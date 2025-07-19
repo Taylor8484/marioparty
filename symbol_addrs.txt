@@ -546,6 +546,12 @@ func_800FE040 = 0x800FE040; //rom:0x19F880
 //ovl_23_CraneGame
 D_800FF550_CraneGame = 0x800FF550; //segment:CraneGame type:s32 size:0x10
 
+//ovl_61
+D_80110448_OpeningScene = 0x80110448; //segment:OpeningScene type:s32
+D_80110450_OpeningScene = 0x80110450; //segment:OpeningScene type:s32
+D_80110460_OpeningScene = 0x80110460; //segment:OpeningScene type:s32
+D_8011033C_OpeningScene = 0x8011033C; //segment:OpeningScene type:s32
+
 CalcChecksumEeprom = 0x80019640;
 _InitEeprom = 0x80019270;
 InitEeprom = 0x80019408;

@@ -1,6 +1,26 @@
 #include "common.h"
 #include "PR/os.h"
 
+#define EEP_ABS_OFFSET_GWCOMMON     0
+#define EEP_ABS_OFFSET_GWPLAYER     sizeof(GwCommon)
+#define EEP_ABS_OFFSET_GWSYSTEM     EEP_ABS_OFFSET_GWPLAYER + sizeof(GwPlayer)
+#define EEP_ABS_OFFSET_GWQUEST      EEP_ABS_OFFSET_GWSYSTEM + sizeof(GwSystem)
+#define EEP_ABS_OFFSET_UNK          EEP_ABS_OFFSET_GWQUEST + sizeof(GwQuest)
+#define EEP_ABS_EEP_SIZE            0x1F0 //size of total eeprom data
+
+//the hudson header is at the beginning and takes up 8 bytes
+typedef struct SaveFile {
+/* 0x000 */ GWCOMMON common;
+/* 0x094 */ GW_PLAYER player[4];
+/* 0x154 */ GW_SYSTEM system;
+/* 0x17A */ GWQUEST quest;
+/* 0x189 */ char pad[0x67];
+} SaveFile; //
+
+//used to allow offsets from structs for the eep file offsets
+#define offsetof(st, m) \
+    ((u32)&(((st *)0)->m))
+
 extern u8 D_800D8720;
 extern s8 D_800C572F;
 s32 func_800141FC(s16 arg0);
@@ -31,9 +51,6 @@ void func_8005963C(s16 index, u16 param_2);
 s32 CalcChecksumEeprom(u16 checksumAddrOffset, u16 size);
 
 void func_80059280(void) {
-    s32 temp_s1;
-    s32 var_s0;
-    s32 var_v0;
     s32 i;
     GWCOMMON* common;
 
@@ -443,7 +460,7 @@ void func_8005B024(void) {
 
     sp10 = func_8005AFC8();
     if (D_800D8720 != 0) {
-        WriteEeprom(0x1F0, &sp10, 2);
+        WriteEeprom(EEP_ABS_EEP_SIZE, &sp10, 2);
     }
 }
 
@@ -454,7 +471,7 @@ void func_8005B060(void) {
     func_8005B280();
     func_8005B3B0();
     if (D_800D8720 != 0) {
-        WriteEeprom(0x17A, &GwQuest, sizeof(GwQuest));
+        WriteEeprom(EEP_ABS_OFFSET_GWQUEST, &GwQuest, sizeof(GwQuest));
     }
     func_8005B024();
 }
@@ -482,10 +499,10 @@ s32 func_8005B0C4(void) {
         D_800D8720 = 1;
     }
     if (D_800D8720 != 0) {
-        var_s1 = ReadEeprom(0, (void*)&GwCommon.unk0, sizeof(GwCommon));
-        var_s1 = var_s1 | ReadEeprom(0x94, (void*)GwPlayer, sizeof(GwPlayer));
-        var_s1 = var_s1 | ReadEeprom(0x154, (void*)&GwSystem, sizeof(GwSystem));
-        var_s1 = var_s1 | ReadEeprom(0x17A, (void*)&GwQuest, sizeof(GwQuest));
+        var_s1 = ReadEeprom(offsetof(SaveFile, common), (void*)&GwCommon.unk0, sizeof(GwCommon));
+        var_s1 = var_s1 | ReadEeprom(EEP_ABS_OFFSET_GWPLAYER, (void*)GwPlayer, sizeof(GwPlayer));
+        var_s1 = var_s1 | ReadEeprom(EEP_ABS_OFFSET_GWSYSTEM, (void*)&GwSystem, sizeof(GwSystem));
+        var_s1 = var_s1 | ReadEeprom(EEP_ABS_OFFSET_GWQUEST, (void*)&GwQuest, sizeof(GwQuest));
     }
     
     GwSystem.unk_1E = 0;

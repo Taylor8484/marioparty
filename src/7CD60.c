@@ -99,7 +99,7 @@ static inline u8 getBit(BitStream *buf)
     if (buf->bit == 0)
     {
         buf->value = *buf->pos++;
-        buf->bit = 0x80000000;
+        buf->bit = 1 << 31;
     }
     ret = (buf->value & buf->bit) != 0;
     buf->bit >>= 1;
@@ -411,6 +411,7 @@ static inline void GenQuantizeData(int step) {
     }
 }
 
+//decodes HVQ2 image to RGB
 void func_8007F54C(void* code, u16* outbuf, u32 outbufWidth, u16* workbuf) {
     u16 blocks_h, blocks_w;
     u16 *dc_ptr, *scale_ptr;
