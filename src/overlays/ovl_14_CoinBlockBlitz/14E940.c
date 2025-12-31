@@ -50,9 +50,7 @@ void func_800F65E0_CoinBlockBlitz(void) {
 }
 
 void func_800F6CB4_CoinBlockBlitz(void) {
-    s32 new_var;
-    
-    if ((new_var = D_800F5144 == 1)) { //fake match?
+    if (D_800F5144 == 1 || D_800F5144 == 1) { //yep, this is required to match
         func_800601D4(0x28);
         func_80009730();
         func_8002890C(0, 0, 0);
@@ -93,7 +91,44 @@ void func_800F6D08_CoinBlockBlitz(void) {
     Center.z = -185.0f;
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_14_CoinBlockBlitz/14E940", func_800F6E1C_CoinBlockBlitz);
+extern u16 D_800FA8E0_CoinBlockBlitz[8];
+
+void func_800F6E1C_CoinBlockBlitz(void) {
+    s32 i;
+    s32 candidate;
+    s32 j;
+    s32 randomIndex;
+
+    for (i = 0; i < 4; i++) {
+        randomIndex = (rand8() & 0xFF) % (4 - i);
+
+        for (candidate = 0; candidate < 4; candidate++) {
+            // Check if candidate was already used
+            j = i;
+            while (j != 0 && D_800FA8E0_CoinBlockBlitz[j] != candidate) {
+                j--;
+            }
+
+            // If found, skip to next candidate
+            if (j != 0) {
+                continue;
+            }
+
+            // Found an unused candidate - is it the one we randomly picked?
+            if (randomIndex == 0) {
+                break;
+            }
+            randomIndex--;
+        }
+
+        // Fallback if loop exhausted
+        if (candidate >= 4) {
+            candidate = i;
+        }
+
+        D_800FA8E0_CoinBlockBlitz[i + 1] = candidate;
+    }
+}
 
 void func_800F6F1C_CoinBlockBlitz(void) {
 }
