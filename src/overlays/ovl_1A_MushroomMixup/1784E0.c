@@ -81,7 +81,7 @@ void func_800F7088_MushroomMixup(s16 arg0) {
 }
 
 void func_800F70C4_MushroomMixup(void) {
-    LoadFormBinary(ReadMainFS(0x2C0001), 0x20D);
+    LoadFormBinary(DataRead(0x2C0001), 0x20D);
 }
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_1A_MushroomMixup/1784E0", func_800F70F0_MushroomMixup);

@@ -49,10 +49,10 @@ void func_800F65E0_BumperBalls(void) {
     D_800FCD20_BumperBalls = omAddObj(6, 3, 0, -1, &func_800F6D98_BumperBalls);
     omAddObj(0x2710, 0, 0, -1, &func_800F9588_BumperBalls);
     D_800FCD18_BumperBalls = InitSprite(117);
-    temp_s0 = ReadMainFS(37);
+    temp_s0 = DataRead(37);
     D_800FCD1A_BumperBalls = func_80039084(temp_s0);
     HuMemDirectFree(temp_s0);
-    temp_s0_2 = ReadMainFS(36);
+    temp_s0_2 = DataRead(36);
     D_800FCD1C_BumperBalls = func_80039084(temp_s0_2);
     HuMemDirectFree(temp_s0_2);
     func_8007B168(D_800FCC28_BumperBalls, 1);

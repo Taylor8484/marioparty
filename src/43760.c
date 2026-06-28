@@ -61,9 +61,9 @@ void func_8004367C(void) {
 
     if (D_800D645A == -1) {
         D_800D645A = func_80064EF4(1, 5);
-        temp_s0 = ReadMainFS(0xA0023);
+        temp_s0 = DataRead(0xA0023);
         D_800D645C = func_800678A4(temp_s0);
-        FreeMainFS(temp_s0);
+        DataClose(temp_s0);
         func_80067208(D_800D645A, 0, D_800D645C, 0);
         func_80067384(D_800D645A, 0, 0x4770);
         func_800674BC(D_800D645A, 0, 0x1000U);
@@ -82,9 +82,9 @@ void func_800437B8(void) {
 
     if (D_800D645E == -1) {
         D_800D645E = func_80064EF4(1, 5);
-        temp_s0 = ReadMainFS(0xA0025);
+        temp_s0 = DataRead(0xA0025);
         D_800D6460 = func_800678A4(temp_s0);
-        FreeMainFS(temp_s0);
+        DataClose(temp_s0);
         func_80067208(D_800D645E, 0, D_800D6460, 0);
         func_80067384(D_800D645E, 0, 0x100);
         func_800674BC(D_800D645E, 0, 0x1000U);

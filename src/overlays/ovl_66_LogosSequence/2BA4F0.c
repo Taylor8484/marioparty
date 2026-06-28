@@ -1,5 +1,8 @@
 #include "common.h"
 
+s32 D_800F6AF0_LogosSequence = 0;
+s32 D_800F6AF4_LogosSequence = 0;
+
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_66_LogosSequence/2BA4F0", func_800F6610_LogosSequence);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_66_LogosSequence/2BA4F0", func_800F66C0_LogosSequence);

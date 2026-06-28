@@ -79,18 +79,18 @@ void ShowPlayerCoinChange(s32 arg0, s32 arg1) {
         D_800D6478->work[3] = arg0;
         temp_s5 = func_80064EF4(4, 5);
         D_800D6470 = temp_s5;
-        temp_s0 = ReadMainFS(0xA0013);
+        temp_s0 = DataRead(0xA0013);
         D_800D6472[0] = func_800678A4(temp_s0);
-        FreeMainFS(temp_s0);
+        DataClose(temp_s0);
         
         if (arg1 > 0) {
-            temp_s0 = ReadMainFS(0xA0035);
+            temp_s0 = DataRead(0xA0035);
         } else {
-            temp_s0 = ReadMainFS(0xA0036);
+            temp_s0 = DataRead(0xA0036);
         }
         
         D_800D6472[1] = func_800678A4(temp_s0);
-        FreeMainFS(temp_s0);
+        DataClose(temp_s0);
         func_80067208(temp_s5, var_s4, D_800D6472[0], 0);
         func_80067384(temp_s5, var_s4, 0x2010);
         func_800674BC(temp_s5, var_s4, 0x1000);

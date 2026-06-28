@@ -27,7 +27,7 @@ void* func_80023668(s32);
 u32 osVirtualToPhysical(void*);
 u32 strlen(const char*);
 void* func_80014614(s32);
-void func_80014750(void*);
+void DataCloseTemp(void*);
 void func_800238F0(s32);
 s32 func_8002451C(s32, void (*)(Gfx**), s32);
 void func_8003A060(Gfx**, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
@@ -1527,7 +1527,7 @@ s16 func_80076FF4(s16 arg0) {
     void* temp_v0 = func_80014614(arg0);
     s16 temp_s0 = func_800678A4(temp_v0);
 
-    func_80014750(temp_v0);
+    DataCloseTemp(temp_v0);
     return temp_s0;
 }
 
@@ -1632,11 +1632,11 @@ void func_8007767C(unkCommonStruct0* arg0, s32 arg1) {
 
     temp_v0 = func_80014614(arg1);
     arg0->unk_34[0] = temp_v0_2 = func_800678A4(temp_v0);
-    func_80014750(temp_v0);
+    DataCloseTemp(temp_v0);
 
     temp_v0 = func_80014614(arg1 + 1);
     arg0->unk_34[1] = temp_v0_4 = func_800678A4(temp_v0);
-    func_80014750(temp_v0);
+    DataCloseTemp(temp_v0);
 
     arg0->unk_14[0] = temp_v0_5 = func_80064EF4(2, 5);
 
@@ -2514,10 +2514,10 @@ void func_8007B52C(void) {
 
     LoadStringIntoWindow(temp_v0, (void*) (s32) D_800C6268[temp_fp].unk_02, -1, -1);
 
-    temp_v0_12 = ReadMainFS(0xB001B);
+    temp_v0_12 = DataRead(0xB001B);
     D_800F3182 = func_800678A4(temp_v0_12);
     D_800F6548 = func_80064EF4(1, 5);
-    FreeMainFS(temp_v0_12);
+    DataClose(temp_v0_12);
 
     func_80067208(D_800F6548, 0, D_800F3182, 0);
     func_800674BC(D_800F6548, 0, 0x01001000);

@@ -20,16 +20,33 @@ typedef struct mainfsEntryInfo {
     s32 compression_type;
 } mainfsEntryInfo;
 
-typedef struct unkMallocPermStruct {
-    u16 unk0;
-    u16 unk2;
-    s32 unk4;
-    void* unk8;
+// typedef struct unkMallocPermStruct {
+//     u16 unk0;
+//     u16 unk2;
+//     s32 unk4;
+//     void* unk8;
+//     s16 unkC;
+//     s16 unkE;
+//     u8* unk10;
+//     u8* unk14;
+// } unkMallocPermStruct;
+
+// deprecated!!
+typedef struct HuFileInfoD {
+    s16 compType;
+    u32 size;
+    u8* block;
     s16 unkC;
     s16 unkE;
-    u8* unk10;
-    u8* unk14;
-} unkMallocPermStruct;
+    void* bytes;
+    void* bytesCopy;
+} HuFileInfoD;
+
+typedef enum
+{
+    ARCHIVE_CACHED = 0x2E,
+    ARCHIVE_DIRECT,
+} EArchiveType;
 
 void func_80014220(void) {
     s16 i;
@@ -67,13 +84,13 @@ extern s32 *D_800D1304; // Directory offset table pointer (copy)
 
 extern HuArchive D_800D1310;
 
-extern void *func_80014678(s32, s32);
-extern void *func_800146D4(s32, s32);
-extern void func_80014770(u32, u32);
-extern void func_80014504(s32 type, s32 index, HuFileInfo* info);
+extern void *DataDecode(s32, s32);
+extern void *DataDecodeTemp(s32, s32);
+extern void DataDirInit(u32, u32);
+extern void DataInfoRead(s32 type, s32 index, HuFileInfo* info);
 
 // Initialize file system from ROM.
-void func_80014460(void* fs_rom_loc) {
+void DataInit(void* fs_rom_loc) {
     s32 dir_table_size;
     HuArchive* archiveHeader;
 
@@ -89,7 +106,7 @@ void func_80014460(void* fs_rom_loc) {
     D_800D1304 = D_800D12F8;
 }
 
-void func_80014504(s32 type, s32 index, HuFileInfo* info) {
+void DataInfoRead(s32 type, s32 index, HuFileInfo* info) {
     HuArchive* archiveHeader;
 
     archiveHeader = &D_800D1310;
@@ -113,7 +130,7 @@ void func_80014504(s32 type, s32 index, HuFileInfo* info) {
  * Reads a file from the main filesystem and decodes it.
  * File is in the permanent heap.
 */
-void* ReadMainFS(s32 dirAndFile) {
+void* DataRead(s32 dirAndFile) {
     u32 dir;
     u32 file;
 
@@ -121,10 +138,10 @@ void* ReadMainFS(s32 dirAndFile) {
     file = dirAndFile & 0xFFFF;
 
     if (dir < D_800D12F4) {
-        func_80014770(0x2F, dir);
+        DataDirInit(0x2F, dir);
 
         if (file < D_800D1300) {
-            return func_80014678(0x2E, file);
+            return DataDecode(0x2E, file);
         }
     }
 
@@ -143,10 +160,10 @@ void* func_80014614(s32 dirAndFile) {
     file = dirAndFile & 0xFFFF;
 
     if (dir < D_800D12F4) {
-        func_80014770(0x2F, dir);
+        DataDirInit(0x2F, dir);
 
         if (file < D_800D1300) {
-            return func_800146D4(0x2E, file);
+            return DataDecodeTemp(0x2E, file);
         }
     }
 
@@ -156,11 +173,11 @@ void* func_80014614(s32 dirAndFile) {
 /*
  * Read file, allocate space in perm heap, decode it.
 */
-void *func_80014678(s32 type, s32 index) {
+void *DataDecode(s32 type, s32 index) {
     HuFileInfo info;
     void* ret;
 
-    func_80014504(type, index, &info);
+    DataInfoRead(type, index, &info);
     ret = HuMemDirectMalloc((info.size + 1) & -2);
     if (ret != NULL) {
         DecodeFile(info.bytes, ret, info.size, info.compType);
@@ -171,11 +188,11 @@ void *func_80014678(s32 type, s32 index) {
 /*
  * Read file, allocate space in temp heap, decode it.
 */
-void* func_800146D4(s32 type, s32 index) {
+void* DataDecodeTemp(s32 type, s32 index) {
     HuFileInfo info;
     void* ret;
 
-    func_80014504(type, index, &info);
+    DataInfoRead(type, index, &info);
     ret = MallocTemp((info.size + 1) & -2);
     if (ret != NULL) {
         DecodeFile(info.bytes, ret, info.size, info.compType);
@@ -184,10 +201,10 @@ void* func_800146D4(s32 type, s32 index) {
 }
 
 /*
- * HuMemMemoryFree file previously obtained through ReadMainFS.
+ * HuMemMemoryFree file previously obtained through DataRead.
  * 80014730
 */
-void FreeMainFS(void *file) {
+void DataClose(void *file) {
     if (file != NULL) {
         HuMemDirectFree(file);
     }
@@ -196,13 +213,13 @@ void FreeMainFS(void *file) {
 /*
  * HuMemMemoryFree file previously obtained through func_80014614.
 */
-void func_80014750(void *file) {
+void DataCloseTemp(void *file) {
     if (file != NULL) {
         HuMemDirectFree(file); //! Should be FreeTemp, but not functionally problematic.
     }
 }
 
-void func_80014770(u32 arg0, u32 arg1) {
+void DataDirInit(u32 arg0, u32 arg1) {
     HuArchive* test;
     HuFileInfo sp10; //rom addr point to directory
     s32 tableSize;
@@ -227,32 +244,106 @@ void func_80014770(u32 arg0, u32 arg1) {
     }
 }
 
-void* func_80014828(s32 arg0, s32 arg1) {
-    HuFileInfo sp10;
-    unkMallocPermStruct* temp_s0;
+// -----------------------------------------------------------------
 
-    temp_s0 = HuMemDirectMalloc(sizeof(unkMallocPermStruct));
-    if (temp_s0 == NULL) {
+// STARTING HERE ARE DEPRECATED FUNCTIONS THAT ARE NOT UTILIZED
+
+// -----------------------------------------------------------------
+
+HuFileInfoD *FileCreate(EArchiveType type, s32 index) {
+    HuFileInfo info;
+    HuFileInfoD *dataInfo; // ! - deprecated
+
+    dataInfo = HuMemDirectMalloc(sizeof(HuFileInfoD));
+    if (dataInfo == NULL)
         return NULL;
+
+    DataInfoRead(type, index, &info);
+
+    dataInfo->size = info.size;
+    dataInfo->compType = info.compType;
+    dataInfo->block = HuMemDirectMalloc(0x400);
+    dataInfo->unkC = 1;
+    dataInfo->unkE = 0;
+    dataInfo->bytes =
+        dataInfo->bytesCopy = info.bytes;
+
+    return dataInfo;
+}
+
+void FileClose(HuFileInfoD *info) {
+    HuMemDirectFree(info->block);
+    HuMemDirectFree(info);
+}
+
+s32 dmaRead(HuFileInfoD *info) {
+    if (((info->bytesCopy - info->bytes) + info->unkE) >= info->size) {
+        return -1;
+    }
+
+    if (info->unkE >= 0x400) {
+        info->unkC = 1;
+        info->bytesCopy = (void *)(info->unkE + info->bytesCopy);
+        info->unkE = 0;
+    }
+
+    if (info->unkC != 0) {
+        info->unkC = 0;
+        func_80061FE8(info->bytesCopy, info->block, 0x400); //dmaRead is func_80061FE8
+    }
+
+    return info->block[info->unkE++];
+}
+
+s32 FileReadBuf(s8 *arg0, s32 arg1, s32 arg2, HuFileInfoD *arg3) {
+    s32 temp_v0;
+    s8 *var_s1;
+
+    s32 i = 0;
+    s32 b = arg1 * arg2;
+    var_s1 = arg0;
+
+    while (TRUE) {
+        temp_v0 = dmaRead(arg3);
+
+        if (temp_v0 == -1) {
+            break;
+        }
+
+        *var_s1 = temp_v0;
+        ++i;
+
+        if (i >= b) {
+            break;
+        }
+
+        var_s1++;
+    }
+    return i;
+}
+
+void FileSeek(HuFileInfoD *info, s32 arg1, s32 arg2) {
+    switch (arg2) {
+        case 0:
+            arg2 = (u32)(info->bytes + arg1);
+            break;
+        case 1:
+            arg2 = (u32)(info->bytesCopy + info->unkE + arg1);
+            break;
+        case 2:
+            arg2 = (u32)(info->bytes + info->size + arg1);
+            break;
+        default:
+            return;
+    }
+    arg2 = ((u32)arg2 < (u32)info->bytes) ? (u32)info->bytes : (u32)arg2;
+    arg2 = ((u32)arg2 >= (u32)(info->bytes + info->size)) ? (u32)(info->bytes + info->size - 1) : (u32)arg2;
+
+    if (((u32)arg2 < (u32)info->bytesCopy) || ((u32)arg2 >= (u32)(info->bytesCopy + 0x400))) {
+        info->unkC = 1;
+        info->unkE = arg2 & 1;
+        info->bytesCopy = (u8 *)(arg2 - info->unkE);
     } else {
-        func_80014504(arg0, arg1, &sp10);
-        temp_s0->unk4 = sp10.size;
-        temp_s0->unk0 = (u16)sp10.compType;
-        temp_s0->unk8 = HuMemDirectMalloc(1024);
-        temp_s0->unkC = 1;
-        temp_s0->unkE = 0;
-        temp_s0->unk10 = temp_s0->unk14 = sp10.bytes;
-        return temp_s0;
+        info->unkE = arg2 - (u32)info->bytesCopy;
     }
 }
-
-void func_800148BC(void *param_1) {
-    HuMemDirectFree((void *)(((s32 *)param_1)[2]));
-    HuMemDirectFree(param_1);
-}
-
-INCLUDE_ASM("asm/nonmatchings/engine/data", func_800148EC);
-
-INCLUDE_ASM("asm/nonmatchings/engine/data", func_80014998);
-
-INCLUDE_ASM("asm/nonmatchings/engine/data", func_80014A14);

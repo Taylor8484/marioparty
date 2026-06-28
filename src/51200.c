@@ -26,7 +26,7 @@ void func_80050600(unk_Struct02* arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4) {
     void* temp_s6;
     s32 i;
 
-    temp_s6 = ReadMainFS(0x000A0122);
+    temp_s6 = DataRead(0x000A0122);
     sprintf(pfStrBuf, "%2d", arg2);
     for (i = 0; i < 2; i++, arg3 += 0x10) {
         asciiChar = pfStrBuf[i];
@@ -40,7 +40,7 @@ void func_80050600(unk_Struct02* arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4) {
             arg1++;
         }        
     }
-    FreeMainFS(temp_s6);
+    DataClose(temp_s6);
 }
 
 unk_Struct02* func_8005077C(s16 arg0) {
@@ -50,22 +50,22 @@ unk_Struct02* func_8005077C(s16 arg0) {
     void* temp_v0_3;
 
     temp_s3 = func_800533F8(7, 0);
-    temp_v0 = ReadMainFS(D_800C5314[GwSystem.playType]);
+    temp_v0 = DataRead(D_800C5314[GwSystem.playType]);
     temp_s3->unk_0C[0] = func_800678A4(temp_v0);
     func_80067208(temp_s3->unk_0A, 0, temp_s3->unk_0C[0], 0);
     func_80067384(temp_s3->unk_0A, 0, 7);
     func_800674BC(temp_s3->unk_0A, 0, 0x1000);
     func_80066DC4(temp_s3->unk_0A, 0, 0xA0, D_800C5320[arg0]);
     func_80067558(temp_s3->unk_0A, 0, 0xFF, 0xFF, 0xFF, 0xFF);
-    FreeMainFS(temp_v0);
-    temp_v0 = ReadMainFS(0xA0120);
+    DataClose(temp_v0);
+    temp_v0 = DataRead(0xA0120);
     temp_s3->unk_0C[1] = func_800678A4(temp_v0);
     func_80067208(temp_s3->unk_0A, 1, temp_s3->unk_0C[1], 0);
     func_80067384(temp_s3->unk_0A, 1, 7);
     func_800674BC(temp_s3->unk_0A, 1, 0x1000);
     func_80066DC4(temp_s3->unk_0A, 1, 0x8C, D_800C5324[arg0]);
     func_80067558(temp_s3->unk_0A, 1, 0xFF, 0xFF, 0xFF, 0xFF);
-    FreeMainFS(temp_v0);
+    DataClose(temp_v0);
     switch (GwSystem.playType) {
     case 1:
         func_80050600(temp_s3, 2, GwSystem.maxTurns, 0xCA, D_800C5320[arg0]);
@@ -75,13 +75,13 @@ unk_Struct02* func_8005077C(s16 arg0) {
         func_80050600(temp_s3, 2, GwSystem.maxTurns, 0xAD, D_800C5320[arg0]);
     }
     func_80050600(temp_s3, 4, GwSystem.currentTurn, 0xB6, D_800C5324[arg0]);
-    temp_v0 = ReadMainFS(D_800C52D0[GwSystem.curBoardIndex]);
+    temp_v0 = DataRead(D_800C52D0[GwSystem.curBoardIndex]);
     temp_s3->unk_0C[6] = func_800678A4(temp_v0);
     func_80067208(temp_s3->unk_0A, 6, temp_s3->unk_0C[6], 0);
     func_80067384(temp_s3->unk_0A, 6, 7U);
     func_800674BC(temp_s3->unk_0A, 6, 0x1000);
     func_80066DC4(temp_s3->unk_0A, 6, 0xA0, 0x3C);
-    FreeMainFS(temp_v0);
+    DataClose(temp_v0);
     return temp_s3;
 }
 

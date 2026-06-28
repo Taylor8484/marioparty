@@ -1,6 +1,6 @@
 osRomBase = 0x80000308;
-ReadMainFS = 0x800145B0;
-FreeMainFS = 0x80014730;
+DataRead = 0x800145B0;
+DataClose = 0x80014730;
 ReadImgPackand = 0x800177F4;
 rand8 = 0x8001758C;
 OvlLoad = 0x800175C0;
@@ -626,3 +626,11 @@ ContDStk = 0x800F544C;
 ContDStkTrg = 0x800EC6EA;
 
 D_800FD8C0_MemoryMatch = 0x800FD8C0; //force_migration:true
+DataInit = 0x80014460;
+DataInfoRead = 0x80014504;
+DataDecode = 0x80014678;
+DataDecodeTemp = 0x800146D4;
+DataCloseTemp = 0x80014750;
+DataDirInit = 0x80014770;
+FileReadBuf = 0x80014998;
+dmaRead = 0x800148EC;

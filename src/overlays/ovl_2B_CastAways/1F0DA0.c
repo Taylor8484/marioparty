@@ -45,19 +45,19 @@ void func_800F65E0_CastAways(void) {
     omAddObj(0x2710, 0, 0, -1, &func_800FACA8_CastAways);
 
     for (i = 0; i < 2; i++) {
-        filePtr = ReadMainFS(D_800FB9A4_ovl2B[i]);
+        filePtr = DataRead(D_800FB9A4_ovl2B[i]);
         D_800FBB04_ovl2B[i] = func_80039084(filePtr);
         HuMemDirectFree(filePtr);
     }
 
     D_800FBB46_ovl2B = LoadFormFile(0x35, 0x2009D);
-    filePtr = ReadMainFS(0x2A);
+    filePtr = DataRead(0x2A);
     D_800FBB40_ovl2B = func_80039084(filePtr);
     HuMemDirectFree(filePtr);
-    filePtr = ReadMainFS(0x25);
+    filePtr = DataRead(0x25);
     D_800FBB42_ovl2B = func_80039084(filePtr);
     HuMemDirectFree(filePtr);
-    filePtr = ReadMainFS(0x24);
+    filePtr = DataRead(0x24);
     D_800FBB44_ovl2B = func_80039084(filePtr);
     HuMemDirectFree(filePtr);
     D_800FBB50_ovl2B[3] = _CheckFlag(0x2B);

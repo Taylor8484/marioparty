@@ -16,19 +16,19 @@
 
 // Likey different return types for the first 3 functions?
 u16 func_800174C0(s32 arg0, s32 arg1) {
-    return LoadFormBinary(ReadMainFS(arg0), arg1);
+    return LoadFormBinary(DataRead(arg0), arg1);
 }
 
 u16 func_800174F4(s32 arg0, s32 arg1) {
-    return LoadFormBinary(ReadMainFS(arg0), arg1);
+    return LoadFormBinary(DataRead(arg0), arg1);
 }
 
 u16 LoadFormFile(s32 arg0, s32 arg1) {
-    return LoadFormBinary(ReadMainFS(arg0), arg1);
+    return LoadFormBinary(DataRead(arg0), arg1);
 }
 
 s16 func_8001755C(s32 arg0) {
-    return LoadFormBinary(ReadMainFS(arg0), 0x1D);
+    return LoadFormBinary(DataRead(arg0), 0x1D);
 }
 
 u8 rand8(void) {
@@ -107,14 +107,14 @@ u16 ReadImgPackand(s32 arg0, s32 arg1, s32 arg2) {
     u16 temp_s0;
     void* temp_v0;
 
-    temp_v0 = ReadMainFS(arg0);
+    temp_v0 = DataRead(arg0);
     temp_s0 = func_8001E00C(temp_v0, arg1, arg2 );
     HuMemDirectFree(temp_v0);
     return temp_s0;
 }
 
 s16 func_80017850(unk2C0C0StructC0* arg0, s32 arg1, char* arg2) {
-    return func_80038A9C(arg0, ReadMainFS(arg1), 0, arg2);
+    return func_80038A9C(arg0, DataRead(arg1), 0, arg2);
 }
 
 void func_800178A0(s32 arg0) {

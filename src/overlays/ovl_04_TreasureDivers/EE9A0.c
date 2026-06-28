@@ -88,9 +88,9 @@ void func_800F65E0_TreasureDivers(void) {
     D_800FF25C_TreasureDivers = 0;
     D_800FED30_TreasureDivers = 0;
 
-    temp_v0_3 = ReadMainFS(0x160014);
+    temp_v0_3 = DataRead(0x160014);
     func_800FAA34_TreasureDivers(temp_v0_3);
-    FreeMainFS(temp_v0_3);
+    DataClose(temp_v0_3);
     func_800FA440_TreasureDivers();
     omOutView(temp_v0);
 

@@ -8,9 +8,9 @@ void func_800F69DC_GhostGuess(omObjData* arg0) {
     void* temp_s0;
 
     arg0->func_ptr = &func_800F79D4_GhostGuess;
-    temp_s0 = ReadMainFS(0x1C000A);
+    temp_s0 = DataRead(0x1C000A);
     temp_s1 = func_800678A4(temp_s0);
-    FreeMainFS(temp_s0);
+    DataClose(temp_s0);
     D_800FBEC0_GhostGuess = func_80064EF4(1, 0);
     func_80067208(D_800FBEC0_GhostGuess, 0, temp_s1, 0);
     func_800674BC(D_800FBEC0_GhostGuess, 0, 0x9000);

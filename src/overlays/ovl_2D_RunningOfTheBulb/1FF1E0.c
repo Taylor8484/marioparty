@@ -48,7 +48,7 @@ void func_800F65E0_RunningOfTheBulb(void) {
     D_800FE47C_RunningOfTheBulb = omAddObj(30, 0, 0, -1, &func_800F7034_RunningOfTheBulb);
     omAddObj(0x2710, 0, 0, -1, &func_800FBF30_RunningOfTheBulb);
     D_800FE4A8_RunningOfTheBulb = omAddObj(6, 0, 0, -1, NULL);
-    temp_s0 = ReadMainFS(38);
+    temp_s0 = DataRead(38);
     D_800FE45A_RunningOfTheBulb = func_80039084(temp_s0);
     HuMemDirectFree(temp_s0);
     D_800FE458_RunningOfTheBulb = _CheckFlag(43);
@@ -95,7 +95,7 @@ void func_800F6BE4_RunningOfTheBulb(omObjData* arg0) {
     void* temp_s0;
     
     arg0->model[0] = LoadFormFile(0x410001, 0x289);
-    temp_s0 = ReadMainFS(0x27);
+    temp_s0 = DataRead(0x27);
     func_80038A9C((&D_800F2B7C[arg0->model[0]])->unk_6C, temp_s0, 0, D_800FE3B0_RunningOfTheBulb);
     func_80025AD4(arg0->model[0]);
     func_80025B34(arg0->model[0]);

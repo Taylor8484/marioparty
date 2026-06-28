@@ -451,9 +451,9 @@ u16 func_800F8DF4_MemoryMatch(u32 arg0) {
     void* fsData;
     s16 temp_s1;
 
-    fsData = ReadMainFS(arg0);
+    fsData = DataRead(arg0);
     temp_s1 = func_800678A4(fsData);
-    FreeMainFS(fsData);
+    DataClose(fsData);
     return temp_s1;
 }
 

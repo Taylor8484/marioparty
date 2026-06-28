@@ -3,12 +3,16 @@
 s32 D_800F6F70_LogosSequenceCopy = 0;
 s32 D_800F6F74_LogosSequenceCopy[] = {0x00110000, 0x00110001, 0x00110002};
 
+typedef struct UnkStruct {
+    char unk_00[0x10];
+} UnkStruct; //sizeof 0x10
+
 void func_800F6610_LogosSequenceCopy(unkLogoStruct* arg0, s16 arg1, s16 arg2, s16 arg3, u16 arg4) {
     void* temp_s6;
     s32 i;
     u8 character;
 
-    temp_s6 = ReadMainFS(0x110005);
+    temp_s6 = DataRead(0x110005);
     sprintf(pfStrBuf, "%02d", arg2);
 
     for (i = 0; i < 2; i++) {
@@ -23,7 +27,7 @@ void func_800F6610_LogosSequenceCopy(unkLogoStruct* arg0, s16 arg1, s16 arg2, s1
         arg3 += 0x10;        
     }
 
-    FreeMainFS(temp_s6);
+    DataClose(temp_s6);
 }
 
 
@@ -51,11 +55,12 @@ void func_800F6AD4_LogosSequenceCopy(void) {
 }
 
 void func_800F6BA0_LogosSequenceCopy(void) {
-    unkLogoStruct sp10; //could be incorrect
+    UnkStruct sp10; //could be incorrect
     s32 mesg;
 
     osCreateMesgQueue(&D_800F7980_LogosSequenceCopy, &D_800F7998_LogosSequenceCopy, 1);
-    func_800639F8(&sp10, &D_800F7980_LogosSequenceCopy, 2);
+    //TODO: fix type of sp10 so it's consistent across repo
+    func_800639F8((void*)&sp10, &D_800F7980_LogosSequenceCopy, 2);
     osRecvMesg(&D_800F7980_LogosSequenceCopy, (OSMesg) &mesg, 1);
     if (mesg == 2) {
         func_8007FEA4();
@@ -81,4 +86,53 @@ s32 func_800F6C94_LogosSequenceCopy(s32 arg0, s32 arg1, s32 arg2) {
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_67_LogosSequenceCopy/2BAA10", func_800F6CEC_LogosSequenceCopy);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_67_LogosSequenceCopy/2BAA10", func_800F6E10_LogosSequenceCopy);
+s32 func_8000B358(void);
+void func_8006073C(void);
+void func_800F6778_LogosSequenceCopy(void);
+void func_800F6C1C_LogosSequenceCopy(void);
+void func_800F6C6C_LogosSequenceCopy(void);
+s32 func_800F6CEC_LogosSequenceCopy(void);
+
+extern s32 D_800F6F70_LogosSequenceCopy;
+extern OSMesgQueue D_800F6FB0_LogosSequenceCopy;
+extern void* D_800F6FC8_LogosSequenceCopy;
+extern s32 LeoDriveExistBool;
+
+void func_800F6E10_LogosSequenceCopy(void) {
+    UnkStruct sp10;
+    s32 i;
+    s32 var_s1;
+
+    var_s1 = 1;
+    omInitObjMan(0xA, 0xA);
+
+    if (LeoDriveExistBool != 0) {
+        osCreateMesgQueue(&D_800F6FB0_LogosSequenceCopy, &D_800F6FC8_LogosSequenceCopy, 1);
+        //TODO: fix type of sp10 so it's consistent across repo
+        func_800639F8((void*)&sp10, &D_800F6FB0_LogosSequenceCopy, 1);
+        func_80060198();
+        func_8006073C();
+        
+        for (i = 5; i != 0; i--) {
+            osRecvMesg(&D_800F6FB0_LogosSequenceCopy, NULL, 1);
+        }
+
+        while (func_8000B358() != 0) {
+            osRecvMesg(&D_800F6FB0_LogosSequenceCopy, NULL, 1);
+        }
+
+        func_800F6C1C_LogosSequenceCopy();
+        D_800F6F70_LogosSequenceCopy = func_800F6CEC_LogosSequenceCopy();
+        func_800F6C6C_LogosSequenceCopy();
+        func_80063A5C(&sp10);
+
+        if ((D_800F6F70_LogosSequenceCopy != 0) && (D_800F6F70_LogosSequenceCopy != 0x2A)) {
+            omAddPrcObj(func_800F6778_LogosSequenceCopy, 0x5000U, 0, 0);
+            var_s1 = 0;
+        }
+    }
+
+    if (var_s1 != 0) {
+        omOvlReturnEx(1);
+    }
+}

@@ -67,10 +67,10 @@ void func_800F65E0_KeyPaWay(void) {
     D_800FF55C_KeyPaWay = omAddObj(40, 2, 0, -1, &func_800F6D98_KeyPaWay);
     D_800FF55C_KeyPaWay->unk_50 = func_80023684(sizeof(unkKeyPaWayStruct), 0x7918);
     func_8007B168(&D_800FF3B0_KeyPaWay, 1);
-    temp_s0 = ReadMainFS(42);
+    temp_s0 = DataRead(42);
     D_800FF534_KeyPaWay = func_80039084(temp_s0);
     HuMemDirectFree(temp_s0);
-    temp_s0 = ReadMainFS(38);
+    temp_s0 = DataRead(38);
     D_800FF536_KeyPaWay = func_80039084(temp_s0);
     HuMemDirectFree(temp_s0);
     D_800FF526_KeyPaWay = _CheckFlag(43);

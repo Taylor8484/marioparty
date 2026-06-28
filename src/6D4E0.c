@@ -151,7 +151,7 @@ s16 func_8006DB3C(s16 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
         return -1;
     }
  
-    file = ReadMainFS(arg1);
+    file = DataRead(arg1);
     temp_v0_3 = func_800678A4(file);
     temp_s3->unk_46[i] = temp_v0_3;
     HuMemDirectFree(file);

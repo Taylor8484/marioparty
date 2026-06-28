@@ -84,9 +84,9 @@ void func_800F7308_MushroomBank(omObjData* arg0) {
     arg0->model[0] = func_800174C0(0x90035, 0x2A9);
     func_80025EB4(arg0->model[0], 1, 1);
     temp_s0 = &D_800F2B7C[arg0->model[0]];
-    file = ReadMainFS(0x90042);
+    file = DataRead(0x90042);
     func_80038A9C(temp_s0->unk_6C, file, 0, "41tt000o_DEF");
-    FreeMainFS(file);
+    DataClose(file);
     func_80025AD4(arg0->model[0]);
     arg0->func_ptr = &func_800F722C_MushroomBank;
     if (D_800F89B8_MushroomBank != 0) {

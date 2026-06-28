@@ -173,12 +173,12 @@ void func_8004746C(s32 arg0) {
     D_800D6502 = func_80064EF4(2, 5);
     func_80067598(D_800D6502, 0, -1);
     func_80067598(D_800D6502, 1, 0);
-    temp_v0_2 = ReadMainFS(0xA0015);
+    temp_v0_2 = DataRead(0xA0015);
     D_800D6504.x = func_800678A4(temp_v0_2);
-    FreeMainFS(temp_v0_2);
-    temp_v0_2 = ReadMainFS(temp[arg0] + 0xA0000);
+    DataClose(temp_v0_2);
+    temp_v0_2 = DataRead(temp[arg0] + 0xA0000);
     D_800D6504.y = func_800678A4(temp_v0_2);
-    FreeMainFS(temp_v0_2);
+    DataClose(temp_v0_2);
     func_80067208(D_800D6502, 0, D_800D6504.x, 0);
     func_80067384(D_800D6502, 0, 0x10);
     func_800674BC(D_800D6502, 0, 0x1000);
@@ -229,12 +229,12 @@ void func_800479B8(s32 arg0) {
     D_800D6502 = func_80064EF4(1, 5);
     
     if (arg0 == 6) {
-        file = ReadMainFS(copyTempTest[6] | 0xA0000);
+        file = DataRead(copyTempTest[6] | 0xA0000);
     } else {
-        file = ReadMainFS(copyTempTest[GwPlayer[arg0].character] | 0xA0000);
+        file = DataRead(copyTempTest[GwPlayer[arg0].character] | 0xA0000);
     }
     D_800D6504.x = func_800678A4(file);
-    FreeMainFS(file);
+    DataClose(file);
     func_80067208(D_800D6502, 0, D_800D6504.x, 0U);
     func_80067384(D_800D6502, 0, 0x10);
     func_800674BC(D_800D6502, 0, 0x1000U);

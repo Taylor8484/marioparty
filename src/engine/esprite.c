@@ -7,7 +7,7 @@ s32 InitSprite(s32 arg0) {
     s16 temp_s0;
     void* temp_s1;
 
-    temp_s1 = ReadMainFS(arg0);
+    temp_s1 = DataRead(arg0);
     temp_s0 = func_800678A4(temp_s1);
     D_800ED198[D_800F6530++] = temp_s0;
     HuMemDirectFree(temp_s1);

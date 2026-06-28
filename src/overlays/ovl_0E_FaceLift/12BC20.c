@@ -171,12 +171,12 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_0E_FaceLift/12BC20", func_800FB9E8_Fa
 void func_800FBE08_FaceLift(void) {
     void* fsData;
 
-    fsData = ReadMainFS(0x0000007E);
+    fsData = DataRead(0x0000007E);
     D_800FCA1E_FaceLift = func_800678A4(fsData);
-    FreeMainFS(fsData);
-    fsData = ReadMainFS(0x0020000C);
+    DataClose(fsData);
+    fsData = DataRead(0x0020000C);
     D_800FCA2A_FaceLift = func_800678A4(fsData);
-    FreeMainFS(fsData);
+    DataClose(fsData);
     D_800FCA28_FaceLift = 0;
 }
 

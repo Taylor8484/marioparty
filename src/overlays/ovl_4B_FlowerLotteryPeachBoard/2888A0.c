@@ -54,9 +54,9 @@ void func_800F7364_FlowerLotteryPeachBoard(void) {
     void* temp_s0;
 
     D_800F78EC_FlowerLotteryPeachBoard = func_80064EF4(1, 5);
-    temp_s0 = ReadMainFS(0xA0101);
+    temp_s0 = DataRead(0xA0101);
     D_800F78F0_FlowerLotteryPeachBoard = func_800678A4(temp_s0);
-    FreeMainFS(temp_s0);
+    DataClose(temp_s0);
     func_80067208(D_800F78EE_FlowerLotteryPeachBoard[0], 0, D_800F78F2_FlowerLotteryPeachBoard, 0);
     func_80067384(D_800F78EE_FlowerLotteryPeachBoard[0], 0, 0x47F4);
     func_800674BC(D_800F78EE_FlowerLotteryPeachBoard[0], 0, 0x1000U);

@@ -366,9 +366,9 @@ void func_80055EE8(void) {
     func_80066DC4(D_800D85EC.unk_00, 0, 0xA0, 0x18);
     GMesFontMesCreate(&D_800D85EC.unk_54, "=", 0, -1, -1);
     func_80066DC4(D_800D85EC.unk_54.unk_14[0], 0, 0xA0, 0x28);
-    file = ReadMainFS(0x7C);
+    file = DataRead(0x7C);
     D_800D85D6 = func_800678A4(file);
-    FreeMainFS(file);
+    DataClose(file);
     D_800D85D4 = func_80064EF4(2, 5);
     
     for (i = 0; i < 2; i++) {
@@ -394,16 +394,16 @@ void func_8005608C(void) {
 
     D_800D84E0 = func_80064EF4(1, 5);
     func_80066DC4(D_800D84E0, 0, 0x2A, 0x22);
-    file = ReadMainFS(D_800C56B0[GwQuest.charNo]);
+    file = DataRead(D_800C56B0[GwQuest.charNo]);
     D_800D84E2 = func_800678A4(file);
-    FreeMainFS(file);
+    DataClose(file);
     func_80067208(D_800D84E0, 0, D_800D84E2, 0);
     func_800672B0(D_800D84E0, 0, 1);
     func_80067384(D_800D84E0, 0, 0x10);
     func_800674BC(D_800D84E0, 0, 0x1000);
-    file = ReadMainFS(0xA0163);
+    file = DataRead(0xA0163);
     D_800D84EA = func_800678A4(file);
-    FreeMainFS(file);
+    DataClose(file);
     D_800D84E8 = func_80064EF4(1, 5);
     func_80067208(D_800D84E8, 0, D_800D84EA, 0);
     func_800672B0(D_800D84E8, 0, 1);
@@ -413,9 +413,9 @@ void func_8005608C(void) {
     func_80066DC4(D_800D84E8, 0, 0x2A, 0x22);
     GMesFontMesCreate(D_800D84F0, "X", 0, -1, -1);
     func_80066DC4(D_800D8504, 0, 0x44, 0x22);
-    file = ReadMainFS(0x7C);
+    file = DataRead(0x7C);
     D_800D84E6 = func_800678A4(file);
-    FreeMainFS(file);
+    DataClose(file);
     D_800D84E4 = func_80064EF4(2, 5);
     
     for (i = 0; i < 2; i++) {
@@ -439,9 +439,9 @@ void func_80056380(void) {
     void* file;
     s32 i;
 
-    file = ReadMainFS(0xA0013);
+    file = DataRead(0xA0013);
     D_800D8562 = func_800678A4(file);
-    FreeMainFS(file);
+    DataClose(file);
     D_800D8560 = func_80064EF4(1, 5);
     func_80067208(D_800D8560, 0, D_800D8562, 0);
     func_800672B0(D_800D8560, 0, 1);
@@ -451,9 +451,9 @@ void func_80056380(void) {
     func_80067284(D_800D8560, 0, 0.0f);
     GMesFontMesCreate(D_800D8568, "X", 0, -1, -1);
     func_80066DC4(D_800D857C, 0, 0xFC, 0x22);
-    file = ReadMainFS(0x7C);
+    file = DataRead(0x7C);
     D_800D855E = func_800678A4(file);
-    FreeMainFS(file);
+    DataClose(file);
     D_800D855C = func_80064EF4(2, 5);
     
     for (i = 0; i < 2; i++) {

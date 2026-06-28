@@ -179,15 +179,15 @@ void* func_800F6BC8_FirstMap(s16 arg0, s16 arg1, s16 arg2) {
 
     temp_s0 = MallocTemp(8U);
     temp_s0->unk0 = func_80064EF4(3, 0);
-    temp_s5 = ReadMainFS(0xA0030);
+    temp_s5 = DataRead(0xA0030);
     temp_s0->unk2 = func_800678A4(temp_s5);
     func_80067208(temp_s0->unk0, 0, temp_s0->unk2, 0);
     func_80067384(temp_s0->unk0, 0, 0xB);
     func_800674BC(temp_s0->unk0, 0, 0x1000);
     temp_s1 = arg1 + 5;
     func_80066DC4(temp_s0->unk0, 0, temp_s1, arg2);
-    FreeMainFS(temp_s5);
-    temp_s5 = ReadMainFS(0xA0031);
+    DataClose(temp_s5);
+    temp_s5 = DataRead(0xA0031);
     temp_s0->unk4 = func_800678A4(temp_s5);
     func_80067208(temp_s0->unk0, 1, temp_s0->unk4, 0);
     func_80067384(temp_s0->unk0, 1, 0xB);
@@ -195,14 +195,14 @@ void* func_800F6BC8_FirstMap(s16 arg0, s16 arg1, s16 arg2) {
     func_80066DC4(temp_s0->unk0, 1, temp_s1, arg2);
     func_8006752C(temp_s0->unk0, 1, 0xFF);
     func_800674F4(temp_s0->unk0, 1, 0xFF, 0xD3, 0x4F);
-    FreeMainFS(temp_s5);
-    temp_s5 = ReadMainFS(D_800F87D8_FirstMap[arg0]);
+    DataClose(temp_s5);
+    temp_s5 = DataRead(D_800F87D8_FirstMap[arg0]);
     temp_s0->unk6 = func_800678A4(temp_s5);
     func_80067208(temp_s0->unk0, 2, temp_s0->unk6, 0);
     func_80067384(temp_s0->unk0, 2, 0xA);
     func_800674BC(temp_s0->unk0, 2, 0x1000);
     func_80066DC4(temp_s0->unk0, 2, arg1, arg2);
-    FreeMainFS(temp_s5);
+    DataClose(temp_s5);
     return temp_s0;
 }
 
@@ -437,7 +437,7 @@ s16 func_800F81F8_FirstMap(s32 arg0) {
 
     func_80060214(0x60);
     temp_s2 = func_800533F8(1, 0);
-    temp_s0 = ReadMainFS(0xA012A);
+    temp_s0 = DataRead(0xA012A);
     *temp_s2->unk_0C = func_800678A4(temp_s0);
     func_80067208(temp_s2->unk_0A, 0, *temp_s2->unk_0C, 0);
     func_80067384(temp_s2->unk_0A, 0, 9);
@@ -445,7 +445,7 @@ s16 func_800F81F8_FirstMap(s32 arg0) {
     func_80066DC4(temp_s2->unk_0A, 0, 0xA0, 0x78);
     func_80067354(temp_s2->unk_0A, 0, 40.0f, 30.0f);
     func_80067558(temp_s2->unk_0A, 0, 0, 0, 0, 0xC0);
-    FreeMainFS(temp_s0);
+    DataClose(temp_s0);
     temp_s1_2 = func_8006D010(0x49, 0x4B, 0xB8, 0x4C, 0, 0);
     func_8006E0A4(temp_s1_2, 5);
     func_8006E154(temp_s1_2, 0);

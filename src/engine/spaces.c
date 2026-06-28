@@ -21,7 +21,7 @@ void LoadSpaceTextures(s16 type) {
 
    for (i = 0; i < SPACE_TYPE_TOTAL; i++) {
       if (ptr[i] != 0) {
-         D_800D8118[i] = ReadMainFS(ptr[i]);
+         D_800D8118[i] = DataRead(ptr[i]);
       }
       else {
          D_800D8118[i] = NULL;
@@ -34,7 +34,7 @@ void FreeSpaceTextures(void) {
    s32 i;
    for (i = 0; i < SPACE_TYPE_TOTAL; i++) {
       if (D_800D8118[i] != NULL) {
-         FreeMainFS(D_800D8118[i]);
+         DataClose(D_800D8118[i]);
       }
       D_800D8118[i] = NULL;
    }
@@ -78,7 +78,7 @@ s32 LoadBoardSpaces(s16 dir, s16 file) {
    s16* chainValues;
    s32 i, j;
 
-   D_800C4FD0 = ReadMainFS((dir << 16) | file);
+   D_800C4FD0 = DataRead((dir << 16) | file);
    if (D_800C4FD0 != NULL) {
       /* Reset special space event lists */
       D_800D8144 = NULL;
@@ -139,7 +139,7 @@ s32 LoadBoardSpaces(s16 dir, s16 file) {
          }
       }
 
-      FreeMainFS(D_800C4FD0);
+      DataClose(D_800C4FD0);
       func_80028E8C(1, RenderSpaces);
       D_800F3290 = 1;
    }
