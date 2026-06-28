@@ -25,7 +25,7 @@ void func_80017150(DecodeStruct* decode) { //DecodeNone
             decode->len -= 1024;
         }
         
-        func_80061FE8(decode->src, decode->dest, copy_len);
+        dmaRead(decode->src, decode->dest, copy_len);
         decode->src += copy_len;
         decode->dest += copy_len;
     }

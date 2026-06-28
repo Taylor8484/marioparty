@@ -261,7 +261,7 @@ void MBModelIDSet(Object*, u8);
 void MBMotionShiftSet(Object* ptr, s16 a, s16 b, s16 c, u16 d);
 void DecodeFile(void* src, void* dest, s32 len, s32 decode_type);
 void* MallocTemp(u32 size);
-void func_80061FE8(u8*, void*, s32);
+void dmaRead(u8*, void*, s32);
 void func_80021B14(s16, u8, s32);
 void func_800421E0(void);
 void func_8004EE14(s32, void*, s32, void*);

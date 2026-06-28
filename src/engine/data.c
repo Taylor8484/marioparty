@@ -96,11 +96,11 @@ void DataInit(void* fs_rom_loc) {
 
     D_800D12F0 = fs_rom_loc;
     archiveHeader = &D_800D1310;
-    func_80061FE8(fs_rom_loc, archiveHeader, 16); // ExecRomCopy
+    dmaRead(fs_rom_loc, archiveHeader, 16); // ExecRomCopy
     D_800D12F4 = archiveHeader->dir;
     dir_table_size = archiveHeader->dir * 4;
     D_800D12F8 = (s32 *)HuMemDirectMalloc(dir_table_size);
-    func_80061FE8(fs_rom_loc + 4, D_800D12F8, dir_table_size);
+    dmaRead(fs_rom_loc + 4, D_800D12F8, dir_table_size);
     D_800D12FC = D_800D12F0;
     D_800D1300 = D_800D12F4;
     D_800D1304 = D_800D12F8;
@@ -120,7 +120,7 @@ void DataInfoRead(s32 type, s32 index, HuFileInfo* info) {
             break;
     }
 
-    func_80061FE8(info->bytes, archiveHeader, 16); // ExecRomCopy
+    dmaRead(info->bytes, archiveHeader, 16); // ExecRomCopy
     info->bytes += 8;
     info->size = archiveHeader->dir;
     info->compType = archiveHeader->offsets[0];
@@ -234,13 +234,13 @@ void DataDirInit(u32 arg0, u32 arg1) {
         D_800D12FC = sp10.bytes;
         test = &D_800D1310;
         
-        func_80061FE8(sp10.bytes, test, 0x10);
+        dmaRead(sp10.bytes, test, 0x10);
         dir = test->dir;
         
         D_800D1300 = dir;
         tableSize = dir * 4;
         D_800D1304 = HuMemDirectMalloc(tableSize);
-        func_80061FE8(sp10.bytes + 4, D_800D1304, tableSize);
+        dmaRead(sp10.bytes + 4, D_800D1304, tableSize);
     }
 }
 
@@ -276,7 +276,7 @@ void FileClose(HuFileInfoD *info) {
     HuMemDirectFree(info);
 }
 
-s32 dmaRead(HuFileInfoD *info) {
+s32 FileRead(HuFileInfoD *info) {
     if (((info->bytesCopy - info->bytes) + info->unkE) >= info->size) {
         return -1;
     }
@@ -289,7 +289,7 @@ s32 dmaRead(HuFileInfoD *info) {
 
     if (info->unkC != 0) {
         info->unkC = 0;
-        func_80061FE8(info->bytesCopy, info->block, 0x400); //dmaRead is func_80061FE8
+        dmaRead(info->bytesCopy, info->block, 0x400);
     }
 
     return info->block[info->unkE++];
@@ -304,7 +304,7 @@ s32 FileReadBuf(s8 *arg0, s32 arg1, s32 arg2, HuFileInfoD *arg3) {
     var_s1 = arg0;
 
     while (TRUE) {
-        temp_v0 = dmaRead(arg3);
+        temp_v0 = FileRead(arg3);
 
         if (temp_v0 == -1) {
             break;

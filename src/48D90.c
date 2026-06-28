@@ -190,13 +190,13 @@ void LoadBackgroundData(Addr arg0) {
 
     D_800D6720 = arg0;
     temp_v0 = MallocTemp(0x10);
-    func_80061FE8((u8*) arg0, temp_v0, 0x10);
+    dmaRead((u8*) arg0, temp_v0, 0x10);
     D_800D6724 = *temp_v0;
     FreeTemp(temp_v0);
     temp_s0 = D_800D6724 * 4;
     temp_v0_2 = MallocTemp(temp_s0);
     D_800C4F70 = temp_v0_2;
-    func_80061FE8((u8*)arg0 + 4, temp_v0_2, temp_s0);
+    dmaRead((u8*)arg0 + 4, temp_v0_2, temp_s0);
     D_800D673C = MallocTemp(sizeof(Unk800D673C));
 }
 
@@ -209,14 +209,14 @@ void LoadBackgroundIndex(s32 arg0) {
     D_800F6598 = arg0;
     D_800D6728 = (u8*)((u8*)D_800D6720 + D_800C4F70[arg0]);
     temp_v0 = MallocTemp(sizeof(unkStruct17));
-    func_80061FE8(&D_800D6728[0], temp_v0, 0x10);
+    dmaRead(&D_800D6728[0], temp_v0, 0x10);
     arg0 = temp_v0->unk_00;
     FreeTemp(temp_v0);
     temp_s0 = arg0 * 4;
     D_800C4F74 = MallocTemp(temp_s0);
-    func_80061FE8(&D_800D6728[4], D_800C4F74, temp_s0);
+    dmaRead(&D_800D6728[4], D_800C4F74, temp_s0);
     D_800C4F78 = MallocTemp(sizeof(unkStruct19));
-    func_80061FE8(&D_800D6728[*D_800C4F74], D_800C4F78, 0x3C);
+    dmaRead(&D_800D6728[*D_800C4F74], D_800C4F78, 0x3C);
     D_800C4F78->unk_18 = (f32) (D_800C4F78->unk_18 * 5.0f);
     D_800C4F78->unk_1C = (f32) (D_800C4F78->unk_1C * 5.0f);
     D_800C4F78->unk_20 = (f32) (D_800C4F78->unk_20 * 5.0f);
@@ -284,7 +284,7 @@ void func_8004A31C(void) {
     while (TRUE) {
         osRecvMesg(&D_800D6AF0, (OSMesg) &sp10, 1);
         if (sp10 == NULL) break;
-        func_80061FE8(sp10->bytes, sp10->archive, sp10->dirTblSize);
+        dmaRead(sp10->bytes, sp10->archive, sp10->dirTblSize);
         osSendMesg(&D_800D7F20, sp10, 0);
     }
     osSendMesg(&D_800D8090, (OSMesg) 1, 0);

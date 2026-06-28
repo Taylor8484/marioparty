@@ -570,7 +570,7 @@ void* func_8005B7E8(s32 stringIndex) {
     temp_v0 = HuMemDirectMalloc(sp10.size);
     
     if (temp_v0 != NULL) {
-        func_80061FE8((void*)sp10.string, temp_v0, sp10.size);
+        dmaRead((void*)sp10.string, temp_v0, sp10.size);
     }
     
     return temp_v0;

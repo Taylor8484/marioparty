@@ -160,7 +160,7 @@ INCLUDE_ASM("asm/nonmatchings/62140", func_80061F60);
 
 INCLUDE_ASM("asm/nonmatchings/62140", func_80061FA0);
 
-INCLUDE_ASM("asm/nonmatchings/62140", func_80061FE8);
+INCLUDE_ASM("asm/nonmatchings/62140", dmaRead);
 
 INCLUDE_ASM("asm/nonmatchings/62140", HuRomDmaCodeRead);
 

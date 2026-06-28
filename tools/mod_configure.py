@@ -116,7 +116,7 @@
 # /* 5C2F4 8005B6F4 00408021 */  addu       $s0, $v0, $zero
 # /* 5C2F8 8005B6F8 02202021 */  addu       $a0, $s1, $zero
 # /* 5C2FC 8005B6FC 02002821 */  addu       $a1, $s0, $zero
-# /* 5C300 8005B700 0C0187FA */  jal        func_80061FE8
+# /* 5C300 8005B700 0C0187FA */  jal        dmaRead
 # /* 5C304 8005B704 24060010 */   addiu     $a2, $zero, 0x10
 # /* 5C308 8005B708 8E020000 */  lw         $v0, 0x0($s0)
 # /* 5C30C 8005B70C 3C01800E */  lui        $at, %hi(D_800D8914)

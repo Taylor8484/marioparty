@@ -633,4 +633,5 @@ DataDecodeTemp = 0x800146D4;
 DataCloseTemp = 0x80014750;
 DataDirInit = 0x80014770;
 FileReadBuf = 0x80014998;
-dmaRead = 0x800148EC;
+FileRead = 0x800148EC;
+dmaRead = 0x80061FE8;
