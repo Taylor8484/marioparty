@@ -1,5 +1,8 @@
 #include "common.h"
 #include "engine/mallocblock.h"
+void func_80026EA8(unk2C0C0StructC0*, f32, f32, u16, u16);
+void func_80027100(unk2C0C0StructC0*, f32, f32, u16, u16);
+void func_80027440(unk2C0C0StructC0*, f32, f32, u16, u16);
 extern u16 D_800ED728;
 extern u8 D_800C30C0;
 extern u8 D_800C30C1;
@@ -847,10 +850,46 @@ void func_80026018(s16 arg0, f32 arg1) {
 
     p->unk_4C = arg1;
 }
-INCLUDE_ASM("asm/nonmatchings/24740", func_80026040);
+void func_80026040(s16 arg0) {
+    unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
+    unk2C0C0StructE0* dst;
+    unk2C0C0StructE0* src;
+    s16 n;
+    s16 j;
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80026174);
+    for (i = 0; i < D_800F37DA; i++) {
+        n = model->unk_72;
+        dst = model->unk_08[i] = func_80023684(n * sizeof(unk2C0C0StructE0), model->unk_68 + 1);
+        src = model->unk_04;
+        for (j = 0; j < n; j++) {
+            *dst++ = *src++;
+        }
+    }
+}
+void func_80026174(s16 arg0, s16 arg1, f32 arg2) {
+    unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
+    unk2C0C0StructE0* var_a3 = model->unk_04;
+    unk2C0C0StructE0* var_a2 = D_800F2B7C[arg1].unk_6C->unk_04;
+    unk2C0C0StructE0* var_t0 = model->unk_08[D_800F37F0];
+    s16 n = model->unk_72;
+    s16 i;
 
+    for (i = 0; i < n; i++) {
+        *var_t0 = *var_a3;
+        if (var_a3->unk_00 != var_a2->unk_00 || var_a3->unk_02 != var_a2->unk_02 || var_a3->unk_04 != var_a2->unk_04) {
+            var_t0->unk_00 = var_a3->unk_00 * arg2 + var_a2->unk_00 * (1.0f - arg2);
+            var_t0->unk_02 = var_a3->unk_02 * arg2 + var_a2->unk_02 * (1.0f - arg2);
+            var_t0->unk_04 = var_a3->unk_04 * arg2 + var_a2->unk_04 * (1.0f - arg2);
+            var_t0->unk_0C.r = (s32) ((s8) var_a3->unk_0C.r * arg2 + (s8) var_a2->unk_0C.r * (1.0f - arg2));
+            var_t0->unk_0C.g = (s32) ((s8) var_a3->unk_0C.g * arg2 + (s8) var_a2->unk_0C.g * (1.0f - arg2));
+            var_t0->unk_0C.b = (s32) ((s8) var_a3->unk_0C.b * arg2 + (s8) var_a2->unk_0C.b * (1.0f - arg2));
+        }
+        var_a3++;
+        var_a2++;
+        var_t0++;
+    }
+}
 void func_80026404(s16 arg0, s16 arg1, f32 arg2, char* arg3, s32 arg4) {
     s16 temp_s0;
     s16 temp_v0;
@@ -941,16 +980,129 @@ void func_800265EC(unk2C0C0StructC0* arg0, unk2C0C0StructC0* arg1, f32 arg2, s16
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80026A00);
+void func_80026A00(s16 arg0) {
+    D_800C34A0 = arg0;
+}
+// loop index re-extension CSE'd after the search loops (masked 5)
+#ifdef NON_MATCHING
+unk2C0C0Struct50* func_80026A0C(s16 arg0, char* arg1) {
+    unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
+    s16 idx = func_80033718(model, arg1);
+    s16 n;
+    s16 j;
+    s16 i;
 
+    if (model->unk_A0 == (unk2C0C0Struct50*)-1) {
+        return (unk2C0C0Struct50*)-1;
+    }
+    for (i = 0; i < model->unk_70; i++) {
+        n = model->unk_A0[i].unk_00;
+        for (j = 0; j < n; j++) {
+            if (model->unk_A0[i].unk_04[j] == idx) {
+                break;
+            }
+        }
+        if (j != n) {
+            break;
+        }
+    }
+    if (i == model->unk_70) {
+        return (unk2C0C0Struct50*)-1;
+    }
+    return &model->unk_A0[i];
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/24740", func_80026A0C);
+#endif
+void func_80026B8C(s16 arg0, f32 arg1, f32 arg2, s32 arg3) {
+    unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80026B8C);
+    if (model != NULL) {
+        switch (arg3 & 0xF) {
+            case 0:
+                func_80026EA8(model, arg1, arg2, 0, model->unk_74);
+                break;
+            case 1:
+                func_80027100(model, arg1, arg2, 0, model->unk_74);
+                break;
+            case 2:
+                func_80027440(model, arg1, arg2, 0, model->unk_74);
+                break;
+        }
+    }
+}
+// retail keeps an extra copy of arg4 in s2 (masked 16)
+#ifdef NON_MATCHING
+void func_80026C6C(s16 arg0, f32 arg1, f32 arg2, char* arg3, s32 arg4) {
+    unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
+    unk2C0C0StructE0* src;
+    unk2C0C0StructE0* dst;
+    s16 idx;
+    s16 n;
+    s16 i;
 
+    if (model == NULL) {
+        return;
+    }
+    idx = func_80033718(model, arg3);
+    if (idx == -1) {
+        return;
+    }
+    if (arg4 & 0x80) {
+        src = model->unk_04;
+        dst = model->unk_08[D_800F37F0];
+        n = model->unk_72;
+        for (i = 0; i < n; i++) {
+            *dst++ = *src++;
+        }
+    }
+    switch (arg4 & 0xF) {
+        case 0:
+            func_80026EA8(model, arg1, arg2, model->unk_80[idx].unk_0E, model->unk_80[idx].unk_10);
+            break;
+        case 1:
+            func_80027100(model, arg1, arg2, model->unk_80[idx].unk_0E, model->unk_80[idx].unk_10);
+            break;
+        case 2:
+            func_80027440(model, arg1, arg2, model->unk_80[idx].unk_0E, model->unk_80[idx].unk_10);
+            break;
+    }
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/24740", func_80026C6C);
+#endif
+void func_80026EA8(unk2C0C0StructC0* arg0, f32 arg1, f32 arg2, u16 arg3, u16 arg4) {
+    unk2C0C0StructB0* b = &arg0->unk_D0[arg3];
+    f32 inv = 1.0f - arg1;
+    unk2C0C0StructE0* src;
+    unk2C0C0StructE0* dst;
+    s16* idx;
+    s16 cx, cy, cz;
+    s16 sx, sy, sz;
+    s16 n;
+    s16 j;
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80026EA8);
-
+    for (i = 0; i < arg4; i++) {
+        cx = b->unk_0C;
+        cy = b->unk_10;
+        cz = b->unk_14;
+        sx = cx * arg2;
+        sy = cy * arg2;
+        sz = cz * arg2;
+        n = (u8)(b->unk_00 & 0x7F);
+        idx = b->unk_02;
+        for (j = 0; j < n; j++) {
+            src = &arg0->unk_04[*idx];
+            dst = &arg0->unk_08[D_800F37F0][*idx];
+            dst->unk_00 = (src->unk_00 - cx) * inv + sx;
+            dst->unk_02 = (src->unk_02 - cy) * inv + sy;
+            dst->unk_04 = (src->unk_04 - cz) * inv + sz;
+            idx++;
+        }
+        b++;
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/24740", func_80027100);
 
 INCLUDE_ASM("asm/nonmatchings/24740", func_80027440);
