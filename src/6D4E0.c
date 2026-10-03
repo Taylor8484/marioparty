@@ -1395,8 +1395,85 @@ s32 func_8006FE4C(s16 arg0) {
 #else
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006FE4C);
 #endif
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8007094C);
+void func_8007094C(TextWindow* tw, SubTextWindow* sub) {
+    f32 sy;
+    f32 sx;
+    f32 px;
+    f32 py;
+    f32 dx;
+    f32 dy;
+    f32 len;
+    f32 mx;
+    f32 my;
 
+    sy = 1.0f;
+    px = sub->unk2 - 12;
+    py = sub->unk4 + 8;
+    sx = sy;
+    switch (tw->unk_6E) {
+    case 0:
+        if (tw->unk_42 != -1) {
+            func_800674BC(tw->unk_44, 11, 0x8000);
+        }
+        return;
+    case 1:
+        sx = sy = tw->unk_78 / 8.0f;
+        if (++tw->unk_78 >= 8) {
+            tw->unk_78 = 0;
+            tw->unk_6E = 2;
+        }
+        break;
+    case 3:
+        tw->unk_78++;
+        dx = tw->unk_74 - tw->unk_70;
+        dy = tw->unk_76 - tw->unk_72;
+        len = func_800B1750(dx * dx + dy * dy);
+        mx = dx / len * 10.0f * tw->unk_78;
+        my = dy / len * 10.0f * tw->unk_78;
+        dx = tw->unk_70 + mx - tw->unk_74;
+        dy = tw->unk_72 + my - tw->unk_76;
+        if (dx * dx + dy * dy < 100.0f) {
+            px = tw->unk_74;
+            py = tw->unk_76;
+            tw->unk_78 = 0;
+            tw->unk_6E = 2;
+        } else {
+            px = tw->unk_70 + mx;
+            py = tw->unk_72 + my;
+        }
+        break;
+    case 2:
+        tw->unk_78 = tw->unk_78 + 10.0f;
+        if (tw->unk_78 >= 181) {
+            tw->unk_78 = 0;
+        }
+        px += func_800AEAC0(tw->unk_78) * 4.0f;
+        break;
+    case 4:
+        if (tw->unk_78 >= 11) {
+            sx = sy = 4.0f / 3.0f;
+        } else {
+            sx = sy = ++tw->unk_78 / 30.0f + 1.0f;
+        }
+        break;
+    case 5:
+        if (--tw->unk_78 == 0) {
+            tw->unk_78 = 0;
+            tw->unk_6E = 2;
+        }
+        break;
+    }
+    if (sx == 0.0f || sy == 0.0f) {
+        func_800674BC(tw->unk_44, 11, 0x8000);
+        return;
+    }
+    dy = 0.8f;
+    dx = sx * dy;
+    func_80067354(tw->unk_44, 11, dx * tw->unk_EC, (dy = sy * dy) * tw->unk_F0);
+    dx = px / dx * tw->unk_EC;
+    func_80066DC4(tw->unk_44, 11, dx, dy = py / dy * tw->unk_F0);
+    func_80067480(tw->unk_44, 11, 0x8000);
+}
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80070D90);
 
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80070ED4);
