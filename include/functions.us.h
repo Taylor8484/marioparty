@@ -186,7 +186,7 @@ s16 GetAbsSpaceIndexFromChainSpaceIndex(u16, u16);
 void MBModelDispOn(Object*);
 void MBModelDispOff(Object*);
 Process* func_8004D648(Vec3f*, Vec3f*, Vec3f*, f32);
-void func_80058910(s32, s32);
+void func_80058910(s16, s16);
 void func_800211BC(s16, u8);
 u8 func_80052F6C(s16 index);
 s16 GetCurrentPlayerIndex(void);

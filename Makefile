@@ -115,6 +115,8 @@ build/src/24740.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 build/src/34D80.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # 3DEB0.c (vector rotation) also has the mul fix on: nop between back-to-back mul.s (func_8003D64C)
 build/src/3DEB0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# 59E80.c (save data, menus, camera) also has the mul fix on: nop between back-to-back mul.s (func_80059EBC)
+build/src/59E80.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # 29C90.c (collision grid) also has the mul fix on: nop before a mult at a loop head (func_80029174)
 build/src/29C90.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 
@@ -152,6 +154,9 @@ build/src/lib/%.c.o: CPPFLAGS = -I include -I include/PR -I include/gcc -I $(BUI
 # Special flags since these functions have a mono sound patch.
 build/src/lib/2.0I/audio/synsetpan.c.o: OPTFLAGS = -O0
 build/src/lib/2.0I/audio/synstartvoiceparam.c.o: OPTFLAGS = -O0
+
+# 64FD0.c is libultra's audio/sndplayer.c (alSndpNew and its static helpers): it includes the lib audio headers
+build/src/64FD0.c.o: CPPFLAGS = -I include -I include/PR -I include/gcc -I $(BUILD_DIR)/include -I src -DNDEBUG -D_MIPS_SZLONG=32 -DF3DEX_GBI_2
 
 build/src/engine/math.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 
@@ -226,7 +231,8 @@ $(BUILD_DIR)/src/%.c.o: src/%.c
 # (func_8001C9F4: a nop before the mul.s after a branch-likely store).
 # 34D80.c needs the same (func_80036B00: mul.s right after a call's return).
 # 3DEB0.c too (func_8003D8CC: mul.s right after a call's return).
-$(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o $(BUILD_DIR)/src/1B800.c.o $(BUILD_DIR)/src/3DEB0.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
+# 59E80.c too (func_80059EBC: mul.s right after a call's return).
+$(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o $(BUILD_DIR)/src/1B800.c.o $(BUILD_DIR)/src/3DEB0.c.o $(BUILD_DIR)/src/59E80.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
 	@$(PRINT)$(GREEN)Compiling C file: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
 	@mkdir -p $(shell dirname $@)
 	@$(CC_HOST) $(CFLAGS_CHECK) $(CPPFLAGS) -MMD -MP -MT $@ -MF $@.d $<
