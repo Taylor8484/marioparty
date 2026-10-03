@@ -1,21 +1,61 @@
 #include "common.h"
 #include "engine/process.h"
 
+extern u16 D_800C5972;
+extern s16 D_800C59A6;
+extern s16 D_800C5994;
+extern u8 D_800C59A2;
+extern u8 D_800C59A4;
+extern u8 D_800C5A20;
+extern u8 D_800C5A21;
+extern u8 D_800D89B0;
+extern u16 D_800C599C;
+extern u16 D_800C59A0;
+extern u16 D_800C596C;
+extern u8 D_800F3705;
+extern u8 D_800C4250[];
+extern s8 omSysPauseEnableFlag;
+
+s16 pfWinCreate(s32, s32, s32, s32, s32);
+s32 func_8003B710(void);
+s32 func_8003B730(void);
+void func_800255DC(void);
+void func_8001AB84(void*, u8, s32);
+void func_80023B40(void* (*)(s32), void (*)(void*), u16, u16, s32, s32);
+void func_8002B6C8(void);
+void func_80025658(s32, s32);
+void MakeTempHeap(void*, s32);
+void func_8006CD0C(s16);
+void func_80018870(void);
+void OvlLoad(s32);
+void func_80012A18(s8);
+void func_800F65E0(void);
+s32 func_800141FC(s16);
+s32 func_8000B198(void);
+u16 func_80060AB4(void);
+void func_80060AF0(void);
+void func_80060E54(void);
+void func_8006086C(void);
+void func_8006073C(void);
+void func_800607A8(s32);
+void func_80060234(s32);
+
+
 extern s32 D_800F09F4; // current overlay
 extern s32 D_800C5968; // previous overlay
-extern s8 D_800C5982;
+extern u8 D_800C5982;
 extern u16 D_800C597C;
-extern s16 D_800F3184;
+extern u16 D_800F3184;
 extern u8 D_800ED552;
 extern u16 D_800F3F30;
 extern u16 D_800ED726;
 extern u16 D_800F64EC;
 extern u8 D_800C58E0[][2];
 extern u8 D_800C5950[][2];
-extern u8 D_800C59A3;
+extern s8 D_800C59A3;
 extern s16 D_800C599A;
 extern s16 D_800C599E;
-extern s8 D_800C5978;
+extern u8 D_800C5978;
 
 void func_80060DFC(s32);
 void func_80060E20(s32, s32, s32);
@@ -612,8 +652,157 @@ void omOvlKill(void) {
 }
 INCLUDE_RODATA("asm/nonmatchings/objmain", D_800CB530);
 
-INCLUDE_ASM("asm/nonmatchings/objmain", omMain);
+void omMain(void) {
+    omObjData* obj;
+    s32 i;
+    s16 j;
+    s16 win;
 
+    if (D_800C5972 != 0) {
+        fontcolor = 14;
+        sprintf(pfStrBuf, "%8lX(%ld)", func_8003B710(), func_8003B730());
+        print8(16, 24, pfStrBuf);
+        sprintf(pfStrBuf, "OVL:%d(%ld<%ld)", omovlhisidx, D_800F09F4, D_800C5968);
+        print8(24, 32, pfStrBuf);
+        sprintf(pfStrBuf, "OBJ:%d/%d", D_800ED56C, D_800ED550);
+        print8(24, 40, pfStrBuf);
+        sprintf(pfStrBuf, "PRC:%d/%d", D_800C598A, D_800C5988);
+        print8(24, 48, pfStrBuf);
+        sprintf(pfStrBuf, "%02X", D_800C5998);
+        print8(112, 48, pfStrBuf);
+        if (D_800C59A6 == -1) {
+            D_800C59A6 = pfWinCreate(14, 22, 130, 58, 0xFF70);
+        }
+    }
+    func_80060E54();
+    func_8006086C();
+    if (D_800C5982 != 0) {
+        if (D_800C5998 & 8) {
+            D_800C59A4 = 1;
+            if (!(D_800C5998 & 1)) {
+                if (D_800C5978 == 0) {
+                    return;
+                }
+                goto dec;
+            }
+        }
+        if (D_800C5978 == 0) {
+            if (D_800C5994 == 1) {
+                if (D_800F3184 == 4) {
+                    func_800255DC();
+                }
+                if (D_800F3184 != 0) {
+                    D_800F3184--;
+                    return;
+                }
+                D_800ED552 = D_800F3705;
+                func_8001AB84(D_800C4250, D_800F3705, 2);
+                func_80023B40(HuMemDirectMalloc, HuMemDirectFree, D_800F3F30, D_800ED726, D_800F64EC, D_800F3705);
+                func_8002B6C8();
+                func_80025658(0x02000000, 0x3D0800);
+                InitCameras(1);
+            }
+            D_800C5994 = 0;
+            if (D_800C59A2 == 0) {
+                if (D_800C5A20 != 0) {
+                    if (--D_800C5A20 == 0) {
+                        D_800C5A21 = 1;
+                    }
+                    return;
+                }
+                D_800D89B0 = 0;
+                if (func_80060AB4() == 1) {
+                    func_80060198();
+                    func_8006073C();
+                    if (D_800C5A21 == 0) {
+                        D_800C5A20 = 5;
+                        return;
+                    }
+                    if (D_800C5A21 == 1 && func_8000B198() == 0) {
+                        D_800D89B0 = 1;
+                        D_800C59A2 = 1;
+                    }
+                    return;
+                }
+            } else {
+                if (--D_800D89B0 != 0) {
+                    return;
+                }
+                func_80060AF0();
+                D_800C599C = D_800C599A;
+                D_800C59A0 = D_800C599E;
+                D_800C59A2 = 0;
+                D_800C5A21 = 0;
+            }
+            MakeTempHeap((void*)0x80120000, 0x20000);
+            for (i = 0; i < 4; i++) {
+                func_8006CD0C(i);
+            }
+            if (D_800F09F4 != 0x83) {
+                D_800C596C = D_800F09F4;
+            }
+            omSysPauseEnableFlag = 0;
+            func_80018870();
+            D_800C5982 = 0;
+            OvlLoad(D_800F09F4);
+            func_80023040();
+            D_800F524C = 1.0f;
+            D_800F5028 = 1.0f;
+            func_80023448(3);
+            func_800234B8(0, 255, 255, 255);
+            func_800234B8(1, 64, 64, 96);
+            func_80023504(1, -100.0f, 100.0f, 100.0f);
+            func_800234B8(2, 32, 32, 32);
+            func_80023504(2, 100.0f, 100.0f, 100.0f);
+            func_800234B8(3, 0, 0, 0);
+            func_80023504(3, 100.0f, 100.0f, 100.0f);
+            func_8002890C(0, 0, 0);
+            func_8002578C(1);
+            func_80028BE0(1);
+            func_8006073C();
+            if (D_800C59A4 == 1) {
+                func_80060234(0x7F);
+                func_800603F0(0x7F);
+            }
+            func_800607A8(0x40);
+            func_80012A18(D_800C59A3);
+            D_800C59A4 = 0;
+            func_800F65E0();
+            for (i = 0; i < 4; i++) {
+                if (func_800141FC(i) != 0) {
+                    ContBtnTrg[i] = 0;
+                }
+            }
+            if (D_800C5982 != 0) {
+                omOvlKill();
+                D_800C5978 = 0;
+                return;
+            }
+        } else {
+        dec:
+            D_800C5978--;
+            return;
+        }
+    }
+    win = func_80061228(0, 0, 255);
+    for (j = D_800ED434; j != -1; j = obj->prev) {
+        obj = &D_800C5984[j];
+        if (!(obj->stat & 3)) {
+            if (obj->func_ptr != NULL && !(obj->stat & 0x58)) {
+                ((void (*)(omObjData*))obj->func_ptr)(obj);
+            }
+            if (obj->model != NULL && obj->model[0] != -1) {
+                func_80025798(obj->model[0], obj->trans.x, obj->trans.y, obj->trans.z);
+                func_800257E4(obj->model[0], obj->rot.x, obj->rot.y, obj->rot.z);
+                func_80025830(obj->model[0], obj->scale.x, obj->scale.y, obj->scale.z);
+            }
+        }
+    }
+    func_80061264(win);
+    if (D_800C5982 != 0) {
+        omOvlKill();
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/objmain", omOutView);
 
 INCLUDE_ASM("asm/nonmatchings/objmain", omOutViewMulti);
