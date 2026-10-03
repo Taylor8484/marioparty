@@ -2,6 +2,9 @@
 
 #include "common.h"
 
+void func_80071264(void);
+
+
 extern s32 D_800C5270[];
 extern s32 D_800C529C[];
 extern s16 D_800F329A;
@@ -63,8 +66,28 @@ extern char D_800CB110[];
 extern char D_800CB11C[];
 extern omObjData* D_800C5248;
 extern s32 D_800C524C;
-extern u16 D_800C524E;
 extern omObjData* D_800F50C0[32];
+
+/* Character names; the .data tables D_800C5218 / D_800C5230 point at them. */
+const char D_800CB090[] = "DK";
+const char D_800CB094[] = "Wario";
+const char D_800CB09C[] = "Yoshi";
+const char D_800CB0A4[] = "Peach";
+const char D_800CB0AC[] = "Luigi";
+const char D_800CB0B4[] = "Mario";
+const char D_800CB0BC[] = "DK    ";
+const char D_800CB0C4[] = "Wario ";
+const char D_800CB0CC[] = "Yoshi ";
+const char D_800CB0D4[] = "Peach ";
+const char D_800CB0DC[] = "Luigi ";
+const char D_800CB0E4[] = "Mario ";
+
+/* Controller-port bit per port; func_8004DBD4 and WaitForTextConfirmation copy it. */
+typedef struct {
+    u8 bit[4];
+} PortMasks;
+
+const PortMasks D_800CB0EC = { { 1, 2, 4, 8 } };
 
 s32 CreateTextWindow(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     s32 temp_s1;
@@ -122,10 +145,89 @@ void func_8004DBC8(s32 arg0) {
     D_800C5210 = arg0;
 }
 
+// register allocation: arg0 and the held -1 swap s7/s8 (masked 0)
+#ifdef NON_MATCHING
+void func_8004DBD4(s32 arg0, s32 arg1) {
+    s32 cpu = 0;
+    s16 colors[4];
+    PortMasks masks = D_800CB0EC;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        if (i == arg1) {
+            if (GwPlayer[i].flags & 1) {
+                cpu = 1;
+                colors[GwPlayer[i].port] = -0x8000;
+            } else {
+                func_8007155C(arg0, masks.bit[GwPlayer[i].port]);
+                colors[GwPlayer[i].port] = -1;
+            }
+        } else {
+            colors[GwPlayer[i].port] = 0;
+        }
+    }
+    if (cpu != 0) {
+        func_8006DA1C(arg0, 2, 2);
+        func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8)D_800C5210);
+        func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8)D_800C5210);
+        func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8)D_800C5210);
+        func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8)D_800C5210);
+        func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8)D_800C5210);
+        func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8)D_800C5210);
+        func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8)D_800C5210);
+        D_800C5210 = D_800C5214;
+    } else {
+        func_800710A4(colors[0], colors[1], colors[2], colors[3]);
+    }
+    while (func_8006FCC0(arg0) != 0) {
+        HuPrcVSleep();
+    }
+    func_80071264();
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/4E530", func_8004DBD4);
+#endif
+void WaitForTextConfirmation(s16 arg0) {
+    s16 colors[4];
+    PortMasks masks = D_800CB0EC;
+    u8 mask = 0;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/4E530", WaitForTextConfirmation);
-
+    for (i = 0; i < 4; i++) {
+        if (!(GwPlayer[i].flags & 1)) {
+            break;
+        }
+    }
+    if (i == 4) {
+        func_8006DA1C(arg0, 2, 2);
+        func_80070FF8(-0x8000, -0x8000, -0x8000, -0x8000, (u8)D_800C5210);
+        func_80070FF8(-0x8000, -0x8000, -0x8000, -0x8000, (u8)D_800C5210);
+        func_80070FF8(-0x8000, -0x8000, -0x8000, -0x8000, (u8)D_800C5210);
+        func_80070FF8(-0x8000, -0x8000, -0x8000, -0x8000, (u8)D_800C5210);
+        func_80070FF8(-0x8000, -0x8000, -0x8000, -0x8000, (u8)D_800C5210);
+        func_80070FF8(-0x8000, -0x8000, -0x8000, -0x8000, (u8)D_800C5210);
+        func_80070FF8(-0x8000, -0x8000, -0x8000, -0x8000, (u8)D_800C5210);
+        D_800C5210 = D_800C5214;
+        while (func_8006FCC0(arg0) != 0) {
+            HuPrcVSleep();
+        }
+        func_80071264();
+    } else {
+        for (i = 0; i < 4; i++) {
+            if (GwPlayer[i].flags & 1) {
+                colors[GwPlayer[i].port] = 0;
+            } else {
+                mask |= masks.bit[GwPlayer[i].port];
+                colors[GwPlayer[i].port] = -1;
+            }
+        }
+        func_8007155C(arg0, mask);
+        func_800710A4(colors[0], colors[1], colors[2], colors[3]);
+        while (func_8006FCC0(arg0) != 0) {
+            HuPrcVSleep();
+        }
+    }
+}
 void func_8004E0E8(s32 arg0) {
     func_8007155C(arg0, 0xF);
     func_800710A4(-1, -1, -1, -1);
@@ -231,31 +333,6 @@ omObjData* func_8004E3E0(s32 arg0, Vec3f* arg1, s32 arg2, void* arg3) { //fix ar
     return obj;
 }
 
-INCLUDE_RODATA("asm/nonmatchings/4E530", D_800CB090);
-
-INCLUDE_RODATA("asm/nonmatchings/4E530", D_800CB094);
-
-INCLUDE_RODATA("asm/nonmatchings/4E530", D_800CB09C);
-
-INCLUDE_RODATA("asm/nonmatchings/4E530", D_800CB0A4);
-
-INCLUDE_RODATA("asm/nonmatchings/4E530", D_800CB0AC);
-
-INCLUDE_RODATA("asm/nonmatchings/4E530", D_800CB0B4);
-
-INCLUDE_RODATA("asm/nonmatchings/4E530", D_800CB0BC);
-
-INCLUDE_RODATA("asm/nonmatchings/4E530", D_800CB0C4);
-
-INCLUDE_RODATA("asm/nonmatchings/4E530", D_800CB0CC);
-
-INCLUDE_RODATA("asm/nonmatchings/4E530", D_800CB0D4);
-
-INCLUDE_RODATA("asm/nonmatchings/4E530", D_800CB0DC);
-
-INCLUDE_RODATA("asm/nonmatchings/4E530", D_800CB0E4);
-
-INCLUDE_RODATA("asm/nonmatchings/4E530", D_800CB0EC);
 f32 fsin(f32);
 void func_8004E564(omObjData* arg0) { //matches, needs rodata support
     f32 temp_f20;
@@ -478,7 +555,7 @@ void func_8004F140(s32 arg0) {
     D_800C5248 = temp_v0;
     temp_v0->trans.x = 0.0f;
     temp_v0->mdlcnt = arg0;
-    temp_v0->mtncnt = D_800C524E;
+    temp_v0->mtncnt = (u16)D_800C524C;
     omSetStatBit(temp_v0, 0xA0);
 }
 
