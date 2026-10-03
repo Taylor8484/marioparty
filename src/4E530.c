@@ -19,6 +19,7 @@ extern s32 D_800C5250[7];
 extern s32 D_800C526C;
 s8 func_8000C4A0(void);
 void func_80060F04(s16, s32, s32, s32);
+void func_80050338(void);
 
 
 typedef struct {
@@ -145,7 +146,7 @@ void func_8004DBC8(s32 arg0) {
     D_800C5210 = arg0;
 }
 
-// register allocation: arg0 and the held -1 swap s7/s8 (masked 0)
+// register allocation: arg0 and the held -1 swap s7/s8 (raw 10, masked 0)
 #ifdef NON_MATCHING
 void func_8004DBD4(s32 arg0, s32 arg1) {
     s32 cpu = 0;
@@ -610,7 +611,7 @@ void func_8004F358(omObjData* arg0) {
         omDelObj(arg0);
     }
 }
-// register allocation of the three arguments (masked 2)
+// register allocation of the three arguments (raw 6, masked 0)
 #ifdef NON_MATCHING
 s32 func_8004F40C(Object* arg0, s32 arg1, s32 arg2) {
     Unk4E530Motion* p;

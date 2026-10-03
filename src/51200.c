@@ -1,5 +1,25 @@
 #include "common.h"
 
+void func_80052CCC(s32, s32);
+extern s32 D_800C537C[];
+extern s32 D_800C5394[];
+extern s16 D_800C53BC[][4];
+
+/* Show message `a` (normal) or `b` (when flag 0x2C is set) in the menu's text window, once. */
+#define SET_MENU_MESSAGE(msg, a, b)                                  \
+    if (_CheckFlag(0x2C) == 0) {                                     \
+        if (msg != (a)) {                                            \
+            msg = (a);                                               \
+            func_80050D1C(D_800D8370->unk8, (a));                    \
+        }                                                            \
+    } else {                                                         \
+        if (msg != (b)) {                                            \
+            msg = (b);                                               \
+            func_80050D1C(D_800D8370->unk8, (b));                    \
+        }                                                            \
+    }
+
+
 void func_8003EE68(s16, s16);
 void func_8003EF98(s16, s16);
 void func_8003F008(s16, s16);
@@ -552,8 +572,191 @@ void func_80051954(void) {
         }
     }
 }
-INCLUDE_ASM("asm/nonmatchings/51200", func_80051AE0);
+// register allocation and stack spills only; retail spills the sprite groups and keeps stk in s8 (masked 103 of 872)
+#ifdef NON_MATCHING
+s32 func_80051AE0(s32 arg0) {
+    s32 msg = 0;
+    s16 sel = 0;
+    u16* stk;
+    u16* btn;
+    unk_Struct02* faces;
+    unk_Struct02* ports;
+    unk_Struct02* cursor;
+    unk_Struct02* box;
+    Process* proc;
+    GW_PLAYER* player;
+    void* data;
+    s32 i;
+    s16 dir;
+    s32 port;
+    s16 v;
+    s32 win;
 
+    for (i = 0; i < 4; i++) {
+        if (PlayerIsCPU(i) == 0 && GwPlayer[i].port == arg0) {
+            sel = i;
+            break;
+        }
+    }
+    faces = func_800533F8(8, 0);
+    for (i = 0; i < 4; i++) {
+        player = GetPlayerStruct(i);
+        data = DataRead(D_800C537C[player->character]);
+        faces->unk_0C[i] = func_800678A4(data);
+        func_80067208(faces->unk_0A, i, faces->unk_0C[i], 0);
+        func_80067384(faces->unk_0A, i, 7);
+        func_800674BC(faces->unk_0A, i, 0x1000);
+        func_80066DC4(faces->unk_0A, i, D_800C53AC[i] - 30, D_800C53B4[i]);
+        DataClose(data);
+        data = DataRead(D_800C5394[player->character]);
+        faces->unk_0C[i + 4] = func_800678A4(data);
+        func_80067208(faces->unk_0A, i + 4, faces->unk_0C[i + 4], 0);
+        func_80067384(faces->unk_0A, i + 4, 7);
+        func_800674BC(faces->unk_0A, i + 4, 0x1000);
+        func_80066DC4(faces->unk_0A, i + 4, D_800C53AC[i] + 8, D_800C53B4[i]);
+        DataClose(data);
+    }
+    data = DataRead(0x90024);
+    ports = func_800533F8(4, 0);
+    for (i = 0; i < 4; i++) {
+        ports->unk_0C[i] = func_800678A4(data);
+        if (PlayerIsCPU(i) != 0) {
+            func_80067208(ports->unk_0A, i, ports->unk_0C[i], 4);
+        } else {
+            func_80067208(ports->unk_0A, i, ports->unk_0C[i], GwPlayer[i].port);
+        }
+        func_80067384(ports->unk_0A, i, 7);
+        func_800674BC(ports->unk_0A, i, 0x01001000);
+        func_80066DC4(ports->unk_0A, i, D_800C53AC[i] - 16, D_800C53B4[i] + 46);
+    }
+    DataClose(data);
+    cursor = func_800533F8(3, 0);
+    data = DataRead(0xA0020);
+    cursor->unk_0C[0] = func_800678A4(data);
+    func_80067208(cursor->unk_0A, 0, cursor->unk_0C[0], 0);
+    func_800674BC(cursor->unk_0A, 0, 0x1808);
+    func_80067384(cursor->unk_0A, 0, 8);
+    func_80067558(cursor->unk_0A, 0, 0, 0, 0xFF, 0x80);
+    DataClose(data);
+    data = DataRead(0xA0113);
+    cursor->unk_0C[1] = func_800678A4(data);
+    func_80067208(cursor->unk_0A, 1, cursor->unk_0C[1], 0);
+    func_800674BC(cursor->unk_0A, 1, 0x9808);
+    func_80067384(cursor->unk_0A, 1, 8);
+    func_80067558(cursor->unk_0A, 1, 0xFF, 0, 0, 0x80);
+    DataClose(data);
+    data = DataRead(0xA0112);
+    cursor->unk_0C[2] = func_800678A4(data);
+    func_80067208(cursor->unk_0A, 2, cursor->unk_0C[2], 0);
+    func_800674BC(cursor->unk_0A, 2, 0x9808);
+    func_80067384(cursor->unk_0A, 2, 8);
+    func_80067558(cursor->unk_0A, 2, 0xFF, 0, 0, 0x80);
+    DataClose(data);
+    func_80051898(cursor, sel);
+    func_8005188C(0);
+    proc = omAddPrcObj(func_80051954, 0x1005, 0, 0);
+    proc->user_data = cursor;
+    stk = &ContDStkTrg[arg0];
+    btn = &ContBtnTrg[arg0];
+    do {
+        SET_MENU_MESSAGE(msg, 0x15D, 0x171);
+        HuPrcVSleep();
+        dir = -1;
+        if (*stk & 0x800) {
+            dir = 0;
+        }
+        if (*stk & 0x400) {
+            dir = 1;
+        }
+        if (*stk & 0x200) {
+            dir = 2;
+        }
+        if (*stk & 0x100) {
+            dir = 3;
+        }
+        if (dir != -1) {
+            sel += D_800C53BC[sel][dir];
+            func_80051898(cursor, sel);
+            PlaySound(0xF5);
+        } else if (*btn & 0x8000) {
+            PlaySound(0xF6);
+            player = GetPlayerStruct(sel);
+            func_8005188C(1);
+            while (1) {
+                HuPrcVSleep();
+                SET_MENU_MESSAGE(msg, 0x15E, 0x172);
+                port = -1;
+                if (*stk & 0x200) {
+                    port = func_80051778(player, -1);
+                    PlaySound(0xF5);
+                } else if (*stk & 0x100) {
+                    port = func_80051778(player, 1);
+                    PlaySound(0xF5);
+                }
+                if (port >= 0) {
+                    func_800516C8(player, port);
+                    if (PlayerIsCPU(sel) != 0) {
+                        func_80067208(ports->unk_0A, sel, ports->unk_0C[sel], 4);
+                    } else {
+                        func_80067208(ports->unk_0A, sel, ports->unk_0C[sel], GwPlayer[sel].port);
+                    }
+                    continue;
+                }
+                if (*stk & 0x8000) {
+                    PlaySound(0xF6);
+                    if (PlayerIsCPU(sel) != 0) {
+                        v = player->cpu_difficulty_copy;
+                        SET_MENU_MESSAGE(msg, 0x15F, 0x173);
+                        box = func_800533F8(1, 0);
+                        data = DataRead(0xA0123);
+                        box->unk_0C[0] = func_800678A4(data);
+                        func_80067208(box->unk_0A, 0, box->unk_0C[0], 0);
+                        func_800674BC(box->unk_0A, 0, 0x1808);
+                        func_80067384(box->unk_0A, 0, 6);
+                        func_80066DC4(box->unk_0A, 0, D_800C53AC[sel] + 44, D_800C53B4[sel] + 40);
+                        DataClose(data);
+                        win = CreateMenuWindow(D_800C53AC[sel] + 14, D_800C53B4[sel] + 10, 0x3F, 0x3E, 0, 0);
+                        func_8006E0A4(win, 5);
+                        func_8006E154(win, 0);
+                        func_8006E2B8(win, 0xC0, 0xC0, 0xC0);
+                        LoadStringIntoWindow(win, (void*)0x167, -1, -1);
+                        func_8006E070(win, 0);
+                        while (func_8006FCC0(win) != 0) {
+                            HuPrcVSleep();
+                        }
+                        func_8007155C(win, (s16)(1 << arg0));
+                        v = func_8006FCF0(win, v, 0);
+                        if (v >= 0) {
+                            func_80052CCC(sel, v & 0xFF);
+                            HuPrcSleep(10);
+                        }
+                        func_80070D90(win);
+                        func_80053454(box);
+                        if (v < 0) {
+                            continue;
+                        }
+                    }
+                    break;
+                }
+                if (*stk & 0x4000) {
+                    PlaySound(0xF8);
+                    break;
+                }
+            }
+            func_8005188C(0);
+            HuPrcVSleep();
+        }
+    } while (!(*btn & 0x4000));
+    PlaySound(0xF8);
+    EndProcess(proc);
+    func_80053454(cursor);
+    func_80053454(ports);
+    func_80053454(faces);
+    return 4;
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/51200", func_80051AE0);
+#endif
 // retail holds the return value 1 in s2 across the loop; this returns it with li (masked 5)
 #ifdef NON_MATCHING
 s32 func_80052614(s32 arg0) {
