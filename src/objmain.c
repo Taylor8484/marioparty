@@ -1,6 +1,15 @@
 #include "common.h"
 #include "engine/process.h"
 
+extern u16 ContBtn[];
+extern s8 ContStkY[];
+extern u8 D_800F64E8[];
+extern u8 D_800F3388[];
+extern u16 D_800F338C[];
+extern u16 D_800ECC24[];
+void func_8006CE64(u8, s16, s16, s16);
+
+
 typedef struct omSndFade {
     /* 0x00 */ f32 vol[13];
     /* 0x34 */ f32 step[13];
@@ -92,7 +101,7 @@ void func_8000C64C(s32);
 void func_8000C5C4(void);
 void func_80037C40(void);
 void func_80037C90(void);
-void func_80060C84(s32);
+void func_80060C84(s16);
 void func_80060D4C(void);
 
 
@@ -169,8 +178,8 @@ extern s16 D_800C599A;
 extern s16 D_800C599E;
 extern u8 D_800C5978;
 
-void func_80060DFC(s32);
-void func_80060E20(s32, s32, s32);
+void func_80060DFC(s8);
+void func_80060E20(s16, s16, s16);
 void GMesClose(void);
 void func_80024754(void);
 void func_8002AD04(void);
@@ -1566,14 +1575,68 @@ void func_80060BC8(s16 ch, s16 frames) {
         fade->step[ch] = (f32)D_800F0A08[ch] / frames;
     }
 }
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060C84);
+void func_80060C84(s16 frames) {
+    omSndFade* fade;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060D4C);
+    if (D_800F64E0 != NULL) {
+        fade = D_800F64E0->unk_50;
+        for (i = 0; i < 13; i++) {
+            if ((fade->flags[i] |= 6) & 1) {
+                fade->vol2[i] = fade->vol[i];
+                fade->step2[i] = fade->vol[i] / frames;
+            } else {
+                fade->vol2[i] = D_800F0A08[i];
+                fade->step2[i] = (f32)D_800F0A08[i] / frames;
+            }
+        }
+    }
+}
+void func_80060D4C(void) {
+    omSndFade* fade;
+    s32 i;
+    u8 flags;
+    s32 vol;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060DFC);
+    if (D_800F64E0 != NULL) {
+        fade = D_800F64E0->unk_50;
+        for (i = 0; i < 13; i++) {
+            flags = fade->flags[i];
+            fade->flags[i] = flags & ~6;
+            if (flags & 1) {
+                vol = fade->vol[i];
+            } else {
+                vol = (u16)D_800F0A08[i];
+            }
+            func_800123DC(i, vol);
+        }
+    }
+}
+void func_80060DFC(s8 arg0) {
+    D_800C5994 = 1;
+    D_800F3184 = 4;
+    D_800F3705 = arg0;
+}
+void func_80060E20(s16 arg0, s16 arg1, s16 arg2) {
+    D_800F3F30 = arg0;
+    D_800ED726 = arg1;
+    D_800F64EC = arg2;
+    D_800C5994 = 1;
+    D_800F3184 = 4;
+}
+void func_80060E54(void) {
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060E20);
-
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060E54);
-
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060F04);
+    for (i = 0; i < 4; i++) {
+        D_800F64E8[i] = ContStkX[i];
+        D_800F3388[i] = ContStkY[i];
+        D_800ED55C[i] = ContBtn[i];
+        D_800EE324[i] = ContBtnTrg[i];
+        D_800ECC24[i] = D_800F338C[i];
+    }
+}
+void func_80060F04(s16 player, s16 arg1, s16 arg2, s16 arg3) {
+    if (!(GwPlayer[player].flags & 1)) {
+        func_8006CE64(GwPlayer[player].port, arg1, arg2, arg3);
+    }
+}
