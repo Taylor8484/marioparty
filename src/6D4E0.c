@@ -1141,8 +1141,37 @@ s16 func_8006FCC0(s16 arg0) {
     return D_800ED4B0[arg0].unk_00;
 }
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006FCF0);
+// parameter copies of arg1/arg2 land in s3/s2 swapped; retail arg1 is probably s8 but callers pass it unextended (masked 0)
+#ifdef NON_MATCHING
+s32 func_8006FCF0(s16 arg0, s32 arg1, s32 arg2) {
+    TextWindow* tw = &D_800ED4B0[arg0];
+    void* file;
 
+    if (tw->unk_42 == -1) {
+        file = DataRead(0x85);
+        tw->unk_42 = func_800678A4(file);
+        HuMemDirectFree(file);
+        func_80067208(tw->unk_44, 11, tw->unk_42, 0);
+        func_8006752C(tw->unk_44, 11, 0x100);
+        func_80067480(tw->unk_44, 11, 0xFFFF);
+        func_800674BC(tw->unk_44, 11, 0x01009000);
+        func_80067384(tw->unk_44, 11, tw->unk_38 - 1);
+    }
+    if (arg2 != 0) {
+        tw->unk_06 |= 1;
+    }
+    tw->unk_11 = arg1;
+    tw->unk_00 = 6;
+    tw->unk_6E = 1;
+    tw->unk_78 = 0;
+    while (func_8006FCC0(arg0) == 6) {
+        HuPrcVSleep();
+    }
+    return tw->unk_11;
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006FCF0);
+#endif
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006FE4C);
 
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8007094C);
