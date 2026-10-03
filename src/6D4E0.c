@@ -74,6 +74,19 @@ extern s16 D_800E4328;
 extern s16 D_800E4330;
 extern OSMesgQueue D_800EE960;
 extern u8 D_800C5DF1;
+extern s16 D_800F2CF0[4];
+
+typedef struct TWInput {
+    /* 0x00 */ s16 v[4];
+    /* 0x08 */ s16 count;
+} TWInput; /* sizeof 0xA */
+
+extern TWInput D_800EE1D0[32];
+/* splat labels for the fields of D_800EE1D0[0] */
+extern TWInput D_800EE1D2[];
+extern TWInput D_800EE1D4[];
+extern TWInput D_800EE1D6[];
+extern TWInput D_800EE1D8[];
 extern u8 D_800F64F8;
 extern TWColor D_800C603C[4];
 /* splat labels for &D_800C603C[0].g and .b */
@@ -105,10 +118,11 @@ s32 func_8006CC18(s16* arg0);
 
 extern TextWindow* D_800ED4B0;
 extern u8 D_800ED722;
-extern s8 D_800F3718;
-extern s8 D_800F64C4;
+extern u8 D_800F3718;
+extern u8 D_800F64C4;
 
-void func_800710E4(s16, s16, s16, s16, s32);
+void func_800710E4(s16, s16, s16, s16, s16);
+void DataCloseTemp(void*);
 
 void func_8006C8E0(void) {
     s16 i;
@@ -1474,10 +1488,46 @@ void func_8007094C(TextWindow* tw, SubTextWindow* sub) {
     func_80066DC4(tw->unk_44, 11, dx, dy = py / dy * tw->unk_F0);
     func_80067480(tw->unk_44, 11, 0x8000);
 }
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80070D90);
+void func_80070D90(s16 arg0) {
+    TextWindow* tw = &D_800ED4B0[arg0];
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80070ED4);
+    if (tw->string != NULL && tw->usingStringIDBool != 0) {
+        func_8005B838(tw->string);
+    }
+    for (i = 0; i < 10; i++) {
+        if (tw->unk_88[i] != NULL && tw->unk_7B[i] != 0) {
+            func_8005B838(tw->unk_88[i]);
+        }
+    }
+    func_80064D38(tw->unk_44);
+    func_80067704(tw->unk_3E);
+    func_80067704(tw->unk_40);
+    if (tw->unk_42 != -1) {
+        func_80067704(tw->unk_42);
+    }
+    tw->unk_36 = -1;
+    D_800ED4B0[tw->unk_3C].unk_3A = tw->unk_3A;
+    D_800ED4B0[tw->unk_3A].unk_3C = tw->unk_3C;
+}
+void func_80070ED4(void) {
+    s16 id;
 
+    if (D_800C5DF1 != 0) {
+        id = D_800ED4B0[0].unk_3C;
+        while (D_800ED4B0[id].unk_3C != -1) {
+            func_80070D90(id);
+            id = D_800ED4B0[id].unk_3C;
+        }
+        DataCloseTemp(D_800F37D4);
+        DataCloseTemp(D_800F3294);
+        DataCloseTemp(D_800F3F34);
+        DataCloseTemp(D_800F3F38);
+        FreeTemp(D_800ED4B0);
+        EndProcess(D_800F2BC4);
+        D_800C5DF1 = 0;
+    }
+}
 void func_80070FF8(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
     func_800710E4(-(~arg0 == 0), -(~arg1 == 0), -(~arg2 == 0), -(~arg3 == 0), arg4);
     func_800710E4(arg0, arg1, arg2, arg3, 1);
@@ -1487,10 +1537,32 @@ void func_800710A4(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     func_800710E4(arg0, arg1, arg2, arg3, 1);
 }
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_800710E4);
+void func_800710E4(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4) {
+    D_800EE1D0[D_800F3718].v[0] = arg0;
+    D_800EE1D2[D_800F3718].v[0] = arg1;
+    D_800EE1D4[D_800F3718].v[0] = arg2;
+    D_800EE1D6[D_800F3718].v[0] = arg3;
+    D_800EE1D8[D_800F3718].v[0] = arg4;
+    D_800F3718 = (D_800F3718 + 1) & 0x1F;
+}
+void func_80071154(s16* arg0) {
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80071154);
-
+    if (D_800F64C4 == D_800F3718) {
+        arg0[0] = arg0[1] = arg0[2] = arg0[3] = 0;
+        return;
+    }
+    for (i = 0; i < 4; i++) {
+        arg0[i] = (D_800EE1D0 + D_800F64C4)->v[i];
+        if (arg0[i] == -1) {
+            arg0[i] = D_800F2CF0[i];
+        }
+    }
+    D_800EE1D8[D_800F64C4].v[0]--;
+    if (D_800EE1D8[D_800F64C4].v[0] == 0) {
+        D_800F64C4 = (D_800F64C4 + 1) & 0x1F;
+    }
+}
 void func_80071264(void) {
     D_800F3718 = 0;
     D_800F64C4 = 0;
