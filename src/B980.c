@@ -336,8 +336,6 @@ typedef struct B980BankFile {
 
 extern s32 D_800C18A8;
 extern s32 D_800C18E0[];
-extern u16 D_800C18DE; // low half of D_800C18DC
-extern u8 D_800C18DF; // low byte of D_800C18DC
 extern u8 D_800C18F4;
 extern s16 D_800CEAB6;
 void alSndpSetPitch(s32, f32);
@@ -2081,7 +2079,7 @@ s16 func_8000E448(B980SndParam* param, s32 noAge) {
         ids[i] = i;
     }
     if (i == D_800C18DC[0]) {
-        func_8000E818(keys, ids, 0, D_800C18DE - 1);
+        func_8000E818(keys, ids, 0, D_800C18DC[0] - 1);
         for (j = 0; j < D_800C18DC[0]; j++) {
             i = ids[j];
             voice = &D_800CEA94[i];
@@ -2102,7 +2100,7 @@ s16 func_8000E448(B980SndParam* param, s32 noAge) {
         return i;
     }
     if (prio == 0xFF) {
-        voice->unk_27 = D_800C18DF;
+        voice->unk_27 = D_800C18DC[0];
         for (j = D_800C18DC[0] - 1; j >= 0; j--) {
             if (ids[j] != i) {
                 D_800CEA94[ids[j]].unk_27 = j;
