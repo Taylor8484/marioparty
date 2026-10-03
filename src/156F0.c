@@ -197,6 +197,8 @@ void func_8001536C(s32 arg0) {
     func_80015430(D_800C1918, D_800C1918, 16, D_800F5248);
 }
 
+// instruction order: channel masks applied before the blue product (masked 6)
+#ifdef NON_MATCHING
 void func_80015430(u8* dst, u8* src, s16 count, s16 scale) {
     u16 i;
     u16 c;
@@ -216,6 +218,9 @@ void func_80015430(u8* dst, u8* src, s16 count, s16 scale) {
         dst[i * 2 + 1] = v;
     }
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/156F0", func_80015430);
+#endif
 
 void func_800154F8(s16 id) {
     Win* w;
@@ -334,6 +339,8 @@ void func_80015C10(s16 id) {
     }
 }
 
+// one unfilled delay slot on the newline path's jump (masked 2)
+#ifdef NON_MATCHING
 void func_80015F90(u8* str) {
     Win* w = &D_800F3B88[D_800F33E8];
     s16 i;
@@ -394,7 +401,12 @@ void func_80015F90(u8* str) {
         }
     }
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/156F0", func_80015F90);
+#endif
 
+// glyph nibble store: retail reloads *p and re-masks color (masked 9)
+#ifdef NON_MATCHING
 void func_80016220(u8 ch, s16 id, s16 x, s16 y, u8 color) {
     Win* w = &D_800F3B88[D_800F33E8];
     u8* src = &D_800C1910[ch * 8];
@@ -419,7 +431,12 @@ void func_80016220(u8 ch, s16 id, s16 x, s16 y, u8 color) {
         row += tw / 2;
     }
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/156F0", func_80016220);
+#endif
 
+// register allocation (pos/args swapped) and one va_arg addressing form (masked 1)
+#ifdef NON_MATCHING
 void func_8001636C(char* fmt, ...) {
     s16 pos;
     s16 i;
@@ -508,7 +525,12 @@ void func_8001636C(char* fmt, ...) {
     D_800F3188[pos] = 0;
     func_80015F90((u8*)D_800F3188);
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/156F0", func_8001636C);
+#endif
 
+// register allocation (started/len swapped) and one assembler hazard nop (masked 4)
+#ifdef NON_MATCHING
 s16 func_800166D8(char* buf, s32 val, s16 width) {
     s16 neg;
     s32 div;
@@ -563,6 +585,9 @@ s16 func_800166D8(char* buf, s32 val, s16 width) {
     *buf = val + '0';
     return len + 1;
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/156F0", func_800166D8);
+#endif
 
 s16 func_800168A8(char* buf, u32 val, s16 width) {
     u16 i;
@@ -598,6 +623,8 @@ loop:
     return width;
 }
 
+// loop-invariant '.' and 0.0 hoisted out of the loop; len register copies (masked 31)
+#ifdef NON_MATCHING
 s16 func_800169A8(char* buf, f64 val, s16 width, s16 prec) {
     s32 neg;
     f64 div;
@@ -670,6 +697,9 @@ s16 func_800169A8(char* buf, f64 val, s16 width, s16 prec) {
     }
     return len;
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/156F0", func_800169A8);
+#endif
 
 s16 func_80016BDC(char* buf, s32 val, s16 bits) {
     s16 i;
