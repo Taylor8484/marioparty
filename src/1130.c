@@ -38,7 +38,9 @@ typedef struct ColSphere {
 typedef struct GroundWork {
     /* 0x00 */ u8 unk_00;
     /* 0x01 */ u8 unk_01;
-    /* 0x02 */ char unk_02[0xA];
+    /* 0x02 */ char unk_02[3];
+    /* 0x05 */ s8 unk_05;
+    /* 0x06 */ char unk_06[6];
     /* 0x0C */ f32 unk_0C;
     /* 0x10 */ f32 unk_10;
     /* 0x14 */ f32 unk_14;
@@ -76,7 +78,7 @@ typedef struct PlayerWork {
     /* 0x50 */ u16 unk_50;
     /* 0x52 */ u8 unk_52;
     /* 0x53 */ s8 unk_53;
-    /* 0x54 */ u8 unk_54;
+    /* 0x54 */ s8 unk_54;
     /* 0x55 */ u8 unk_55;
     /* 0x56 */ u8 unk_56;
     /* 0x57 */ s8 unk_57;
@@ -131,6 +133,7 @@ f32 func_80000530(f32, f32, f32, ColVtx*, ColTri*, Vec3f*, Vec3f*);
 s32 func_80000828(Vec4f*, s16*, ColVtx*);
 s32 func_80000F3C(omObjData*, f32, f32, f32);
 s32 func_8000396C(ColSphere*, GroundWork*);
+f32 func_80004578(omObjData*, f32, f32, f32);
 void func_800078E8(f32, f32, f32);
 void func_800090D8(omObjData*, s32, s32);
 void func_800096B0(PlayerWork*, s32);
@@ -143,22 +146,27 @@ void func_80060F04(s16, s32, s32, s32);
 void func_800295FC(ColVtx*, ColVtx*, ColVtx*, Vec3f*);
 void func_8002956C(Vec3f*);
 void func_8000A464(void*, Vec3f*);
-void func_80004D1C(omObjData*, Vec4f*, s32);
+s32 func_80004D1C(omObjData*, Vec4f*, f32);
 f32 func_800051D4(omObjData*, f32, f32, f32, Vec3f*);
 void func_800057F4(omObjData*, Vec3f*);
 s32 func_8000A910(Vec4f*, GroundWork*);
 f32 func_80029764(f32, f32, f32, ColVtx*, ColTri*);
-void func_8002AE24(s16, s32*, s32 (*)(void*, s16*, ColVtx*, Vec3f*), Vec4f*);
+void func_8002AE24(s16, s32*, void*, void*);
 ColTri* func_8002B3A8(s32*);
 void func_80037178(s16, Vec3f*);
+s32 func_80009138(s8);
+void func_8000A1C0(void*, void*, ColSphere*, omObjData*);
+s32 func_8000A830(void*, ColSphere*, f32);
 s32 func_80019964(f32[3][3], Vec3f*, f32, Vec3f*);
 s32 func_80019EDC(f32[4][3], Vec3f*, f32, Vec3f*);
 
 extern s16 D_800B8956;
 extern u8 D_800B8954;
+extern s8 D_800F3704;
 extern u8 D_800B8958;
 extern u8 D_800B8959;
 extern f32 D_800B899C;
+extern f32 D_800B8998;
 extern omObjData* D_800F2AF8[];
 extern u8 D_800ED6E0[];
 extern u8 D_800F2B80[];
@@ -1187,10 +1195,233 @@ void func_8000423C(omObjData* obj, ColSphere* s, f32 arg2) {
         }
     }
 }
+// register allocation (masked 28): floorY/shadowY take swapped FPRs (f24/f22)
+#ifdef NON_MATCHING
+f32 func_80004578(omObjData* obj, f32 x, f32 y, f32 z) {
+    Vec4f probe;
+    Vec3f n;
+    Vec3f n2;
+    PlayerWork* w;
+    GroundWork* gw;
+    ColVtx* verts;
+    ColTri* tri;
+    s16 mdl;
+    Vec3f* normal;
+    f32 speed;
+    f32 sa, sb, sc;
+    f32 shadowY, floorY;
+    f32 h;
+    f32 nx, nz;
+    f32 d, scale;
+
+    w = obj->unk_50;
+    w->unk_53 = w->unk_54 = -1;
+    sa = w->unk_40;
+    sb = w->unk_4C;
+    sc = w->unk_A4;
+    if (w->unk_50 & 6) {
+        speed = sa * 0.6f * sb;
+    } else {
+        speed = sa * sb;
+    }
+    speed *= sc;
+    nx = x + func_800AEAC0(w->unk_3C) * speed + D_800ED6B8;
+    nz = z + func_800AEFD0(w->unk_3C) * speed + D_800F5254;
+    floorY = shadowY = -65536.0f;
+    if (func_80000F3C(obj, nx, y, nz) != 2) {
+        func_80001F84(obj);
+        sa = w->unk_40;
+        sb = w->unk_4C;
+        sc = w->unk_A4;
+        if (w->unk_50 & 6) {
+            speed = sa * 0.6f * sb;
+        } else {
+            speed = sa * sb;
+        }
+        speed *= sc;
+        nx = x + func_800AEAC0(w->unk_3C) * speed;
+        nz = z + func_800AEFD0(w->unk_3C) * speed;
+        probe.x = nx;
+        probe.y = y;
+        probe.z = nz;
+        probe.w = w->unk_48;
+        func_80004D1C(obj, &probe, 0);
+        func_80001F84(obj);
+        probe.x = nx + D_800ED6B8;
+        probe.y = y;
+        probe.z = nz + D_800F5254;
+        if (!(((u8*)w)[D_800B8954] & 1)) {
+            gw = D_800F2AF8[D_800B8954]->unk_50;
+            if (gw->unk_01 & 0x1A) {
+                if (func_8000A910(&probe, gw) == 1) {
+                    h = gw->unk_10;
+                    if (floorY < h && h < y + 150.0f) {
+                        floorY = h;
+                        D_800B8958 = D_800B8954;
+                        if (shadowY < floorY && shadowY < y + 35.0f) {
+                            shadowY = floorY;
+                            n.x = 0.0f;
+                            n.y = 1.0f;
+                            n.z = 0.0f;
+                            normal = &n;
+                        }
+                    }
+                }
+            } else {
+                mdl = *D_800F2AF8[D_800B8954]->model;
+                verts = (ColVtx*)D_800F2B7C[mdl].unk_6C->unk_78;
+                func_8002AE24(mdl, &D_800EDEC0, func_80002060, &probe);
+                for (tri = func_8002B3A8(&D_800EDEC0); tri != NULL; tri = func_8002B3A8(&D_800EDEC0)) {
+                    h = func_80029764(nx + D_800ED6B8, y, nz + D_800F5254, verts, tri);
+                    if (floorY < h && h < y + 150.0f) {
+                        floorY = h;
+                        D_800B8958 = D_800B8954;
+                    }
+                    if (shadowY < h && shadowY < y + 35.0f) {
+                        shadowY = h;
+                        func_800295FC(&verts[tri->v[0]], &verts[tri->v[1]], &verts[tri->v[2]], &n);
+                        normal = &n;
+                    }
+                }
+                if (floorY == -65536.0f) {
+                    floorY = -65536.0f;
+                }
+            }
+        }
+        h = func_800051D4(obj, nx + D_800ED6B8, y, nz + D_800F5254, &n2);
+        if (floorY < h && h < y + 150.0f) {
+            floorY = h;
+        } else {
+            w->unk_53 = -1;
+        }
+        if (shadowY < h && h < y + 150.0f) {
+            shadowY = h;
+            normal = &n2;
+        }
+        if (floorY == -65536.0f) {
+            shadowY = -65536.0f;
+            w->unk_4C = D_800B8998;
+            if (w->unk_38 < 0.0f) {
+                w->unk_38 = 0.0f;
+            }
+            w->unk_53 = -1;
+        } else if (y < floorY) {
+            w->unk_53 = D_800B8958;
+            y = func_800006E4(obj, floorY);
+            w->unk_38 = 1000.0f;
+            w->unk_50 &= ~0x10;
+            if (((u8*)w)[(s8)D_800B8958] & 8) {
+                func_80009438();
+            }
+        } else {
+            w->unk_53 = -1;
+        }
+    } else {
+        probe.x = nx + D_800ED6B8;
+        probe.y = y;
+        probe.z = nz + D_800F5254;
+        probe.w = w->unk_48;
+        func_80004D1C(obj, &probe, 0);
+    }
+    if (obj->model[1] != 0) {
+        if (shadowY != -65536.0f) {
+            if (D_800B8959 == 1) {
+                shadowY += 2.0f;
+            }
+            func_80025798(obj->model[1], nx, shadowY, nz);
+            d = y - shadowY;
+            if (d > 200.0f) {
+                scale = 0.6f;
+            } else {
+                scale = 1.0 - fabs(d) / 500.0;
+            }
+            func_80025830(obj->model[1], scale, scale, scale);
+            func_80037178(obj->model[1], normal);
+            func_800258EC(obj->model[1], 4, 0);
+        } else {
+            func_800258EC(obj->model[1], 4, 4);
+        }
+    }
+    w->unk_90 = w->unk_98 = w->unk_84 = w->unk_88 = w->unk_8C = 0.0f;
+    obj->rot.x = obj->rot.z = 0.0f;
+    return y;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/1130", func_80004578);
+#endif
+s32 func_80004D1C(omObjData* obj, Vec4f* p, f32 arg2) {
+    Vec4f s;
+    ColSphere s2;
+    PlayerWork* w = obj->unk_50;
+    omObjData* o;
+    GroundWork* g;
+    s16 prev;
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/1130", func_80004D1C);
-
+    s.x = p->x;
+    s.y = w->unk_34 / 2.0f + p->y;
+    s.z = p->z;
+    s.w = p->w;
+    D_800F3704 = -1;
+    D_800B8956 = 0;
+    prev = D_800B8956;
+    if (!(((u8*)w)[D_800B8954] & 1)) {
+        o = D_800F2AF8[D_800B8954];
+        g = o->unk_50;
+        if (g->unk_01 & 8) {
+            s.x += D_800ED6B8;
+            s.y += D_800F5254;
+            func_80003460(o, (ColSphere*)&s);
+        } else if (g->unk_01 & 0x10) {
+            s.x += D_800ED6B8;
+            s.y += D_800F5254;
+            func_80003C08(o, (ColSphere*)&s, w->unk_34 / 2.0f);
+        } else if (!(g->unk_01 & 2)) {
+            func_8002AE24(*D_800F2AF8[D_800B8954]->model, &D_800EDEC0, func_80002080, &s);
+        }
+        if (prev != D_800B8956) {
+            D_800F3704 = g->unk_05;
+        }
+    }
+    for (i = 0; i < D_800ED440; i++) {
+        o = D_800F2AF8[i];
+        g = o->unk_50;
+        if (i == D_800B8954 || (g->unk_01 & 2) || (((u8*)w)[i] & 1)) {
+            continue;
+        }
+        prev = D_800B8956;
+        s2.x = s2.x2 = p->x;
+        s2.y = s2.y2 = w->unk_34 / 2.0f + p->y;
+        s2.z = s2.z2 = p->z;
+        s2.r = s.w = p->w;
+        func_8000A1C0(D_800F2B80, D_800ED6E0, &s2, o);
+        if ((g->unk_01 & 4) && func_8000A830(D_800F2B7C[*o->model].unk_6C->unk_80, &s2, w->unk_48) == 0) {
+            continue;
+        }
+        if (g->unk_01 & 8) {
+            s2.x += D_800ED6B8;
+            s2.y += D_800F5254;
+            func_80003460(o, &s2);
+        } else if (g->unk_01 & 0x10) {
+            s2.x += D_800ED6B8;
+            s2.y += D_800F5254;
+            func_80003C08(o, &s2, w->unk_34 / 2.0f);
+        } else {
+            func_8002AE24(*D_800F2AF8[i]->model, &D_800EDEC0, func_8000261C, &s2);
+        }
+        if (prev != D_800B8956) {
+            D_800F3704 = g->unk_05;
+        }
+    }
+    s.x = p->x + D_800ED6B8;
+    s.y = w->unk_34 / 2.0f + p->y;
+    s.z = p->z + D_800F5254;
+    s.w = p->w;
+    if (func_80009138(D_800F3704) == 1) {
+        func_8000423C(obj, (ColSphere*)&s, arg2);
+    }
+    return D_800F3704;
+}
 INCLUDE_ASM("asm/nonmatchings/1130", func_800051D4);
 
 INCLUDE_ASM("asm/nonmatchings/1130", func_800057F4);
