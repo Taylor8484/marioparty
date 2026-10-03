@@ -76,6 +76,22 @@ extern OSMesgQueue D_800EE960;
 extern u8 D_800C5DF1;
 extern s16 D_800F2CF0[4];
 extern u8* D_800C6048[16];
+
+typedef struct TWStyle {
+    /* 0x00 */ s32 frame;  /* window frame graphic */
+    /* 0x04 */ s32 cursor; /* cursor graphic */
+    /* 0x08 */ s16 width;
+    /* 0x0A */ s16 height;
+    /* 0x0C */ s16 textX;
+    /* 0x0E */ s16 textY;
+    /* 0x10 */ s16 textW;
+    /* 0x12 */ s16 textH;
+    /* 0x14 */ s16 offsetX;
+    /* 0x16 */ s16 offsetY;
+    /* 0x18 */ u8 color;
+} TWStyle; /* sizeof 0x1C */
+
+extern TWStyle D_800C6050[];
 /* splat labels for D_800F2CF0[1..3] and ContDStkTrg[1..3] */
 extern u16 D_800F2CF2;
 extern u16 D_800F2CF4;
@@ -704,7 +720,7 @@ void func_8006E1E4(s16 arg0, s32 arg1) {
     func_8006752C(textWindow->unk_44, 0xA, (0xFF - arg1));
 }
 
-void func_8006E288(s16 arg0, s8 arg1) {
+void func_8006E288(s16 arg0, u8 arg1) {
     TextWindow* textWindow = &D_800ED4B0[arg0];
     textWindow->unk_02 = arg1;
 }
@@ -1740,8 +1756,60 @@ void func_800718DC(s16 arg0, void* arg1, s8 arg2) {
     func_8006DA5C(arg0, arg1, arg2);
     func_80071894(tw->unk_88[arg2], tw->unk_88[arg2]);
 }
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8007194C);
+// register allocation: the return value comes from the s16 copy of id instead of id itself (masked 0)
+#ifdef NON_MATCHING
+s16 func_8007194C(s32 arg0, s32 arg1, s32 arg2) {
+    TWStyle* style = &D_800C6050[arg2];
+    TextWindow* tw;
+    TWSprite* spr;
+    s32 id;
+    s32 sub;
+    s32 i;
 
+    id = func_8006D010(arg0, arg1, style->width, style->height, 0, 0);
+    func_8006E070(id, 0);
+    tw = &D_800ED4B0[id];
+    tw->unk_2C = tw->unk_24 = style->textX;
+    tw->unk_2E = tw->unk_26 = style->textY;
+    tw->unk_28 = style->textW;
+    tw->unk_2A = style->textH;
+    func_8006DEC8(id, style->offsetX, style->offsetY);
+    tw->unk_30 = tw->unk_2C + style->textW - tw->unk_07;
+    tw->unk_32 = tw->unk_2E + style->textH - tw->unk_08;
+    if (arg2 == 5) {
+        tw->unk_09 = 0;
+    }
+    tw->unk_274 = sub = func_8006DB3C(id, style->frame, 0, 0, 0);
+    func_80067384(tw->unk_44, sub, 15000);
+    func_80066DC4(tw->unk_44, sub, 0, 0);
+    func_80067354(tw->unk_44, sub, 0.0f, 0.0f);
+    spr = func_800675F4(tw->unk_44, sub);
+    for (i = 0; i < spr->unk_4C->count; i++) {
+        spr->unk_4C->frames[i].unk8 = style->offsetX;
+        spr->unk_4C->frames[i].unkA = style->offsetY;
+    }
+    tw->unk_276 = sub = func_8006DB3C(id, style->cursor, 0, 0, 0);
+    func_80067384(tw->unk_44, sub, 15000);
+    func_80066DC4(tw->unk_44, sub, 0, 0);
+    func_80067354(tw->unk_44, sub, 0.0f, 0.0f);
+    func_800674BC(tw->unk_44, tw->unk_276, 0x1000);
+    func_8006752C(tw->unk_44, tw->unk_276, 0xFF);
+    func_800674F4(tw->unk_44, tw->unk_276, 0xFF, 0xD3, 0x4F);
+    spr = func_800675F4(tw->unk_44, sub);
+    for (i = 0; i < spr->unk_4C->count; i++) {
+        spr->unk_4C->frames[i].unk8 = style->offsetX;
+        spr->unk_4C->frames[i].unkA = style->offsetY;
+    }
+    func_8006E154(id, 0);
+    func_8006E2B8(id, 0xC0, 0xC0, 0xC0);
+    func_8006E288(id, style->color);
+    tw->unk_12 = style->color;
+    func_8006DE20(id, 0.0f, 0.0f);
+    return id;
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8007194C);
+#endif
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80071C8C);
 
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80071DE0);

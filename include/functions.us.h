@@ -536,7 +536,7 @@ void func_8005B024(void);
 void func_8005B280(void);
 void func_8005B3B0(void);
 void func_80039A4C(s16);
-void func_8006E288(s16, s8);
+void func_8006E288(s16, u8);
 void func_8006E2B8(s16 arg0, u8 arg1, u8 arg2, u8 arg3);
 void func_800714F0(s16 arg0, u8 arg1, u8 arg2, u8 arg3);
 
