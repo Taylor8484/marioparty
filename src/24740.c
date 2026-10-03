@@ -12,58 +12,59 @@ typedef struct unk24740Struct18 {
     /* 0x04 */ char unk_04[0x14];
 } unk24740Struct18; //sizeof 0x18
 
-extern unk2C0C0StructC0 D_800ECB40;
-unk2C0C0Struct70* func_80038178(unk2C0C0StructC0*);
-f32 func_800369FC(unk24740Struct18*, s16, f32, f32, f32);
-extern unk2C0C0Struct70* D_800F37AC;
-s32 func_8009B850(unk2C0C0Struct70*, u8*);
-extern const f32 D_800CA8D8[];
-void func_80026EA8(unk2C0C0StructC0*, f32, f32, u16, u16);
-void func_80027100(unk2C0C0StructC0*, f32, f32, u16, u16);
-void func_80027440(unk2C0C0StructC0*, f32, f32, u16, u16);
-extern u16 D_800ED728;
 extern u8 D_800C30C0;
 extern u8 D_800C30C1;
 extern u8 D_800C30C2;
-void func_80023964(void);
-void func_800337E4(unk2C0C0StructC0*, char*, unk2C0C0StructC0*);
-extern u16 D_800ECE18[4];
-extern u16 D_800F2D00[4][128];
 extern s32 D_800C32B0;
-extern unk24740Struct18* D_800ED554;
-void func_8001D658(s16, Gfx**);
-void func_8002B808(void);
-void func_800A0B90(Matrix4f, void*);
-void func_8002C1A8(unk2C0C0StructC0*, Matrix4f, Matrix4f);
-void func_800363C8(unk2C0C0StructC0*);
-void func_800368AC(unk2C0C0StructC0*, f32);
-void func_80028668(unk_ovl_2D_struct*, u16);
-void func_800397AC(u16);
-void func_80028A34(s16);
-Gfx* func_8002D614(s16, Gfx*, Gfx*);
-Gfx* func_800253EC(Gfx*, s16, u16);
-void func_800721D8(Gfx**);
-Gfx* pfDrawFonts(Gfx*);
-
-#define CAM ((unk_Struct00*)D_800F32A0)
-void func_800238F0(s16);
-void func_8002AD30(s16);
-void func_800343C8(s16);
-void func_80037FA0(unk2C0C0StructC0*);
-void func_80039BAC(void);
-void func_80039AEC(void);
-void func_8002AD04(void);
-void func_80034420(void);
-void func_8002854C(void);
-
+extern const f32 D_800CA8D8[];
+extern unk2C0C0StructC0 D_800ECB40;
+extern u16 D_800ECE18[4];
 extern void (*D_800ED3E4[2])(Gfx**, Mtx*, u8);
+extern unk24740Struct18* D_800ED554;
 extern u8 D_800ED6BC;
+extern u16 D_800ED728;
+extern u16 D_800F2D00[4][128];
 extern s32 D_800F3758;
+extern unk2C0C0Struct70* D_800F37AC;
 extern s8 D_800F384E;
+
+void func_8001D658(s16, Gfx**);
+void func_800238F0(s16);
+void func_80023964(void);
+Gfx* func_800253EC(Gfx*, s16, u16);
+void func_80026EA8(unk2C0C0StructC0*, f32, f32, u16, u16);
+void func_80027100(unk2C0C0StructC0*, f32, f32, u16, u16);
+void func_80027440(unk2C0C0StructC0*, f32, f32, u16, u16);
+void func_8002854C(void);
+void func_80028668(unk_ovl_2D_struct*, u16);
+void func_80028A34(s16);
+void func_8002AD04(void);
+void func_8002AD30(s16);
 void func_8002B4C0(void* (*arg0)(s32), void (*arg1)(void*), u16 arg2, u16 arg3, u16 arg4, u8 arg5);
 void func_8002B6C8(void);
+void func_8002B808(void);
+void func_8002C1A8(unk2C0C0StructC0*, Matrix4f, Matrix4f);
+Gfx* func_8002D614(s16, Gfx*, Gfx*);
+void func_800337E4(unk2C0C0StructC0*, char*, unk2C0C0StructC0*);
 void func_80034180(void);
+void func_800343C8(s16);
+void func_80034420(void);
+void func_800363C8(unk2C0C0StructC0*);
+void func_800368AC(unk2C0C0StructC0*, f32);
+f32 func_800369FC(unk24740Struct18*, s16, f32, f32, f32);
+void func_80037FA0(unk2C0C0StructC0*);
+unk2C0C0Struct70* func_80038178(unk2C0C0StructC0*);
+void func_800397AC(u16);
+void func_80039AEC(void);
+void func_80039BAC(void);
+void func_800721D8(Gfx**);
+s32 func_8009B850(unk2C0C0Struct70*, u8*);
+void func_800A0B90(Matrix4f, void*);
+Gfx* pfDrawFonts(Gfx*);
+void guMtxCatF(float m[4][4], float n[4][4], float r[4][4]);
+void guMtxL2F(float mf[4][4], Mtx* m);
 
+#define CAM ((unk_Struct00*)D_800F32A0)
 
 extern Gfx D_800C3370[];
 extern Gfx D_800C32B8[];
@@ -413,7 +414,7 @@ void func_80024754(void) {
     func_8002854C();
     D_800ED3E4[0] = D_800ED3E4[1] = NULL;
 }
-// register allocation, and D_800ED0D8 address not folded into the load (masked 28)
+// register allocation; D_800ED0D8 address not folded into the load (masked 31, 3 of them the D_800ED3E4[1] split-label reloc)
 #ifdef NON_MATCHING
 void func_800247FC(OSMesgQueue* arg0, s32 arg1) {
     Matrix4f sp18;
@@ -1563,12 +1564,39 @@ void func_80028C28(s16 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4) {
     model->unk_30 = arg3;
     model->unk_31 = arg4;
 }
-INCLUDE_ASM("asm/nonmatchings/24740", func_80028C64);
+void func_80028C64(s16 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4) {
+    func_80028BEC(arg0, arg1, arg2, arg3, arg4);
+    func_80028C28(arg0, arg1 * 0.5f, arg2 * 0.5f, arg3 * 0.5f, arg4 * 0.5f);
+}
+void func_80028E8C(s16 arg0, void (*arg1)(Gfx**, Mtx*, u8)) {
+    D_800ED3E4[arg0] = arg1;
+}
+// assembler mul fix adds a nop before mul.s after each sin/cos call (masked 3)
+#ifdef NON_MATCHING
+void func_80028EA4(s16 arg0, f32 arg1) {
+    unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
+    unk2C0C0StructE0* src = model->unk_04;
+    unk2C0C0StructE0* dst = model->unk_08[D_800F37F0];
+    f32 dx, dy, r, a;
+    s16 ang;
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80028E8C);
-
+    for (i = 0; i < model->unk_72; i++) {
+        dx = src->unk_08 - 0x200;
+        dy = src->unk_0A - 0x200;
+        ang = func_800B0CD8(dy, dx);
+        r = func_800B1750(dx * dx + dy * dy);
+        ang = ang + arg1;
+        a = ang % 360;
+        dst->unk_08 = func_800AEFD0(a) * r + 512.0f;
+        dst->unk_0A = func_800AEAC0(a) * r + 512.0f;
+        src++;
+        dst++;
+    }
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/24740", func_80028EA4);
-
+#endif
 const char D_800CA810[] = "donky4_DEF";
 const char D_800CA81C[] = "wario_kao_DEF";
 const char D_800CA82C[] = "c003t000._DEF";
