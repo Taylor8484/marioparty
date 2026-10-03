@@ -12,7 +12,7 @@ void HuPrcSleep(s32);
 f32 sinf(f32);
 void func_8006EEB8(s16, u8, u8, s16, s16);
 void func_8006F3BC(s16, s16, s16, s32, s32);
-s32 func_8006E93C(TextWindow*, void*);
+s32 func_8006E93C(TextWindow*);
 void func_800673B0(s16, s16, f32);
 void func_800477AC(void);
 void func_80048060(void);

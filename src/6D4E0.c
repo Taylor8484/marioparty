@@ -40,6 +40,8 @@ extern TWColor D_800C5DF5[];
 extern TWColor D_800C5DF6[];
 
 TWSprite* func_800675F4(s16, s16);
+s32 func_8006E87C(TextWindow* arg0);
+void func_8006E984(TextWindow* arg0);
 
 
 
@@ -81,7 +83,7 @@ s32 func_8006CC18(s16* arg0);
 #define mp1UnkCharacter 0x20
 
 extern TextWindow* D_800ED4B0;
-extern s8 D_800ED722;
+extern u8 D_800ED722;
 extern s8 D_800F3718;
 extern s8 D_800F64C4;
 
@@ -665,8 +667,124 @@ void func_8006E2B8(s16 arg0, u8 arg1, u8 arg2, u8 arg3) {
     func_800674F4(textWindow->unk_44, 1, arg1, arg2, arg3);
 }
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006E318);
+s32 func_8006E318(s16 arg0) {
+    TextWindow* tw = &D_800ED4B0[arg0];
+    SubTextWindow* sub;
+    s16 n;
+    s32 c;
 
+    while (tw->unk_34 >= tw->unk_04) {
+        while (*tw->stringPtr < 0x21) {
+            if (*tw->stringPtr == 0) {
+                if (tw->unk_7A >= 0) {
+                    tw->unk_7A = -1;
+                    tw->stringPtr = tw->unk_BC;
+                    continue;
+                }
+                if (tw->usingStringIDBool != 0) {
+                    func_8005B838(tw->string);
+                }
+                tw->string = NULL;
+                tw->unk_00 = 0;
+                D_800ED722 = 0;
+                return 0;
+            }
+            if (*tw->stringPtr < 10) {
+                tw->unk_02 = *tw->stringPtr - 1;
+            }
+            c = *tw->stringPtr - 0x11;
+            if ((u8)c < 10) {
+                tw->unk_7A = c;
+                if (tw->unk_88[tw->unk_7A] != NULL) {
+                    tw->unk_BC = ++tw->stringPtr;
+                    tw->stringPtr = tw->unk_88[tw->unk_7A];
+                    continue;
+                }
+                tw->unk_7A = -1;
+            }
+            if ((tw->unk_06 & 4) && (*tw->stringPtr == 0x10 || *tw->stringPtr == 0x20)) {
+                *tw->stringPtr = 0x40;
+                break;
+            }
+            switch (*tw->stringPtr) {
+            case 0x10:
+            case 0x20:
+                tw->stringPtr++;
+                tw->unk_13 = (D_800C5DF2 != 0) ? 4 : ((-(tw->unk_05 == 0) & 0xA) | 8);
+                if (func_8006E87C(tw) == 0) {
+                    tw->unk_00 = 2;
+                    return 1;
+                }
+                continue;
+            case 10:
+                if (D_800ED722 == 0 && func_8006E93C(tw) == 0) {
+                    tw->stringPtr++;
+                    return 1;
+                }
+                break;
+            case 11:
+                func_8006E984(tw);
+                break;
+            case 12:
+                sub = &tw->unk_F4[tw->unk_10];
+                sub->unk2 = tw->unk_2C - tw->unk_20;
+                sub->unk4 = tw->unk_2E - tw->unk_22;
+                tw->unk_04 = 0;
+                tw->unk_34 = 0;
+                break;
+            case 13:
+                sub = &tw->unk_F4[tw->unk_10];
+                sub->unk6 = tw->unk_2C - sub->unk2;
+                sub->unk8 = (tw->unk_2E - sub->unk4) + tw->unk_08;
+                sub->unk0 = 0;
+                tw->unk_04 = tw->unk_03;
+                if (++tw->unk_10 >= 24) {
+                    osSyncPrintf("Select Max Over!\n");
+                    tw->unk_10--;
+                }
+                break;
+            case 14:
+                n = ((s16)(tw->unk_2C - tw->unk_24) + 12) / 12 * 12;
+                if (n < tw->unk_28) {
+                    tw->unk_2C = n + tw->unk_24;
+                }
+                break;
+            }
+            tw->stringPtr++;
+        }
+        if (*tw->stringPtr == 0xFF) {
+            tw->unk_00 = 2;
+            tw->stringPtr++;
+            return 1;
+        }
+        tw->unk_34 -= tw->unk_04;
+        if (tw->unk_2E + tw->unk_08 > tw->unk_26 + tw->unk_2A) {
+            tw->unk_00 = 5;
+            tw->unk_0B = 0;
+            return 1;
+        }
+        if (*tw->stringPtr >= 0x30) {
+            func_8006EEB8(arg0, *tw->stringPtr, 0, tw->unk_2C + 1, tw->unk_2E + 1);
+            func_8006EEB8(arg0, *tw->stringPtr, tw->unk_02, tw->unk_2C, tw->unk_2E);
+        } else {
+            func_8006EEB8(arg0, *tw->stringPtr, 9, tw->unk_2C, tw->unk_2E);
+        }
+        tw->stringPtr++;
+        if ((u8)(*tw->stringPtr + 0x80) < 2) {
+            func_8006EEB8(arg0, *tw->stringPtr, 0, tw->unk_07 + tw->unk_2C - 2, tw->unk_2E);
+            func_8006EEB8(arg0, *tw->stringPtr, tw->unk_02, tw->unk_07 + tw->unk_2C - 3, tw->unk_2E - 1);
+            tw->stringPtr++;
+        }
+        if (func_8006E87C(tw) == 0) {
+            return 1;
+        }
+        if (*tw->stringPtr == 0) {
+            return 0;
+        }
+    }
+    tw->unk_34++;
+    return 1;
+}
 s32 func_8006E87C(TextWindow* arg0) {
     s32 var_v1;
 
@@ -682,13 +800,13 @@ s32 func_8006E87C(TextWindow* arg0) {
     
     if ((var_v1 + arg0->unk_2C) > (arg0->unk_24 + arg0->unk_28)) {
         if (*arg0->stringPtr >= 0x20) {
-            return func_8006E93C(arg0, arg0);
+            return func_8006E93C(arg0);
         }
     }
     return 1;
 }
 
-s32 func_8006E93C(TextWindow* arg0, void* arg1) {
+s32 func_8006E93C(TextWindow* arg0) {
     arg0->unk_2C = arg0->unk_24;
     arg0->unk_2E = arg0->unk_2E + (arg0->unk_08 + arg0->unk_0A);
     return ((arg0->unk_2E + arg0->unk_08) > (arg0->unk_26 + arg0->unk_2A)) ^ 1;
