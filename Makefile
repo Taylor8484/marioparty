@@ -213,7 +213,8 @@ $(BUILD_DIR)/src/%.c.o: src/%.c
 # 1130.c is assembled with the KMC vr4300 mul fix on (no --vr4300mul-off, see CFLAGS above) from
 # GCC's assembly with blank lines removed: KMC as adds a nop before a mul.s that follows a call when
 # GCC's blank line separates it from the call's `.set reorder`, and the original object has none there.
-$(BUILD_DIR)/src/1130.c.o: src/1130.c
+# 34D80.c needs the same (func_80036B00: mul.s right after a call's return).
+$(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
 	@$(PRINT)$(GREEN)Compiling C file: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
 	@mkdir -p $(shell dirname $@)
 	@$(CC_HOST) $(CFLAGS_CHECK) $(CPPFLAGS) -MMD -MP -MT $@ -MF $@.d $<
