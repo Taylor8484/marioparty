@@ -1,6 +1,15 @@
 #include "common.h"
 #include "engine/mallocblock.h"
 
+extern u8 D_800C30C0;
+extern u8 D_800C30C1;
+extern u8 D_800C30C2;
+extern s8 D_800EC6DE;
+extern s16 D_800ED738;
+extern void* D_800F33C8;
+extern s16 D_800F3960;
+
+
 s16 func_8001B290(unk2C0C0StructC0*, u8*);
 s16 func_8001B608(unk2C0C0StructC0*, s16);
 void func_8001B6FC(unk2C0C0StructC0*);
@@ -523,8 +532,44 @@ INCLUDE_ASM("asm/nonmatchings/1B800", func_8001C3A8);
 
 INCLUDE_ASM("asm/nonmatchings/1B800", func_8001C75C);
 
-INCLUDE_ASM("asm/nonmatchings/1B800", func_8001C9F4);
+void func_8001C9F4(s8* arg0, unk2C0C0StructA0* arg1, unk2C0C0StructA0* arg2, unk2C0C0StructA0* arg3) {
+    s16 ax;
+    s16 bx;
+    s16 ay;
+    s16 by;
+    s16 az;
+    s16 bz;
+    f32 nx;
+    f32 ny;
+    f32 nz;
+    f32 scale;
 
+    ax = arg1->unk_00 - arg2->unk_00;
+    bx = arg3->unk_00 - arg1->unk_00;
+    ay = arg1->unk_02 - arg2->unk_02;
+    by = arg3->unk_02 - arg1->unk_02;
+    az = arg1->unk_04 - arg2->unk_04;
+    bz = arg3->unk_04 - arg1->unk_04;
+    nx = ax * by - ay * bx;
+    ny = ay * bz - az * by;
+    nz = az * bx - ax * bz;
+    scale = 127.0f / sqrtf(nx * nx + ny * ny + nz * nz);
+    if (nx != 0.0f) {
+        arg0[0] = nx * scale;
+    } else {
+        arg0[0] = 0;
+    }
+    if (ny != 0.0f) {
+        arg0[1] = ny * scale;
+    } else {
+        arg0[1] = 0;
+    }
+    if (nz != 0.0f) {
+        arg0[2] = nz * scale;
+    } else {
+        arg0[2] = 0;
+    }
+}
 s16 func_8001CBD8(unk2C0C0StructC0* arg0, u8* arg1, s16 arg2) {
     s16 var_a0_2;
     s16 var_t0;
@@ -590,6 +635,34 @@ s16 func_8001CD00(u8* arg0) {
 }
 
 
-INCLUDE_ASM("asm/nonmatchings/1B800", func_8001CD60);
+void func_8001CD60(unk2C0C0StructC0* arg0) {
+    u8* view;
+    u8* back;
+    s32 size;
 
+    D_800EC6DE = 0;
+    view = func_8001C2E8('VIEW', arg0->unk_3C, arg0->unk_38);
+    if (view == NULL) {
+        return;
+    }
+    D_800EC6DE = 1;
+    back = func_8001C2E8('BACK', view + 8, view + (view[5] << 16) + (view[6] << 8) + view[7] + 8);
+    if (back == NULL) {
+        return;
+    }
+    D_800EC6DE = 2;
+    if (back[8] == 0) {
+        D_800EC6DE = 3;
+        D_800C30C0 = back[9];
+        D_800C30C1 = back[10];
+        D_800C30C2 = back[11];
+    } else {
+        D_800EC6DE = 4;
+        D_800ED738 = (back[11] << 8) + back[12];
+        D_800F3960 = (back[13] << 8) + back[14];
+        size = (back[16] << 16) + (back[17] << 8) + back[18];
+        D_800F33C8 = func_80023668(size);
+        func_80023A38(back + 19, D_800F33C8, size);
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/1B800", func_8001CEB4);
