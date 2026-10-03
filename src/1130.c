@@ -1570,8 +1570,6 @@ f32 func_800051D4(omObjData* obj, f32 x, f32 y, f32 z, Vec3f* normal) {
     }
     return best;
 }
-// register allocation (masked 13): the cached unk_98 is reloaded on the decrement path
-#ifdef NON_MATCHING
 void func_800057F4(omObjData* obj, Vec3f* n) {
     PlayerWork* w = obj->unk_50;
     f32 rx, rz;
@@ -1590,9 +1588,7 @@ void func_800057F4(omObjData* obj, Vec3f* n) {
             }
         } else if (rx < cx) {
             w->unk_90 -= 4.0f;
-            cx = w->unk_90;
-        cz = w->unk_98;
-        if (cx < rx) {
+            if (w->unk_90 < rx) {
                 w->unk_90 = rx;
             }
         }
@@ -1603,7 +1599,7 @@ void func_800057F4(omObjData* obj, Vec3f* n) {
             }
         } else if (rz < cz) {
             w->unk_98 -= 4.0f;
-            if (cz < rz) {
+            if (w->unk_98 < rz) {
                 w->unk_98 = rz;
             }
         }
@@ -1618,9 +1614,6 @@ void func_800057F4(omObjData* obj, Vec3f* n) {
     obj->rot.x = w->unk_90;
     obj->rot.z = w->unk_98;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/1130", func_800057F4);
-#endif
 void func_80005A04(Object* arg0) {
     D_800CD9B0.x = arg0->unk_18.x;
     D_800CD9B0.y = arg0->unk_18.y;
