@@ -612,7 +612,8 @@ typedef struct unk2C0C0Struct70 {
     /* 0x1B */ u8 unk_19;
     /* 0x1A */ u8 unk_1A;
     /* 0x1B */ u8 unk_1B;
-    /* 0x1C */ char unk_1C[4];
+    /* 0x1C */ char unk_1C[2];
+    /* 0x1E */ s16 unk_1E;
     /* 0x20 */ u16 unk_20;
     /* 0x22 */ char unk_22[2];
     /* 0x24 */ u8* unk_24;
