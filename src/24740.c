@@ -1508,14 +1508,61 @@ void func_800289D0(s16 arg0, s16 arg1, f32 arg2) {
     p->unk_1C = 0.0f;
     p->unk_20 |= 4;
 }
-INCLUDE_ASM("asm/nonmatchings/24740", func_80028A34);
+void func_80028A34(s16 arg0) {
+    unk_ovl_2D_struct* p = &D_800F2B7C[arg0];
+    f32 dx = D_800F32A0->coords.x - p->unk_24;
+    f32 dy = D_800F32A0->coords.y - p->unk_28;
+    f32 dz = D_800F32A0->coords.z - p->unk_2C;
+    unk2C0C0StructC0* model;
+    unk_ovl_2D_struct* q;
+    s32 flags;
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80028BE0);
+    if (p->unk_1C < func_800B1750(dx * dx + dy * dy + dz * dz)) {
+        model = p->unk_74;
+    } else {
+        model = D_800F2B7C[p->unk_1A].unk_6C;
+    }
+    if (model != p->unk_6C) {
+        p->unk_6C = model;
+        for (i = 0; i < 128; i++) {
+            q = &D_800F2B7C[i];
+            if (q->unk_6C != NULL) {
+                continue;
+            }
+            flags = q->unk_20;
+            if (flags & 4) {
+                continue;
+            }
+            if (!(flags & 0x4000)) {
+                continue;
+            }
+            if (p->unk_6C == q->unk_70 || D_800F2B7C[p->unk_1A].unk_6C == q->unk_70) {
+                D_800F2B7C[i].unk_70 = model;
+            }
+        }
+    }
+    D_800F2B7C[p->unk_1A].unk_20 |= 4;
+}
+void func_80028BE0(s32 arg0) {
+    D_800ED0C8 = arg0;
+}
+void func_80028BEC(s16 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4) {
+    unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80028BEC);
+    model->unk_2A = arg1;
+    model->unk_2B = arg2;
+    model->unk_2C = arg3;
+    model->unk_2D = arg4;
+}
+void func_80028C28(s16 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4) {
+    unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80028C28);
-
+    model->unk_2E = arg1;
+    model->unk_2F = arg2;
+    model->unk_30 = arg3;
+    model->unk_31 = arg4;
+}
 INCLUDE_ASM("asm/nonmatchings/24740", func_80028C64);
 
 INCLUDE_ASM("asm/nonmatchings/24740", func_80028E8C);
