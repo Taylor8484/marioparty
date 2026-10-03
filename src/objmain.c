@@ -1,6 +1,47 @@
 #include "common.h"
 #include "engine/process.h"
 
+typedef struct omDBGMenuItem {
+    /* 0x00 */ u8 disabled;
+    /* 0x01 */ u8 x;
+    /* 0x02 */ u8 y;
+    /* 0x03 */ u8 color;
+    /* 0x04 */ u8 selColor;
+    /* 0x08 */ char* str;
+} omDBGMenuItem; // sizeof 0xC
+
+typedef struct omSaftyFrameColor {
+    u8 r;
+    u8 g;
+    u8 b;
+} omSaftyFrameColor;
+
+extern omDBGMenuItem D_800C5A24[6];
+extern u16 D_800EE324[];
+extern u16 D_800ED55C[];
+extern u8 D_800F384E;
+extern u8 D_800C5966;
+extern u16 D_800C5974;
+extern s16 D_800D89BE;
+extern s16 D_800D89C0;
+extern omSaftyFrameColor saftyFrameColor;
+
+void saftyFrameFlashSet(s32, s32, s32, s32, s32, s32, s32, s32, s32);
+void saftyFrameFlashReset(void);
+void saftyFrameReset(void);
+void saftyFrameSet(s32, s32, s32);
+void pfWinClose(void);
+void pfWinKill(s16);
+void func_80070ED4(void);
+s32 func_80072718(void);
+void func_8000C64C(s32);
+void func_8000C5C4(void);
+void func_80037C40(void);
+void func_80037C90(void);
+void func_80060C84(s32);
+void func_80060D4C(void);
+
+
 typedef struct omCameraView {
     /* 0x00 */ f32 rot;
     /* 0x04 */ f32 x;
@@ -896,8 +937,191 @@ INCLUDE_RODATA("asm/nonmatchings/objmain", D_800CB594);
 
 INCLUDE_RODATA("asm/nonmatchings/objmain", D_800CB59C);
 
-INCLUDE_ASM("asm/nonmatchings/objmain", omDBGSystemKeyCheck);
+void omDBGSystemKeyCheck(omObjData* obj) {
+    s32 i;
+    s32 j;
+    u8 pad;
+    u8 close = 0;
 
+    if (obj->work[0] & 1) {
+        pad = obj->work[1];
+        if (!(obj->work[0] & 4)) {
+            sprintf(pfStrBuf, "- PAUSE -");
+            fontcolor = 4;
+            print8(125, 97, pfStrBuf);
+            fontcolor = 12;
+            print8(124, 96, pfStrBuf);
+            for (i = 0; i < 6; i++) {
+                sprintf(pfStrBuf, D_800C5A24[i].str);
+                if (i == obj->work[2]) {
+                    fontcolor = D_800C5A24[i].color;
+                    print8(D_800C5A24[i].x + 1, D_800C5A24[i].y + 1, pfStrBuf);
+                    fontcolor = D_800C5A24[i].selColor;
+                    print8(D_800C5A24[i].x, D_800C5A24[i].y, pfStrBuf);
+                } else {
+                    fontcolor = 0;
+                    print8(D_800C5A24[i].x + 1, D_800C5A24[i].y + 1, pfStrBuf);
+                    fontcolor = D_800C5A24[i].color;
+                    print8(D_800C5A24[i].x, D_800C5A24[i].y, pfStrBuf);
+                }
+            }
+            sprintf(pfStrBuf, ">");
+            fontcolor = 8;
+            print8(D_800C5A24[obj->work[2]].x + 1, D_800C5A24[obj->work[2]].y + 1, pfStrBuf);
+            fontcolor = 15;
+            print8(D_800C5A24[obj->work[2]].x, D_800C5A24[obj->work[2]].y, pfStrBuf);
+            if (D_800EE324[pad] & 0x400) {
+                PlaySound(0xF5);
+                do {
+                    if (++obj->work[2] >= 6) {
+                        obj->work[2] = 0;
+                    }
+                } while (D_800C5A24[obj->work[2]].disabled == 1);
+            } else if (D_800EE324[pad] & 0x800) {
+                PlaySound(0xF5);
+                do {
+                    if ((s8)--obj->work[2] < 0) {
+                        obj->work[2] = 5;
+                    }
+                } while (D_800C5A24[obj->work[2]].disabled == 1);
+            } else if (D_800EE324[pad] & 8) {
+                obj->work[0] ^= 8;
+                if (obj->work[0] & 8) {
+                    saftyFrameFlashSet(1, 1, -1, 0x60, 0x80, 0xFF, 0, 0, 100);
+                } else {
+                    saftyFrameFlashReset();
+                    saftyFrameColor.r = saftyFrameColor.g = 0;
+                    saftyFrameColor.b = 0x90;
+                }
+            } else if (D_800EE324[pad] & 4) {
+                obj->work[0] ^= 0x20;
+                if (obj->work[0] & 0x20) {
+                    saftyFrameColor.g = 0xFF;
+                } else {
+                    saftyFrameColor.g = 0;
+                }
+            } else if (D_800EE324[pad] & 2) {
+                obj->work[0] ^= 0x10;
+                if (obj->work[0] & 0x10) {
+                    saftyFrameColor.r = 0xFF;
+                } else {
+                    saftyFrameColor.r = 0;
+                }
+            } else if (D_800EE324[pad] & 1) {
+                obj->work[0] ^= 0x40;
+                if (obj->work[0] & 0x40) {
+                    saftyFrameColor.b = 0xFF;
+                } else {
+                    saftyFrameColor.b = 0;
+                }
+            } else if (D_800EE324[pad] & 0x8000) {
+                D_800EE324[pad] = 0;
+                PlaySound(0xF6);
+                switch (obj->work[2]) {
+                case 0:
+                    D_800EE324[pad] |= 0x20;
+                    break;
+                case 1:
+                    D_800F5144 = 1;
+                    D_800EE324[pad] |= 0x20;
+                    if (omDBGSysKeyObj->work[0] & 1) {
+                        omDBGSysKeyObj->work[0] &= ~1;
+                        func_80070ED4();
+                    }
+                    break;
+                case 2:
+                    pfWinClose();
+                    D_800C5972 = 0;
+                    D_800C59A6 = -1;
+                    saftyFrameReset();
+                    obj->work[0] |= 4;
+                    func_80037C40();
+                    break;
+                case 3:
+                    if ((D_800C5972 ^= 1) == 0) {
+                        pfWinKill(D_800C59A6);
+                        D_800C59A6 = -1;
+                    }
+                    break;
+                case 4:
+                    if ((D_800C5974 ^= 1) == 0) {
+                        func_80060198();
+                    }
+                    break;
+                case 5:
+                    if ((D_800C5976 ^= 1) == 0) {
+                        func_8006073C();
+                    }
+                    break;
+                }
+            }
+        }
+        if (D_800EE324[pad] & 0x20) {
+            close = 1;
+            obj->work[0] &= ~4;
+        }
+        if (D_800C5982 == 1) {
+            close = 1;
+        }
+        if (close == 1) {
+            obj->work[0] &= ~1;
+            if (!(omDBGSysKeyObj->work[0] & 1)) {
+                D_800F384E = D_800C5966;
+                for (j = 0; j < D_800ED550; j++) {
+                    if (!(D_800C5984[j].stat & 0x21)) {
+                        omResetStatBit(&D_800C5984[j], 0x10);
+                    }
+                }
+                for (j = 0; j < D_800C5988; j++) {
+                    if (!(D_800C5990[j].unk0 & 0x21)) {
+                        omPrcResetStatBit(D_800C5990[j].processInstance, 0x10);
+                        if (!(D_800C5990[j].unk0 & 0x40)) {
+                            D_800C5990[j].processInstance->stat &= ~1;
+                        }
+                    }
+                }
+                func_8000C64C(0);
+                func_80060D4C();
+                if (D_800C5998 & 8) {
+                    D_800C5998 &= ~8;
+                }
+                for (i = 0; i < 4; i++) {
+                    func_8006CD0C(i);
+                }
+            }
+            pfWinKill(D_800D89BE);
+            pfWinKill(D_800D89C0);
+            saftyFrameReset();
+            func_80037C90();
+        }
+    } else if (func_80072718() != 1 && D_800C5982 != 1) {
+        for (i = 0; i < 4; i++) {
+            if (func_800141FC(i) != 0 && (D_800EE324[i] & 0x20) && !((D_800ED55C[i] | D_800EE324[i]) & 0x10)) {
+                D_800C5966 = D_800F384E;
+                D_800F384E = 1;
+                obj->work[0] = 1;
+                obj->work[1] = i;
+                for (j = 0; j < D_800ED550; j++) {
+                    if (!(D_800C5984[j].stat & 0x21)) {
+                        omSetStatBit(&D_800C5984[j], 0x10);
+                    }
+                }
+                for (j = 0; j < D_800C5988; j++) {
+                    if (!(D_800C5990[j].unk0 & 0x21)) {
+                        omPrcSetStatBit(D_800C5990[j].processInstance, 0x10);
+                        D_800C5990[j].processInstance->stat |= 1;
+                    }
+                }
+                D_800D89BE = pfWinCreate(0x78, 0x60, 0xD0, 0xA8, 0x40FF);
+                D_800D89C0 = pfWinCreate(0x74, 0x5C, 0xCC, 0xA4, 0x90FF);
+                saftyFrameSet(0, 0, 0x90);
+                func_8000C5C4();
+                func_80060C84(4);
+                return;
+            }
+        }
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/objmain", omSystemKeyCheck);
 
 INCLUDE_ASM("asm/nonmatchings/objmain", func_8005FD5C);
