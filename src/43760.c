@@ -36,6 +36,9 @@ extern s8 D_800D6467;
 s32 func_80054730(s32);
 s16 func_8005949C(s32);
 void func_80047D48(void);
+void func_80043544(void);
+void func_8004367C(void);
+void func_800437B8(void);
 void func_800448F4(omObjData* obj);
 
 typedef struct Rect43760 {
