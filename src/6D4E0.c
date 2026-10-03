@@ -45,6 +45,12 @@ extern TWColor D_800C5DF6[];
 TWSprite* func_800675F4(s16, s16);
 s32 func_8006E87C(TextWindow* arg0);
 u8* func_8006F718(s16 arg0, u8 arg1);
+s32 func_8006E318(s16 arg0);
+s32 func_8006EB90(TextWindow* tw);
+void func_8006EA44(s16 arg0);
+s32 func_8006FE4C(s16 arg0);
+void func_8007094C(TextWindow* arg0, SubTextWindow* arg1);
+s32 func_80071278(TextWindow* arg0);
 void func_8006E984(TextWindow* arg0);
 
 
@@ -68,6 +74,11 @@ extern s16 D_800E4328;
 extern s16 D_800E4330;
 extern OSMesgQueue D_800EE960;
 extern u8 D_800C5DF1;
+extern u8 D_800F64F8;
+extern TWColor D_800C603C[4];
+/* splat labels for &D_800C603C[0].g and .b */
+extern TWColor D_800C603D[];
+extern TWColor D_800C603E[];
 extern Process* D_800F2BC4;
 typedef struct FontFile {
     /* 0x00 */ s32 unk0;
@@ -1075,8 +1086,57 @@ u8* func_8006F718(s16 arg0, u8 arg1) {
     }
     return buf;
 }
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006F9B0);
+// retail re-truncates the colour index (an extra andi 0xff); otherwise identical (masked 23, all from the 1-instruction shift)
+#ifdef NON_MATCHING
+void func_8006F9B0(void) {
+    TextWindow* tw;
+    s16 id;
+    u8 c;
 
+    while (1) {
+        HuPrcVSleep();
+        id = D_800ED4B0[0].unk_3C;
+        while (D_800ED4B0[id].unk_3C != -1) {
+            tw = &D_800ED4B0[id];
+            c = D_800C5DF0 & 3;
+            func_800674F4(tw->unk_44, 9, D_800C603C[c].r, D_800C603D[c].r, D_800C603E[c].r);
+            if ((D_800ECC22 == 0 || (tw->unk_06 & 0x40)) && func_8005FD5C() + D_800F64F8 != 0) {
+                id = D_800ED4B0[id].unk_3C;
+                continue;
+            }
+            switch (tw->unk_00) {
+            case 1:
+                func_8006E318(id);
+                break;
+            case 2:
+                func_8006EA44(id);
+                if (!(tw->unk_06 & 0x10) && (func_80071278(tw) & 0xC000)) {
+                    PlaySound((tw->unk_06 & 0x20) ? 0x34 : 0x46);
+                    tw->unk_00 = 1;
+                    func_8006F3BC(id, tw->unk_30 - 1, tw->unk_32 - 1, tw->unk_07 + 1, tw->unk_08 + 1);
+                }
+                break;
+            case 5:
+                if (func_8006EB90(tw) == 0) {
+                    tw->unk_2E -= tw->unk_08 + tw->unk_0A;
+                    tw->unk_00 = 1;
+                }
+                break;
+            case 6:
+                if (func_8006FE4C(id) == 0) {
+                    tw->unk_00 = 0;
+                }
+                break;
+            }
+            func_8007094C(tw, &tw->unk_F4[tw->unk_11]);
+            id = D_800ED4B0[id].unk_3C;
+        }
+        D_800C5DF0++;
+    }
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006F9B0);
+#endif
 s16 func_8006FCC0(s16 arg0) {
     return D_800ED4B0[arg0].unk_00;
 }

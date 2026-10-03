@@ -9,7 +9,7 @@
 
 extern s16 D_800F64F6; //matrix stack position
 extern u16 ContDStkTrg[];
-extern s8 D_800ECC22;
+extern u8 D_800ECC22;
 extern u8 D_800ED0D2;
 //extern s16 D_800ED15E;
 extern Addr D_FE2310;

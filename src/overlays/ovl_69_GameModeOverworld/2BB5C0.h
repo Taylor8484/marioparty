@@ -8,7 +8,7 @@ extern u8 D_800FA204_GameModeOverworld;
 extern f32 D_800FA1D8_GameModeOverworld;
 extern s8 ContStkY[];
 extern s16 ContBtn[];
-extern s8 D_800ECC22;
+extern u8 D_800ECC22;
 extern s16 D_800ED144;
 extern s8 omSysPauseEnableFlag;
 extern s16 D_800FA1C0_GameModeOverworld;
