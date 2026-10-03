@@ -18,8 +18,6 @@ s16 func_8001BD60(unk2C0C0StructC0*);
 s16 func_8001BF64(unk2C0C0StructC0*, u16, u8*);
 u8* func_8001C2E8(s32, u8*, u8*);
 u8* func_8001C378(u8*);
-// the unk_80 base load is emitted after the index multiply instead of before it (masked 2)
-#ifdef NON_MATCHING
 void func_8001C3A8(unk2C0C0StructC0*, s16, s16, s16);
 void func_8001C75C(unk2C0C0Struct20*, u8*, unk2C0C0StructC0*, u16*);
 void func_8001C9F4(s8*, unk2C0C0StructA0*, unk2C0C0StructA0*, unk2C0C0StructA0*);
@@ -157,9 +155,6 @@ void func_8001AC00(unk2C0C0StructC0* arg0, u8* arg1, s16 arg2) {
 
     func_8003394C(arg0);
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/1B800", func_8001C3A8);
-#endif
 
 void func_8001B1D4(unk2C0C0StructC0* arg0) {
     s16 i;
@@ -535,6 +530,8 @@ u8* func_8001C378(u8* arg0) {
     return arg0;
 }
 
+// the unk_80 base load is emitted after the index multiply instead of before it (masked 2)
+#ifdef NON_MATCHING
 void func_8001C3A8(unk2C0C0StructC0* arg0, s16 arg1, s16 arg2, s16 arg3) {
     u16 flags;
     unk2C0C0Struct20* faces;
@@ -633,6 +630,9 @@ void func_8001C3A8(unk2C0C0StructC0* arg0, s16 arg1, s16 arg2, s16 arg3) {
     box->unk_02 = maxY;
     box->unk_04 = maxZ;
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/1B800", func_8001C3A8);
+#endif
 // register allocation of the two packed-word sums (masked 0, raw 4)
 #ifdef NON_MATCHING
 void func_8001C75C(unk2C0C0Struct20* arg0, u8* arg1, unk2C0C0StructC0* arg2, u16* arg3) {
@@ -806,12 +806,12 @@ void func_8001CD60(unk2C0C0StructC0* arg0) {
     s32 size;
 
     D_800EC6DE = 0;
-    view = func_8001C2E8('VIEW', arg0->unk_3C, arg0->unk_38);
+    view = func_8001C2E8(0x56494557 /* 'VIEW' */, arg0->unk_3C, arg0->unk_38);
     if (view == NULL) {
         return;
     }
     D_800EC6DE = 1;
-    back = func_8001C2E8('BACK', view + 8, view + (view[5] << 16) + (view[6] << 8) + view[7] + 8);
+    back = func_8001C2E8(0x4241434B /* 'BACK' */, view + 8, view + (view[5] << 16) + (view[6] << 8) + view[7] + 8);
     if (back == NULL) {
         return;
     }
