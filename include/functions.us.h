@@ -238,7 +238,7 @@ void func_8004A520(void);
 void LoadStringIntoWindow(s16 win_id, void* string_id, s16 a, s16 b);
 void func_800427D4(void* );
 void func_800A0D50(Vec3f* ptr, Vec3f* ptr2);
-void* func_80042728(Object* ptr, s32 num);
+void* func_80042728(Object* ptr, s16 num);
 void func_800A40D0(void* ptr, f32 unk);
 void func_8004CDCC(Object* unk);
 void func_8004F2EC(void);
