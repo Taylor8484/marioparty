@@ -1,5 +1,20 @@
 #include "common.h"
 
+typedef struct DiceProcWork {
+    /* 0x00 */ s32 player;
+    /* 0x04 */ s32 state;
+} DiceProcWork;
+
+void func_80039ACC(s16);
+void func_80047694(s32);
+s32 func_80047B68(void);
+void func_800471FC(void);
+void func_80052C44(s32, s32, s32, s32, s32);
+s32 func_80041644(s32);
+s32 func_80041664(s32);
+extern s16 D_800EE320;
+
+
 extern s32 D_800C4C40[];
 extern s32 D_800C4C58[];
 s16 func_80038D5C(unk2C0C0StructC0*, u16, s32, char*);
@@ -857,50 +872,350 @@ void func_800411C8(s32 idx) {
     D_800D63E1 = 4;
     func_800503B0(idx, 1);
 }
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041250);
+void func_80041250(s32 idx) {
+    DiceBlockWork* work = &D_800D62D0[idx];
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041370);
+    if (work->unkC != -1) {
+        func_8002456C(work->unkC);
+        for (i = 0; i < 6; i++) {
+            if (work->unk10[i] != -1) {
+                func_80039ACC(work->unk10[i]);
+            }
+        }
+        if (work->unk24 != NULL) {
+            DataClose(work->unk24);
+        }
+        omDelObj(work->unk2C);
+        work->unk2C = NULL;
+        work->unkC = -1;
+    }
+    if (work->unkE != -1) {
+        func_8002456C(work->unkE);
+        work->unkE = -1;
+        if (work->unk30 != NULL) {
+            omDelObj(work->unk30);
+            work->unk30 = NULL;
+        }
+    }
+    if (work->unk1C != -1) {
+        func_80039ACC(work->unk1C);
+        work->unk1C = -1;
+    }
+    if (work->unk28 != NULL) {
+        DataClose(work->unk28);
+        work->unk28 = NULL;
+    }
+}
+void func_80041370(void) {
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_800413B0);
+    for (i = 0; i < 4; i++) {
+        func_80041250(i);
+        func_800405DC(i);
+    }
+}
+void func_800413B0(s32 idx) {
+    DiceBlockWork* work = &D_800D62D0[idx];
+    s32 value;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8004157C);
+    if (work->unkC == -1) {
+        return;
+    }
+    work->unk2C->work[0] = 2;
+    func_8004017C(idx);
+    value = work->unk3;
+    switch (work->unk5) {
+    case 1:
+        ShowPlayerCoinChange(idx, value);
+        func_80055960(idx, value);
+        break;
+    case 2:
+        value = -value;
+        ShowPlayerCoinChange(idx, value);
+        func_80055960(idx, value);
+        func_800503B0(idx, 3);
+        break;
+    }
+    if (D_800D63E1 == 1) {
+        value = 0;
+        for (i = 0; i < 4; i++) {
+            value += D_800D62D0[i].unk1E != -1;
+        }
+    } else {
+        value = 1;
+    }
+    if (value == 1) {
+        func_8006071C(work->unk1E);
+    }
+    work->unk1E = -1;
+    work->unk20 = 0;
+    switch (D_800D63E1) {
+    case 4:
+        PlaySound(0x5D);
+        break;
+    case 3:
+        if (func_80041644(idx) == 0) {
+            PlaySound(0x100);
+        } else {
+            PlaySound(0xFF);
+        }
+        break;
+    case 2:
+        if (func_80041604(idx) == 0) {
+            PlaySound(0x100);
+        } else {
+            PlaySound(0xFF);
+        }
+        break;
+    default:
+        if (work->unk5 == 5) {
+            PlaySound(0x5D);
+        } else {
+            PlaySound(0x35);
+        }
+        break;
+    }
+}
+void func_8004157C(void) {
+    D_800D63E1 = 1;
+}
+s32 func_8004158C(s32 idx) {
+    return D_800D62D0[idx].unkC != -1;
+}
+void func_800415B0(s32 idx, s8 value) {
+    D_800D62D0[idx].unk3 = value;
+}
+void func_800415CC(s32 idx, s32 value) {
+    D_800D62D0[idx].unk2 = value;
+}
+s8 func_800415E8(s32 idx) {
+    return D_800D62D0[idx].unk3;
+}
+s32 func_80041604(s32 idx) {
+    return D_800D62D0[idx].unk0 - 1;
+}
+s32 func_80041624(s32 idx) {
+    return D_800D62D0[idx].unk0 - 8;
+}
+s32 func_80041644(s32 idx) {
+    return D_800D62D0[idx].unk1 - 3;
+}
+s32 func_80041664(s32 idx) {
+    return D_800D62D0[idx].unk1 - 5;
+}
+void func_80041684(void) {
+    DiceProcWork* work = HuPrcCurrentGet()->user_data;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8004158C);
+    while (TRUE) {
+        switch (work->state) {
+        case 0:
+            func_80047694(work->player);
+            work->state++;
+            break;
+        case 1:
+            if (func_80047B68() == 0) {
+                HuPrcSleep(5);
+                work->state++;
+            }
+            if ((GwPlayer[work->player].flags & 1) || (ContBtnTrg[GwPlayer[work->player].port] & 0x8000)) {
+                func_800471FC();
+            }
+            break;
+        case 2:
+            EndProcess(NULL);
+            break;
+        }
+        HuPrcVSleep();
+    }
+}
+void func_800417B4(void) {
+    DiceProcWork* work = HuPrcCurrentGet()->user_data;
+    s32 timer = 0;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_800415B0);
+    while (TRUE) {
+        switch (work->state) {
+        case 0:
+            D_800D63E2 = 0;
+            func_80040780(work->player);
+            D_800D63E2 = 1;
+            work->state++;
+            HuPrcSleep(20);
+            break;
+        case 1:
+            if ((GwPlayer[work->player].flags & 1) || (ContBtnTrg[GwPlayer[work->player].port] & 0x8000)) {
+                work->state++;
+                SetPlayerAnimation(work->player, 2, 0);
+                func_8004F00C(GwPlayer[work->player].player_obj, 20.0f, -3.0f);
+                D_800EE320 = 0;
+            }
+            break;
+        case 2:
+            if (++timer >= 5) {
+                func_800413B0(work->player);
+                func_80052C44(work->player, -1, 0, 10, 2);
+                work->state++;
+            }
+            break;
+        case 3:
+            HuPrcSleep(20);
+            EndProcess(NULL);
+            break;
+        }
+        HuPrcVSleep();
+    }
+}
+Process* func_80041978(s32 player) {
+    Process* process = omAddPrcObj(func_80041684, 0, 0, 0x40);
+    DiceProcWork* work = HuMemMemoryAlloc(process->heap, 0x10);
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_800415CC);
+    process->user_data = work;
+    work->player = player;
+    work->state = 0;
+    return process;
+}
+Process* func_800419D8(s32 player) {
+    Process* process = omAddPrcObj(func_800417B4, 0, 0, 0x40);
+    DiceProcWork* work = HuMemMemoryAlloc(process->heap, 0x10);
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_800415E8);
+    process->user_data = work;
+    work->player = player;
+    work->state = 0;
+    return process;
+}
+void func_80041A38(void) {
+    DiceProcWork* work = HuPrcCurrentGet()->user_data;
+    s32 timer = 0;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041604);
+    while (TRUE) {
+        switch (work->state) {
+        case 0:
+            D_800D63E2 = 0;
+            func_80041158(work->player);
+            D_800D63E2 = 1;
+            work->state++;
+            HuPrcSleep(20);
+            break;
+        case 1:
+            if ((GwPlayer[work->player].flags & 1) || (ContBtnTrg[GwPlayer[work->player].port] & 0x8000)) {
+                work->state++;
+                SetPlayerAnimation(work->player, 2, 0);
+                func_8004F00C(GwPlayer[work->player].player_obj, 20.0f, -3.0f);
+                D_800EE320 = 0;
+            }
+            break;
+        case 2:
+            if (++timer >= 5) {
+                func_800413B0(work->player);
+                func_80052C44(work->player, -1, 0, 10, 2);
+                work->state++;
+            }
+            break;
+        case 3:
+            HuPrcSleep(5);
+            HuPrcSleep(15);
+            EndProcess(NULL);
+            break;
+        }
+        HuPrcVSleep();
+    }
+}
+Process* func_80041C04(s32 player) {
+    Process* process = omAddPrcObj(func_80041A38, 0, 0, 0x40);
+    DiceProcWork* work = HuMemMemoryAlloc(process->heap, 0x10);
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041624);
+    process->user_data = work;
+    work->player = player;
+    work->state = 0;
+    return process;
+}
+void func_80041C64(void) {
+    s32 timer = 0;
+    DiceProcWork* work = HuPrcCurrentGet()->user_data;
+    f32 y;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041644);
+    while (TRUE) {
+        switch (work->state) {
+        case 0:
+            D_800D63E2 = 0;
+            func_800411C8(work->player);
+            D_800D63E2 = 1;
+            work->state++;
+            HuPrcSleep(20);
+            break;
+        case 1:
+            if ((GwPlayer[work->player].flags & 1) || (ContBtnTrg[GwPlayer[work->player].port] & 0x8000)) {
+                work->state++;
+                SetPlayerAnimation(work->player, 2, 0);
+                func_8004F00C(GwPlayer[work->player].player_obj, 20.0f, -3.0f);
+                D_800EE320 = 0;
+            }
+            break;
+        case 2:
+            if (++timer >= 5) {
+                func_800413B0(work->player);
+                func_80052C44(work->player, -1, 0, 10, 2);
+                work->state++;
+            }
+            break;
+        case 3:
+            HuPrcSleep(20);
+            switch (func_80041664(work->player)) {
+            case 0:
+                PlaySound(0x81);
+                break;
+            case 1:
+                PlaySound(0x83);
+                break;
+            case 2:
+                PlaySound(0x82);
+                break;
+            }
+            for (y = 0.0f; -D_800D63E4 < y; y -= 10.0f) {
+                D_800D62D0[work->player].unk34->scale.x -= 0.05;
+                D_800D62D0[work->player].unk34->trans.y = y;
+                HuPrcVSleep();
+            }
+            func_800405DC(work->player);
+            EndProcess(NULL);
+            break;
+        }
+        HuPrcVSleep();
+    }
+}
+Process* func_80041F24(s32 player) {
+    Process* process = omAddPrcObj(func_80041C64, 0, 0, 0x40);
+    DiceProcWork* work = HuMemMemoryAlloc(process->heap, 0x10);
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041664);
+    process->user_data = work;
+    work->player = player;
+    work->state = 0;
+    return process;
+}
+void func_80041F84(s32 idx) {
+    DiceBlockWork* work = &D_800D62D0[idx];
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041684);
+    if (work->unk1E != -1) {
+        func_8006071C(work->unk1E);
+        work->unk1E = -1;
+    }
+    work->unk20 = 1;
+}
+void func_80041FE0(s32 idx) {
+    DiceBlockWork* work = &D_800D62D0[idx];
+    s32 sound;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_800417B4);
-
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041978);
-
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_800419D8);
-
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041A38);
-
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041C04);
-
-
-
-
-
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041C64);
-
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041F24);
-
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041F84);
-
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041FE0);
+    if (work->unk20 == 1 && work->unkC != -1 && work->unk2C != NULL && work->unk2C->work[0] != 2) {
+        if (D_800D63E1 == 3) {
+            sound = 0x4F;
+            goto play;
+        }
+        if (work->unk5 != 5 && D_800D63E1 != 4) {
+            sound = 0x2D;
+        play:
+            work->unk1E = PlaySound(sound);
+        }
+    }
+    work->unk20 = 0;
+}
