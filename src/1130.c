@@ -379,7 +379,7 @@ s32 func_80000D14(Vec3f* p, ColTri* tri, ColVtx* verts) {
     }
     return 1;
 }
-// register allocation and block layout (masked 193)
+// register allocation (masked 150) and block layout around the shared return-2 tail
 #ifdef NON_MATCHING
 s32 func_80000F3C(omObjData* obj, f32 x, f32 y, f32 z) {
     PlayerWork* w = obj->unk_50;
@@ -387,10 +387,12 @@ s32 func_80000F3C(omObjData* obj, f32 x, f32 y, f32 z) {
     f32 speed = w->unk_40;
     omObjData* o;
     PlayerWork* ow;
+    PlayerWork* ow2;
     f32 dx, dy, dz;
     f32 dist, flat;
     f32 dxx, dzz;
     f32 a;
+    f32 dz2;
     u16 i;
     u8 c;
     s16 m;
@@ -406,7 +408,7 @@ s32 func_80000F3C(omObjData* obj, f32 x, f32 y, f32 z) {
     for (i = 0; i < D_800EE984; i++) {
         o = D_800EDE70[i];
         ow = o->unk_50;
-        if (ow->unk_54 == 0) {
+        if ((u8)ow->unk_54 == 0) {
             continue;
         }
         dx = o->trans.x - (x + D_800ED6B8);
@@ -416,7 +418,8 @@ s32 func_80000F3C(omObjData* obj, f32 x, f32 y, f32 z) {
         if (ow->unk_34 != 0.0f && o->trans.y <= y && y <= o->trans.y + ow->unk_34) {
             flat = func_800B1750(dx * dx + dz * dz) - (radius + ow->unk_48);
         }
-        if ((func_800B1750(dx * dx + dy * dy + dz * dz) - (radius + ow->unk_48) < 0.0f) | (flat < 0.0f)) {
+        dist = func_800B1750(dx * dx + dy * dy + dz * dz) - (radius + ow->unk_48);
+        if ((dist < 0.0f) | (flat < 0.0f)) {
             if (w->unk_DC != NULL && w->unk_DC(obj, o) == 1) {
                 continue;
             }
@@ -510,34 +513,34 @@ s32 func_80000F3C(omObjData* obj, f32 x, f32 y, f32 z) {
     y += w->unk_48;
     for (i = 0; i < D_800F2BC0; i++) {
         o = D_800F3FB0[i];
-        ow = o->unk_50;
-        if (w == ow) {
+        ow2 = o->unk_50;
+        if (w == ow2) {
             continue;
         }
         dx = o->trans.x - (x + D_800ED6B8);
-        dy = (o->trans.y + ow->unk_48) - y;
-        dz = o->trans.z - (z + D_800F5254);
+        dy = (o->trans.y + ow2->unk_48) - y;
+        dz2 = o->trans.z - (z + D_800F5254);
         dxx = dx * dx;
-        dzz = dz * dz;
-        flat = func_800B1750(dxx + dzz) - (w->unk_48 + ow->unk_48) * 0.6f;
-        dist = func_800B1750(dxx + dy * dy + dzz) - (ow->unk_48 + w->unk_48);
-        if (((flat < 0.0f) | (dist < 0.0f)) && w->unk_38 != 1000.0f && !(w->unk_50 & 0x8000)) {
-            if (y - (ow->unk_34 + ow->unk_48) <= o->trans.y && o->trans.y <= (y - w->unk_48) + w->unk_34) {
-                if (!(ow->unk_50 & 7) && w->unk_AE == 0 && ow->unk_AE == 0) {
-                    if (ow->unk_38 != 1000.0f) {
+        dzz = dz2 * dz2;
+        dist = func_800B1750(dxx + dzz) - (w->unk_48 + ow2->unk_48) * 0.6f;
+        flat = func_800B1750(dxx + dy * dy + dzz) - (ow2->unk_48 + w->unk_48);
+        if (((dist < 0.0f) | (flat < 0.0f)) && w->unk_38 != 1000.0f && !(w->unk_50 & 0x8000)) {
+            if (y - (ow2->unk_34 + ow2->unk_48) <= o->trans.y && o->trans.y <= (y - w->unk_48) + w->unk_34) {
+                if (!(ow2->unk_50 & 7) && w->unk_AE == 0 && ow2->unk_AE == 0) {
+                    if (ow2->unk_38 != 1000.0f) {
                         if (w->unk_5C & 0x200) {
-                            if (!(flat < 0.0f && dy < -w->unk_34 * 0.5f)) {
+                            if (!(dist < 0.0f && dy < -w->unk_34 * 0.5f)) {
                                 goto block_93;
                             }
                             func_80017C0C(obj, 7, x, y, z, 0.0f, 0.0f);
-                            if (!(ow->unk_50 & 0x200)) {
+                            if (!(ow2->unk_50 & 0x200)) {
                                 func_80018450(o, 1);
                                 func_800184BC(o, 0x1E);
-                                if (ow->unk_50 & 0x20) {
+                                if (ow2->unk_50 & 0x20) {
                                     func_8000A534(o, D_800B898C);
                                 }
                             }
-                            ow->unk_38 = w->unk_38;
+                            ow2->unk_38 = w->unk_38;
                             goto block_104;
                         block_93:
                             if (D_800B8955 != 1) {
@@ -546,32 +549,32 @@ s32 func_80000F3C(omObjData* obj, f32 x, f32 y, f32 z) {
                             func_8000ACE4(obj, o);
                             return 0;
                         }
-                        if (!(flat < 0.0f && dy < -w->unk_34 * 0.2)) {
+                        if (!(dist < 0.0f && dy < -w->unk_34 * 0.2)) {
                             goto block_93;
                         }
-                        if (!(ow->unk_50 & 0x200)) {
+                        if (!(ow2->unk_50 & 0x200)) {
                             func_80017C0C(obj, 6, x, y, z, -90.0f, 0.0f);
                             func_80018450(o, 2);
-                            if (ow->unk_50 & 0x20) {
+                            if (ow2->unk_50 & 0x20) {
                                 func_8000A534(o, D_800B898C);
                             }
                         }
-                        if (ow->unk_38 < 0.0f) {
-                            ow->unk_38 = 0.0f;
+                        if (ow2->unk_38 < 0.0f) {
+                            ow2->unk_38 = 0.0f;
                         }
                     block_104:
-                        ow->unk_40 = D_800B8990;
-                        func_8000A988(obj, dx, dz);
+                        ow2->unk_40 = D_800B8990;
+                        func_8000A988(obj, dx, dz2);
                         func_800096B0(w, 9);
                         func_80060F04(w->unk_58, 2, 3, 10);
-                        func_80060F04(ow->unk_58, 2, 3, 10);
+                        func_80060F04(ow2->unk_58, 2, 3, 10);
                         return 2;
                     block_78:
-                        func_800078E8(dx, dz, func_800B1750(dx * dx + dz * dz) - (ow->unk_48 + w->unk_48));
+                        func_800078E8(dx, dz2, func_800B1750(dx * dx + dz2 * dz2) - (ow2->unk_48 + w->unk_48));
                         return 0;
                     }
-                    if ((flat < 0.0f) & (dy < 0.0f)) {
-                        if (!(ow->unk_50 & 0x200)) {
+                    if ((dist < 0.0f) & (dy < 0.0f)) {
+                        if (!(ow2->unk_50 & 0x200)) {
                             if (w->unk_5C & 0x200) {
                                 func_80018450(o, 1);
                                 func_800184BC(o, 0);
@@ -580,30 +583,30 @@ s32 func_80000F3C(omObjData* obj, f32 x, f32 y, f32 z) {
                                 func_80017C0C(obj, 6, x, y, z, -90.0f, 0.0f);
                                 func_80018450(o, 2);
                             }
-                            if (ow->unk_50 & 0x20) {
+                            if (ow2->unk_50 & 0x20) {
                                 func_8000A534(o, D_800B898C);
                             }
                         }
-                        func_8000A988(obj, dx, dz);
+                        func_8000A988(obj, dx, dz2);
                         func_800096B0(w, 9);
                         func_80060F04(w->unk_58, 2, 3, 10);
-                        func_80060F04(ow->unk_58, 2, 2, 20);
+                        func_80060F04(ow2->unk_58, 2, 2, 20);
                         return 2;
                     }
-                    func_8000A988(obj, dx, dz);
+                    func_8000A988(obj, dx, dz2);
                     w->unk_38 = -D_800B8964 * 0.6f;
                     w->unk_40 = w->unk_40 * 0.5;
                     func_800096B0(w, 9);
                     func_80060F04(w->unk_58, 2, 3, 10);
-                    func_80060F04(ow->unk_58, 2, 2, 20);
-                } else if (w->unk_38 != 1000.0f && ow->unk_38 != 1000.0f) {
-                    if (w->unk_AE != 0 || ow->unk_AE != 0) {
+                    func_80060F04(ow2->unk_58, 2, 2, 20);
+                } else if (w->unk_38 != 1000.0f && ow2->unk_38 != 1000.0f) {
+                    if (w->unk_AE != 0 || ow2->unk_AE != 0) {
                         if (D_800B8955 == 1) {
                             func_8000ACE4(obj, o);
                             func_80060F04(w->unk_58, 2, 3, 10);
                             return 0;
                         }
-                        func_800078E8(dx, dz, dist);
+                        func_800078E8(dx, dz2, flat);
                         return 0;
                     }
                 } else {
@@ -613,20 +616,20 @@ s32 func_80000F3C(omObjData* obj, f32 x, f32 y, f32 z) {
                         func_80017C0C(obj, 6, x, y, z, -90.0f, 0.0f);
                     }
                     func_80060F04(w->unk_58, 2, 3, 10);
-                    func_8000A988(obj, dx, dz);
+                    func_8000A988(obj, dx, dz2);
                     func_800096B0(w, 9);
                 }
-            } else if (dist < 0.0f) {
+            } else if (flat < 0.0f) {
                 if (D_800B8955 == 1) {
                     func_8000ACE4(obj, o);
                 } else {
-                    func_800078E8(dx, dz, dist);
+                    func_800078E8(dx, dz2, flat);
                 }
             }
         } else {
-            dist = func_800B1750(dx * dx + dy * dy + dz * dz) - (ow->unk_48 + w->unk_48);
-            if (dist < 0.0f && (ow->unk_38 == 1000.0f || w->unk_38 != 1000.0f)) {
-                func_800078E8(dx, dz, dist);
+            flat = func_800B1750(dx * dx + dy * dy + dz2 * dz2) - (ow2->unk_48 + w->unk_48);
+            if (flat < 0.0f && (ow2->unk_38 == 1000.0f || w->unk_38 != 1000.0f)) {
+                func_800078E8(dx, dz2, flat);
                 w->unk_54 = i;
             }
         }
