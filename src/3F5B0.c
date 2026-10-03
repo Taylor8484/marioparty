@@ -1,5 +1,13 @@
 #include "common.h"
 
+extern s32 D_800C4C40[];
+extern s32 D_800C4C58[];
+s16 func_80038D5C(unk2C0C0StructC0*, u16, s32, char*);
+void func_8003967C(s16, u8);
+void func_800396B0(s16, u8);
+s32 func_8004606C(void);
+
+
 void func_80041250(s32);
 
 
@@ -648,18 +656,207 @@ void func_80040724(s32 idx) {
 void func_80040764(s32 idx, s8 value) {
     D_800D62D0[idx].unk4 = value;
 }
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80040780);
+void func_80040780(s32 idx) {
+    DiceBlockWork* work = &D_800D62D0[idx];
+    omObjData* obj;
+    s32 i;
+    s32 color;
+    s32 frame;
+    s32 r;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80040D9C);
+    if (work->unkC != -1) {
+        return;
+    }
+    func_800405DC(idx);
+    if (work->unk4 != -1) {
+        work->unk5 = work->unk4;
+        work->unk4 = -1;
+    } else {
+        work->unk5 = 0;
+        if (D_800D63E2 == 0 && GwSystem.curBoardIndex != 8 && _CheckFlag(0x2C) == 0) {
+            r = rand8() & 0x1F;
+            if (r == 0 && _CheckFlag(7) != 0) {
+                work->unk5 = 1;
+                D_800F3298++;
+                func_800503B0(idx, 1);
+            } else if (r == 1 && _CheckFlag(8) != 0) {
+                work->unk5 = 2;
+                D_800F3180++;
+                func_800503B0(idx, 1);
+            } else if (r == 2 && _CheckFlag(9) != 0) {
+                work->unk5 = 3;
+                D_800ECC20++;
+                func_800503B0(idx, 1);
+            } else if (r == 3 && _CheckFlag(10) != 0) {
+                work->unk5 = 4;
+                D_800ED3C0++;
+                func_800503B0(idx, 1);
+            } else if (r == 4 && _CheckFlag(11) != 0 && func_8004606C() != 0) {
+                work->unk5 = 5;
+                D_800F65D8++;
+                func_800503B0(idx, 1);
+            }
+        }
+    }
+    work->unkC = LoadFormBinary(DataRead(D_800C4C40[work->unk5]), 0x6A9);
+    func_80025F10(work->unkC, 1);
+    func_80025830(work->unkC, 0.0f, 0.0f, 0.0f);
+    func_80025930(work->unkC, 0x20000, 0x20000);
+    if (work->unk5 != 5) {
+        work->unk24 = DataRead(D_800C4C58[work->unk5]);
+        work->unk10[0] = func_80038A9C(D_800F2B7C[work->unkC].unk_6C, work->unk24, 0, "tile01_DEF");
+        work->unk10[1] = func_80038D5C(D_800F2B7C[work->unkC].unk_6C, work->unk10[0], 0, "tile02_DEF");
+        work->unk10[2] = func_80038D5C(D_800F2B7C[work->unkC].unk_6C, work->unk10[0], 0, "tile03_DEF");
+        work->unk10[3] = func_80038D5C(D_800F2B7C[work->unkC].unk_6C, work->unk10[0], 0, "tile04_DEF");
+        work->unk10[4] = func_80038D5C(D_800F2B7C[work->unkC].unk_6C, work->unk10[0], 0, "tile06_DEF");
+        work->unk10[5] = func_80038D5C(D_800F2B7C[work->unkC].unk_6C, work->unk10[0], 0, "tile10_DEF");
+        frame = (u8)(rand8() % 10);
+        color = rand8() & 3;
+        for (i = 0; i < 6; i++) {
+            switch (work->unk5) {
+            case 0:
+            case 1:
+            case 2:
+                func_8003967C(work->unk10[i], color);
+                break;
+            }
+            func_800396B0(work->unk10[i], frame);
+        }
+    } else {
+        work->unk24 = NULL;
+        for (i = 0; i < 6; i++) {
+            work->unk10[i] = -1;
+        }
+        func_80025EB4(work->unkC, 0, 2);
+    }
+    func_80025AD4(work->unkC);
+    func_80026040(work->unkC);
+    obj = omAddObj(0x8000, 1, 1, -1, func_8003F400);
+    work->unk2C = obj;
+    obj->model[0] = work->unkC;
+    omSetStatBit(obj, 0xA0);
+    obj->trans.x = GwPlayer[idx].player_obj->coords.x;
+    obj->trans.y = GwPlayer[idx].player_obj->coords.y + D_800D63E4;
+    obj->trans.z = GwPlayer[idx].player_obj->coords.z;
+    obj->rot.y = -90.0f;
+    obj->rot.x = obj->rot.z = 0.0f;
+    obj->scale.z = obj->scale.y = obj->scale.x = 0.0f;
+    obj->work[0] = 0;
+    obj->work[1] = 135;
+    obj->work[2] = 0;
+    obj->work[3] = idx;
+    work->unk40 = 1.0f;
+    work->unk38 = 0.0f;
+    work->unk3C = 1.0f;
+    D_800D63E1 = 0;
+    switch (work->unk5) {
+    case 0:
+        if (D_800D63E1 == 4) {
+            PlaySound(0x7F);
+        } else {
+            PlaySound(0x34);
+        }
+        break;
+    case 1:
+        PlaySound(0x7D);
+        break;
+    case 2:
+        PlaySound(0x7E);
+        break;
+    case 3:
+        PlaySound(0x7B);
+        break;
+    case 4:
+        PlaySound(0x7C);
+        break;
+    case 5:
+        PlaySound(0x7A);
+        break;
+    default:
+        PlaySound(0x6A);
+        break;
+    }
+}
+void func_80040D9C(s32 idx, s32 file, s32 tileFile, char** names) {
+    DiceBlockWork* work = &D_800D62D0[idx];
+    omObjData* obj;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041048);
+    if (work->unkC != -1) {
+        return;
+    }
+    D_800D63E4 = 250;
+    func_800405DC(idx);
+    work->unk5 = 0;
+    work->unkC = LoadFormBinary(DataRead(file), 0x6A9);
+    func_80025F10(work->unkC, 1);
+    func_80025830(work->unkC, 0.0f, 0.0f, 0.0f);
+    func_80025930(work->unkC, 0x20000, 0x20000);
+    if (tileFile != -1) {
+        work->unk24 = DataRead(tileFile);
+    } else {
+        work->unk24 = NULL;
+    }
+    for (i = 0; i < 6; i++) {
+        if (names[i] != NULL) {
+            if (i == 0) {
+                work->unk10[0] = func_80038A9C(D_800F2B7C[work->unkC].unk_6C, work->unk24, 0, names[0]);
+            } else {
+                // retail always stores to unk10[1]
+                work->unk10[1] = func_80038D5C(D_800F2B7C[work->unkC].unk_6C, work->unk10[0], 0, names[i]);
+            }
+        } else {
+            work->unk10[i] = -1;
+        }
+    }
+    func_80025AD4(work->unkC);
+    func_80026040(work->unkC);
+    obj = omAddObj(0x8000, 1, 1, -1, func_8003F400);
+    work->unk2C = obj;
+    obj->model[0] = work->unkC;
+    omSetStatBit(obj, 0xA0);
+    obj->trans.x = GwPlayer[idx].player_obj->coords.x;
+    obj->trans.y = GwPlayer[idx].player_obj->coords.y + D_800D63E4;
+    obj->trans.z = GwPlayer[idx].player_obj->coords.z;
+    obj->rot.y = -90.0f;
+    obj->rot.x = obj->rot.z = 0.0f;
+    obj->scale.z = obj->scale.y = obj->scale.x = 0.0f;
+    obj->work[0] = 0;
+    obj->work[1] = 135;
+    obj->work[2] = 0;
+    obj->work[3] = idx;
+    work->unk40 = 1.0f;
+    work->unk38 = 0.0f;
+    work->unk3C = 1.0f;
+    PlaySound(0x6A);
+}
+void func_80041048(s32 idx, s32 kind) {
+    char* names[6] = { "donkeyxi_DEF", "starxi_DEF", NULL, NULL, NULL, NULL };
+    s32 files[2] = { 0xA012C, 0xA012D };
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_800410E8);
+    func_80040D9C(idx, 0xA012B, files[kind], names);
+    D_800D63E1 = 2;
+    D_800D63E0 = kind;
+}
+void func_800410E8(s32 idx) {
+    char* names[6] = { "donkeyxi_DEF", "starxi_DEF", NULL, NULL, NULL, NULL };
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041158);
+    func_80040D9C(idx, 0xA012B, 0xA012E, names);
+    D_800D63E1 = 5;
+}
+void func_80041158(s32 idx) {
+    char* names[6] = { "starxi_DEF", NULL, NULL, NULL, NULL, NULL };
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_800411C8);
+    func_80040D9C(idx, 0xA0002, 0xA000A, names);
+    D_800D63E1 = 3;
+}
+void func_800411C8(s32 idx) {
+    char* names[6] = { NULL, NULL, NULL, NULL, NULL, NULL };
 
+    func_80040D9C(idx, 0xA0003, -1, names);
+    D_800D63E1 = 4;
+    func_800503B0(idx, 1);
+}
 INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041250);
 
 INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041370);
@@ -696,13 +893,9 @@ INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041A38);
 
 INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041C04);
 
-INCLUDE_RODATA("asm/nonmatchings/3F5B0", D_800CACA8);
 
-INCLUDE_RODATA("asm/nonmatchings/3F5B0", D_800CACC4);
 
-INCLUDE_RODATA("asm/nonmatchings/3F5B0", D_800CACDC);
 
-INCLUDE_RODATA("asm/nonmatchings/3F5B0", D_800CACF4);
 
 INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80041C64);
 
