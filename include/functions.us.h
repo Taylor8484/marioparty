@@ -216,7 +216,7 @@ s32 omOvlCallEx(s32 arg0, s16 arg1, u16 arg2);
 void func_8004F504(void*);
 void func_800503B0(s32, s32);
 void func_8004F2AC(void);
-void func_80054868(s32);
+s32 func_80054868(s32);
 void func_80055A34(s32);
 void func_8003C314(s8 a, void* ptr, s32 c, s32 d);
 void func_8003E174(Object* ptr);

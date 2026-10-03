@@ -990,7 +990,7 @@ void func_800415B0(s32 idx, s8 value) {
 void func_800415CC(s32 idx, s32 value) {
     D_800D62D0[idx].unk2 = value;
 }
-s8 func_800415E8(s32 idx) {
+s32 func_800415E8(s32 idx) {
     return D_800D62D0[idx].unk3;
 }
 s32 func_80041604(s32 idx) {
