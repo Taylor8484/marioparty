@@ -1305,8 +1305,203 @@ void func_80030D50(unk2C0C0StructC0* arg0, s16 arg1) {
     gSPCullDisplayList(D_800F37DC++, 0, 7);
 }
 
-INCLUDE_ASM("asm/nonmatchings/2C0C0", func_80031054);
+// block layout only: GCC turns the 64-bit combine if/else pairs into default-then-override and
+// merges the render-mode tails that retail keeps separate (masked 132); every branch checked by hand
+#ifdef NON_MATCHING
+void func_80031054(unk2C0C0Struct90* arg0, unk2C0C0Struct80* arg1, s32 arg2) {
+    u64 cc;
+    s64 rm;
+    s32 flags;
+    s32 zbuf;
+    s16 zmode;
+    s32 t;
 
+    flags = (u8)arg0->unk_0C;
+    if ((D_800ECB14 & 0x180) == 0x100) {
+        zbuf = 0;
+    } else {
+        zbuf = (u16)D_800ECB14 & 0x180;
+    }
+    if (arg2 & 0x06080000) {
+        return;
+    }
+    if (D_800ECB14 & 0x80000) {
+        cc = 0xFCFFFFFFFFFFFFFFLL;
+    } else if (D_800ECB14 & 0x10000) {
+        cc = 0xFC127E2455FDF2F9LL;
+    } else if (arg2 & 0x200000) {
+        cc = 0xFCFFFFFFFFFE793CLL;
+    } else if (arg1 == (unk2C0C0Struct80*)-1) {
+        if ((u8)arg0->unk_0C & 1) {
+            cc = 0xFCFFFFFFFFFE773BLL;
+        } else if (D_800EE988 == 0) {
+            cc = 0xFCFFFFFFFFFE793CLL;
+        } else {
+            cc = 0xFCFFFFFFFFFE7C38LL;
+        }
+    } else if (arg1->unk_0C->unk_18 == 3) {
+        if (D_800EE988 == 0) {
+            cc = 0xFC119623FF2FFFFFLL;
+            flags |= 1;
+        } else {
+            cc = 0xFC1197FFFFFFFE38LL;
+            flags |= 1;
+        }
+    } else if (arg1->unk_0C->unk_18 == 4) {
+        if (D_800EE988 == 0) {
+            cc = 0xFCFF97FFFF2DFEFFLL;
+            flags |= 1;
+        } else {
+            cc = 0xFCFF97FFFFFDFE38LL;
+            flags |= 1;
+        }
+    } else if (arg1->unk_0C->unk_19 == 3) {
+        if (D_800EE988 == 0) {
+            cc = 0xFC121624FF2FFFFFLL;
+            flags |= 1;
+        } else {
+            cc = 0xFC1217FFFFFFFE38LL;
+            flags |= 1;
+        }
+    } else if (flags & 1) {
+        if (D_800EE988 == 0) {
+            cc = 0xFC127624FFEF93C9LL;
+        } else {
+            cc = 0xFC1277FFFFFF9238LL;
+        }
+    } else if (D_800EE988 == 0) {
+        cc = 0xFC127E24FFFFF3F9LL;
+    } else {
+        cc = 0xFC127FFFFFFFF238LL;
+    }
+    if (D_800F37B0 != cc) {
+        gDPPipeSync(D_800F37DC++);
+        D_800F37B0 = cc;
+        {
+            Gfx* g = D_800F37DC++;
+
+            g->words.w0 = cc >> 32;
+            g->words.w1 = cc;
+        }
+    }
+
+    t = D_800ECB14 & 0x60;
+    if (t == 0x20) {
+        zmode = 0x48;
+    } else {
+        zmode = (t == 0x40) ? 8 : 0;
+    }
+    if (D_800ECB14 & 0x80000) {
+        rm = 0x5553F0;
+    } else if (arg2 & 0x8000) {
+        gDPSetBlendColor(D_800F37DC++, 0, 0, 0, 1);
+        gDPSetAlphaCompare(D_800F37DC++, G_AC_THRESHOLD);
+        if (!(flags & 4)) {
+            gDPSetPrimColor(D_800F37DC++, 0, 0, arg0->unk_05.r, arg0->unk_05.g, arg0->unk_05.b, arg0->unk_0D);
+        }
+        rm = (arg1 == (unk2C0C0Struct80*)-1) ? 0x50007B : 0x50307B;
+        D_800F0A60 = 0;
+    } else if (arg2 & 0x200000) {
+        rm = 0x507858;
+    } else if (arg2 < 0) {
+        if (flags & 1) {
+            gDPSetBlendColor(D_800F37DC++, 0, 0, 0, 1);
+            gDPSetAlphaCompare(D_800F37DC++, G_AC_THRESHOLD);
+            if (!(flags & 4)) {
+                gDPSetPrimColor(D_800F37DC++, 0, 0, arg0->unk_05.r, arg0->unk_05.g, arg0->unk_05.b, arg0->unk_0D);
+            }
+            if (D_800EE988 == 0) {
+                rm = 0x504DD8;
+            } else {
+                rm = (s32)0xC8104DD8;
+            }
+        } else {
+            gDPSetAlphaCompare(D_800F37DC++, G_AC_NONE);
+            if (D_800EE988 == 0) {
+                rm = zmode | 0x553D10;
+            } else {
+                rm = (s32)0xC8113D10 | zmode;
+            }
+        }
+        D_800D6010->unk_00 = (u8)arg0->unk_00;
+    } else if (flags & 1) {
+        gDPSetBlendColor(D_800F37DC++, 0, 0, 0, 1);
+        gDPSetAlphaCompare(D_800F37DC++, G_AC_THRESHOLD);
+        if (!(flags & 4)) {
+            gDPSetPrimColor(D_800F37DC++, 0, 0, arg0->unk_05.r, arg0->unk_05.g, arg0->unk_05.b, arg0->unk_0D);
+        }
+        if (zmode != 0) {
+            zmode |= 0x180;
+        } else {
+            zmode |= 0x200;
+        }
+        if (zbuf != 0) {
+            if (D_800EE988 == 0) {
+                rm = zmode | 0x504850;
+            } else {
+                rm = (s32)0xC8104850 | zmode;
+            }
+        } else if (D_800EE988 == 0) {
+            rm = zmode | 0x504040;
+        } else {
+            rm = (s32)0xC8104040 | zmode;
+        }
+        D_800D6010->unk_00 = (u8)arg0->unk_00;
+    } else {
+        gDPSetAlphaCompare(D_800F37DC++, G_AC_NONE);
+        if (arg1 == (unk2C0C0Struct80*)-1) {
+            if (zmode == 0) {
+                zmode |= 0x200;
+            }
+            if (zbuf != 0) {
+                if (D_800EE988 == 0) {
+                    rm = zmode | 0x552030;
+                } else {
+                    rm = (s32)0xC8112030 | zmode;
+                }
+            } else if (D_800EE988 == 0) {
+                rm = zmode | 0x552000;
+            } else {
+                rm = (s32)0xC8112000 | zmode;
+            }
+        } else if (D_800ECB14 & 0x20000) {
+            if (zmode == 0) {
+                zmode |= 0x200;
+            }
+            if (zbuf != 0) {
+                if (D_800EE988 == 0) {
+                    rm = zmode | 0x552030;
+                } else {
+                    rm = (s32)0xC8112030 | zmode;
+                }
+            } else if (D_800EE988 == 0) {
+                rm = zmode | 0x552000;
+            } else {
+                rm = (s32)0xC8112000 | zmode;
+            }
+        } else if (zbuf != 0) {
+            if (D_800EE988 == 0) {
+                rm = zmode | 0x553038;
+            } else {
+                rm = (s32)0xC8113038 | zmode;
+            }
+        } else if (D_800EE988 == 0) {
+            rm = zmode | 0x0F0A7008;
+        } else {
+            rm = (s32)0xCB027008 | zmode;
+        }
+    }
+    if (D_800F0A60 != rm) {
+        gDPPipeSync(D_800F37DC++);
+        D_800F37DC->words.w0 = 0xE200001C;
+        D_800F37DC->words.w1 = rm;
+        D_800F37DC++;
+        D_800F0A60 = rm;
+    }
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/2C0C0", func_80031054);
+#endif
 void func_800318D0(u16 arg0) {
     u8 temp_v1;
 
