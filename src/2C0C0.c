@@ -90,7 +90,6 @@ void func_8002B808(void) {
     }
 }
 
-
 void func_8002B890(unk2C0C0StructC0* arg0) {
     unk2C0C0StructE0* temp_v0;
     unk2C0C0StructE0* temp_s7;
