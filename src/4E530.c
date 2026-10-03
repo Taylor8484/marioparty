@@ -2,6 +2,13 @@
 
 #include "common.h"
 
+extern s32 D_800C5270[];
+extern s32 D_800C529C[];
+extern s16 D_800F329A;
+void func_8004E564(omObjData* arg0);
+void func_8004EC44(omObjData* arg0);
+
+
 extern s8 D_800D8360;
 extern f32 D_800D8364;
 extern f32 D_800D8368;
@@ -137,8 +144,22 @@ void func_8004E154(void) {
 
 }
 
-INCLUDE_ASM("asm/nonmatchings/4E530", func_8004E184);
+void func_8004E184(void) {
+    s32 i;
 
+    for (i = 0; i < 32; i++) {
+        if (D_800F50C0[i] == NULL) {
+            continue;
+        }
+        if (D_800F50C0[i]->func_ptr == func_8004E248 || D_800F50C0[i]->func_ptr == func_8004E564 ||
+            D_800F50C0[i]->func_ptr == func_8004EC44) {
+            if (D_800F50C0[i]->stat & 4) {
+                D_800F50C0[i]->unk_50 = NULL;
+                omDelObj(D_800F50C0[i]);
+            }
+        }
+    }
+}
 void func_8004E248(omObjData* arg0) {
     Object* temp_v0;
     unkGlobalStruct_00* temp_v1;
@@ -296,12 +317,129 @@ void func_8004E564(omObjData* arg0) { //matches, needs rodata support
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/4E530", func_8004EA8C);
+omObjData* func_8004EA8C(Object* arg0, Vec3f* arg1, s32 arg2, Vec3f* arg3) {
+    s32 player = -1;
+    omObjData* obj;
+    f32 n;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/4E530", func_8004EC44);
+    obj = omAddObj(0x1000, 0, 0, -1, func_8004E564);
+    if ((s32)arg0 >= 0) {
+        player = (s32)arg0;
+        arg0 = NULL;
+        obj->work[0] = player;
+    }
+    obj->work[1] = arg2;
+    obj->work[2] = arg2;
+    obj->trans.x = arg1->x;
+    obj->trans.y = arg1->y;
+    obj->trans.z = arg1->z;
+    if (arg0 == NULL) {
+        obj->scale.x = (arg1->x - GwPlayer[player].player_obj->coords.x) / (n = arg2);
+        obj->scale.y = (arg1->y - GwPlayer[player].player_obj->coords.y) / n;
+        obj->scale.z = (arg1->z - GwPlayer[player].player_obj->coords.z) / n;
+    } else {
+        obj->scale.x = (arg1->x - arg0->coords.x) / (n = arg2);
+        obj->scale.y = (arg1->y - arg0->coords.y) / n;
+        obj->scale.z = (arg1->z - arg0->coords.z) / n;
+    }
+    obj->rot.x = arg3->x;
+    obj->rot.y = arg3->y;
+    obj->rot.z = arg3->z;
+    obj->unk_50 = arg0;
+    for (i = 0; i < 32; i++) {
+        if (D_800F50C0[i] == NULL) {
+            D_800F50C0[i] = obj;
+            break;
+        }
+    }
+    return obj;
+}
+void func_8004EC44(omObjData* arg0) {
+    Object* obj = arg0->unk_50;
 
-INCLUDE_ASM("asm/nonmatchings/4E530", func_8004EE14);
+    arg0->work[1]--;
+    if (obj == NULL) {
+        if (arg0->work[1] == 0) {
+            GwPlayer[arg0->work[0]].player_obj->unk_18.x = arg0->rot.x;
+            GwPlayer[arg0->work[0]].player_obj->unk_18.y = arg0->rot.y;
+            GwPlayer[arg0->work[0]].player_obj->unk_18.z = arg0->rot.z;
+            omDelObj(arg0);
+            return;
+        }
+        arg0->scale.y += arg0->scale.x;
+        GwPlayer[arg0->work[0]].player_obj->unk_18.x = sinf(arg0->scale.y * (M_PI / 180));
+        GwPlayer[arg0->work[0]].player_obj->unk_18.y = 0.0f;
+        GwPlayer[arg0->work[0]].player_obj->unk_18.z = cosf(arg0->scale.y * (M_PI / 180));
+        return;
+    }
+    if (arg0->work[1] == 0) {
+        obj->unk_18.x = arg0->rot.x;
+        obj->unk_18.y = arg0->rot.y;
+        obj->unk_18.z = arg0->rot.z;
+        arg0->unk_50 = NULL;
+        omDelObj(arg0);
+        return;
+    }
+    arg0->scale.y += arg0->scale.x;
+    obj->unk_18.x = sinf(arg0->scale.y * (M_PI / 180));
+    obj->unk_18.y = 0.0f;
+    obj->unk_18.z = cosf(arg0->scale.y * (M_PI / 180));
+}
+omObjData* func_8004EE14(s32 arg0, void* arg1, s32 arg2, void* arg3) {
+    Vec3f dir;
+    f32 cur;
+    f32 tgt;
+    omObjData* obj;
+    s32 i;
 
+    if (arg3 == NULL) {
+        func_8004CCD0(&GwPlayer[arg0].player_obj->coords, arg1, &dir);
+    } else {
+        func_8004CCD0(&((Object*)arg3)->coords, arg1, &dir);
+    }
+    obj = omAddObj(0x1000, 0, 0, -1, func_8004EC44);
+    obj->work[0] = arg0;
+    obj->work[1] = arg2;
+    obj->rot.x = dir.x;
+    obj->rot.y = dir.y;
+    obj->rot.z = dir.z;
+    if (arg3 == NULL) {
+        cur = func_8003D2B0(&GwPlayer[arg0].player_obj->unk_18);
+        tgt = func_8003D2B0(&dir);
+        if (tgt < cur) {
+            if (cur - tgt >= 180.0f) {
+                tgt += 360.0f;
+            }
+        } else {
+            if (tgt - cur >= 180.0f) {
+                cur += 360.0f;
+            }
+        }
+    } else {
+        cur = func_8003D2B0(&((Object*)arg3)->unk_18);
+        tgt = func_8003D2B0(&dir);
+        if (tgt < cur) {
+            if (cur - tgt >= 180.0f) {
+                tgt += 360.0f;
+            }
+        } else {
+            if (tgt - cur >= 180.0f) {
+                cur += 360.0f;
+            }
+        }
+    }
+    obj->scale.y = cur;
+    obj->scale.x = (tgt - cur) / arg2;
+    obj->unk_50 = arg3;
+    for (i = 0; i < 32; i++) {
+        if (D_800F50C0[i] == NULL) {
+            D_800F50C0[i] = obj;
+            break;
+        }
+    }
+    return obj;
+}
 void func_8004F00C(Object* arg0, f32 arg1, f32 arg2) {
     arg0->unk_34 = arg1;
     arg0->unk_38 = arg2;
@@ -788,4 +926,52 @@ void func_800503B0(s32 arg0, s32 arg1) {
         }
     }
 }
-INCLUDE_ASM("asm/nonmatchings/4E530", func_8005049C);
+void func_8005049C(void) {
+    s32 board = GwSystem.curBoardIndex;
+    s32 player = GwSystem.curPlayerIndex;
+    s32 bg;
+
+    if (_CheckFlag(0x30) != 0) {
+        board = 9;
+    }
+    switch (board) {
+    case 1:
+        if (GwPlayer[player].cur_chain == 2) {
+            bg = 12;
+        } else {
+            bg = 9;
+        }
+        break;
+    case 3:
+        switch (GwPlayer[player].cur_chain) {
+        case 2:
+            bg = 0x1D;
+            break;
+        case 3:
+            bg = 0x21;
+            break;
+        case 8:
+            bg = 0x1F;
+            break;
+        case 1:
+            bg = 0x20;
+            break;
+        case 0:
+        default:
+            bg = 0x1E;
+            break;
+        }
+        break;
+    case 10:
+        if ((D_800F329A == -1) | (D_800F329A >= 10)) {
+            bg = 0x59;
+        } else {
+            bg = D_800C529C[D_800F329A];
+        }
+        break;
+    default:
+        bg = D_800C5270[board];
+        break;
+    }
+    LoadBackgroundIndex(bg);
+}
