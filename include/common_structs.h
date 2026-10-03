@@ -737,10 +737,10 @@ typedef struct unk2C0C0StructC0 {
     /* 0xB4 */ s32 unk_B4;
     /* 0xB8 */ unk2C0C0StructB8* unk_B8;
     /* 0xBC */ unk2C0C0Struct70* unk_BC;
-    /* 0xC0 */ s32 unk_C0;
+    /* 0xC0 */ f32 unk_C0;
     /* 0xC4 */ s32 unk_C4;
     /* 0xC8 */ s32 unk_C8;
-    /* 0xCC */ s32 unk_CC;
+    /* 0xCC */ f32 unk_CC;
     /* 0xD0 */ unk2C0C0StructB0* unk_D0;
     /* 0xD4 */ char unk_D4[0xC];
 } unk2C0C0StructC0; //sizeof 0xE0
@@ -808,7 +808,7 @@ typedef struct unk_ovl_2D_struct { //actually global??
     /* 0x6C */ unk2C0C0StructC0* unk_6C;
     /* 0x70 */ char pad70[0xC];
     /* 0x7C */ Mat4 unk7C; // Transformation Matrix
-    /* 0xBC */ char padBC[0x4];
+    /* 0xBC */ void* unk_BC;
 } unk_ovl_2D_struct; //sizeof 0xC0
 
 typedef struct SubTextWindow {
