@@ -1,10 +1,13 @@
 #include "common.h"
 #include "engine/mallocblock.h"
 
+extern Gfx D_800C30C8[];
+
+
 extern u8 D_800C30C0;
 extern u8 D_800C30C1;
 extern u8 D_800C30C2;
-extern s8 D_800EC6DE;
+extern u8 D_800EC6DE;
 extern s16 D_800ED738;
 extern void* D_800F33C8;
 extern s16 D_800F3960;
@@ -830,4 +833,42 @@ void func_8001CD60(unk2C0C0StructC0* arg0) {
         func_80023A38(back + 19, D_800F33C8, size);
     }
 }
-INCLUDE_ASM("asm/nonmatchings/1B800", func_8001CEB4);
+void func_8001CEB4(void) {
+    s16 cols;
+    s16 x;
+    s16 y;
+    s16 i;
+    s16 j;
+    s16 rows;
+
+    rows = 16;
+    if (D_800EC6DE != 4) {
+        return;
+    }
+    gSPDisplayList(D_800F37DC++, D_800C30C8);
+    for (y = 0; y < D_800F3960; y += 16) {
+        if (y >= D_800F3960 - 16) {
+            rows = D_800F3960 - y;
+        }
+        cols = 64;
+        for (x = 0; x < D_800ED738; x += 64) {
+            if (x >= D_800ED738 - 64) {
+                cols = D_800ED738 - x;
+            }
+            gDPSetTextureImage(D_800F37DC++, G_IM_FMT_RGBA, G_IM_SIZ_16b, D_800ED738,
+                               &((u16*)D_800F33C8)[x + y * D_800ED738]);
+            gDPSetTile(D_800F37DC++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 17, 0, G_TX_LOADTILE, 0, 0, 0, 0, 0, 0, 0);
+            gDPLoadSync(D_800F37DC++);
+            gDPLoadTile(D_800F37DC++, G_TX_LOADTILE, 0, 0, 64 << 2, rows << 2);
+            gDPPipeSync(D_800F37DC++);
+            gDPSetTile(D_800F37DC++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 17, 0, G_TX_RENDERTILE, 0, 0, 0, 0, 0, 0, 0);
+            gDPSetTileSize(D_800F37DC++, G_TX_RENDERTILE, 0, 0, 64 << 2, rows << 2);
+            for (j = 0; j < 240; j += D_800F3960) {
+                for (i = 0; i < 320; i += D_800ED738) {
+                    gSPTextureRectangle(D_800F37DC++, (x + i) << 2, (y + j) << 2, (x + i + cols) << 2,
+                                        (y + j + rows) << 2, G_TX_RENDERTILE, 0, 0, 1 << 10, 1 << 10);
+                }
+            }
+        }
+    }
+}
