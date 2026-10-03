@@ -1147,8 +1147,82 @@ void func_80027100(unk2C0C0StructC0* arg0, f32 arg1, f32 arg2, u16 arg3, u16 arg
         b++;
     }
 }
-INCLUDE_ASM("asm/nonmatchings/24740", func_80027440);
+void func_80027440(unk2C0C0StructC0* arg0, f32 arg1, f32 arg2, u16 arg3, u16 arg4) {
+    unk24740Floats8 sp10 = *(unk24740Floats8*)D_800CA8D8;
+    unk2C0C0StructB0* b = &arg0->unk_D0[arg3];
+    f32 inv = 1.0f - arg1;
+    f32 s = func_800AEAC0(D_800C34A4);
+    f32 c = func_800AEFD0(D_800C34A4);
+    unk2C0C0StructE0* src;
+    unk2C0C0StructE0* dst;
+    s16* idx;
+    s16 cx, cy, cz;
+    s16 sx, sy, sz;
+    f32 dx, dy, dz;
+    s16 n;
+    s16 j;
+    s16 i;
 
+    for (i = 0; i < arg4; i++) {
+        cx = b->unk_0C;
+        cy = b->unk_10;
+        cz = b->unk_14;
+        if (arg2 == 1.0f) {
+            sx = cx * arg2;
+            sy = cy * arg2;
+            sz = cz * arg2;
+        } else {
+            sx = cx * arg2 * sp10.v[i & 7];
+            sy = cy * arg2 * sp10.v[i & 7];
+            sz = cz * arg2 * sp10.v[i & 7];
+        }
+        n = (u8)(b->unk_00 & 0x7F);
+        idx = b->unk_02;
+        switch (i & 3) {
+            case 0:
+            case 2:
+                for (j = 0; j < n; j++) {
+                    src = &arg0->unk_04[*idx];
+                    dst = &arg0->unk_08[D_800F37F0][*idx];
+                    dx = src->unk_00 - cx;
+                    dy = src->unk_02 - cy;
+                    dz = src->unk_04 - cz;
+                    dst->unk_00 = dx * inv + sx;
+                    dst->unk_02 = (dy * c + dz * s) * inv + sy;
+                    dst->unk_04 = (-dy * s + dz * c) * inv + sz;
+                    idx++;
+                }
+                break;
+            case 1:
+                for (j = 0; j < n; j++) {
+                    src = &arg0->unk_04[*idx];
+                    dst = &arg0->unk_08[D_800F37F0][*idx];
+                    dx = src->unk_00 - cx;
+                    dy = src->unk_02 - cy;
+                    dz = src->unk_04 - cz;
+                    dst->unk_00 = (dx * c - dz * s) * inv + sx;
+                    dst->unk_02 = dy * inv + sy;
+                    dst->unk_04 = (dx * s + dz * c) * inv + sz;
+                    idx++;
+                }
+                break;
+            case 3:
+                for (j = 0; j < n; j++) {
+                    src = &arg0->unk_04[*idx];
+                    dst = &arg0->unk_08[D_800F37F0][*idx];
+                    dx = src->unk_00 - cx;
+                    dy = src->unk_02 - cy;
+                    dz = src->unk_04 - cz;
+                    dst->unk_00 = (dx * c + dy * s) * inv + sx;
+                    dst->unk_02 = (-dx * s + dy * c) * inv + sy;
+                    dst->unk_04 = dz * inv + sz;
+                    idx++;
+                }
+                break;
+        }
+        b++;
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/24740", func_80027AC8);
 
 INCLUDE_ASM("asm/nonmatchings/24740", func_80027C1C);
