@@ -913,8 +913,6 @@ void func_8006EB80(void) {
     D_800ED722 = 1;
 }
 
-// register allocation: s0/s2 swapped for spr and the loop index (masked 0)
-#ifdef NON_MATCHING
 s32 func_8006EB90(TextWindow* tw) {
     TWSprite* spr;
     u8* new;
@@ -947,7 +945,8 @@ s32 func_8006EB90(TextWindow* tw) {
     }
     for (i = 1; i < 10; i++) {
         if (tw->unk_C0[i] != NULL) {
-            func_800675F4(tw->unk_44, i)->unk_4C->frames[i].data = tw->unk_1C / 2 * tw->unk_0B + tw->unk_C0[i];
+            spr = func_800675F4(tw->unk_44, i);
+            spr->unk_4C->frames[i].data = tw->unk_1C / 2 * tw->unk_0B + tw->unk_C0[i];
         }
     }
     if (tw->unk_E8 != NULL) {
@@ -955,9 +954,6 @@ s32 func_8006EB90(TextWindow* tw) {
     }
     return 1;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006EB90);
-#endif
 // GCC proves the glyph width/height non-negative and uses srl/ori where retail uses signed ops (masked 41)
 #ifdef NON_MATCHING
 void func_8006EEB8(s16 arg0, u8 arg1, u8 arg2, s16 arg3, s16 arg4) {

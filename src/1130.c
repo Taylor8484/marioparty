@@ -271,8 +271,6 @@ s32 func_80000710(Vec3f* pos, ColTri* tri, ColVtx* verts) {
     return ret;
 }
 
-// register allocation (masked 0): s0/s1 swapped for the sphere and polygon pointers
-#ifdef NON_MATCHING
 s32 func_80000828(Vec4f* s, s16* tri, ColVtx* verts) {
     s32 side = -1;
     Vec3f n;
@@ -288,7 +286,7 @@ s32 func_80000828(Vec4f* s, s16* tri, ColVtx* verts) {
     func_800295FC(&verts[tri[1]], &verts[tri[2]], &verts[tri[3]], &n);
     v = &verts[tri[1]];
     vx = v->x;
-    vy = v->y;
+    vy = dx = v->y; // dx is reassigned below; the extra copy (decomp-permuter) reproduces retail's registers
     vz = v->z;
     dx = vx - s->x;
     dy = vy - s->y;
@@ -306,9 +304,6 @@ s32 func_80000828(Vec4f* s, s16* tri, ColVtx* verts) {
     s->z += t * n.z;
     return side;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/1130", func_80000828);
-#endif
 f32 func_800009D8(f32 x, f32 y, f32 z, ColVtx* a, ColVtx* b, Vec3f* n) {
     f32 ax = a->x - x;
     f32 ay = a->y - y;
@@ -1038,12 +1033,12 @@ void func_80003460(omObjData* obj, ColSphere* s) {
         }
     }
 }
-// register allocation (masked 0): s0/s1 swapped for the sphere and box pointers
-#ifdef NON_MATCHING
 s32 func_8000396C(ColSphere* s, GroundWork* g) {
     f32 x = s->x;
     f32 z;
-    f32 dx, dz;
+    f32 dx;
+    ColSphere* t; // alias found by decomp-permuter; reproduces retail's registers
+    f32 dz;
     f32 d;
 
     dx = g->unk_18;
@@ -1074,24 +1069,25 @@ s32 func_8000396C(ColSphere* s, GroundWork* g) {
         }
     } else if ((dx = g->unk_20) <= x) {
         dx -= x;
-        z = s->z;
+        t = s;
+        z = t->z;
         dz = g->unk_1C;
         if (z <= dz) {
             dz -= z;
-            d = func_800B1750(dx * dx + dz * dz) - s->r;
+            d = func_800B1750(dx * dx + dz * dz) - t->r;
             if (d < 0.0f) {
                 D_800EDED0[D_800B8956].x = g->unk_20;
-                D_800EDED4[D_800B8956].x = s->y;
+                D_800EDED4[D_800B8956].x = t->y;
                 D_800EDED8[D_800B8956].x = g->unk_1C;
                 D_800B8956++;
                 return 0;
             }
         } else if ((dz = g->unk_24) <= z) {
             dz -= z;
-            d = func_800B1750(dx * dx + dz * dz) - s->r;
+            d = func_800B1750(dx * dx + dz * dz) - t->r;
             if (d < 0.0f) {
                 D_800EDED0[D_800B8956].x = g->unk_20;
-                D_800EDED4[D_800B8956].x = s->y;
+                D_800EDED4[D_800B8956].x = t->y;
                 D_800EDED8[D_800B8956].x = g->unk_24;
                 D_800B8956++;
                 return 0;
@@ -1100,9 +1096,6 @@ s32 func_8000396C(ColSphere* s, GroundWork* g) {
     }
     return 1;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/1130", func_8000396C);
-#endif
 void func_80003C08(omObjData* obj, ColSphere* s, f32 h) {
     s32 i = D_800B8956;
     GroundWork* g = obj->unk_50;
