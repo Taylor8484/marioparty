@@ -2,6 +2,11 @@
 #include "PR/os.h"
 #include "engine/mallocblock.h"
 
+void func_800A0B90(Matrix4f, void*);
+s32 func_800334A0(unk2C0C0StructC0* arg0, s16 arg1, s16 arg2);
+void func_80033830(unk2C0C0StructC0* arg0, s16 arg1, unk2C0C0StructC0* arg2);
+
+
 void func_8002B4C0(void* (*arg0)(s32), void (*arg1)(void*), u16 arg2, u16 arg3, u16 arg4, u8 arg5) {
     s16 i;
 
@@ -620,8 +625,12 @@ void func_8002CDEC(unk2C0C0StructC0* arg0, s16 arg1) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/2C0C0", func_8002D270);
+void func_8002D270(unk2C0C0StructC0* arg0, s16 arg1, void* arg2) {
+    Matrix4f sp10;
 
+    func_800A0B90(sp10, arg2);
+    func_8002D2CC(arg0, arg1, arg2, sp10);
+}
 // Matches without --vr4300mul-off
 #ifdef NON_MATCHING
 void func_8002D2CC(unk2C0C0StructC0* arg0, s16 arg1, void* arg2, Matrix4f arg3) {
@@ -1503,10 +1512,52 @@ s32 func_8003305C(unk2C0C0StructC0* arg0, s16 arg1, Matrix4f arg2, Matrix4f arg3
 
 INCLUDE_ASM("asm/nonmatchings/2C0C0", func_800330BC);
 
-INCLUDE_ASM("asm/nonmatchings/2C0C0", func_80033408);
+void func_80033408(unk2C0C0StructC0* arg0, s16 arg1, Matrix4f arg2) {
+    D_800F33D4 = 0;
+    guMtxIdentF(D_800F54C0[0]);
+    if (arg0->unk_A0 == (unk2C0C0Struct50*)-1 && arg0->unk_84 != 0) {
+        func_800334A0(arg0, 0, arg1);
+        func_8002C37C(arg2, D_800F54C0[D_800F33D4]);
+    }
+}
+s32 func_800334A0(unk2C0C0StructC0* arg0, s16 arg1, s16 arg2) {
+    Matrix4f sp10;
+    unk2C0C0Struct40* node;
+    s16 pushed;
 
-INCLUDE_ASM("asm/nonmatchings/2C0C0", func_800334A0);
-
+    node = &arg0->unk_88[arg1];
+    pushed = 0;
+    guMtxIdentF(sp10);
+    if (node->unk_08.x != 0.0f || node->unk_08.y != 0.0f || node->unk_08.z != 0.0f) {
+        MtxTranslate(sp10, node->unk_08.x, node->unk_08.y, node->unk_08.z);
+        pushed = 1;
+    }
+    if (node->unk_14.x != 0.0f || node->unk_14.y != 0.0f || node->unk_14.z != 0.0f) {
+        MtxRotate(sp10, node->unk_14.x, node->unk_14.y, node->unk_14.z);
+        pushed = 1;
+    }
+    if (node->unk_20.x != 1.0f || node->unk_20.y != 1.0f || node->unk_20.z != 1.0f) {
+        MtxScale(sp10, node->unk_20.x, node->unk_20.y, node->unk_20.z);
+        pushed = 1;
+    }
+    if (pushed != 0) {
+        D_800F33D4++;
+        MtxMult(sp10, D_800F5480[D_800F33D4], D_800F5480[D_800F33D4 + 1]);
+    }
+    if (arg2 == arg1) {
+        return 0;
+    }
+    if (node->unk_04 != 0 && func_800334A0(arg0, arg1 + node->unk_04, arg2) == 0) {
+        return 0;
+    }
+    if (pushed != 0) {
+        D_800F33D4--;
+    }
+    if (node->unk_02 != 0 && func_800334A0(arg0, arg1 + node->unk_02, arg2) == 0) {
+        return 0;
+    }
+    return 1;
+}
 s16 func_80033718(unk2C0C0StructC0* arg0, char* arg1) {
     s16 temp_a1;
     s16 i;
@@ -1526,10 +1577,36 @@ s16 func_80033718(unk2C0C0StructC0* arg0, char* arg1) {
     return i;
 }
 
-INCLUDE_ASM("asm/nonmatchings/2C0C0", func_800337E4);
+void func_800337E4(unk2C0C0StructC0* arg0, char* arg1, unk2C0C0StructC0* arg2) {
+    s16 idx;
 
-INCLUDE_ASM("asm/nonmatchings/2C0C0", func_80033830);
+    idx = func_80033718(arg0, arg1);
+    if (idx != -1) {
+        func_80033830(arg0, idx, arg2);
+    }
+}
+void func_80033830(unk2C0C0StructC0* arg0, s16 arg1, unk2C0C0StructC0* arg2) {
+    s16 i;
+    s16 j;
+    s16 name;
+    unk2C0C0Struct40* node;
 
+    name = arg0->unk_80[arg1].unk_08;
+    for (i = 0; i < arg2->unk_6A; i++) {
+        if (arg2->unk_80[i].unk_08 == name) {
+            break;
+        }
+    }
+    if (i != arg2->unk_6A) {
+        for (j = 0; j < arg0->unk_84; j++) {
+            node = &arg0->unk_88[j];
+            if (node->unk_00 == arg1) {
+                node->unk_48 = arg2;
+                node->unk_00 = i;
+            }
+        }
+    }
+}
 void func_8003394C(unk2C0C0StructC0* arg0) {
     if (arg0->unk_6E != 0) {
         D_800F5030 = 0;
