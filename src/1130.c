@@ -157,6 +157,9 @@ void func_80037178(s16, Vec3f*);
 s32 func_80009138(s8);
 void func_8000A1C0(void*, void*, ColSphere*, omObjData*);
 s32 func_8000A830(void*, ColSphere*, f32);
+s32 func_8000A798(void*, ColSphere*);
+void func_8000A3E8(void*, Vec3f*);
+void func_8000A4F8(void*, ColSphere*);
 s32 func_80019964(f32[3][3], Vec3f*, f32, Vec3f*);
 s32 func_80019EDC(f32[4][3], Vec3f*, f32, Vec3f*);
 
@@ -1422,8 +1425,117 @@ s32 func_80004D1C(omObjData* obj, Vec4f* p, f32 arg2) {
     }
     return D_800F3704;
 }
-INCLUDE_ASM("asm/nonmatchings/1130", func_800051D4);
+f32 func_800051D4(omObjData* obj, f32 x, f32 y, f32 z, Vec3f* normal) {
+    Vec4f s;
+    Vec3f tmp;
+    Vec3f dir;
+    PlayerWork* w = obj->unk_50;
+    omObjData* o;
+    GroundWork* g;
+    ColVtx* verts;
+    ColTri* tri;
+    unk_ovl_2D_struct* e;
+    s16 mdl;
+    s16 i;
+    u8 xf;
+    f32 best = -65536.0f;
+    f32 h;
 
+    s.w = 10.0f;
+    w->unk_53 = -1;
+    for (i = 0; i < D_800ED440; i++) {
+        o = D_800F2AF8[i];
+        g = o->unk_50;
+        if (i == D_800B8954 || (((u8*)w)[i] & 1)) {
+            continue;
+        }
+        s.x = x;
+        s.y = y;
+        s.z = z;
+        func_8000A1C0(D_800F2B80, D_800ED6E0, (ColSphere*)&s, o);
+        if ((g->unk_01 & 4) && func_8000A798(D_800F2B7C[*o->model].unk_6C->unk_80, (ColSphere*)&s) == 0) {
+            continue;
+        }
+        if (g->unk_01 & 0x1A) {
+            if ((g->unk_01 & 0x10) && func_8000A910(&s, g) == 0) {
+                continue;
+            }
+            h = g->unk_10;
+            if (o->trans.x != 0.0f || o->trans.y != 0.0f || o->trans.z != 0.0f || o->rot.x != 0.0f ||
+                o->rot.y != 0.0f || o->rot.z != 0.0f) {
+                s.y = h;
+                func_8000A4F8(D_800F2B80, (ColSphere*)&s);
+                if (best <= s.y && s.y < y + 150.0f) {
+                    best = s.y;
+                    w->unk_53 = D_800B8958 = i;
+                    if (normal != NULL) {
+                        tmp.x = 0.0f;
+                        tmp.y = 1.0f;
+                        tmp.z = 0.0f;
+                        func_8000A3E8(D_800F2B80, &tmp);
+                        normal->x = tmp.x;
+                        normal->y = tmp.y;
+                        normal->z = tmp.z;
+                        func_8002956C(normal);
+                    }
+                }
+            } else if (best <= h && h < y + 150.0f) {
+                best = h;
+                D_800B8958 = i;
+                w->unk_53 = i;
+                if (normal != NULL) {
+                    normal->x = 0.0f;
+                    normal->y = 1.0f;
+                    normal->z = 0.0f;
+                }
+            }
+        } else {
+            mdl = *o->model;
+            verts = (ColVtx*)D_800F2B7C[mdl].unk_6C->unk_78;
+            func_8002AE24(mdl, &D_800EDEC0, func_80002060, &s);
+            for (tri = func_8002B3A8(&D_800EDEC0); tri != NULL; tri = func_8002B3A8(&D_800EDEC0)) {
+                e = &D_800F2B7C[mdl];
+                xf = 0;
+                if (e->unk_24 != 0.0f || e->unk_28 != 0.0f || e->unk_2C != 0.0f || e->unk_30 != 0.0f ||
+                    e->unk_34 != 0.0f || e->unk_38 != 0.0f) {
+                    tmp.x = x;
+                    tmp.y = y + 10.0f;
+                    tmp.z = z;
+                    func_8000A464(D_800ED6E0, &tmp);
+                    dir.x = tmp.x - s.x;
+                    dir.y = tmp.y - s.y;
+                    dir.z = tmp.z - s.z;
+                    func_8002956C(&dir);
+                    func_80000530(s.x, s.y, s.z, verts, tri, &dir, (Vec3f*)&s);
+                    func_8000A4F8(D_800F2B80, (ColSphere*)&s);
+                    h = s.y;
+                    xf = 1;
+                } else {
+                    h = func_80029764(s.x, s.y, s.z, verts, tri);
+                }
+                if (best <= h && h < y + 150.0f) {
+                    best = h;
+                    D_800B8958 = i;
+                    w->unk_53 = i;
+                    if (normal != NULL) {
+                        func_800295FC(&verts[tri->v[0]], &verts[tri->v[1]], &verts[tri->v[2]], normal);
+                        if (xf == 1) {
+                            tmp.x = normal->x;
+                            tmp.y = normal->y;
+                            tmp.z = normal->z;
+                            func_8000A3E8(D_800F2B80, &tmp);
+                            normal->x = tmp.x;
+                            normal->y = tmp.y;
+                            normal->z = tmp.z;
+                            func_8002956C(normal);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return best;
+}
 INCLUDE_ASM("asm/nonmatchings/1130", func_800057F4);
 
 void func_80005A04(Object* arg0) {
