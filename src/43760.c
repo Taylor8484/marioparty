@@ -35,6 +35,7 @@ extern s8 D_800D6467;
 
 s32 func_80054730(s32);
 s16 func_8005949C(s32);
+void func_80047D48(void);
 void func_800448F4(omObjData* obj);
 
 typedef struct Rect43760 {
@@ -75,7 +76,114 @@ void func_80042B60(void) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/43760", func_80042BAC);
+void func_80042BAC(omObjData* obj) {
+    s32 i;
+    unk43760* p;
+
+    switch (obj->work[0]) {
+        case 0:
+            obj->trans.y += 16.0f;
+            for (i = 0; i < D_800C4D3C[D_800D6459]; i++) {
+                p = &D_800D6400[i];
+                func_8006DDC8(p->unk_00, (s16)(p->unk_04 + p->unk_08 / 2), (s32)obj->trans.y + p->unk_06 + p->unk_0A / 2);
+            }
+            func_80066DC4(D_800D645A, 0, 160, (s32)obj->trans.y + D_800D6404 + D_800C4DC0[D_800D6459]);
+            if (obj->trans.y > 218.0f) {
+                func_80042B60();
+                obj->work[0] = 1;
+                obj->scale.x = 1.0f;
+                obj->scale.z = -1.0f;
+                obj->scale.y = 0.0f;
+                obj->work[1] = 0;
+                obj->work[2] = rand8() % D_800C4D3C[D_800D6459];
+                obj->work[3] = 0;
+                func_800437B8();
+            }
+            break;
+        case 1:
+            obj->scale.z += obj->scale.x;
+            if (obj->scale.z >= 1.0f) {
+                if (obj->work[3] != 0 && obj->scale.x <= 0.08f) {
+                    obj->work[3]--;
+                }
+                obj->scale.z -= 1.0f;
+                if (obj->scale.y == 0.0f) {
+                    obj->work[1]++;
+                    obj->work[1] %= D_800C4D3C[D_800D6459];
+                } else {
+                    obj->work[1]--;
+                    if (obj->work[1] >= 128) {
+                        obj->work[1] = D_800C4D3C[D_800D6459] - 1;
+                    }
+                }
+                func_80042B60();
+            }
+            for (i = 0; i < D_800C4D3C[D_800D6459]; i++) {
+                p = &D_800D6400[i];
+                if (i == obj->work[1]) {
+                    func_800714F0(p->unk_00, 0, 200, 0);
+                    func_8006E154(p->unk_00, 0x100);
+                    func_8006E0A4(p->unk_00, 9000);
+                } else {
+                    func_800714F0(p->unk_00, 0x40, 0x40, 0x80);
+                    func_8006E154(p->unk_00, 0);
+                    func_8006E0A4(p->unk_00, 10000);
+                }
+            }
+            if (obj->work[1] == obj->work[2] || obj->scale.x < 1.0f) {
+                obj->scale.x -= 0.02;
+            }
+            if (obj->scale.x <= 0.08f) {
+                obj->scale.x = 0.08f;
+                if (obj->work[1] == obj->work[2] && obj->work[3] == 0 && obj->scale.z + obj->scale.x >= 1.0f) {
+                    if ((rand8() & 0xF) || obj->scale.y == 1.0f || obj->work[1] == 0) {
+                        PlaySound(0x3E);
+                        obj->work[0] = 2;
+                        obj->work[3] = 60;
+                        func_8006EB80();
+                        func_8006DA1C(D_800D6400[obj->work[1]].unk_00, 0, 4);
+                        LoadStringIntoWindow(D_800D6400[obj->work[1]].unk_00, (void*)(D_800D6454[obj->work[1]] + 0x324), -2, 4);
+                        func_8006E288(D_800D6400[obj->work[1]].unk_00, 1);
+                        func_8006E2B8(D_800D6400[obj->work[1]].unk_00, 0xA0, 0xA0, 0xA0);
+                        func_800714F0(D_800D6400[obj->work[1]].unk_00, 0xFE, 0xFF, 0xD0);
+                        func_8006E070(D_800D6400[obj->work[1]].unk_00, 0);
+                    } else {
+                        obj->scale.y = 1.0f;
+                        obj->work[2]--;
+                        if (obj->work[2] >= 128) {
+                            obj->work[2] = D_800C4D3C[D_800D6459] - 1;
+                        }
+                    }
+                }
+            }
+            break;
+        case 2:
+            if (obj->work[3] != 0) {
+                obj->work[3]--;
+            } else {
+                D_800D6438[D_800D6459][D_800D644C[D_800D6459]] = D_800D6454[obj->work[2]];
+                if ((D_800D6459 == 3) | (D_800D6459 == 0)) {
+                    D_800D644C[D_800D6459]++;
+                    D_800D644C[D_800D6459] %= 5;
+                }
+                func_80059348(D_800D6454[obj->work[2]] - 1);
+                if (GwSystem.curBoardIndex != 8) {
+                    func_80047D48();
+                    func_80043544();
+                }
+            }
+            obj->rot.z += 1.0f;
+            if (obj->rot.z >= 13.0f) {
+                obj->rot.z -= 13.0f;
+            }
+            break;
+    }
+    if (D_800D645E != -1) {
+        for (i = 0; !(obj->rot.z < (*(D_800C4DC8 + i))[0]); i++) {
+        }
+        func_80066DC4(D_800D645E, 0, D_800C4DC8[i][1] + 50, D_800C4DC4[D_800D6459] + obj->work[1] * 20);
+    }
+}
 
 void func_80043460(void) {
     s32 i;
