@@ -1,6 +1,9 @@
 #include "common.h"
 #include "engine/process.h"
 
+extern s8 D_800F384E;
+
+
 #define ABS_F(x) (((x) > 0.0f) ? (x) : 0.0f - (x))
 
 
@@ -89,14 +92,147 @@ extern f32 D_800D84B8[2];
 extern f32 D_800D84C0[2];
 extern s16 D_800D84C8;
 extern s32 D_800ECE10;
+extern u8 D_800C563C[];
+extern s16 (*D_800C5698[])[2];
 void func_80055810(s32 arg0, s32 arg1, s32);
 void func_80055228(void);
 void func_80067284(s16, s16, f32);
 
-INCLUDE_ASM("asm/nonmatchings/54120", func_80053520);
+void func_80053520(s32 arg0) {
+    u8 digits[3];
+    s16 cur[2];
+    unkStruct4* p = &D_800D83A8[arg0];
+    s32 n;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/54120", func_80053A1C);
+    func_800672DC(p->unk_06, 1, p->unk_04, 0);
+    func_800672B0(p->unk_06, 1, 1);
+    digits[0] = GwPlayer[arg0].coins / 100;
+    digits[1] = (s16)(GwPlayer[arg0].coins / 10) % 10;
+    digits[2] = GwPlayer[arg0].coins % 10;
+    if (digits[0] != 0 || digits[1] != 0) {
+        n = (digits[0] != 0) ? 3 : 2;
+    } else {
+        n = 1;
+    }
+    if (n == 1) {
+        func_800674BC(p->unk_06, 6, 0x8000);
+        digits[1] = digits[2];
+    } else {
+        func_80067480(p->unk_06, 6, 0x8000);
+    }
+    if (digits[0] == 0) {
+        digits[0] = 10;
+    }
+    for (i = 0; i < 3; i++) {
+        func_800672DC(p->unk_06, i + 4, digits[i], 0);
+        func_800672B0(p->unk_06, i + 4, 1);
+    }
+    if (GwPlayer[arg0].stars >= 100) {
+        func_800672DC(p->unk_06, 7, 9, 0);
+        func_800672DC(p->unk_06, 8, 9, 0);
+    } else {
+        if (GwPlayer[arg0].stars >= 10) {
+            func_800672DC(p->unk_06, 7, GwPlayer[arg0].stars / 10, 0);
+        } else {
+            func_800672DC(p->unk_06, 7, 10, 0);
+        }
+        func_800672DC(p->unk_06, 8, GwPlayer[arg0].stars % 10, 0);
+    }
+    func_800672B0(p->unk_06, 7, 1);
+    func_800672B0(p->unk_06, 8, 1);
+    cur[0] = GwPlayer[arg0].coins;
+    cur[1] = GwPlayer[arg0].stars;
+    for (i = 0; i < 2; i++) {
+        if ((i != 0 && p->unk_3C[i] != cur[i]) || (i == 0 && D_800D84D0[arg0] != NULL)) {
+            if (p->unk_01[i] == 0) {
+                func_80067284(p->unk_06, i + 2, 1.0f);
+                p->unk_01[i] = 15;
+            }
+        }
+        if (p->unk_01[i] != 0) {
+            p->unk_01[i]--;
+            if (p->unk_01[i] == 0 && (i != 0 || D_800D84D0[arg0] == NULL)) {
+                func_800672DC(p->unk_06, i + 2, 0, 0);
+                func_80067284(p->unk_06, i + 2, 0.0f);
+                func_800672B0(p->unk_06, i + 2, 1);
+            }
+        }
+        p->unk_3C[i] = cur[i];
+    }
+    if (p->unk_00 != -1) {
+        func_800672DC(p->unk_06, 10, p->unk_00, 0);
+    } else {
+        func_800672DC(p->unk_06, 10, func_8004FEBC(arg0), 0);
+    }
+    func_800672B0(p->unk_06, 10, 1);
+    if (_CheckFlag(0x2C) != 0) {
+        func_800674BC(p->unk_06, 7, 0x8000);
+        func_800674BC(p->unk_06, 8, 0x8000);
+        func_800674BC(p->unk_06, 3, 0x8000);
+    }
+}
+void func_80053A1C(void) {
+    unkStruct4* p;
+    s32 i;
+    s32 j;
 
+    while (1) {
+        if (D_800F384E == 0) {
+            for (i = 0; i < 4; i++) {
+                if (D_800C54D0 != -1 && D_800C54D4 != -1 && i != D_800C54D0 && i != D_800C54D4) {
+                    continue;
+                }
+                p = &D_800D83A8[i];
+                if (p->unk_05 & 1) {
+                    for (j = 0; j < 11; j++) {
+                        func_800674BC(p->unk_06, j, 0x8000);
+                    }
+                    continue;
+                }
+                for (j = 0; j < 11; j++) {
+                    func_80067480(p->unk_06, j, 0x8000);
+                }
+                if ((GwPlayer[i].flags & 1) && !(p->unk_05 & 1)) {
+                    func_80067480(p->unk_06, 9, 0x8000);
+                } else {
+                    func_800674BC(p->unk_06, 9, 0x8000);
+                }
+                func_80053520(i);
+                if (p->unk_0A > 0) {
+                    p->unk_0A--;
+                    p->unk_0C += p->unk_1C;
+                    p->unk_10 += p->unk_20;
+                    p->unk_1C += p->unk_24;
+                    p->unk_20 += p->unk_28;
+                } else if (p->unk_0A == -1) {
+                    p->unk_0A = -2;
+                } else if (p->unk_0A != -2) {
+                    p->unk_0C = p->unk_14;
+                    p->unk_10 = p->unk_18;
+                    p->unk_0A = -1;
+                }
+                func_80066DC4(p->unk_06, 0, (s32)(p->unk_0C + 0.5f) + 0x30, (s32)(p->unk_10 + 0.5f) + 0x10);
+            }
+            if (D_800D84A8 != -1) {
+                D_800D84AC += 0.1f;
+                if (D_800D84AC > 1.0f) {
+                    D_800D84AC = 1.0f;
+                }
+                func_80067354(D_800D84A8, 0, D_800D84AC, D_800D84AC);
+                if (D_800D84C8 > 0) {
+                    D_800D84C8--;
+                    D_800D84B0[0] += D_800D84B8[0];
+                    D_800D84B0[1] += D_800D84B8[1];
+                    D_800D84B8[0] += D_800D84C0[0];
+                    D_800D84B8[1] += D_800D84C0[1];
+                    func_80066DC4(D_800D84A8, 0, D_800D84B0[0], D_800D84B0[1]);
+                }
+            }
+        }
+        HuPrcVSleep();
+    }
+}
 void func_80053D88(s32 arg0) {
     unkStruct4* temp_s2 = &D_800D83A8[arg0];
     s16 id = temp_s2->unk_06;
@@ -298,8 +434,184 @@ void func_80054834(s32 arg0, s32 arg1) {
     func_80054758(arg0, D_800C54D8[arg1][0], D_800C54D8[arg1][1]);
 }
 
-INCLUDE_ASM("asm/nonmatchings/54120", func_80054868);
+// loop-invariant motion: retail hoists arg0 - 10, GCC here hoists the switch range check (masked 44)
+#ifdef NON_MATCHING
+s32 func_80054868(s32 arg0) {
+    u8 order[5];
+    u8 blue[5];
+    u8 red[4];
+    u8 nblue = 0;
+    u8 nred = 0;
+    u8 n;
+    unkStruct4* p;
+    s32 i;
 
+    if (arg0 == 2) {
+        n = 0;
+        nblue = nred;
+        for (i = 0; i < 4; i++) {
+            switch (D_800D83A8[i].unk_03) {
+                case 1:
+                    blue[nblue++] = i;
+                    break;
+                case 2:
+                    red[nred++] = i;
+                    break;
+                default:
+                    n++;
+                    break;
+            }
+        }
+        if (n != 0) {
+            for (i = 0; i < 5; i++) {
+                blue[i] = i;
+            }
+            nblue = 5;
+            nred = 0;
+        }
+        n = 0;
+        for (i = 0; i < nblue; i++) {
+            order[blue[i]] = n++;
+        }
+        for (i = 0; i < nred; i++) {
+            order[red[i]] = n++;
+        }
+    }
+
+    for (i = 0; i < 4; i++) {
+        p = &D_800D83A8[i];
+        if (arg0 >= 10 && arg0 < 14 && i != arg0 - 10) {
+            continue;
+        }
+        if (arg0 >= 14 && arg0 < 18 && i != arg0 - 14) {
+            continue;
+        }
+        if (arg0 >= 18 && arg0 < 22 && i != arg0 - 18) {
+            continue;
+        }
+        if (arg0 == 22 && i != D_800C54D0) {
+            continue;
+        }
+        if (arg0 == 23 && i != D_800C54D4) {
+            continue;
+        }
+        if (arg0 == 24 && i != D_800C54D4) {
+            continue;
+        }
+        switch (arg0) {
+            case 0:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+                func_80054758(i, D_800C54D8[i + 4][0], D_800C54D8[i + 4][1]);
+                break;
+            case 22:
+                func_80054758(D_800C54D0, D_800C54D8[4][0], D_800C54D8[4][1]);
+                break;
+            case 23:
+                func_80054758(D_800C54D4, D_800C54D8[7][0], D_800C54D8[7][1]);
+                break;
+            case 24:
+                func_80054758(D_800C54D4, D_800C54D8[5][0], D_800C54D8[5][1]);
+                break;
+        }
+        p->unk_0A = 19;
+        switch (arg0) {
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+                p->unk_0A = 15;
+            case 0:
+            case 1:
+            case 3:
+            case 4:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+                p->unk_14 = D_800C54D8[D_800C563C[arg0] + i][0];
+                p->unk_18 = D_800C54D8[D_800C563C[arg0] + i][1];
+                break;
+            case 2:
+                p->unk_14 = D_800C5698[nblue][order[i]][0];
+                p->unk_18 = D_800C5698[nblue][order[i]][1];
+                p->unk_0A = 9;
+                break;
+            case 5:
+                p->unk_14 = p->unk_0C;
+                p->unk_18 = p->unk_10 + 480.0f;
+                p->unk_0A = 19;
+                break;
+            case 14:
+            case 15:
+            case 16:
+            case 17:
+            case 18:
+            case 19:
+            case 20:
+            case 21:
+                p->unk_14 = D_800C54D8[D_800C563C[arg0] + i][0];
+                p->unk_18 = p->unk_10;
+                break;
+            case 22:
+                p->unk_14 = D_800C54D8[0][0];
+                p->unk_18 = D_800C54D8[0][1];
+                break;
+            case 23:
+                p->unk_14 = D_800C54D8[3][0];
+                p->unk_18 = D_800C54D8[3][1];
+                break;
+            case 24:
+                p->unk_14 = D_800C54D8[1][0];
+                p->unk_18 = D_800C54D8[1][1];
+                break;
+        }
+        p->unk_1C = p->unk_24 = (2.0f * (p->unk_14 - p->unk_0C)) / ((p->unk_0A + 1) * (p->unk_0A + 1));
+        p->unk_20 = p->unk_28 = (2.0f * (p->unk_18 - p->unk_10)) / ((p->unk_0A + 1) * (p->unk_0A + 1));
+        if (arg0 == 5) {
+            D_800D84B8[0] = D_800D84C0[0] = p->unk_24;
+            D_800D84B8[1] = D_800D84C0[1] = p->unk_28;
+            D_800D84C8 = p->unk_0A;
+        }
+    }
+
+    if ((arg0 == 2) & (nblue != 5)) {
+        if (nblue == 4 || nblue == 0) {
+            for (i = 0; i < 4; i++) {
+                GwPlayer[i].group = i;
+            }
+        } else if (nblue == 3) {
+            for (i = 0; i < nblue; i++) {
+                GwPlayer[blue[i]].group = 1;
+            }
+            for (i = 0; i < nred; i++) {
+                GwPlayer[red[i]].group = 0;
+            }
+        } else {
+            for (i = 0; i < nblue; i++) {
+                GwPlayer[blue[i]].group = 0;
+            }
+            for (i = 0; i < nred; i++) {
+                GwPlayer[red[i]].group = 1;
+            }
+        }
+    }
+    if (arg0 == 6 || arg0 == 7 || arg0 == 8 || arg0 == 9) {
+        for (i = 0; i < 4; i++) {
+            if (i == arg0 - 6) {
+                GwPlayer[i].group = 0;
+            } else {
+                GwPlayer[i].group = 1;
+            }
+        }
+    }
+    return 0;
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/54120", func_80054868);
+#endif
 s32 func_80054FA8(void) {
     s32 i;
     s32 ret = 0;
