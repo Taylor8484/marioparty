@@ -1,5 +1,67 @@
 #include "common.h"
 
+void func_80067284(s16, s16, f32);
+s16 func_80056990(void);
+
+
+typedef struct DiceBlockWork {
+    /* 0x00 */ s8 unk0;
+    /* 0x01 */ s8 unk1;
+    /* 0x02 */ s8 unk2;
+    /* 0x03 */ s8 unk3;
+    /* 0x04 */ s8 unk4;
+    /* 0x05 */ s8 unk5;
+    /* 0x06 */ s8 unk6;
+    /* 0x07 */ s8 unk7;
+    /* 0x08 */ s16 unk8;
+    /* 0x0A */ s16 unkA;
+    /* 0x0C */ s16 unkC;
+    /* 0x0E */ s16 unkE;
+    /* 0x10 */ s16 unk10[6];
+    /* 0x1C */ s16 unk1C;
+    /* 0x1E */ s16 unk1E;
+    /* 0x20 */ s16 unk20;
+    /* 0x22 */ char pad22[2];
+    /* 0x24 */ void* unk24;
+    /* 0x28 */ void* unk28;
+    /* 0x2C */ omObjData* unk2C;
+    /* 0x30 */ omObjData* unk30;
+    /* 0x34 */ omObjData* unk34;
+    /* 0x38 */ f32 unk38;
+    /* 0x3C */ f32 unk3C;
+    /* 0x40 */ f32 unk40;
+} DiceBlockWork; /* size = 0x44 */
+
+extern DiceBlockWork D_800D62D0[4];
+extern s8 D_800D63E0;
+extern u8 D_800D63E1;
+extern u8 D_800D63E2;
+extern s32 D_800D63E4;
+extern s8 D_800F384E;
+
+
+extern s16 D_800ECC20;
+extern s16 D_800ED3C0;
+extern s16 D_800F3180;
+extern s16 D_800F3298;
+extern s16 D_800F37E8;
+extern s16 D_800F65D8;
+
+
+extern s16 D_800F2CDC;
+extern s16 D_800F65B8;
+extern s16 D_800F37A8;
+extern s16 D_800EE986;
+extern s16 D_800F64C6;
+s16 GetSumOfPlayerStars(void);
+
+typedef struct {
+    /* 0x00 */ Process* process;
+    /* 0x04 */ u16* sequence;
+    /* 0x08 */ s16 index;
+} ButtonSeqWork;
+
+
 s16 RunDecisionTree(DecisionTreeNonLeafNode* currentNode) {
     s32 loopIndex;
     DecisionTreeNonLeafNode* tempNode;
@@ -126,42 +188,267 @@ void func_8003ECB0(u16 arg0, u16 arg1, s32 arg2, u8 arg3, u8 arg4) {
 }
 
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003ED30);
+void func_8003ED30(void) {
+    ButtonSeqWork* work = HuPrcCurrentGet()->user_data;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003EDDC);
+    while (TRUE) {
+        if (ContBtnTrg[0] != 0) {
+            if (ContBtnTrg[0] == work->sequence[work->index]) {
+                work->index++;
+                if (work->sequence[work->index] == 0) {
+                    work->index = -1;
+                    break;
+                }
+            } else {
+                work->index = 0;
+            }
+        }
+        HuPrcVSleep();
+    }
+    while (TRUE) {
+        HuPrcVSleep();
+    }
+}
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003EE3C);
+s32 func_8003EDDC(s32* sequence) {
+    Process* process = omAddPrcObj(func_8003ED30, 0xEFFF, 0, 0x40);
+    ButtonSeqWork* work = HuMemMemoryAlloc(process->heap, sizeof(ButtonSeqWork));
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003EE58);
+    process->user_data = work;
+    work->sequence = (u16*)sequence;
+    work->index = 0;
+    work->process = process;
+    return (s32)work;
+}
+void func_8003EE3C(s32 work) {
+    EndProcess(((ButtonSeqWork*)work)->process);
+}
+s32 func_8003EE58(s32 work) {
+    return ((ButtonSeqWork*)work)->index == -1;
+}
+void func_8003EE68(s16 x, s16 y) {
+    s32 i;
+    GW_PLAYER* player;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003EE68);
-
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003EF98);
-
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003F008);
-
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003F07C);
-
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003F1C0);
-
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003F384);
-
+    sprintf(pfStrBuf, "   GAME COIN  ?  R  B  Y  !  M  K");
+    func_8003ECB0(x * 8, y * 8, (s32)pfStrBuf, 15, 9);
+    for (i = 0; i < 4; ) {
+        player = GetPlayerStruct(i);
+        i++;
+        sprintf(pfStrBuf, "%d: %4d %4d %2d %2d %2d %2d %2d %2d %2d", i, player->coins_total, player->coins_max,
+                (s8)player->happening_count, (s8)player->red_count, (s8)player->blue_count,
+                (s8)player->minigame_count, (s8)player->chance_count, (s8)player->mushroom_count,
+                (s8)player->bowser_count);
+        func_8003ECB0(x * 8, (y + i) * 8, (s32)pfStrBuf, 15, 9);
+    }
+}
+void func_8003EF98(s16 x, s16 y) {
+    sprintf(pfStrBuf, "KM: %d", D_800F2CDC);
+    func_8003ECB0(x * 8, y * 8, (s32)pfStrBuf, 15, 9);
+}
+void func_8003F008(s16 x, s16 y) {
+    sprintf(pfStrBuf, "STAR:%2d", GetSumOfPlayerStars());
+    func_8003ECB0(x * 8, y * 8, (s32)pfStrBuf, 15, 9);
+}
+void func_8003F07C(s16 x, s16 y) {
+    sprintf(pfStrBuf, "1   :%2d", D_800F65B8);
+    func_8003ECB0(x * 8, y * 8, (s32)pfStrBuf, 15, 9);
+    sprintf(pfStrBuf, "1VS3:%2d", D_800F37A8);
+    func_8003ECB0(x * 8, (y + 1) * 8, (s32)pfStrBuf, 15, 9);
+    sprintf(pfStrBuf, "2VS2:%2d", D_800EE986);
+    func_8003ECB0(x * 8, (y + 2) * 8, (s32)pfStrBuf, 15, 9);
+    sprintf(pfStrBuf, "4   :%2d", D_800F64C6);
+    func_8003ECB0(x * 8, (y + 3) * 8, (s32)pfStrBuf, 15, 9);
+}
+void func_8003F1C0(s16 x, s16 y) {
+    sprintf(pfStrBuf, "+ :%2d", D_800F3298);
+    func_8003ECB0(x * 8, y * 8, (s32)pfStrBuf, 15, 9);
+    sprintf(pfStrBuf, "- :%2d", D_800F3180);
+    func_8003ECB0(x * 8, (y + 1) * 8, (s32)pfStrBuf, 15, 9);
+    sprintf(pfStrBuf, "S+:%2d", D_800ECC20);
+    func_8003ECB0(x * 8, (y + 2) * 8, (s32)pfStrBuf, 15, 9);
+    sprintf(pfStrBuf, "S-:%2d", D_800ED3C0);
+    func_8003ECB0(x * 8, (y + 3) * 8, (s32)pfStrBuf, 15, 9);
+    sprintf(pfStrBuf, "WA:%2d", D_800F65D8);
+    func_8003ECB0(x * 8, (y + 4) * 8, (s32)pfStrBuf, 15, 9);
+    sprintf(pfStrBuf, "YO:%2d", D_800F37E8);
+    func_8003ECB0(x * 8, (y + 5) * 8, (s32)pfStrBuf, 15, 9);
+}
+void func_8003F384(s16 x, s16 y) {
+    sprintf(pfStrBuf, "MAP: %d    TURN: %d", GwSystem.curBoardIndex + 1, GwSystem.currentTurn);
+    func_8003ECB0(x * 8, y * 8, (s32)pfStrBuf, 15, 9);
+}
 INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003F400);
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003F7FC);
+void func_8003F7FC(omObjData* obj) {
+    DiceBlockWork* work = &D_800D62D0[obj->work[3]];
+    Vec3f pos;
+    Vec2f screen;
+    f32 scale;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003FA5C);
+    if (obj->work[0] == 0 && D_800F384E == 0) {
+        obj->scale.x = sinf(obj->rot.x * (M_PI / 180.0)) * obj->scale.z + 1.0f;
+        obj->rot.x += 20.0f;
+        if (obj->rot.x >= 360.0f) {
+            obj->rot.x -= 360.0f;
+        }
+        obj->scale.z -= 0.15;
+        if (obj->scale.z <= 0.0f) {
+            obj->scale.x = 1.0f;
+            obj->work[0] = 1;
+        }
+    }
+    scale = obj->scale.x / 2.0f;
+    func_80067354(work->unk8, 0, scale, scale);
+    if (work->unk0 == 0) {
+        func_800672DC(work->unk8, 0, work->unk3, 0);
+        func_800672B0(work->unk8, 0, 1);
+    }
+    pos.x = GwPlayer[obj->work[3]].player_obj->coords.x;
+    pos.y = GwPlayer[obj->work[3]].player_obj->coords.y + D_800D63E4 + obj->trans.y;
+    pos.z = GwPlayer[obj->work[3]].player_obj->coords.z;
+    func_8004B730(&pos, &screen);
+    func_80066DC4(work->unk8, 0, screen.x, screen.y - 8.0f);
+}
+void func_8003FA5C(omObjData* obj) {
+    DiceBlockWork* work = &D_800D62D0[obj->work[3]];
+    Vec3f pos;
+    Vec2f screen;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003FC94);
+    if (obj->work[0] == 0 && D_800F384E == 0) {
+        obj->scale.x = sinf(obj->rot.x * (M_PI / 180.0)) * obj->scale.z + 1.0f;
+        obj->rot.x += 20.0f;
+        if (obj->rot.x >= 360.0f) {
+            obj->rot.x -= 360.0f;
+        }
+        obj->scale.z -= 0.05;
+        if (obj->scale.z <= 0.0f) {
+            obj->scale.x = 1.0f;
+            obj->work[0] = 1;
+        }
+    }
+    func_80067354(work->unk8, 0, obj->scale.x, obj->scale.x);
+    if (work->unk0 == 0) {
+        func_800672DC(work->unk8, 0, work->unk3, 0);
+        func_800672B0(work->unk8, 0, 1);
+    }
+    pos.x = GwPlayer[obj->work[3]].player_obj->coords.x;
+    pos.y = GwPlayer[obj->work[3]].player_obj->coords.y + D_800D63E4 + obj->trans.y;
+    pos.z = GwPlayer[obj->work[3]].player_obj->coords.z;
+    func_8004B730(&pos, &screen);
+    func_80066DC4(work->unk8, 0, screen.x, screen.y);
+}
+void func_8003FC94(void) {
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003FCD4);
+    for (i = 0; i < 4; i++) {
+        D_800D62D0[i].unk3 = 0;
+        D_800D62D0[i].unk2 = 0;
+    }
+}
+void func_8003FCD4(void) {
+    s32 i;
+    DiceBlockWork* work;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003FD68);
+    for (i = 0; i < 4; i++) {
+        work = &D_800D62D0[i];
+        work->unkC = -1;
+        work->unkE = -1;
+        work->unk28 = NULL;
+        work->unk1C = -1;
+        work->unk8 = -1;
+        work->unkA = -1;
+        work->unk7 = 0;
+        work->unk2C = NULL;
+        work->unk30 = NULL;
+        work->unk34 = NULL;
+        work->unk6 = 0;
+        work->unk0 = 0;
+        work->unk2 = 0;
+        work->unk1E = -1;
+        work->unk20 = 0;
+        work->unk4 = -1;
+    }
+    D_800D63E1 = 0;
+    D_800D63E2 = 1;
+    D_800D63E4 = 250;
+}
+void func_8003FD68(s32 idx) {
+    s32 files[9] = { 0xA012F, 0xA0130, 0xA000D, 0xA000C, 0xA000E, 0xA000F, 0xA0010, 0xA0131, 0xA0130 };
+    DiceBlockWork* work = &D_800D62D0[idx];
+    s32 file;
+    void* data;
+    s16 shared;
+    s16 sprite;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003FEFC);
+    if (work->unk0 != 0) {
+        file = files[work->unk0 - 1];
+    } else if (idx != 0 && (shared = D_800D62D0[0].unkA) != -1) {
+        work->unkA = shared;
+        D_800D62D0[0].unk7++;
+        goto loaded;
+    } else {
+        file = 0xA000B;
+    }
+    data = DataRead(file);
+    work->unkA = func_800678A4(data);
+    work->unk7 = 1;
+    DataClose(data);
+loaded:
+    sprite = func_80064EF4(1, 5);
+    work->unk8 = sprite;
+    func_80067208(sprite, 0, work->unkA, 0);
+    func_80067384(work->unk8, 0, 0x4000);
+    func_800674BC(work->unk8, 0, 0x9000);
+    func_80067284(work->unk8, 0, 0.0f);
+    func_80067354(work->unk8, 0, 0.0f, 0.0f);
+    func_800672DC(work->unk8, 0, 0, 0);
+    func_800672B0(work->unk8, 0, 1);
+    work->unk6 = 1;
+}
+void func_8003FEFC(s32 idx) {
+    DiceBlockWork* work = &D_800D62D0[idx];
+    Vec3f pos;
+    Vec2f screen;
+    omObjData* obj;
 
-INCLUDE_RODATA("asm/nonmatchings/3F5B0", D_800CAC08);
-
+    if ((work->unk0 != 0 || work->unk3 != 0) && (work->unk2C == NULL || work->unk2C->work[0] == 2)) {
+        pos.x = GwPlayer[idx].player_obj->coords.x;
+        pos.y = GwPlayer[idx].player_obj->coords.y + D_800D63E4;
+        pos.z = GwPlayer[idx].player_obj->coords.z;
+        func_8004B730(&pos, &screen);
+        if (work->unk8 == -1) {
+            func_8003FD68(idx);
+            work->unk6 = 0;
+        } else {
+            func_800672DC(work->unk8, 0, work->unk3, 0);
+            func_80067384(work->unk8, 0, 0x4000);
+            func_800672B0(work->unk8, 0, 1);
+        }
+        if (func_80056990() == 0 && D_800D63E1 == 0) {
+            func_80066DC4(work->unk8, 0, screen.x, screen.y - 8.0f);
+        } else {
+            func_80066DC4(work->unk8, 0, screen.x, screen.y);
+        }
+        func_80067480(work->unk8, 0, 0x8000);
+        if (work->unk34 == NULL) {
+            if (func_80056990() == 0 && D_800D63E1 == 0) {
+                obj = omAddObj(0x8000, 0, 0, -1, func_8003F7FC);
+                work->unk34 = obj;
+                obj->scale.z = 3.0f;
+            } else {
+                obj = omAddObj(0x8000, 0, 0, -1, func_8003FA5C);
+                work->unk34 = obj;
+                obj->scale.z = 1.0f;
+            }
+            obj->work[0] = 0;
+            obj->work[3] = idx;
+            obj->scale.x = 0.0f;
+            obj->rot.x = 270.0f;
+            obj->trans.y = 0.0f;
+        }
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8004017C);
 
 INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80040590);

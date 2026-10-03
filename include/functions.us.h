@@ -180,7 +180,7 @@ void SetPlayerAnimation(s32 index, s16 animation, s32 unk);
 //void func_8004CB20(s32);
 void func_800587BC(s32, s32, s32, s32);
 void SetNextChainAndSpace(s16, s16, s16);
-void func_8003FEFC(u8);
+void func_8003FEFC(s32);
 void func_800405DC(s32);
 s16 GetAbsSpaceIndexFromChainSpaceIndex(u16, u16);
 void MBModelDispOn(Object*);
