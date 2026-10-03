@@ -1341,20 +1341,89 @@ void func_80027E48(s16 arg0, f32 arg1, f32 arg2, u16 arg3, u16 arg4, char* arg5,
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80028180);
+void func_80028180(s16 arg0, char* arg1, u8 arg2, u8 arg3, u8 arg4, u8 arg5) {
+    unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
+    unk2C0C0StructE0* src;
+    unk2C0C0StructE0* dst;
+    s16 idx;
+    s16 n;
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80028314);
+    if (model != NULL) {
+        if (arg5 != 0) {
+            src = model->unk_04;
+            dst = model->unk_08[D_800F37F0];
+            n = model->unk_72;
+            for (i = 0; i < n; i++) {
+                *dst++ = *src++;
+            }
+        }
+        idx = func_80033718(model, arg1);
+        n = model->unk_80[idx].unk_0C;
+        src = &model->unk_08[D_800F37F0][model->unk_80[idx].unk_0A];
+        for (i = 0; i < n; i++) {
+            src->unk_0C.r = arg2;
+            src->unk_0C.g = arg3;
+            src->unk_0C.b = arg4;
+            src++;
+        }
+    }
+}
+void func_80028314(s16 arg0) {
+    unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
+    unk2C0C0Struct30* obj;
+    unk2C0C0Struct20* key;
+    s16 tmp;
+    f32 ftmp;
+    s16 n;
+    s16 k;
+    s16 j;
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80028498);
+    for (i = 0; i < model->unk_6A; i++) {
+        obj = &model->unk_80[i];
+        for (j = 0; j < (s16)obj->unk_04; j++) {
+            key = &obj->unk_34[j];
+            n = (u8)(key->unk_00 & 0x7F);
+            for (k = 0; k < n / 2; k++) {
+                tmp = key->unk_04[k];
+                key->unk_04[k] = key->unk_04[n - k - 1];
+                key->unk_04[n - k - 1] = tmp;
+                ftmp = key->unk_0C[k];
+                key->unk_0C[k] = key->unk_0C[n - k - 1];
+                key->unk_0C[n - k - 1] = ftmp;
+                ftmp = key->unk_1C[k];
+                key->unk_1C[k] = key->unk_1C[n - k - 1];
+                key->unk_1C[n - k - 1] = ftmp;
+            }
+        }
+    }
+}
+void func_80028498(s16 arg0, s16 arg1, s16 arg2) {
+    unk_ovl_2D_struct* temp_v0 = &D_800F2B7C[arg0];
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_800284E4);
-
-INCLUDE_ASM("asm/nonmatchings/24740", func_80028510);
-
-INCLUDE_ASM("asm/nonmatchings/24740", func_8002854C);
-
-INCLUDE_ASM("asm/nonmatchings/24740", func_80028558);
-
+    temp_v0->unk_14 = arg1;
+    temp_v0->unk_68 = temp_v0->unk_60 = 0.0f;
+    temp_v0->unk_16 = arg2;
+    temp_v0->unk_64 = 1.0f;
+}
+void func_800284E4(s16 arg0) {
+    D_800F2B7C[arg0].unk_14 = -1;
+}
+void func_80028510(s16 arg0, s16 arg1, u8 arg2, u8 arg3, u8 arg4) {
+    D_800EE988 = 1;
+    D_800F65DA = arg0;
+    D_800ED0D0 = arg1;
+    D_800F2CF9 = arg2;
+    D_800F3FF4 = arg3;
+    D_800EDEBC = arg4;
+}
+void func_8002854C(void) {
+    D_800EE988 = 0;
+}
+void func_80028558(s16 arg0, s16 arg1) {
+    D_800F2B7C[arg0].unk_6C = D_800F2B7C[arg1].unk_6C;
+}
 INCLUDE_ASM("asm/nonmatchings/24740", func_8002859C);
 
 INCLUDE_ASM("asm/nonmatchings/24740", func_8002861C);

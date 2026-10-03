@@ -33,7 +33,7 @@ void func_8005DC18(omObjData*, s32);
 s16 func_80038A9C(unk2C0C0StructC0*, void*, s32, char*);
 f32 func_8000A72C(f32, f32, f32, f32);
 u8 func_800179C0(s32);
-void func_80028510(s32, s32, s32, s32, s32);
+void func_80028510(s16, s16, u8, u8, u8);
 void func_80028BE0(s32);
 u16 func_800594FC(s16);
 void func_800603F0(s32);
