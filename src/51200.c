@@ -1,5 +1,11 @@
 #include "common.h"
 
+s32 func_800141FC(s16);
+extern s16 D_800D8378;
+extern s16 D_800C53AC[];
+extern s16 D_800C53B4[];
+
+
 extern s32 D_800C5370[];
 void func_8004D0B0(s16);
 
@@ -428,18 +434,108 @@ s32 func_80051548(s32 arg0) {
     func_80070D90(win);
     return 4;
 }
-INCLUDE_ASM("asm/nonmatchings/51200", func_8005165C);
+s32 func_8005165C(s16 arg0) {
+    GW_PLAYER* player;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/51200", func_800516C8);
+    for (i = 0; i < 4; i++) {
+        player = GetPlayerStruct(i);
+        if (!(player->flags & 1) && player->port == arg0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+void func_800516C8(GW_PLAYER* arg0, s16 arg1) {
+    GW_PLAYER* player;
+    u8 port = arg0->port;
+    s32 i;
 
+    if (arg1 < 4) {
+        for (i = 0; i < 4; i++) {
+            player = GetPlayerStruct(i);
+            if (player->port == arg1) {
+                player->port = port;
+                arg0->port = arg1;
+                arg0->flags &= ~1;
+                return;
+            }
+        }
+    } else {
+        arg0->flags |= 1;
+    }
+}
+// register allocation of the step copies and the port counters (masked 0)
+#ifdef NON_MATCHING
+s32 func_80051778(GW_PLAYER* arg0, s16 arg1) {
+    s16 step = arg1;
+    s32 tries;
+    s32 cpuPort;
+    u32 port;
+
+    if (PlayerIsCPU(arg0->player_index) != 0) {
+        tries = 4;
+        cpuPort = (step > 0) ? 0 : 3;
+        do {
+            if (func_8005165C(cpuPort) == 0 && func_800141FC(cpuPort) != 0) {
+                return cpuPort;
+            }
+            cpuPort += arg1;
+        } while (--tries != 0);
+        return -1;
+    }
+    if (arg1 > 0) {
+        port = arg0->port + 1;
+    } else {
+        port = arg0->port - 1;
+    }
+    for (; port < 4; port += arg1) {
+        if (func_8005165C(port) == 0 && func_800141FC(port) != 0) {
+            return port;
+        }
+    }
+    return 4;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/51200", func_80051778);
+#endif
+void func_8005188C(s16 arg0) {
+    D_800D8378 = arg0;
+}
+void func_80051898(unk_Struct02* arg0, s16 arg1) {
+    func_80066DC4(arg0->unk_0A, 0, D_800C53AC[arg1], D_800C53B4[arg1]);
+    func_80066DC4(arg0->unk_0A, 1, D_800C53AC[arg1] + 32, D_800C53B4[arg1] + 27);
+    func_80066DC4(arg0->unk_0A, 2, D_800C53AC[arg1] - 32, D_800C53B4[arg1] + 27);
+}
+void func_80051954(void) {
+    unk_Struct02* sprite = HuPrcCurrentGet()->user_data;
+    f32 angle = 0.0f;
+    s16 alpha;
 
-INCLUDE_ASM("asm/nonmatchings/51200", func_8005188C);
-
-INCLUDE_ASM("asm/nonmatchings/51200", func_80051898);
-
-INCLUDE_ASM("asm/nonmatchings/51200", func_80051954);
-
+    while (1) {
+        HuPrcVSleep();
+        if (D_800D8378 != 0) {
+            alpha = func_800AEAC0(angle) * 255.0f;
+            if (alpha < 0) {
+                alpha = -(s32)alpha;
+            }
+            angle += 6.0f;
+            if (angle > 360.0f) {
+                angle -= 360.0f;
+            }
+            func_80067558(sprite->unk_0A, 0, 0xFF, alpha, 0, 0xC0);
+            func_80067558(sprite->unk_0A, 1, 0xFF, alpha, 0, 0xC0);
+            func_80067558(sprite->unk_0A, 2, 0xFF, alpha, 0, 0xC0);
+            func_80067480(sprite->unk_0A, 1, 0x8000);
+            func_80067480(sprite->unk_0A, 2, 0x8000);
+        } else {
+            angle = 0.0f;
+            func_80067558(sprite->unk_0A, 0, 0, 0, 0xFF, 0xC0);
+            func_800674BC(sprite->unk_0A, 1, 0x8000);
+            func_800674BC(sprite->unk_0A, 2, 0x8000);
+        }
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/51200", func_80051AE0);
 
 INCLUDE_ASM("asm/nonmatchings/51200", func_80052614);
