@@ -314,7 +314,7 @@ void func_80079078(s16);
 void omDelObj(void*); //idk what type this arg is, either omObjData* or Object*
 s32 func_8005021C(f32); //getRandInRange
 void func_800A0D00(void*, f32, f32, f32);
-void func_80025CA8(s16, s32);
+void func_80025CA8(s16, f32);
 void func_80025B34(s16);
 void func_80026040(s16);
 void func_80039C48(char*, void*);

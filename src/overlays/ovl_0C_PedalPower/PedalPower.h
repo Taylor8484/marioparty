@@ -22,7 +22,7 @@ extern u16 D_800F9EFA_PedalPower;
 extern u16 D_800F9EFC_PedalPower;
 extern s16 D_800F9EFE_PedalPower;
 extern s32 D_800F9F04_PedalPower;
-extern s32 D_800FA720_PedalPower;
+extern f32 D_800FA720_PedalPower;
 extern s8 D_800FA72C_PedalPower;
 extern s8 D_800FA72D_PedalPower;
 extern s8 D_800FA738_PedalPower;

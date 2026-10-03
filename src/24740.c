@@ -1,11 +1,20 @@
 #include "common.h"
 #include "engine/mallocblock.h"
+extern u16 D_800ED728;
+extern u8 D_800C30C0;
+extern u8 D_800C30C1;
+extern u8 D_800C30C2;
+void func_80023964(void);
+void func_800337E4(unk2C0C0StructC0*, char*, unk2C0C0StructC0*);
 typedef struct unk24740Struct18 {
-    /* 0x00 */ char unk_00[0x18];
+    /* 0x00 */ u8 unk_00;
+    /* 0x01 */ char unk_01;
+    /* 0x02 */ s16 unk_02;
+    /* 0x04 */ char unk_04[0x14];
 } unk24740Struct18; //sizeof 0x18
 
 extern u16 D_800ECE18[4];
-extern s16 D_800F2D00[4][128];
+extern u16 D_800F2D00[4][128];
 extern s32 D_800C32B0;
 extern unk24740Struct18* D_800ED554;
 void func_8001D658(s16, Gfx**);
@@ -18,7 +27,7 @@ void func_80028668(unk_ovl_2D_struct*, u16);
 void func_800397AC(u16);
 void func_80028A34(s16);
 Gfx* func_8002D614(s16, Gfx*, Gfx*);
-Gfx* func_800253EC(Gfx*, s32, u16);
+Gfx* func_800253EC(Gfx*, s16, u16);
 void func_800721D8(Gfx**);
 Gfx* pfDrawFonts(Gfx*);
 
@@ -34,7 +43,7 @@ void func_80034420(void);
 void func_8002854C(void);
 
 extern void (*D_800ED3E4[2])(Gfx**, Mtx*, u8);
-extern s8 D_800ED6BC;
+extern u8 D_800ED6BC;
 extern s32 D_800F3758;
 extern s8 D_800F384E;
 void func_8002B4C0(void* (*arg0)(s32), void (*arg1)(void*), u16 arg2, u16 arg3, u16 arg4, u8 arg5);
@@ -597,22 +606,101 @@ void func_800247FC(OSMesgQueue* arg0, s32 arg1) {
 #else
 INCLUDE_ASM("asm/nonmatchings/24740", func_800247FC);
 #endif
-INCLUDE_ASM("asm/nonmatchings/24740", func_800253EC);
+Gfx* func_800253EC(Gfx* arg0, s16 arg1, u16 arg2) {
+    unk_ovl_2D_struct* p;
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_800255DC);
+    for (i = 0; i < D_800ECE18[arg1]; i++) {
+        p = &D_800F2B7C[D_800F2D00[arg1][i]];
+        if (!(p->unk_02 & arg2) && arg2 != 0) {
+            continue;
+        }
+        D_800ED728 = D_800F2D00[arg1][i];
+        if (p->unk_6C->unk_28 != D_800EE754) {
+            gDPFullSync(D_800F37DC++);
+            gSPEndDisplayList(D_800F37DC++);
+            func_8001AAC4(arg0, D_800EE754, 0, NULL, 0);
+            D_800EE754 = p->unk_6C->unk_28;
+            arg0 = D_800F37DC;
+        }
+        if (p->unk_78 != NULL) {
+            p->unk_78(&D_800F37DC, D_800F2BCC, D_800F32A0);
+        } else if (p->unk_6C->unk_00 != NULL) {
+            gSPDisplayList(D_800F37DC++, p->unk_6C->unk_00);
+        }
+    }
+    return arg0;
+}
+void func_800255DC(void) {
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025658);
+    func_80023964();
+    for (i = 0; i < 128; i++) {
+        D_800F2B7C[i].unk_6C = NULL;
+    }
+    D_800C3110 = NULL;
+    D_800ECB00 = 0;
+    D_800F37F0 = 0;
+    D_800F3854 = 0;
+}
+void func_80025658(void* arg0, void* arg1) {
+    gSPSegment(D_800F37DC++, 0, 0);
+    gSPDisplayList(D_800F37DC++, D_800C33B0);
+    gDPSetDepthImage(D_800F37DC++, arg1);
+    gDPSetColorImage(D_800F37DC++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH, arg1);
+    gSPDisplayList(D_800F37DC++, D_800C3430);
+    gDPSetColorImage(D_800F37DC++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH, arg0);
+    if (D_800ED6BC != 0) {
+        gDPSetFillColor(D_800F37DC++, GPACK_RGBA5551(D_800C30C0, D_800C30C1, D_800C30C2, 1) << 16 |
+                                      GPACK_RGBA5551(D_800C30C0, D_800C30C1, D_800C30C2, 1));
+        gSPDisplayList(D_800F37DC++, D_800C3460);
+    }
+}
+void func_8002578C(s32 arg0) {
+    D_800ED6BC = arg0;
+}
+void func_80025798(s16 arg0, f32 arg1, f32 arg2, f32 arg3) {
+    unk_ovl_2D_struct* temp_v1;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_8002578C);
+    if (D_800F2B7C[arg0].unk_6C != NULL) {
+        temp_v1 = &D_800F2B7C[arg0];
+        temp_v1->unk_24 = arg1;
+        temp_v1->unk_28 = arg2;
+        temp_v1->unk_2C = arg3;
+    }
+}
+void func_800257E4(s16 arg0, f32 arg1, f32 arg2, f32 arg3) {
+    unk_ovl_2D_struct* temp_v1;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025798);
+    if (D_800F2B7C[arg0].unk_6C != NULL) {
+        temp_v1 = &D_800F2B7C[arg0];
+        temp_v1->unk_30 = arg1;
+        temp_v1->unk_34 = arg2;
+        temp_v1->unk_38 = arg3;
+    }
+}
+void func_80025830(s16 arg0, f32 arg1, f32 arg2, f32 arg3) {
+    unk_ovl_2D_struct* temp_v1;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_800257E4);
+    if (D_800F2B7C[arg0].unk_6C != NULL) {
+        temp_v1 = &D_800F2B7C[arg0];
+        temp_v1->unk_3C = arg1;
+        temp_v1->unk_40 = arg2;
+        temp_v1->unk_44 = arg3;
+    }
+}
+void func_8002587C(s16 arg0, s32 arg1) {
+    unk_ovl_2D_struct* temp_v1;
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025830);
-
-INCLUDE_ASM("asm/nonmatchings/24740", func_8002587C);
-
+    for (i = 0; i < 128; i++) {
+        temp_v1 = &D_800F2B7C[i];
+        if (temp_v1->unk_6C != NULL) {
+            temp_v1->unk_20 &= ~arg0;
+            temp_v1->unk_20 |= arg1;
+        }
+    }
+}
 void func_800258EC(s16 arg0, s32 arg1, s32 arg2) {
     unk_ovl_2D_struct* temp_a0 = &D_800F2B7C[arg0];
 
@@ -622,12 +710,27 @@ void func_800258EC(s16 arg0, s32 arg1, s32 arg2) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025930);
+void func_80025930(s16 arg0, s32 arg1, s32 arg2) {
+    unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_800259D0);
+    for (i = 0; i < model->unk_6A; i++) {
+        model->unk_80[i].unk_14 &= ~arg1;
+        model->unk_80[i].unk_14 |= arg2;
+    }
+}
+void func_800259D0(s16 arg0, char* arg1, s32 arg2, s32 arg3) {
+    unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
+    s16 idx = func_80033718(model, arg1);
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025A7C);
-
+    if (idx >= 0) {
+        model->unk_80[idx].unk_14 &= ~arg2;
+        model->unk_80[idx].unk_14 |= arg3;
+    }
+}
+void func_80025A7C(s16 arg0, char* arg1, s16 arg2) {
+    func_800337E4(D_800F2B7C[arg0].unk_6C, arg1, D_800F2B7C[arg2].unk_6C);
+}
 void func_80025AD4(s16 arg0) {
     func_800258EC(arg0, 1, 1);
     D_800ECB14 = D_800F2B7C[arg0].unk_20;
@@ -635,10 +738,22 @@ void func_80025AD4(s16 arg0) {
 }
 
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025B34);
+void func_80025B34(s16 arg0) {
+    unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025BB8);
+    if (model->unk_64 != 0) {
+        func_800238F0(model->unk_68);
+    } else {
+        func_800237BC(D_800F2B7C[arg0].unk_6C->unk_68);
+    }
+}
+void func_80025BB8(s16 arg0, s16 arg1) {
+    unk_ovl_2D_struct* temp_v1 = &D_800F2B7C[arg0];
 
+    temp_v1->unk_08 = D_800F2B7C[arg1].unk_08;
+    temp_v1->unk_50 = temp_v1->unk_48 = temp_v1->unk_0A = 0;
+    temp_v1->unk_4C = 1.0f;
+}
 void func_80025C20(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4) {
     unk_ovl_2D_struct* temp_a0 = &D_800F2B7C[arg0];
 
@@ -657,36 +772,81 @@ void func_80025C20(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4) {
     temp_a0->unk_5C = 0.0f;
 }
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025CA8);
+void func_80025CA8(s16 arg0, f32 arg1) {
+    unk_ovl_2D_struct* temp_a1 = &D_800F2B7C[arg0];
+    f32 len = D_800ED554[temp_a1->unk_08].unk_02;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025D18);
+    if (len < arg1) {
+        temp_a1->unk_48 = len;
+    } else {
+        temp_a1->unk_48 = arg1;
+    }
+}
+f32 func_80025D18(s16 arg0) {
+    return D_800F2B7C[arg0].unk_48;
+}
+f32 func_80025D40(s16 arg0) {
+    return D_800ED554[D_800F2B7C[arg0].unk_08].unk_02;
+}
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025D40);
+// 0.0f materialized once instead of twice (masked 2)
+#ifdef NON_MATCHING
+f32 func_80025D90(s16 arg0) {
+    f32 x = D_800F2B7C[arg0].unk_60;
+    f32 r;
 
+    if (!(x < 0.0f)) {
+        r = x;
+    } else {
+        r = 0.0f;
+    }
+    return r;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/24740", func_80025D90);
-
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025DD8);
-
+#endif
+f32 func_80025DD8(s16 arg0) {
+    if (D_800F2B7C[arg0].unk_60 < 0.0f) {
+        return 0.0f;
+    }
+    return D_800ED554[D_800F2B7C[arg0].unk_14].unk_02;
+}
 s16 func_80025E48(s16 arg0) {
     return D_800F2B7C[arg0].unk_08;
 }
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025E70);
+f32 func_80025E70(s16 arg0) {
+    return (D_800F2B7C[arg0].unk_0C != -1) ? D_800F2B7C[arg0].unk_54 : -1.0f;
+}
+void func_80025EB4(s16 arg0, s32 arg1, s32 arg2) {
+    unk_ovl_2D_struct* temp_a0 = &D_800F2B7C[arg0];
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025EB4);
+    temp_a0->unk_0A = arg2 | (temp_a0->unk_0A & ~arg1);
+    if (temp_a0->unk_0C != -1) {
+        temp_a0->unk_0E = arg2 | (temp_a0->unk_0E & ~arg1);
+    }
+}
+void func_80025F10(s16 arg0, s32 arg1) {
+    D_800F2B7C[arg0].unk_02 = arg1;
+}
+s16 func_80025F38(s16 arg0) {
+    return D_800F2B7C[arg0].unk_02;
+}
+void func_80025F60(s16 arg0, s32 arg1) {
+    func_800258EC(arg0, 0x1C00, arg1);
+    D_800F2B7C[arg0].unk_6C->unk_28 = ((u32)arg1 >> 10) & 7;
+}
+void func_80025FC8(s16 arg0, f32 arg1) {
+    D_800F2B7C[arg0].unk_50 = arg1;
+}
+void func_80025FF0(s16 arg0, f32 arg1) {
+    D_800F2B7C[arg0].unk_5C = arg1;
+}
+void func_80026018(s16 arg0, f32 arg1) {
+    unk_ovl_2D_struct* p = &D_800F2B7C[arg0];
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025F10);
-
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025F38);
-
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025F60);
-
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025FC8);
-
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025FF0);
-
-INCLUDE_ASM("asm/nonmatchings/24740", func_80026018);
-
+    p->unk_4C = arg1;
+}
 INCLUDE_ASM("asm/nonmatchings/24740", func_80026040);
 
 INCLUDE_ASM("asm/nonmatchings/24740", func_80026174);
