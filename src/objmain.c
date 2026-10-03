@@ -1,6 +1,12 @@
 #include "common.h"
 #include "engine/process.h"
 
+extern u8 D_800F3B80;
+void GamePauseStart(void);
+void GamePauseEnd(void);
+void func_8006CEA0(void);
+
+
 typedef struct omDBGMenuItem {
     /* 0x00 */ u8 disabled;
     /* 0x01 */ u8 x;
@@ -72,7 +78,7 @@ extern u16 D_800C59A0;
 extern u16 D_800C596C;
 extern u8 D_800F3705;
 extern u8 D_800C4250[];
-extern s8 omSysPauseEnableFlag;
+extern u8 omSysPauseEnableFlag;
 
 s16 pfWinCreate(s32, s32, s32, s32, s32);
 s32 func_8003B710(void);
@@ -1122,14 +1128,121 @@ void omDBGSystemKeyCheck(omObjData* obj) {
         }
     }
 }
-INCLUDE_ASM("asm/nonmatchings/objmain", omSystemKeyCheck);
+void omSystemKeyCheck(omObjData* obj) {
+    s32 i;
+    s32 j;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_8005FD5C);
+    if (omSysPauseEnableFlag == 0) {
+        if (obj->work[0] & 1) {
+            if (D_800F3B80 != 0 && ((D_800EE324[obj->work[1]] & 0x1000) || D_800C5982 == 1)) {
+                D_800F384E = 0;
+                obj->work[0] &= ~1;
+                for (j = 0; j < D_800ED550; j++) {
+                    if (!(D_800C5984[j].stat & 0x21)) {
+                        omResetStatBit(&D_800C5984[j], 0x10);
+                    }
+                }
+                for (j = 0; j < D_800C5988; j++) {
+                    if (!(D_800C5990[j].unk0 & 0x21)) {
+                        omPrcResetStatBit(D_800C5990[j].processInstance, 0x10);
+                        if (!(D_800C5990[j].unk0 & 0x40)) {
+                            D_800C5990[j].processInstance->stat &= ~1;
+                        }
+                    }
+                }
+                for (j = 0; j < 4; j++) {
+                    func_8006CD0C(j);
+                }
+                func_80070ED4();
+                GamePauseEnd();
+                func_8000C64C(0);
+                func_80060D4C();
+                if (D_800C5998 & 8) {
+                    D_800C5998 &= ~8;
+                }
+            }
+        } else if (func_80072718() != 1 && D_800C5982 != 1 && (D_800C597C & 4)) {
+            for (i = 0; i < 4; i++) {
+                if (func_800141FC(i) != 0 && (D_800EE324[i] & 0x1000)) {
+                    D_800F3B80 = 0;
+                    D_800F384E = 1;
+                    obj->work[0] = 1;
+                    obj->work[1] = i;
+                    for (j = 0; j < D_800ED550; j++) {
+                        if (!(D_800C5984[j].stat & 0x21)) {
+                            omSetStatBit(&D_800C5984[j], 0x10);
+                        }
+                    }
+                    for (j = 0; j < D_800C5988; j++) {
+                        if (!(D_800C5990[j].unk0 & 0x21)) {
+                            omPrcSetStatBit(D_800C5990[j].processInstance, 0x10);
+                            D_800C5990[j].processInstance->stat |= 1;
+                        }
+                    }
+                    func_8006CEA0();
+                    GamePauseStart();
+                    func_8000C5C4();
+                    func_80060C84(4);
+                    for (j = 0; j < 4; j++) {
+                        func_8006CD0C(j);
+                    }
+                    return;
+                }
+            }
+        }
+    }
+}
+u16 func_8005FD5C(void) {
+    if (omDBGSysKeyObj == NULL) {
+        return 0;
+    }
+    return omDBGSysKeyObj->work[0] & 1;
+}
+s32 func_8005FD7C(void) {
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_8005FD7C);
+    if (func_80072718() == 1 || D_800C5982 == 1) {
+        return 0;
+    }
+    D_800F64F8 = 1;
+    for (i = 0; i < D_800ED550; i++) {
+        if (!(D_800C5984[i].stat & 0x81)) {
+            omSetStatBit(&D_800C5984[i], 0x40);
+        }
+    }
+    for (i = 0; i < D_800C5988; i++) {
+        if (!(D_800C5990[i].unk0 & 0x81)) {
+            omPrcSetStatBit(D_800C5990[i].processInstance, 0x40);
+            D_800C5990[i].processInstance->stat |= 1;
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        func_8006CD0C(i);
+    }
+    return 1;
+}
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_8005FECC);
+void func_8005FECC(void) {
+    s32 i;
 
+    D_800F64F8 = 0;
+    for (i = 0; i < D_800ED550; i++) {
+        if (!(D_800C5984[i].stat & 0x81)) {
+            omResetStatBit(&D_800C5984[i], 0x40);
+        }
+    }
+    for (i = 0; i < D_800C5988; i++) {
+        if (!(D_800C5990[i].unk0 & 0x81)) {
+            omPrcResetStatBit(D_800C5990[i].processInstance, 0x40);
+            if (!(D_800C5990[i].unk0 & 0x10)) {
+                D_800C5990[i].processInstance->stat &= ~1;
+            }
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        func_8006CD0C(i);
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/objmain", func_8005FFFC);
 
 INCLUDE_ASM("asm/nonmatchings/objmain", func_80060058);

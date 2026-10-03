@@ -73,7 +73,7 @@ void func_80041FE0(s32);
 u16 func_8004B61C(Vec2f*);
 void func_8004B6D8(Vec2f*);
 void func_80056984(void);
-void func_8005FD7C(void);
+s32 func_8005FD7C(void);
 void func_8005FECC(void);
 void* func_800533F8(s32, s32);
 void func_80060214(s32);
