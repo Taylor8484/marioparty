@@ -105,7 +105,7 @@ extern u16 D_800EE732;
 extern u8 D_800EE754;
 extern u8 D_800EE988;
 extern s16 D_800EE992;
-extern s16 D_800EE9A0[];
+extern LightState D_800EE9A0;
 extern unk2C0C0Struct10* D_800F09FC;
 extern s64 D_800F0A60;
 extern u8 D_800F2CF9;

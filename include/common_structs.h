@@ -1028,4 +1028,17 @@ typedef struct unk_8003B8D4Struct {
     /* 0x68 */ s32 unk68;
 } unk_8003B8D4Struct;
 
+// Light setup (D_800EE9A0, 23C40.c)
+typedef struct LightDef {
+    /* 0x00 */ u8 col[3];
+    /* 0x03 */ u8 flags; // bit 0: dir is in world space, transformed by the view matrix
+    /* 0x04 */ s8 dir[3];
+} LightDef; // size = 0x7
+
+typedef struct LightState {
+    /* 0x00 */ s16 count; // directional lights; the ambient light follows them
+    /* 0x02 */ LightDef def[8];
+    /* 0x40 */ Light lights[2][8][8]; // [frame][set][light]
+} LightState;
+
 #endif
