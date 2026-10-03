@@ -245,16 +245,134 @@ void func_8006BFF0(omObjData* obj) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/6C470", func_8006C058);
-
-// register allocation (masked 0)
+// register choice and scheduling: f2/f6 for the scale step, obj->model load order (masked 6)
 #ifdef NON_MATCHING
+s32 func_8006C058(omObjData* obj) {
+    Unk6C470Work* w = obj->unk_50;
+    Unk6C470Part* p;
+    s32 count;
+    f32 grow;
+    f32 shrink;
+    f32 maxScale;
+    f32 ang;
+    f32 c;
+    f32 s;
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 sc;
+    f32 t;
+    s32 i;
+    s16 mdl;
+
+    count = 0;
+    grow = 4.0f / w->unk28A;
+    shrink = -1.6f / w->unk28A;
+    maxScale = 2.0f * w->unk28E;
+    ang = CRot.y + 90.0f;
+    p = w->parts;
+    if (ang > 360.0f) {
+        ang -= 360.0f;
+    }
+    c = func_800AEAC0(ang);
+    s = func_800AEFD0(ang);
+    for (i = 3; i < 23; p++, i++) {
+        if (i == 13) {
+            p = w->parts2;
+        }
+        if (p->state == 0) {
+            continue;
+        }
+        mdl = obj->model[i];
+        count++;
+        switch (p->state) {
+            case 1:
+                if (p->timer != 0) {
+                    p->timer--;
+                    break;
+                }
+                p->state = 2;
+                p->timer = w->unk28A;
+                func_80025830(mdl, p->scale, p->scale, p->scale);
+                y = func_800AEAC0(p->angle) * p->radius;
+                x = y * c;
+                z = y * s;
+                y = func_800AEFD0(p->angle) * p->radius;
+                x += p->x;
+                y += p->y;
+                z += p->z;
+                func_80025798(mdl, x, y, z);
+                func_800258EC(mdl, 4, 0);
+                if (i == 3) {
+                    func_800258EC(obj->model[2], 4, 0);
+                    func_80025798(obj->model[2], x + c * 10.0f, y - 10.0f, z + s * 10.0f);
+                    func_8001E268(w->sprites[2], 4, 4);
+                }
+                break;
+            case 2:
+                if (p->timer != 0 && p->scale < maxScale) {
+                    sc = grow + p->scale;
+                    goto update;
+                }
+                p->state = 3;
+                break;
+            case 3:
+                if (p->timer != 0) {
+                    sc = shrink + p->scale;
+            update:
+                p->scale = sc;
+                func_80025830(mdl, sc, sc, sc);
+                x = w->unk10 - p->x;
+                y = w->unk14 - p->y;
+                z = w->unk18 - p->z;
+                t = p->timer;
+                x /= t;
+                y /= t;
+                z /= t;
+                p->x = x + p->x;
+                p->y = y + p->y;
+                p->z = z + p->z;
+                y = func_800AEAC0(p->angle) * p->radius;
+                x = y * c;
+                z = y * s;
+                y = func_800AEFD0(p->angle) * p->radius;
+                x += p->x;
+                y += p->y;
+                z += p->z;
+                func_80025798(mdl, x, y, z);
+                if (i == 3) {
+                    func_80025798(obj->model[2], x + c * 10.0f, y - 10.0f, z + s * 10.0f);
+                    func_8001E2A8(w->sprites[2], p->timer % 8);
+                }
+                p->radius -= p->radius / p->timer;
+                p->angle += 450.0f / w->unk28A;
+                if (p->angle > 360.0f) {
+                    p->angle -= 360.0f;
+                } else if (p->angle < 0.0f) {
+                    p->angle += 360.0f;
+                }
+                p->timer--;
+                } else {
+                    p->state = 0;
+                    func_800258EC(mdl, 4, 4);
+                    if (i < 13) {
+                        PlaySound(0xFC);
+                    }
+                }
+                break;
+        }
+    }
+    return count;
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/6C470", func_8006C058);
+#endif
 void func_8006C5A8(omObjData* obj) {
     Unk6C470Work* w = obj->unk_50;
     Unk6C470Part* p;
     s16 mdl;
+    s32 t;
     s32 i;
-    s16 t;
     f32 cur;
 
     if (w->unk20 > 0) {
@@ -305,8 +423,28 @@ void func_8006C5A8(omObjData* obj) {
         }
     }
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/6C470", func_8006C5A8);
-#endif
 
-INCLUDE_ASM("asm/nonmatchings/6C470", func_8006C7A4);
+void func_8006C7A4(omObjData* obj) {
+    Unk6C470Work* w = obj->unk_50;
+    s16 mdl = obj->model[1];
+    f32 d;
+    f32 s;
+
+    func_80025798(mdl, obj->trans.x, w->unk1C, obj->trans.z);
+    d = obj->trans.y - w->unk1C - obj->scale.y * 50.0f;
+    if (!w->unk288) {
+        s = obj->scale.y * 0.58f;
+    } else {
+        s = obj->scale.y * 1.2f;
+    }
+    if (d < 0.0f) {
+        d = s;
+    } else {
+        d = s - (d * 0.002f);
+        if (d < 0.00001f) {
+            d = 0.00001f;
+        }
+    }
+    func_80025830(mdl, d, d, d);
+    func_800257E4(mdl, obj->rot.x, obj->rot.y, obj->rot.z);
+}
