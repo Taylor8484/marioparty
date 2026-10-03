@@ -1,11 +1,22 @@
 #include "common.h"
 #include "engine/mallocblock.h"
-extern unk2C0C0Struct70* D_800F37AC;
-s32 func_8009B850(unk2C0C0Struct70*, u8*);
+
 typedef struct unk24740Floats8 {
     /* 0x00 */ f32 v[8];
 } unk24740Floats8;
 
+typedef struct unk24740Struct18 {
+    /* 0x00 */ u8 unk_00;
+    /* 0x01 */ char unk_01;
+    /* 0x02 */ s16 unk_02;
+    /* 0x04 */ char unk_04[0x14];
+} unk24740Struct18; //sizeof 0x18
+
+extern unk2C0C0StructC0 D_800ECB40;
+unk2C0C0Struct70* func_80038178(unk2C0C0StructC0*);
+f32 func_800369FC(unk24740Struct18*, s16, f32, f32, f32);
+extern unk2C0C0Struct70* D_800F37AC;
+s32 func_8009B850(unk2C0C0Struct70*, u8*);
 extern const f32 D_800CA8D8[];
 void func_80026EA8(unk2C0C0StructC0*, f32, f32, u16, u16);
 void func_80027100(unk2C0C0StructC0*, f32, f32, u16, u16);
@@ -16,13 +27,6 @@ extern u8 D_800C30C1;
 extern u8 D_800C30C2;
 void func_80023964(void);
 void func_800337E4(unk2C0C0StructC0*, char*, unk2C0C0StructC0*);
-typedef struct unk24740Struct18 {
-    /* 0x00 */ u8 unk_00;
-    /* 0x01 */ char unk_01;
-    /* 0x02 */ s16 unk_02;
-    /* 0x04 */ char unk_04[0x14];
-} unk24740Struct18; //sizeof 0x18
-
 extern u16 D_800ECE18[4];
 extern u16 D_800F2D00[4][128];
 extern s32 D_800C32B0;
@@ -1424,14 +1428,46 @@ void func_8002854C(void) {
 void func_80028558(s16 arg0, s16 arg1) {
     D_800F2B7C[arg0].unk_6C = D_800F2B7C[arg1].unk_6C;
 }
-INCLUDE_ASM("asm/nonmatchings/24740", func_8002859C);
+void func_8002859C(s16 arg0, s16 arg1, char* arg2) {
+    unk2C0C0StructC0* model = D_800F2B7C[arg1].unk_6C;
+    s16 idx = func_80033718(model, arg2);
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_8002861C);
+    D_800F2B7C[arg0].unk_70 = model;
+    D_800F2B7C[arg0].unk_18 = idx;
+}
+void func_8002861C(s16 arg0) {
+    unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80028668);
+    model->unk_BC = func_80038178(model);
+}
+void func_80028668(unk_ovl_2D_struct* arg0, u16 arg1) {
+    arg0->unk_48 = func_800369FC(&D_800ED554[arg0->unk_08], arg0->unk_0A, arg0->unk_48, arg0->unk_50, (f32)arg1 * arg0->unk_4C);
+    if (arg0->unk_0C != -1) {
+        arg0->unk_54 = func_800369FC(&D_800ED554[arg0->unk_0C], arg0->unk_0E, arg0->unk_54, arg0->unk_5C, (f32)arg1 * arg0->unk_58);
+    }
+    if (arg0->unk_14 != -1) {
+        arg0->unk_60 = func_800369FC(&D_800ED554[arg0->unk_14], arg0->unk_16, arg0->unk_60, arg0->unk_68, (f32)arg1 * arg0->unk_64);
+    }
+}
+s16 func_80028784(u8* arg0, s16 arg1) {
+    s16 ret;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80028784);
-
+    if (arg0[0] != 'M' || arg0[1] != 'T' || arg0[2] != 'N' || arg0[3] != 'X') {
+        D_800F502C = 10256;
+        D_800EE32E = 10257;
+        D_800ECB40.unk_68 = D_800F502C;
+        func_8001AC00(&D_800ECB40, arg0, arg1);
+        ret = func_800341E8(arg0, &D_800ECB40);
+        func_800237BC(D_800F502C);
+        func_800237BC(D_800EE32E);
+    } else {
+        ret = func_800342BC(arg0);
+    }
+    if (arg1 & 8) {
+        D_800F33A4(arg0);
+    }
+    return ret;
+}
 INCLUDE_ASM("asm/nonmatchings/24740", func_8002888C);
 
 INCLUDE_ASM("asm/nonmatchings/24740", func_800288D8);
