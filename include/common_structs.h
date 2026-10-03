@@ -834,8 +834,8 @@ typedef struct TextWindow {
 /* 0x08 */ u8 unk_08;
 /* 0x09 */ u8 unk_09;
 /* 0x0A */ u8 unk_0A;
-/* 0x0B */ s8 unk_0B;
-/* 0x0C */ s8 unk_0C;
+/* 0x0B */ u8 unk_0B;
+/* 0x0C */ u8 unk_0C;
 /* 0x0D */ u8 unk_0D;
 /* 0x0E */ u8 unk_0E;
 /* 0x0F */ u8 unk_0F;
@@ -884,8 +884,8 @@ typedef struct TextWindow {
 /* 0xB8 */ u8 usingStringIDBool;
 /* 0xB9 */ char unk_B9[3];
 /* 0xBC */ u8* unk_BC;
-/* 0xC0 */ void* unk_C0[10];
-/* 0xE8 */ unkGlobalStruct_00* unk_E8;
+/* 0xC0 */ u8* unk_C0[10];
+/* 0xE8 */ u8* unk_E8;
 /* 0xEC */ f32 unk_EC;
 /* 0xF0 */ f32 unk_F0;
 /* 0xF4 */ SubTextWindow unk_F4[24];

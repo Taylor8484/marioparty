@@ -1,4 +1,5 @@
 #include "common.h"
+#include "engine/mallocblock.h"
 
 typedef struct TWMask {
     u8 a, b;
@@ -41,6 +42,7 @@ extern TWColor D_800C5DF6[];
 
 TWSprite* func_800675F4(s16, s16);
 s32 func_8006E87C(TextWindow* arg0);
+u8* func_8006F718(s16 arg0, u8 arg1);
 void func_8006E984(TextWindow* arg0);
 
 
@@ -65,8 +67,14 @@ extern s16 D_800E4330;
 extern OSMesgQueue D_800EE960;
 extern u8 D_800C5DF1;
 extern Process* D_800F2BC4;
-extern void* D_800F37D4;
-extern void* D_800F3294;
+typedef struct FontFile {
+    /* 0x00 */ s32 unk0;
+    /* 0x04 */ s32 unk4; /* offset of the 8-bit glyphs */
+    /* 0x08 */ s32 unk8; /* offset of the 4-bit glyphs */
+} FontFile;
+
+extern FontFile* D_800F37D4;
+extern FontFile* D_800F3294;
 extern void* D_800F3F34;
 extern void* D_800F3F38;
 
@@ -850,10 +858,132 @@ void func_8006EB80(void) {
     D_800ED722 = 1;
 }
 
+// register allocation: s0/s2 swapped for spr and the loop index (masked 0)
+#ifdef NON_MATCHING
+s32 func_8006EB90(TextWindow* tw) {
+    TWSprite* spr;
+    u8* new;
+    u8* old;
+    s16 i;
+
+    tw->unk_0B += tw->unk_0C;
+    if (tw->unk_0B > tw->unk_08) {
+        for (i = 1; i < 10; i++) {
+            if (tw->unk_C0[i] != NULL) {
+                old = tw->unk_C0[i];
+                spr = func_800675F4(tw->unk_44, i);
+                new = spr->unk_4C->frames[i].data = tw->unk_C0[i] = func_80023668((tw->unk_1C * tw->unk_1E) / 2);
+                func_8009B770(new, 0, (tw->unk_1C * tw->unk_1E) / 2);
+                func_80023A38(old + (tw->unk_1C * (tw->unk_08 + tw->unk_0A + tw->unk_26)) / 2,
+                              new + (tw->unk_1C * tw->unk_26) / 2, (tw->unk_1C * tw->unk_2E) / 2);
+                func_80023888(old);
+            }
+        }
+        if (tw->unk_E8 != NULL) {
+            old = tw->unk_E8;
+            spr = func_800675F4(tw->unk_44, 10);
+            new = spr->unk_4C->frames->data = tw->unk_E8 = func_80023668(tw->unk_1C * tw->unk_1E);
+            func_8009B770(new, 0, tw->unk_1C * tw->unk_1E);
+            func_80023A38(old + tw->unk_1C * (tw->unk_08 + tw->unk_0A + tw->unk_26),
+                          new + tw->unk_1C * tw->unk_26, tw->unk_1C * tw->unk_2E);
+            func_80023888(old);
+        }
+        return 0;
+    }
+    for (i = 1; i < 10; i++) {
+        if (tw->unk_C0[i] != NULL) {
+            func_800675F4(tw->unk_44, i)->unk_4C->frames[i].data = tw->unk_1C / 2 * tw->unk_0B + tw->unk_C0[i];
+        }
+    }
+    if (tw->unk_E8 != NULL) {
+        func_800675F4(tw->unk_44, 10)->unk_4C->frames->data = tw->unk_1C * tw->unk_0B + tw->unk_E8;
+    }
+    return 1;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006EB90);
+#endif
+// GCC proves the glyph width/height non-negative and uses srl/ori where retail uses signed ops (masked 41)
+#ifdef NON_MATCHING
+void func_8006EEB8(s16 arg0, u8 arg1, u8 arg2, s16 arg3, s16 arg4) {
+    TextWindow* tw = &D_800ED4B0[arg0];
+    u8* src;
+    u8* dst;
+    u8* buf;
+    s16 x;
+    s16 y;
+    s16 row;
+    s16 col;
+    s16 stride;
+    s16 w;
+    s16 h;
+    s16 srcStride;
 
+    y = (arg4 < 0) ? 0 : arg4;
+    x = (arg3 < 0) ? 0 : arg3;
+    buf = func_8006F718(arg0, arg2);
+    if (arg2 < 9) {
+        if (tw->unk_05 == 0) {
+            src = (u8*)D_800F37D4 + D_800F37D4->unk8 + (arg1 - 0x30) * 60;
+            w = 10;
+            if (D_800C5DF2 != 0) {
+                w = D_800C5E34[arg1];
+            }
+            h = 12;
+            srcStride = 5;
+        } else {
+            src = (u8*)D_800F3294 + D_800F3294->unk8 + (arg1 - 0x30) * 32;
+            if (D_800C5DF2 == 0 || (w = D_800C5F34[arg1]) >= 9) {
+                w = 8;
+            }
+            h = 8;
+            srcStride = 4;
+        }
+        tw->unk_13 = w;
+        if ((tw->unk_06 & 4) && arg1 != 0x80 && arg1 != 0x81 && arg2 == 0) {
+            func_8006F3BC(arg0, x - 1, y - 2, tw->unk_09 + 3 + w, h + 2);
+        }
+        dst = buf + (x + y * tw->unk_1C) / 2;
+        stride = tw->unk_1C / 2;
+        if (x & 1) {
+            for (row = 0; row < h; row++) {
+                for (col = 0; col < w / 2; col++) {
+                    dst[col] |= *src >> 4;
+                    dst[col + 1] |= *src << 4;
+                    src++;
+                }
+                src += srcStride - col;
+                dst += stride;
+            }
+        } else {
+            for (row = 0; row < h; row++) {
+                for (col = 0; col < w / 2; col++) {
+                    dst[col] |= *src;
+                    src++;
+                }
+                src += srcStride - col;
+                dst += stride;
+            }
+        }
+    } else {
+        tw->unk_13 = 10;
+        if ((tw->unk_06 & 4) && arg1 != 0x80 && arg1 != 0x81) {
+            func_8006F3BC(arg0, x - 1, y - 2, tw->unk_07 + 3, tw->unk_08 + 2);
+        }
+        src = (u8*)D_800F37D4 + D_800F37D4->unk4 + (arg1 - 0x20) * 120;
+        dst = buf + x + y * tw->unk_1C;
+        for (row = 0; row < tw->unk_08; row++) {
+            for (col = 0; col < tw->unk_07; col++) {
+                dst[col] |= *src;
+                src++;
+            }
+            dst += tw->unk_1C;
+        }
+    }
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006EEB8);
-
+#endif
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006F3BC);
 
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006F718);
