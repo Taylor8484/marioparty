@@ -1,6 +1,10 @@
 #include "common.h"
 #include "spaces.h"
 
+void func_8004D0B0(s16);
+s16 GetSumOfPlayerStars(void);
+
+
 void func_800591E0(void* arg0);
 void func_80043460(void);                                  /* extern */
 void func_80045EE0(void);                                  /* extern */
@@ -77,8 +81,30 @@ void func_80056730(s32 arg0, s16 arg1, s16 arg2) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/57330", func_800567D4);
-
+void func_800567D4(void) {
+    D_800D86B0 = 1;
+    D_800D86B2 = 0;
+    if (_CheckFlag(0x41) == 0) {
+        if (GwSystem.curBoardIndex < 10) {
+            if (GwSystem.curBoardIndex < 8) {
+                func_80056730(-2, 4, 0x92);
+            }
+        } else {
+            func_80056730(-2, 4, 0x92);
+        }
+        if (GwSystem.curBoardIndex == 9) {
+            func_80056730(0x82, 0, 0x92);
+        } else {
+            func_80056730(0x62, 0, 0x92);
+        }
+        func_80056730(-2, 1, 0x92);
+    }
+    GwSystem.unk_00 = 2;
+    func_80056B78();
+    func_8004D0B0((s8)GwSystem.messageSpeed);
+    ClearBoardFeatureFlag(0x36);
+    D_800D86E2 = 0;
+}
 void func_800568A4(void) {
     omOvlHisData* history;
 
@@ -304,24 +330,98 @@ void func_80056E6C(void) {
     }
 }
 
+// GCC keeps &GwSystem+0x1C in a register; retail addresses each field as a constant (masked 24)
+#ifdef NON_MATCHING
+void func_80056F40(void) {
+    if (++GwSystem.curPlayerIndex >= 4) {
+        GwSystem.curPlayerIndex = 0;
+        if (++GwSystem.currentTurn >= 99) {
+            GwSystem.currentTurn = 99;
+        }
+    }
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/57330", func_80056F40);
+#endif
 
-// void func_80056F40(void) {
-//     GW_SYSTEM* gameStatus = &GwSystem;
-    
-//     if (++GwSystem.curPlayerIndex >= 4) {
-//         gameStatus->curPlayerIndex = 0;
-//         gameStatus->currentTurn++;
-//         if (gameStatus->currentTurn >= 0x63) {
-//             gameStatus->currentTurn = 0x63;
-//         }
-//     }
-// }
+// register allocation: ret lives in a0 instead of v0 (masked 3)
+#ifdef NON_MATCHING
+s32 func_80056FA8(void) {
+    GW_SYSTEM* gs = &GwSystem;
+    s32 ret;
 
+    if (_CheckFlag(0x2C) != 0) {
+        ret = 0;
+    } else {
+        ret = 0;
+        if (gs->curPlayerIndex == 3 && gs->maxTurns >= 0) {
+            ret = (gs->maxTurns - gs->currentTurn) == 5;
+        }
+    }
+    return ret;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/57330", func_80056FA8);
+#endif
+// GCC keeps &GwSystem.curBoardIndex in s0 across the calls; retail reloads it (masked 25)
+#ifdef NON_MATCHING
+void func_8005700C(void) {
+    s32 ovl;
 
+    do {
+        HuPrcVSleep();
+    } while (func_80072718() != 0);
+loop:
+    do {
+        HuPrcVSleep();
+    } while (D_800F5144 == 0 && D_800D86EC < 0);
+    while (func_80072718() != 0) {
+        HuPrcVSleep();
+    }
+    if (D_800D86F0 != 0) {
+        func_800601D4(0x5A);
+    }
+    func_800726AC(D_800D86EE, 0x10);
+    HuPrcSleep(0x11);
+    func_80056AF4();
+    if (D_800D86EC & 0x20) {
+        ovl = 0x80;
+        if (GwSystem.curBoardIndex != 9) {
+            if (GetSumOfPlayerStars() != 0) {
+                D_800D86E2 = 1;
+                if (GwSystem.curBoardIndex == 7 && _CheckFlag(0x2A) == 0) {
+                    func_80056730(0x63, 0, 0x94);
+                }
+                func_80056730(0x41, 0, 0x92);
+                ovl = 0x42;
+            } else {
+                ovl = 0x43;
+            }
+        }
+        func_80056730(ovl, 0, 0x92);
+        func_80056984();
+    }
+    if (D_800D86EC & 1) {
+        if (func_80056FA8() != 0) {
+            func_80056730(0x3F, 0, 0x92);
+        }
+        func_80056F40();
+    }
+    if (D_800D86EC & 2) {
+        func_80056730(0x6F, 0, 0x94);
+    }
+    if (D_800D86EC & 8) {
+        func_80056730(D_800D86F4, D_800D86F8, 0x92);
+    }
+    ClearBoardFeatureFlag(0x45);
+    omOvlReturnEx(1);
+    omOvlKill();
+    HuPrcVSleep();
+    goto loop;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/57330", func_8005700C);
-
+#endif
 void func_80057208(s16 arg0) {
     switch (--arg0) {
     case 3:
