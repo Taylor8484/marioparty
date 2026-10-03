@@ -1810,12 +1810,54 @@ s16 func_8007194C(s32 arg0, s32 arg1, s32 arg2) {
 #else
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8007194C);
 #endif
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80071C8C);
+void func_80071C8C(s32 a, s32 b) {
+    TextWindow* tw = &D_800ED4B0[a];
+    f32 scale;
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80071DE0);
+    func_80071740(a, 1);
+    if (b != 0) {
+        PlaySound(0x3A);
+    }
+    for (scale = 0.0f; scale <= 1.0f; scale += 0.1f) {
+        func_80067354(tw->unk_44, tw->unk_274, scale, scale);
+        func_80067354(tw->unk_44, tw->unk_276, scale, scale);
+        func_8006DE20(a, scale, scale);
+        HuPrcVSleep();
+    }
+    func_80067354(tw->unk_44, tw->unk_274, 1.0f, 1.0f);
+    func_80067354(tw->unk_44, tw->unk_276, 1.0f, 1.0f);
+    func_8006DE20(a, 1.0f, 1.0f);
+    func_80071740(a, 0);
+}
+void func_80071DE0(s32 arg0) {
+    TextWindow* tw = &D_800ED4B0[arg0];
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80071E80);
+    func_80071740(arg0, 1);
+    func_80067354(tw->unk_44, tw->unk_274, 1.0f, 1.0f);
+    func_80067354(tw->unk_44, tw->unk_276, 1.0f, 1.0f);
+    func_8006DE20(arg0, 1.0f, 1.0f);
+    func_80071740(arg0, 0);
+}
+void func_80071E80(s32 a, s32 b) {
+    TextWindow* tw = &D_800ED4B0[a];
+    f32 scale = 1.0f;
 
+    func_80071740(a, 1);
+    if (b != 0) {
+        PlaySound(0x3B);
+    }
+    while (scale > 0.0f) {
+        func_80067354(tw->unk_44, tw->unk_274, scale, scale);
+        func_80067354(tw->unk_44, tw->unk_276, scale, scale);
+        func_8006DE20(a, scale, scale);
+        scale -= 0.1f;
+        HuPrcVSleep();
+    }
+    func_80067354(tw->unk_44, tw->unk_274, scale, scale);
+    func_80067354(tw->unk_44, tw->unk_276, scale, scale);
+    func_8006DE20(a, scale, scale);
+    func_80071740(a, 0);
+}
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80071FF4);
 
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80072080);
