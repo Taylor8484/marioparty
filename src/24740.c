@@ -1468,16 +1468,46 @@ s16 func_80028784(u8* arg0, s16 arg1) {
     }
     return ret;
 }
-INCLUDE_ASM("asm/nonmatchings/24740", func_8002888C);
+void func_8002888C(s16 arg0, s16 arg1) {
+    unk_ovl_2D_struct* temp_v0 = &D_800F2B7C[arg0];
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_800288D8);
+    temp_v0->unk_08 = arg1;
+    temp_v0->unk_50 = temp_v0->unk_48 = temp_v0->unk_0A = 0;
+    temp_v0->unk_4C = 1.0f;
+}
+f32 func_800288D8(s16 arg0) {
+    return D_800ED554[arg0].unk_02;
+}
+void func_8002890C(s32 arg0, s32 arg1, s32 arg2) {
+    D_800C30C0 = arg0;
+    D_800C30C1 = arg1;
+    D_800C30C2 = arg2;
+}
+void func_80028928(s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
+    unk_ovl_2D_struct* p = &D_800F2B7C[arg0];
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_8002890C);
+    if ((arg1 & 1) && p->unk_08 >= 0) {
+        p->unk_0A = arg3 | (p->unk_0A & ~arg2);
+        if ((arg1 & 2) && p->unk_0C >= 0) {
+            p->unk_0E = arg3 | (p->unk_0E & ~arg2);
+        }
+        if ((arg1 & 4) && p->unk_14 >= 0) {
+            p->unk_16 = arg3 | (p->unk_16 & ~arg2);
+        }
+    }
+}
+void func_800289D0(s16 arg0, s16 arg1, f32 arg2) {
+    unk_ovl_2D_struct* p = &D_800F2B7C[arg0];
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80028928);
-
-INCLUDE_ASM("asm/nonmatchings/24740", func_800289D0);
-
+    p->unk_1A = arg1;
+    p->unk_74 = p->unk_6C;
+    p->unk_1C = arg2;
+    p = &D_800F2B7C[arg1];
+    p->unk_1A = arg0;
+    p->unk_74 = NULL;
+    p->unk_1C = 0.0f;
+    p->unk_20 |= 4;
+}
 INCLUDE_ASM("asm/nonmatchings/24740", func_80028A34);
 
 INCLUDE_ASM("asm/nonmatchings/24740", func_80028BE0);
