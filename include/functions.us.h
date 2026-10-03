@@ -201,7 +201,7 @@ void func_800A0E80(Vec3f*, Vec3f*, Vec3f*);
 void func_80052E84(s16);
 void func_80056A08(s32, s16, s32, s32);
 void func_8006DDC8(s16, s32, s16);
-void func_80072080(s16);
+void func_80072080(s32);
 void func_80025F10(s16, s32);
 s16 func_8007194C(s32, s32, s32);
 void func_8001D520(s16, Vec3f*, Vec3f*);

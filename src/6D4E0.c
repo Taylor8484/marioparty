@@ -1858,12 +1858,28 @@ void func_80071E80(s32 a, s32 b) {
     func_8006DE20(a, scale, scale);
     func_80071740(a, 0);
 }
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80071FF4);
+void func_80071FF4(s32 arg0, u8 arg1) {
+    TextWindow* tw = &D_800ED4B0[arg0];
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80072080);
+    func_800674BC(tw->unk_44, tw->unk_274, 0x1000);
+    func_8006752C(tw->unk_44, tw->unk_274, arg1);
+    func_800674BC(tw->unk_44, tw->unk_276, 0x1000);
+    func_8006752C(tw->unk_44, tw->unk_276, arg1);
+}
+void func_80072080(s32 arg0) {
+    TextWindow* tw = &D_800ED4B0[arg0];
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80072108);
+    func_80067704(func_8006DD8C(arg0, tw->unk_274));
+    func_80067704(func_8006DD8C(arg0, tw->unk_276));
+    func_80070D90(arg0);
+}
+void func_80072108(s16 arg0, s16 arg1) {
+    TextWindow* tw = &D_800ED4B0[arg0];
 
+    func_8006E0A4(arg0, arg1);
+    func_80067384(tw->unk_44, tw->unk_274, arg1 + 1);
+    func_80067384(tw->unk_44, tw->unk_276, arg1 + 1);
+}
 INCLUDE_RODATA("asm/nonmatchings/6D4E0", D_800CB750);
 
 INCLUDE_RODATA("asm/nonmatchings/6D4E0", D_800CB774);
