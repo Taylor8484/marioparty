@@ -4,6 +4,7 @@
 #include "types.h"
 #include "engine/math.h"
 #include "PR/mbi.h"
+#include "PR/os.h"
 
 typedef struct Vec2f {
                f32 x;
@@ -524,13 +525,10 @@ typedef struct unk_Struct02 {
 typedef struct unk2C0C0Struct20 {
     /* 0x00 */ u8 unk_00;
     /* 0x01 */ char unk_01[3];
-    /* 0x04 */ s16 unk_04[2]; // unknown array size
-    /* 0x08 */ char unk_08[4];
-    /* 0x0C */ f32 unk_0C[1]; // unknown array size
-    /* 0x10 */ char unk_10[0xC];
-    /* 0x1C */ f32 unk_1C[1]; // unknown array size
-    /* 0x20 */ char unk_20[0xC];
-    /* 0x2C */ u8 unk_2C[4]; // unknown array size
+    /* 0x04 */ s16 unk_04[4]; // vertex indices
+    /* 0x0C */ f32 unk_0C[4];
+    /* 0x1C */ f32 unk_1C[4];
+    /* 0x2C */ u8 unk_2C[4];
     /* 0x30 */ s16 unk_30;
     /* 0x32 */ s16 unk_32;
 } unk2C0C0Struct20; //sizeof 0x34
@@ -1019,13 +1017,27 @@ typedef struct unk_ProcessUserData08 {
 
 typedef struct unk_8003B8D4Struct {
     /* 0x00 */ s16 unk00;
-    /* 0x02 */ s16 unk02;
-    /* 0x04 */ struct unk_ProcessUserData08* unk04;
+    /* 0x02 */ s16 unk02; // number of choices
+    /* 0x04 */ struct unk_ProcessUserData08** unk04; // choice arrows
     /* 0x08 */ Process* unk08;
-    /* 0x0C */ s16 unk0C;
-    /* 0x0E */ s16 unk0E;
-    /* 0x10 */ char unk_10[0x58];
-    /* 0x68 */ s32 unk68;
+    /* 0x0C */ s16 unk0C; // current choice
+    /* 0x0E */ s16 unk0E; // controller port
+    /* 0x10 */ OSMesgQueue unk10;
+    /* 0x28 */ OSMesg unk28[16];
+    /* 0x68 */ struct GW_PLAYER* unk68;
 } unk_8003B8D4Struct;
+
+// Light setup (D_800EE9A0, 23C40.c)
+typedef struct LightDef {
+    /* 0x00 */ u8 col[3];
+    /* 0x03 */ u8 flags; // bit 0: dir is in world space, transformed by the view matrix
+    /* 0x04 */ s8 dir[3];
+} LightDef; // size = 0x7
+
+typedef struct LightState {
+    /* 0x00 */ s16 count; // directional lights; the ambient light follows them
+    /* 0x02 */ LightDef def[8];
+    /* 0x40 */ Light lights[2][8][8]; // [frame][set][light]
+} LightState;
 
 #endif

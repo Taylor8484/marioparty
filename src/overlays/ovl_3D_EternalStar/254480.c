@@ -1080,7 +1080,7 @@ void func_800F8588_EternalStar(void) {
 
 void func_800F87E4_EternalStar(EventTableUnkStruct* arg0) {
     s32 directionResult;
-    s32 temp_s2;
+    unk_8003B8D4Struct* temp_s2;
     s32 i;
     s32 tempVar;
 
