@@ -812,7 +812,7 @@ typedef struct unk_ovl_2D_struct { //actually global??
 } unk_ovl_2D_struct; //sizeof 0xC0
 
 typedef struct SubTextWindow {
-    s8 unk0;
+    u8 unk0;
     char unk_01;
     s16 unk2;
     s16 unk4;
@@ -834,7 +834,8 @@ typedef struct TextWindow {
 /* 0x08 */ u8 unk_08;
 /* 0x09 */ u8 unk_09;
 /* 0x0A */ u8 unk_0A;
-/* 0x0B */ char unk_0B[2];
+/* 0x0B */ u8 unk_0B;
+/* 0x0C */ u8 unk_0C;
 /* 0x0D */ u8 unk_0D;
 /* 0x0E */ u8 unk_0E;
 /* 0x0F */ u8 unk_0F;
@@ -842,11 +843,14 @@ typedef struct TextWindow {
 /* 0x11 */ char unk_11;
 /* 0x12 */ u8 unk_12;
 /* 0x13 */ u8 unk_13;
-/* 0x14 */ char unk_14[4];
+/* 0x14 */ s16 unk_14;
+/* 0x16 */ s16 unk_16;
 /* 0x18 */ s16 unk_18;
 /* 0x1A */ s16 unk_1A;
 /* 0x1C */ s16 unk_1C;
-/* 0x1E */ char unk_1E[6];
+/* 0x1E */ s16 unk_1E;
+/* 0x20 */ s16 unk_20;
+/* 0x22 */ s16 unk_22;
 /* 0x24 */ s16 unk_24;
 /* 0x26 */ s16 unk_26;
 /* 0x28 */ s16 unk_28;
@@ -856,32 +860,38 @@ typedef struct TextWindow {
 /* 0x30 */ s16 unk_30;
 /* 0x32 */ s16 unk_32;
 /* 0x34 */ s16 unk_34;
-/* 0x36 */ char unk_36[0x2];
+/* 0x36 */ s16 unk_36;
 /* 0x38 */ s16 unk_38;
-/* 0x3A */ char unk_3A[2];
-/* 0x3C */ f32 unk_3C;
-/* 0x40 */ char unk_40[2];
+/* 0x3A */ s16 unk_3A;
+/* 0x3C */ s16 unk_3C;
+/* 0x3E */ s16 unk_3E;
+/* 0x40 */ s16 unk_40;
 /* 0x42 */ s16 unk_42;
 /* 0x44 */ s16 unk_44;
 /* 0x46 */ s16 unk_46[20];
 /* 0x6E */ s16 unk_6E;
-/* 0x70 */ char unk_70[11];
-/* 0x7B */ s8 unk_7B[5]; //unknown array size
-/* 0x80 */ char unk_80[8];
-/* 0x88 */ void* unk_88[5]; //unknown array size
-/* 0x9C */ char unk_9C[0x14];
+/* 0x70 */ s16 unk_70;
+/* 0x72 */ s16 unk_72;
+/* 0x74 */ s16 unk_74;
+/* 0x76 */ s16 unk_76;
+/* 0x78 */ s16 unk_78;
+/* 0x7A */ s8 unk_7A;
+/* 0x7B */ s8 unk_7B[10];
+/* 0x85 */ char unk_85[3];
+/* 0x88 */ void* unk_88[10];
 /* 0xB0 */ u8* stringPtr;
 /* 0xB4 */ void* string;
 /* 0xB8 */ u8 usingStringIDBool;
-/* 0xB9 */ char unk_B9[7];
-/* 0xC0 */ void* unk_C0[10];
-/* 0xE8 */ unkGlobalStruct_00* unk_E8;
+/* 0xB9 */ char unk_B9[3];
+/* 0xBC */ u8* unk_BC;
+/* 0xC0 */ u8* unk_C0[10];
+/* 0xE8 */ u8* unk_E8;
 /* 0xEC */ f32 unk_EC;
 /* 0xF0 */ f32 unk_F0;
-/* 0xF4 */ SubTextWindow unk_F4[5]; //unknown size
-/* 0x144 */ char unk_144[0x130];
+/* 0xF4 */ SubTextWindow unk_F4[24];
 /* 0x274 */ s16 unk_274;
-/* 0x276 */ char unk_276[6];
+/* 0x276 */ s16 unk_276;
+/* 0x278 */ char unk_278[4];
 } TextWindow; //sizeof 0x27C
 
 typedef struct DecisionTreeNonLeafNode {

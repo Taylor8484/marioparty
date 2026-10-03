@@ -13,7 +13,7 @@ void func_8005A258(s16);
 void func_8005B060();
 void func_80060F04(s16, s16, s16, s16);
 TextWindow* func_8006DD60(s16);
-void func_8006E288(s16, s8);
+void func_8006E288(s16, u8);
 
 void func_800F6750_OptionsHouse();
 void func_800F6A78_OptionsHouse(omObjData*);
