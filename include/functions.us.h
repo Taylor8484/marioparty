@@ -368,7 +368,7 @@ f32 func_800AEAC0(f32);
 void func_80009E20(omObjData*);
 void func_800186E4(omObjData*, s32, s32);
 f32 func_800AEFD0(f32);
-u32 omOutView(omObjData*);
+void omOutView(omObjData*);
 s32 _CheckFlag(s32);
 s16 func_8000C544(void);
 s32 GMesStatAllGet(void);

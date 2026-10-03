@@ -1,6 +1,23 @@
 #include "common.h"
 #include "engine/process.h"
 
+typedef struct omCameraView {
+    /* 0x00 */ f32 rot;
+    /* 0x04 */ f32 x;
+    /* 0x08 */ f32 z;
+    /* 0x0C */ f32 unk_0C;
+    /* 0x10 */ f32 far;
+    /* 0x14 */ f32 near;
+} omCameraView; // sizeof 0x18
+
+extern omCameraView D_800EE738;
+extern omCameraView D_800F2C28[];
+extern Vec3f CRotM[];
+extern f32 CZoomM[];
+extern Vec3f CenterM[];
+void omSystemKeyCheck(omObjData*);
+
+
 extern u16 D_800C5972;
 extern s16 D_800C59A6;
 extern s16 D_800C5994;
@@ -803,12 +820,70 @@ void omMain(void) {
         omOvlKill();
     }
 }
-INCLUDE_ASM("asm/nonmatchings/objmain", omOutView);
+void omOutView(omObjData* obj) {
+    Vec3f pos;
+    Vec3f target;
+    Vec3f up;
+    f32 rx = CRot.x;
+    f32 ry = CRot.y;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", omOutViewMulti);
+    pos.x = Center.x + func_800AEAC0(ry) * func_800AEFD0(rx) * CZoom;
+    pos.y = -func_800AEAC0(rx) * CZoom + Center.y;
+    pos.z = func_800AEFD0(ry) * func_800AEFD0(rx) * CZoom + Center.z;
+    target.x = Center.x;
+    target.y = Center.y;
+    target.z = Center.z;
+    up.x = func_800AEAC0(ry) * func_800AEAC0(rx);
+    up.y = func_800AEFD0(rx);
+    up.z = func_800AEFD0(ry) * func_800AEAC0(rx);
+    D_800EE738.x = pos.x;
+    D_800EE738.z = pos.z;
+    D_800EE738.rot = CRot.y;
+    D_800EE738.unk_0C = D_800C3110->unk_40;
+    D_800EE738.far = 20000.0f;
+    D_800EE738.near = 10000.0f;
+    func_8001D420(0, &pos, &target, &up);
+    func_8001D57C(0);
+}
+void omOutViewMulti(omObjData* obj) {
+    Vec3f pos;
+    Vec3f target;
+    Vec3f up;
+    f32 rx;
+    f32 ry;
+    u8 i;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", omSystemKeyCheckSetup);
+    for (i = 0; i < obj->work[0]; i++) {
+        rx = CRotM[i].x;
+        ry = CRotM[i].y;
+        pos.x = func_800AEAC0(ry) * func_800AEFD0(rx) * CZoomM[i] + CenterM[i].x;
+        pos.y = -func_800AEAC0(rx) * CZoomM[i] + CenterM[i].y;
+        pos.z = func_800AEFD0(ry) * func_800AEFD0(rx) * CZoomM[i] + CenterM[i].z;
+        target.x = CenterM[i].x;
+        target.y = CenterM[i].y;
+        target.z = CenterM[i].z;
+        up.x = func_800AEAC0(ry) * func_800AEAC0(rx);
+        up.y = func_800AEFD0(rx);
+        up.z = func_800AEFD0(ry) * func_800AEAC0(rx);
+        D_800F2C28[i].x = pos.x;
+        D_800F2C28[i].z = pos.z;
+        D_800F2C28[i].rot = CRotM[i].y;
+        D_800F2C28[i].unk_0C = D_800C3110[i].unk_40;
+        D_800F2C28[i].far = 20000.0f;
+        D_800F2C28[i].near = 10000.0f;
+        func_8001D420(i, &pos, &target, &up);
+        func_8001D57C(i);
+    }
+}
+void omSystemKeyCheckSetup(void) {
+    omObjData* obj;
 
+    obj = omDBGSysKeyObj = omAddObj(0x7FD9, 0, 0, -1, omSystemKeyCheck);
+    omSetStatBit(obj, 0xA0);
+    obj->work[0] = 0;
+    obj->work[1] = 0;
+    obj->work[2] = 0;
+}
 INCLUDE_RODATA("asm/nonmatchings/objmain", D_800CB574);
 
 INCLUDE_RODATA("asm/nonmatchings/objmain", D_800CB57C);
