@@ -353,7 +353,7 @@ void func_80015F90(u8* str) {
         return;
     }
     inChoice = 0;
-    len = strlen(str);
+    len = strlen((char*)str);
     color = 7;
     for (i = 0; i < len; i++) {
         if (*str == 0) {

@@ -55,7 +55,7 @@ u16 func_80017A50(omObjData* obj);
 void func_80017B4C(u8 mdl);
 void func_80017BB0(omObjData* obj);
 void func_80017D1C(omObjData* obj);
-void func_8001846C(MotionReq* req, s16 flags, s16 motion, u16 speed);
+void func_8001846C(MotionReq* req, u16 flags, u16 motion, u16 speed);
 s32 func_800184A8(ActorWork* w, u16 motion);
 s32 func_800185A4(omObjData* obj, u16 motion);
 
@@ -176,7 +176,7 @@ void func_80017C0C(omObjData* obj, u8 idx, f32 x, f32 y, f32 z, f32 a, f32 b) {
     u8 mdl = obj->model[idx];
     f32 cur;
 
-    if (idx < obj->mdlcnt) {
+    if (obj->mdlcnt > idx) {
         if (mdl != 0) {
             cur = func_80025D18(mdl);
             if (func_80025D40(mdl) <= cur) {
@@ -192,61 +192,73 @@ void func_80017C0C(omObjData* obj, u8 idx, f32 x, f32 y, f32 z, f32 a, f32 b) {
     }
 }
 
+// flip held in a copy register and the motion pointer preloaded only in retail (masked 11)
+#ifdef NON_MATCHING
 void func_80017D1C(omObjData* obj) {
     ActorWork* w = obj->unk_50;
+    s16* motion = obj->motion;
     s32 flip = (w->req.flags & 1) * 2;
 
     if (w->table[22].flags & 4) {
-        func_80028498(obj->model[0], obj->motion[22] & 0x3FFF, flip);
+        func_80028498(obj->model[0], motion[22] & 0x3FFF, flip);
     } else {
         func_80028498(obj->model[0], func_80025E48(obj->motion[22] & 0x3FFF), flip);
     }
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/18650", func_80017D1C);
+#endif
 
 void func_80017DB0(omObjData* obj) {
     u16 mdl = obj->model[0];
     ActorWork* w = obj->unk_50;
     MotionReq* req;
-    s32 mot;
+    s16 mot;
     s32 flip;
     f32 t;
+    u16 spd;
+    MotionEntry* e;
 
     if (w->pending != 0) {
         flip = 0;
         if (w->count != 0) {
             req = &w->req;
             if (req->flags & 4) {
-                mot = obj->motion[req->motion] & 0x3FFF;
-                w->unk_A8 = func_800288D8(mot);
+                spd = (w->unk_A8 = func_800288D8(mot = obj->motion[req->motion] & 0x3FFF)) / 5.0f;
             } else {
                 mot = func_80025E48(obj->motion[req->motion] & 0x3FFF);
-                w->unk_A8 = func_80025D40(obj->motion[req->motion] & 0x3FFF);
+                spd = (w->unk_A8 = func_80025D40(obj->motion[req->motion] & 0x3FFF)) / 5.0f;
             }
             if (req->flags & 1) {
                 flip = 2;
             }
-            func_80025C20(mdl, mot, 0, (u16)(w->unk_A8 / 5.0f), flip);
+            func_80025C20(mdl, mot, 0, spd, flip);
             func_80025FF0(mdl, req->speed);
             if (w->flags & 0x100) {
                 func_80017D1C(obj);
             }
         }
         w->pending = 0;
-    } else if (!(w->table[func_80017A50(obj)].flags & 1)) {
-        t = func_80025E70(mdl);
-        if (t == -1.0f) {
-            t = func_80025D18(mdl);
-        }
-        if (w->unk_A8 <= t) {
-            w->cur++;
-            if (w->cur >= w->count) {
-                w->count = 0;
-                w->cur = 0xFFFF;
+    } else {
+        e = &w->table[func_80017A50(obj)];
+        if (!(e->flags & 1)) {
+            t = func_80025E70(mdl);
+            if (t == -1.0f) {
+                t = func_80025D18(mdl);
+            }
+            if (w->unk_A8 <= t) {
+                w->cur++;
+                if (w->count <= w->cur) {
+                    w->count = 0;
+                    w->cur = 0xFFFF;
+                }
             }
         }
     }
 }
 
+// one load scheduled before the blink-flag test (masked 2)
+#ifdef NON_MATCHING
 void func_8001802C(omObjData* obj) {
     ActorWork* w = obj->unk_50;
     u16 lim1;
@@ -324,6 +336,9 @@ void func_8001802C(omObjData* obj) {
     }
     func_80017BB0(obj);
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/18650", func_8001802C);
+#endif
 
 void func_80018450(omObjData* obj, u8 flags) {
     ActorWork* w = obj->unk_50;
@@ -332,7 +347,7 @@ void func_80018450(omObjData* obj, u8 flags) {
     w->unk_9C = 0;
 }
 
-void func_8001846C(MotionReq* req, s16 flags, s16 motion, u16 speed) {
+void func_8001846C(MotionReq* req, u16 flags, u16 motion, u16 speed) {
     req->flags = flags;
     req->motion = motion;
     req->unk_08 = 0;
@@ -347,44 +362,49 @@ s32 func_800184A8(ActorWork* w, u16 motion) {
     return w->req.motion == motion;
 }
 
+// retail reloads a0 from s0 before func_80017A50 (masked 1)
+#ifdef NON_MATCHING
 s32 func_800184BC(omObjData* obj, u16 motion) {
     ActorWork* w = obj->unk_50;
     MotionEntry* e;
+    s32 flags;
+    s32 speed;
 
-    if (w->unk_52 != 0) {
-        return 0;
-    }
-    e = &w->table[func_80017A50(obj)];
-    if (w->cur != 0xFFFF) {
-        if ((e->flags & 2) || func_800184A8(w, motion)) {
-            return 0;
+    if (w->unk_52 == 0) {
+        e = &w->table[func_80017A50(obj)];
+        if (w->cur == 0xFFFF || (!(e->flags & 2) && !func_800184A8(w, motion))) {
+            e = &w->table[motion];
+            if ((u16)obj->motion[motion] != 0xFFFF) {
+                flags = e->flags;
+                speed = e->speed;
+                w->cur = 0;
+                w->count = 1;
+                func_8001846C(&w->req, flags, motion, speed);
+                w->pending = 1;
+                return 1;
+            }
         }
     }
-    e = &w->table[motion];
-    if (obj->motion[motion] == -1) {
-        return 0;
-    }
-    w->cur = 0;
-    w->count = 1;
-    func_8001846C(&w->req, e->flags, motion, e->speed);
-    w->pending = 1;
-    return 1;
+    return 0;
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/18650", func_800184BC);
+#endif
 
 s32 func_800185A4(omObjData* obj, u16 motion) {
     ActorWork* w = obj->unk_50;
     MotionEntry* e;
+    s32 flags;
+    s32 speed;
 
-    if (w->unk_52 != 0) {
+    if (w->unk_52 != 0 || (e = &w->table[motion], (u16)obj->motion[motion] == 0xFFFF)) {
         return 0;
     }
-    e = &w->table[motion];
-    if (obj->motion[motion] == -1) {
-        return 0;
-    }
+    flags = e->flags;
+    speed = e->speed;
     w->cur = 0;
     w->count = 1;
-    func_8001846C(&w->req, e->flags, motion, e->speed);
+    func_8001846C(&w->req, flags, motion, speed);
     w->pending = 1;
     return 1;
 }
@@ -412,7 +432,8 @@ void func_800186C8(omObjData* obj, s32 idx, s16 flags, s16 speed) {
 }
 
 void func_800186E4(omObjData* obj, s32 a, s32 b) {
-    s16 tmp;
+    ActorWork* w = obj->unk_50;
+    s32 tmp;
     MotionEntry* ea;
     MotionEntry* eb;
     u16 flags;
@@ -421,8 +442,8 @@ void func_800186E4(omObjData* obj, s32 a, s32 b) {
     tmp = obj->motion[a];
     obj->motion[a] = obj->motion[b];
     obj->motion[b] = tmp;
-    ea = &((ActorWork*)obj->unk_50)->table[a];
-    eb = &((ActorWork*)obj->unk_50)->table[b];
+    ea = &w->table[a];
+    eb = &w->table[b];
     speed = ea->speed;
     flags = ea->flags;
     ea->speed = eb->speed;
@@ -431,26 +452,40 @@ void func_800186E4(omObjData* obj, s32 a, s32 b) {
     eb->flags = flags;
 }
 
+// register allocation of the parameters; retail reads speed as u16 from the stack (masked 5)
+#ifdef NON_MATCHING
 void func_8001874C(omObjData* obj, s32 idx, s32 file, s32 flags, s32 speed) {
     s16 mot = func_8001755C(file);
+    ActorWork* w;
     MotionEntry* e;
 
-    if (!(mot & 0x8000)) {
+    if (mot >= 0) {
+        w = obj->unk_50;
         obj->motion[(u16)idx] = mot;
-        e = &((ActorWork*)obj->unk_50)->table[(u16)idx];
+        e = &w->table[(u16)idx];
         e->flags = flags;
         e->speed = speed;
     }
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/18650", func_8001874C);
+#endif
 
+// register allocation of the parameters; retail reads speed as u16 from the stack (masked 5)
+#ifdef NON_MATCHING
 void func_800187D0(omObjData* obj, s32 idx, s32 file, s32 flags, s32 speed) {
     s16 mot = func_80028784(DataRead(file), 0x18);
+    ActorWork* w;
     MotionEntry* e;
 
-    if (!(mot & 0x8000)) {
+    if (mot >= 0) {
+        w = obj->unk_50;
         obj->motion[(u16)idx] = mot;
-        e = &((ActorWork*)obj->unk_50)->table[(u16)idx];
+        e = &w->table[(u16)idx];
         e->flags = flags | 4;
         e->speed = speed;
     }
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/18650", func_800187D0);
+#endif
