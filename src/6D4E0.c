@@ -1,5 +1,82 @@
 #include "common.h"
 
+typedef struct TWMask {
+    u8 a, b;
+} TWMask;
+
+extern TWMask D_800C6034[4];
+/* splat label for &D_800C6034[0].b */
+extern TWMask D_800C6035[];
+
+void func_8006D650(u8* arg0, s16 arg1, s16 arg2);
+
+
+typedef struct TWImage {
+    /* 0x00 */ void* data;
+    /* 0x04 */ s16 width;
+    /* 0x06 */ s16 height;
+    /* 0x08 */ s16 unk8;
+    /* 0x0A */ s16 unkA;
+} TWImage; /* sizeof 0xC */
+
+typedef struct TWSprData {
+    /* 0x00 */ TWImage* frames;
+    /* 0x04 */ char unk_04[0xE];
+    /* 0x12 */ u16 count;
+} TWSprData;
+
+typedef struct TWSprite {
+    /* 0x00 */ char unk_00[0x4C];
+    /* 0x4C */ TWSprData* unk_4C;
+} TWSprite;
+
+typedef struct TWColor {
+    u8 r, g, b;
+} TWColor;
+
+extern TWColor D_800C5DF4[10];
+/* splat labels for &D_800C5DF4[0].g and &D_800C5DF4[0].b: retail indexes them as TWColor arrays */
+extern TWColor D_800C5DF5[];
+extern TWColor D_800C5DF6[];
+
+TWSprite* func_800675F4(s16, s16);
+
+
+
+typedef struct RumbleState {
+    /* 0x00 */ s16 unk0;
+    /* 0x02 */ s16 unk2;
+    /* 0x04 */ s16 unk4;
+    /* 0x06 */ s16 unk6;
+    /* 0x08 */ s16 unk8;
+    /* 0x0A */ s16 unkA;
+} RumbleState;
+
+extern OSPfs D_800E4140[4];
+extern RumbleState D_800E42E0[4];
+/* splat label for &D_800E42E0[0].unk2; func_8006CC18 addresses that field through it */
+extern RumbleState D_800E42E2[];
+extern functionListEntry D_800E4310;
+extern functionListEntry D_800E431C;
+extern s16 D_800E4328;
+extern s16 D_800E4330;
+extern OSMesgQueue D_800EE960;
+extern u8 D_800C5DF1;
+extern Process* D_800F2BC4;
+extern void* D_800F37D4;
+extern void* D_800F3294;
+extern void* D_800F3F34;
+extern void* D_800F3F38;
+
+s32 RequestSIFunction(unkMesg* siMessg, HuSiFunc func, void* arg, s32 type);
+void func_8006407C(functionListEntry* entry, s16 type, void* func);
+s32 __osMotorAccess(OSPfs* pfs, s32 flag);
+void* func_80014614(s32);
+void func_8006F9B0(void);
+void func_8006CDA0(s16* arg0);
+s32 func_8006CC18(s16* arg0);
+
+
 #define mp1SpaceCharacter 0x10
 #define mp1UnkCharacter 0x20
 
@@ -10,35 +87,337 @@ extern s8 D_800F64C4;
 
 void func_800710E4(s16, s16, s16, s16, s32);
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006C8E0);
+void func_8006C8E0(void) {
+    s16 i;
+    RumbleState* r;
+    OSPfs* pfs;
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006CB1C);
+    if (D_800E4328 == 0) {
+        for (i = 0; i < 4; i++) {
+            r = &D_800E42E0[i];
+            pfs = &D_800E4140[i];
+            if (r->unk0 != 0 && r->unkA != 0) {
+                r->unkA--;
+                __osMotorAccess(pfs, 0);
+            }
+        }
+        return;
+    }
+    for (i = 0; i < 4; i++) {
+        r = &D_800E42E0[i];
+        pfs = &D_800E4140[i];
+        switch (r->unk2) {
+        case 1:
+            if (--r->unkA == 0) {
+                r->unk0 = 1;
+                r->unk2 = 0;
+            }
+            __osMotorAccess(pfs, 0);
+            break;
+        case 2:
+            __osMotorAccess(pfs, 1);
+            r->unk0 = 2;
+            r->unk2 = 0;
+            break;
+        case 3:
+            if (r->unk8 <= 0) {
+                switch (r->unk0) {
+                case 1:
+                    if (r->unk4 != 0) {
+                        __osMotorAccess(pfs, 1);
+                        r->unk0 = 2;
+                        r->unk8 = r->unk4;
+                    }
+                    break;
+                case 2:
+                    if (r->unk6 != 0) {
+                        __osMotorAccess(pfs, 0);
+                        r->unk0 = 1;
+                        r->unk8 = r->unk6;
+                    }
+                    break;
+                }
+            }
+            r->unk8--;
+            if (r->unkA != 0) {
+                if (--r->unkA == 0) {
+                    r->unk2 = 1;
+                    r->unkA = 3;
+                }
+            }
+            break;
+        }
+    }
+}
+void func_8006CB1C(void) {
+    s16 i;
+    s16 sp10;
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006CB6C);
+    D_800E4328 = 0;
+    for (i = 0; i < 4; i++) {
+        sp10 = i;
+        func_8006CDA0(&sp10);
+    }
+}
+s32 func_8006CB6C(void) {
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006CBB0);
+    for (i = 0; i < 4; i++) {
+        func_8006CC18(&i);
+    }
+    return 0;
+}
+void func_8006CBB0(void) {
+    unkMesg sp10;
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006CC18);
+    D_800E4328 = 1;
+    RequestSIFunction(&sp10, (void*)func_8006CB6C, 0, 1);
+    func_8006407C(&D_800E4310, 0, func_8006C8E0);
+    func_8006407C(&D_800E431C, 1, func_8006CB1C);
+}
+s32 func_8006CC18(s16* arg0) {
+    s32 ret = osMotorInit(&D_800EE960, &D_800E4140[*arg0], *arg0);
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006CD0C);
+    if (ret == 0) {
+        D_800E42E0[*arg0].unk0 = 1;
+        __osMotorAccess(&D_800E4140[*arg0], 0);
+    } else {
+        D_800E42E0[*arg0].unk0 = 0;
+    }
+    D_800E42E2[*arg0].unk0 = 0;
+    return ret;
+}
+void func_8006CD0C(s16 arg0) {
+    unkMesg sp10;
+    s16 sp20 = arg0;
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006CD3C);
+    RequestSIFunction(&sp10, (void*)func_8006CC18, &sp20, 1);
+}
+void func_8006CD3C(s16* arg0) {
+    RumbleState* r = &D_800E42E0[*arg0];
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006CD70);
+    if (r->unk0 != 0) {
+        r->unk2 = 2;
+    }
+}
+void func_8006CD70(s16 arg0) {
+    unkMesg sp10;
+    s16 sp20 = arg0;
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006CDA0);
+    RequestSIFunction(&sp10, (void*)func_8006CD3C, &sp20, 1);
+}
+void func_8006CDA0(s16* arg0) {
+    RumbleState* r = &D_800E42E0[*arg0];
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006CDDC);
+    if (r->unk0 != 0) {
+        r->unk2 = 1;
+        r->unkA = 3;
+    }
+}
+void func_8006CDDC(s16 arg0) {
+    unkMesg sp10;
+    s16 sp20 = arg0;
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006CE0C);
+    RequestSIFunction(&sp10, (void*)func_8006CDA0, &sp20, 1);
+}
+void func_8006CE0C(s16* arg0) {
+    RumbleState* r = &D_800E42E0[arg0[0]];
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006CE64);
+    if (r->unk0 != 0) {
+        r->unk0 = 1;
+        r->unk2 = 3;
+        r->unk4 = arg0[1];
+        r->unk6 = arg0[2];
+        r->unkA = arg0[3];
+        r->unk8 = 0;
+    }
+}
+void func_8006CE64(s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
+    unkMesg sp10;
+    s16 sp20[4];
 
+    sp20[0] = arg0;
+    sp20[1] = arg1;
+    sp20[2] = arg2;
+    sp20[3] = arg3;
+    RequestSIFunction(&sp10, (void*)func_8006CE0C, sp20, 1);
+}
+// condition on D_800C5DF2: retail tests ==0, <0, <4 as branches; GCC folds to setcc/range (masked 7)
+#ifdef NON_MATCHING
+void func_8006CEA0(void) {
+    s16 i;
+    s32 mode;
+
+    if (D_800C5DF1 == 0) {
+        D_800ED4B0 = MallocTemp(0x22C8);
+        for (i = 0; i < 14; i++) {
+            D_800ED4B0[i].unk_36 = -1;
+        }
+        D_800ED4B0[0].unk_3A = -1;
+        D_800ED4B0[0].unk_3C = 1;
+        D_800ED4B0[0].unk_36 = 0;
+        D_800ED4B0[1].unk_3A = 0;
+        D_800ED4B0[1].unk_3C = -1;
+        D_800ED4B0[1].unk_36 = -0x218;
+        D_800F64C4 = 0;
+        D_800F3718 = 0;
+        D_800E4330 = 10000;
+        mode = D_800C5DF2;
+        if (mode == 0 || (mode >= 0 && mode < 4)) {
+            D_800F37D4 = func_80014614(0x7A);
+            D_800F3294 = func_80014614(0x86);
+        }
+        D_800F2BC4 = omAddPrcObj(func_8006F9B0, 0x1001, 0x800, 0);
+        omPrcSetStatBit(D_800F2BC4, 0xA0);
+        D_800C5DF1 = 1;
+        D_800ED722 = 0;
+        D_800ECC22 = 0;
+        D_800F3F34 = func_80014614(0x77);
+        D_800F3F38 = func_80014614(0x78);
+    }
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006CEA0);
+#endif
+s16 func_8006D010(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4, s16 arg5) {
+    TextWindow* tw;
+    TWSprite* spr;
+    s16 i;
+    s16 id;
+    s16 sprId;
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006D010);
+    for (id = 2; id < 14; id++) {
+        if (D_800ED4B0[id].unk_36 == -1) {
+            break;
+        }
+    }
+    if (id == 14) {
+        return -1;
+    }
+    if (arg2 & 1) {
+        arg2++;
+    }
+    tw = &D_800ED4B0[id];
+    tw->unk_3C = 1;
+    tw->unk_3A = D_800ED4B0[1].unk_3A;
+    tw->unk_36 = 0x7D00;
+    D_800ED4B0[D_800ED4B0[1].unk_3A].unk_3C = id;
+    D_800ED4B0[1].unk_3A = id;
+    tw->unk_14 = arg0;
+    tw->unk_16 = arg1;
+    tw->unk_18 = arg2;
+    tw->unk_1A = arg3;
+    tw->unk_1C = (arg2 + 0xF) & 0xFFF0;
+    tw->unk_1E = arg3 + 0x10;
+    tw->unk_EC = tw->unk_F0 = 1.0f;
+    tw->unk_24 = tw->unk_26 = tw->unk_2C = tw->unk_2E = 4;
+    tw->unk_28 = arg2 - 8;
+    tw->unk_2A = arg3 - 8;
+    tw->unk_00 = 0;
+    tw->unk_12 = tw->unk_02 = 7;
+    tw->unk_03 = tw->unk_04 = 1;
+    tw->unk_07 = 10;
+    tw->unk_08 = 12;
+    tw->unk_09 = 0;
+    tw->unk_0A = 2;
+    tw->unk_30 = tw->unk_18 - tw->unk_07;
+    tw->unk_32 = tw->unk_1A - tw->unk_08;
+    tw->unk_20 = tw->unk_22 = 0;
+    tw->unk_05 = 0;
+    tw->unk_0D = D_800C5DF4[0].r;
+    tw->unk_0E = D_800C5DF4[0].g;
+    tw->unk_0F = D_800C5DF4[0].b;
+    tw->unk_01 = 0xF;
+    tw->unk_11 = 0;
+    tw->unk_06 = 0;
+    tw->string = NULL;
+    tw->unk_7A = -1;
+    tw->unk_0C = 2;
+    for (i = 0; i < 10; i++) {
+        tw->unk_88[i] = NULL;
+    }
+    for (i = 0; i < 10; i++) {
+        tw->unk_C0[i] = NULL;
+    }
+    tw->unk_E8 = NULL;
+    tw->unk_42 = -1;
+    for (i = 0; i < 20; i++) {
+        tw->unk_46[i] = (i >= 12) ? -1 : 0;
+    }
+    tw->unk_6E = 0;
+    tw->unk_3E = func_800678A4(D_800F3F34);
+    tw->unk_40 = func_800678A4(D_800F3F38);
+    tw->unk_44 = sprId = func_80064EF4(20, 5);
+    for (i = 0; i < 10; i++) {
+        func_8006752C(sprId, i, 0xFF);
+        func_80067480(sprId, i, 0xFFFF);
+        func_800674BC(sprId, i, 0x01009000);
+        func_800672B0(sprId, i, 0);
+        func_80067208(sprId, i, tw->unk_3E, i);
+        func_80066DC4(sprId, i, 0, 0);
+        func_800674F4(sprId, i, D_800C5DF4[i].r, D_800C5DF5[i].r, D_800C5DF6[i].r);
+        func_80067598(sprId, i, 0);
+    }
+    func_80067598(sprId, 0, -1);
+    func_80066DC4(sprId, 0, arg0, arg1);
+    spr = func_800675F4(sprId, 0);
+    spr->unk_4C->frames->width = arg2;
+    spr->unk_4C->frames->height = arg3;
+    func_80023728(spr->unk_4C->frames->data);
+    spr->unk_4C->frames->data = tw->unk_C0[0] = func_80023668((arg2 * arg3) / 2);
+    func_8009B770(tw->unk_C0[0], 0xFF, (arg2 * arg3) / 2);
+    if (arg5 != 1) {
+        func_8006D650(tw->unk_C0[0], arg2, arg3);
+    }
+    func_8006752C(sprId, 0, 100);
+    func_80067480(sprId, 0, 0x8000);
+    func_800672B0(sprId, 0, 0);
+    func_8006752C(sprId, 10, 0x100);
+    func_80067480(sprId, 10, 0xFFFF);
+    func_800674BC(sprId, 10, 0x01009000);
+    func_800672B0(sprId, 10, 0);
+    func_80067208(sprId, 10, tw->unk_40, 0);
+    func_80066DC4(sprId, 10, 0, 0);
+    func_80067598(sprId, 10, 0);
+    for (i = 0; i < 20; i++) {
+        func_80067384(sprId, i, D_800E4330);
+    }
+    func_80067384(sprId, 11, D_800E4330 - 1);
+    tw->unk_38 = D_800E4330;
+    D_800E4330 -= 0x20;
+    return id;
+}
+// retail recomputes (arg1 - 4) / 2 for every store; GCC hoists it out of the loop (masked 27)
+#ifdef NON_MATCHING
+void func_8006D650(u8* arg0, s16 arg1, s16 arg2) {
+    s16 i;
+    s32 top;
+    s32 bot;
+    s32 sw0;
+    s32 sw1;
+    u8* m0;
+    u8* m1;
 
+    for (i = 0; i < 4; i++) {
+        top = (i * arg1) / 2;
+        m0 = &D_800C6034[i].a;
+        arg0[top] &= *m0;
+        m1 = &D_800C6035[i].a;
+        arg0[top + 1] &= *m1;
+        bot = ((arg2 - i - 1) * arg1) / 2;
+        arg0[bot] &= *m0;
+        arg0[bot + 1] &= *m1;
+        sw0 = (*m0 >> 4) | (*m0 << 4);
+        sw1 = (*m1 >> 4) | (*m1 << 4);
+        arg0[(arg1 - 4) / 2 + top] &= sw1;
+        arg0[(arg1 - 4) / 2 + top + 1] &= sw0;
+        arg0[(arg1 - 4) / 2 + bot] &= sw1;
+        arg0[(arg1 - 4) / 2 + bot + 1] &= sw0;
+    }
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006D650);
+#endif
 
 void LoadStringIntoWindow(s16 win_id, void* string_id, s16 a, s16 b) {
     void* text;
@@ -208,8 +587,24 @@ void func_8006DE20(s16 arg0, f32 arg1, f32 arg2) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006DEC8);
+void func_8006DEC8(s16 arg0, s32 arg1, s32 arg2) {
+    TextWindow* tw = &D_800ED4B0[arg0];
+    TWSprite* spr;
+    s16 i;
 
+    tw->unk_20 = arg1;
+    tw->unk_22 = arg2;
+    spr = func_800675F4(tw->unk_44, 0);
+    for (i = 0; i < spr->unk_4C->count; i++) {
+        spr->unk_4C->frames[i].unk8 = arg1;
+        spr->unk_4C->frames[i].unkA = arg2;
+    }
+    spr = func_800675F4(tw->unk_44, 10);
+    for (i = 0; i < spr->unk_4C->count; i++) {
+        spr->unk_4C->frames[i].unk8 = arg1;
+        spr->unk_4C->frames[i].unkA = arg2;
+    }
+}
 void func_8006E01C(s16 arg0, f32 arg1) {
     TextWindow* textWindow = &D_800ED4B0[arg0];
     func_800673B0(textWindow->unk_44, 0, arg1);
