@@ -311,7 +311,7 @@ void func_80064D38(s16);
 void func_8006752C(s16, s16, u16);
 void Convert3DTo2D(s16 index, Vec3f* arg1, Vec2f* arg2);
 void func_80079078(s16);
-void omDelObj(void*); //idk what type this arg is, either omObjData* or Object*
+void omDelObj(omObjData*);
 s32 func_8005021C(f32); //getRandInRange
 void func_800A0D00(void*, f32, f32, f32);
 void func_80025CA8(s16, s32);
@@ -445,8 +445,8 @@ void func_8002578C(s32);
 void func_8002890C(s32, s32, s32);
 void func_8002ADF0(s32*, s32);
 s16 func_80039084(void*);
-void func_8005D98C(s32, s32);
-omObjData** func_8005DB44(s32);
+void func_8005D98C(u16, u16);
+omObjData** func_8005DB44(s16);
 void func_80009468(void);
 void HuPrcChildLink(Process* process, Process* child);
 void HuPrcChildWatch(void);

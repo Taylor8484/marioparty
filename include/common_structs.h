@@ -161,7 +161,7 @@ typedef struct omObjData {
 /* 0x08 */ s16 next;
 /* 0x0A */ s16 next_idx;
 /* 0x0C */ s16 group;
-/* 0x0E */ s16 group_idx;
+/* 0x0E */ u16 group_idx;
 /* 0x10 */ s32 unk_10;
 /* 0x14 */ void* func_ptr;
 /* 0x18 */ Vec trans;
@@ -241,7 +241,7 @@ typedef struct ProcessHeader { //?
 } ProcessHeader;
 
 typedef struct unkProcessStruct {
-           s16 unk0;
+           u16 unk0;
            s16 unk2;
            Process* processInstance;
            void (*unk8)();
