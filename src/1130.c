@@ -1228,8 +1228,6 @@ void func_8000423C(omObjData* obj, ColSphere* s, f32 arg2) {
         }
     }
 }
-// register allocation (masked 28): floorY/shadowY take swapped FPRs (f24/f22)
-#ifdef NON_MATCHING
 f32 func_80004578(omObjData* obj, f32 x, f32 y, f32 z, f32 unused) {
     Vec4f probe;
     Vec3f n;
@@ -1245,7 +1243,7 @@ f32 func_80004578(omObjData* obj, f32 x, f32 y, f32 z, f32 unused) {
     f32 shadowY, floorY;
     f32 h;
     f32 nx, nz;
-    f32 d, scale;
+    f32 scale;
 
     w = obj->unk_50;
     w->unk_53 = w->unk_54 = -1;
@@ -1362,11 +1360,11 @@ f32 func_80004578(omObjData* obj, f32 x, f32 y, f32 z, f32 unused) {
                 shadowY += 2.0f;
             }
             func_80025798(obj->model[1], nx, shadowY, nz);
-            d = y - shadowY;
-            if (d > 200.0f) {
+            shadowY = y - shadowY;
+            if (shadowY > 200.0f) {
                 scale = 0.6f;
             } else {
-                scale = 1.0 - fabs(d) / 500.0;
+                scale = 1.0 - fabs(shadowY) / 500.0;
             }
             func_80025830(obj->model[1], scale, scale, scale);
             func_80037178(obj->model[1], normal);
@@ -1379,9 +1377,6 @@ f32 func_80004578(omObjData* obj, f32 x, f32 y, f32 z, f32 unused) {
     obj->rot.x = obj->rot.z = 0.0f;
     return y;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/1130", func_80004578);
-#endif
 s32 func_80004D1C(omObjData* obj, Vec4f* p, f32 arg2) {
     Vec4f s;
     ColSphere s2;
@@ -2244,8 +2239,6 @@ void func_80007A50(omObjData* arg0) {
     }
 }
 
-// register allocation (masked 56): y is copied to a second callee-saved FPR; the D_800EDED0 address is not kept in a register
-#ifdef NON_MATCHING
 void func_80007B34(omObjData* obj, f32 x, f32 y, f32 z) {
     Vec4f v;
     PlayerWork* w = obj->unk_50;
@@ -2254,11 +2247,10 @@ void func_80007B34(omObjData* obj, f32 x, f32 y, f32 z) {
     f32 frame;
     f32 rot;
     f32 len;
-    f32 nx, nz;
+    f32 nx, ny, nz;
     f32 dx, dy, dz;
     f32 a;
     u16 i;
-    Vec3f* p;
 
     frame = func_80025E70(*obj->model);
     if (frame == -1.0f) {
@@ -2274,6 +2266,7 @@ void func_80007B34(omObjData* obj, f32 x, f32 y, f32 z) {
     len = w->unk_64 + w->unk_48;
     rot = w->unk_3C;
     nx = x + func_800AEAC0(rot) * len;
+    ny = y;
     nz = z + func_800AEFD0(rot) * len;
     w->unk_E0 = 1;
     for (i = 0; i < D_800F2BC0; i++) {
@@ -2284,7 +2277,7 @@ void func_80007B34(omObjData* obj, f32 x, f32 y, f32 z) {
                 continue;
             }
             dx = o->trans.x - nx;
-            dy = o->trans.y - y;
+            dy = o->trans.y - ny;
             dz = o->trans.z - nz;
             if (func_800B1750(dx * dx + dy * dy + dz * dz) < ow->unk_48 + 30.0f) {
                 if (!(ow->unk_50 & 0x200)) {
@@ -2333,10 +2326,10 @@ void func_80007B34(omObjData* obj, f32 x, f32 y, f32 z) {
                     D_800F370C++;
                 } else {
                     dx = o->trans.x - nx;
-                    dy = o->trans.y - y;
+                    dy = o->trans.y - ny;
                     dz = o->trans.z - nz;
-                    if (func_800B1750(dx * dx + dy * dy + dz * dz) - (ow->unk_48 + w->unk_48) < 0.0f &&
-                        (w->unk_DC == NULL || w->unk_DC(obj, o) != 1)) {
+                    len = func_800B1750(dx * dx + dy * dy + dz * dz) - (ow->unk_48 + w->unk_48);
+                    if (len < 0.0f && (w->unk_DC == NULL || w->unk_DC(obj, o) != 1)) {
                         func_8000A634(obj, o);
                     }
                 }
@@ -2344,20 +2337,17 @@ void func_80007B34(omObjData* obj, f32 x, f32 y, f32 z) {
         }
     }
     v.x = func_800AEAC0(rot) * w->unk_48 + obj->trans.x;
-    v.y = y;
+    v.y = ny;
     v.z = func_800AEFD0(rot) * w->unk_48 + obj->trans.z;
     v.w = w->unk_64;
     w->unk_55 = func_80004D1C(obj, &v, -D_800B8980);
     if (D_800B8956 != 0 && func_80009138(D_800F3704) == 1) {
-        p = D_800EDED0;
-        func_80017C0C(obj, 6, nx, y, nz, 0.0f, func_800B0CD8(p->x - obj->trans.x, p->z - obj->trans.z) + 180.0f);
+        a = func_800B0CD8(D_800EDED0[0].x - obj->trans.x, D_800EDED0[0].z - obj->trans.z);
+        func_80017C0C(obj, 6, nx, ny, nz, 0.0f, a + 180.0f);
     }
     D_800B8956 = 0;
     D_800ED6B8 = D_800F5254 = 0.0f;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/1130", func_80007B34);
-#endif
 void func_800081C0(omObjData* obj, s32 port) {
     PlayerWork* w;
     s32 i;
