@@ -1,6 +1,19 @@
 #include "common.h"
 #include "engine/process.h"
 
+extern omObjData* D_800EE750;
+extern s32 D_800F6520;
+void func_800607E8(void);
+s16 func_8000BEBC(s16, s32);
+void func_8000C1B8(void);
+void func_8000C390(s8);
+void func_8000C414(s8);
+void func_8000C4BC(s16);
+s16 func_80010C4C(s16);
+
+void func_80060058(omObjData* obj);
+
+
 extern u8 D_800F3B80;
 void GamePauseStart(void);
 void GamePauseEnd(void);
@@ -102,7 +115,7 @@ void func_80060E54(void);
 void func_8006086C(void);
 void func_8006073C(void);
 void func_800607A8(s32);
-void func_80060234(s32);
+void func_80060234(s8);
 
 
 extern s32 D_800F09F4; // current overlay
@@ -1243,32 +1256,86 @@ void func_8005FECC(void) {
         func_8006CD0C(i);
     }
 }
-INCLUDE_ASM("asm/nonmatchings/objmain", func_8005FFFC);
+void func_8005FFFC(void) {
+    D_800EE750 = omAddObj(0x7FD8, 0, 0, -1, func_80060058);
+    omSetStatBit(D_800EE750, 0xA0);
+    *(s32*)D_800EE750->work = D_800F6520;
+}
+void func_80060058(omObjData* obj) {
+    s32* timer = (s32*)obj->work;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060058);
+    if (*timer == 0) {
+        D_800F5144 = 1;
+    } else {
+        (*timer)--;
+    }
+}
+void func_80060088(void) {
+    s32 i;
+    GW_PLAYER* player;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060088);
-
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060128);
-
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060198);
-
+    for (i = 0; i < 4; i++) {
+        player = &GwPlayer[i];
+        player->coins_mg = 0;
+    }
+    if (D_800C597C & 0x10) {
+        omSystemKeyCheckSetup();
+        if (D_800C597C & 4) {
+            omSysPauseEnableFlag = 1;
+        }
+    }
+    if (D_800C597C & 0x20) {
+        func_8005FFFC();
+    }
+    func_800607E8();
+}
+s16 func_80060128(s32 arg0) {
+    if (D_800C5974 != 0 && D_800C5996 != (s16)arg0) {
+        D_800C5996 = arg0;
+        D_800C5998 = (D_800C5998 | 2) & ~9;
+        return func_8000BEBC(arg0, arg0);
+    }
+    return 0;
+}
+void func_80060198(void) {
+    D_800C5996 = -1;
+    func_8000C1B8();
+    D_800C5998 = (D_800C5998 & ~0xA) | 1;
+}
 void func_800601D4(s32 arg0) {
     D_800C5996 = -1;
     func_8000C250(arg0);
     D_800C5998 |= 8;
 }
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060214);
+void func_80060214(s8 arg0) {
+    func_8000C390(arg0);
+}
+void func_80060234(s8 arg0) {
+    func_8000C414(arg0);
+    D_800C5998 &= ~8;
+}
+void func_80060268(s16 arg0) {
+    func_8000C4BC(arg0);
+}
+s16 func_80060288(void) {
+    return func_8000C544();
+}
+s32 PlaySound(s32 arg0) {
+    s32 idx;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060234);
-
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060268);
-
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060288);
-
-INCLUDE_ASM("asm/nonmatchings/objmain", PlaySound);
-
+    if (D_800C5976 == 0) {
+        return 0;
+    }
+    idx = func_80012C7C(arg0);
+    if (idx > 0) {
+        if (D_800D89B2[idx] == -1) {
+            D_800D89B2[idx] = func_80010C4C(arg0);
+        }
+        return D_800D89B2[idx];
+    }
+    return func_80010C4C(arg0);
+}
 INCLUDE_ASM("asm/nonmatchings/objmain", func_8006035C);
 
 INCLUDE_ASM("asm/nonmatchings/objmain", func_80060398);
