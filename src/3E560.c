@@ -189,6 +189,7 @@ void func_8003DE60(omObjData* obj) {
     if (!(D_800F5278 & 1)) {
         goto off;
     }
+    // retail reloads attr for each test; only a volatile read reproduces it
     if (!(((volatile MBModel*)m)->attr & 8)) {
         goto off;
     }
