@@ -2,6 +2,9 @@
 #include "PR/os.h"
 #include "engine/mallocblock.h"
 
+#define ABS_S(x) ((x) < 0 ? -(x) : (x))
+
+
 void func_800A0B90(Matrix4f, void*);
 s32 func_800334A0(unk2C0C0StructC0* arg0, s16 arg1, s16 arg2);
 void func_80033830(unk2C0C0StructC0* arg0, s16 arg1, unk2C0C0StructC0* arg2);
@@ -1510,8 +1513,62 @@ s32 func_8003305C(unk2C0C0StructC0* arg0, s16 arg1, Matrix4f arg2, Matrix4f arg3
     return 1;
 }
 
-INCLUDE_ASM("asm/nonmatchings/2C0C0", func_800330BC);
+s32 func_800330BC(unk2C0C0StructC0* arg0, s16 arg1, Matrix4f arg2) {
+    unk2C0C0StructA0* min;
+    unk2C0C0StructA0* max;
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 radius;
+    f32 px;
+    f32 py;
+    f32 pz;
+    f32 h;
+    f32 w;
+    f32 t;
+    f32 tan;
 
+    min = (unk2C0C0StructA0*)&arg0->unk_80[arg1].unk_4A;
+    max = (unk2C0C0StructA0*)&arg0->unk_80[arg1].unk_50;
+    x = (ABS_S(min->unk_00) < ABS_S(max->unk_00)) ? max->unk_00 : min->unk_00;
+    y = (ABS_S(min->unk_02) < ABS_S(max->unk_02)) ? max->unk_02 : min->unk_02;
+    z = (ABS_S(min->unk_04) < ABS_S(max->unk_04)) ? max->unk_04 : min->unk_04;
+    radius = func_800B1750(SQ(x) + SQ(y) + SQ(z));
+    px = arg2[3][0];
+    py = arg2[3][1];
+    pz = -arg2[3][2];
+    if (pz + radius < ((unk_Struct00*)D_800F32A0)->unk_44 || ((unk_Struct00*)D_800F32A0)->unk_48 < pz - radius) {
+        return 0;
+    }
+    tan = func_800AEAC0(((unk_Struct00*)D_800F32A0)->unk_40 / 2.0f);
+    tan /= func_800AEFD0(((unk_Struct00*)D_800F32A0)->unk_40 / 2.0f);
+    h = tan * pz;
+    w = h * (4.0f / 3.0f);
+    if (px < 0.0f) {
+        px += radius;
+    } else {
+        px -= radius;
+    }
+    if (py < 0.0f) {
+        py += radius;
+    } else {
+        py -= radius;
+    }
+    t = px;
+    if (t < 0.0f) {
+        t = -t;
+    }
+    if (t < ABS_S(w)) {
+        t = py;
+        if (t < 0.0f) {
+            t = -t;
+        }
+        if (t < ABS_S(h)) {
+            return 1;
+        }
+    }
+    return 0;
+}
 void func_80033408(unk2C0C0StructC0* arg0, s16 arg1, Matrix4f arg2) {
     D_800F33D4 = 0;
     guMtxIdentF(D_800F54C0[0]);
