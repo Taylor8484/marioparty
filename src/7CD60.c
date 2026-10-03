@@ -147,7 +147,7 @@ static inline s16 decodeHuff(BitStream* buf, Tree* tree) {
     return pos;
 }
 
-// TODO
+// register choice v0/v1 for the masked run length, so reorg fills two delay slots differently (masked 9)
 #ifdef NON_MATCHING
 void func_8007C434(void) {
     s32 n;
@@ -228,7 +228,7 @@ s32 func_8007C818(u8* dcrun, BitStream* buf, BitStream* runbuf) {
     return 0;
 }
 
-// TODO
+// register allocation and spill-slot choice under -O3 (pointer locals spilled in retail; masked ~130)
 #ifdef NON_MATCHING
 void func_8007CA90(void) {
     u8 dcrun[3];
@@ -394,7 +394,7 @@ void func_8007CE28(u8* arg0) {
     
 }
 
-// TODO
+// register allocation, and the abs/max tests take bgez/bnezl instead of bltzl/beqz (masked 76)
 #ifdef NON_MATCHING
 void func_8007CFCC(s16* block, s32* scale, s32 plane) {
     u16 code;
@@ -515,7 +515,7 @@ void func_8007D470(s16* block, s32 nbasis, s32 dc, s32 plane) {
     }
 }
 
-// TODO
+// retail sign-extends the s16 temporaries and stores the 16 results last; scheduling and registers (masked 45)
 #ifdef NON_MATCHING
 void func_8007DA48(s16* block, unkStruct_D_800E6EC8* info, s32 plane) {
     u8 bn;
