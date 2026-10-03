@@ -984,8 +984,57 @@ void func_8006EEB8(s16 arg0, u8 arg1, u8 arg2, s16 arg3, s16 arg4) {
 #else
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006EEB8);
 #endif
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006F3BC);
+void func_8006F3BC(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4) {
+    TextWindow* tw = &D_800ED4B0[arg0];
+    u8* img;
+    u8* buf;
+    u8* dst;
+    s16 x;
+    s16 y;
+    s16 i;
+    s16 row;
+    s16 col;
 
+    y = (arg2 < 0) ? 0 : arg2;
+    x = (arg1 < 0) ? 0 : arg1;
+    for (i = 1; i < 11; i++) {
+        if (i == 10) {
+            img = tw->unk_E8;
+        } else {
+            img = tw->unk_C0[i];
+        }
+        if (img != NULL) {
+            buf = func_8006F718(arg0, i - 1);
+            if (i < 10) {
+                dst = buf + (x + y * tw->unk_1C) / 2;
+                if (x & 1) {
+                    for (row = 0; row < arg4; row++) {
+                        for (col = 0; col < arg3 / 2; col++) {
+                            dst[col] &= 0xF0;
+                            dst[col + 1] &= 0xF;
+                        }
+                        dst += tw->unk_1C / 2;
+                    }
+                } else {
+                    for (row = 0; row < arg4; row++) {
+                        for (col = 0; col < arg3 / 2; col++) {
+                            dst[col] = 0;
+                        }
+                        dst += tw->unk_1C / 2;
+                    }
+                }
+            } else {
+                dst = buf + x + y * tw->unk_1C;
+                for (row = 0; row < arg4; row++) {
+                    for (col = 0; col < arg3; col++) {
+                        dst[col] = 0;
+                    }
+                    dst += tw->unk_1C;
+                }
+            }
+        }
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006F718);
 
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006F9B0);
