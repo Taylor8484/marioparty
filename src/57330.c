@@ -1,6 +1,21 @@
 #include "common.h"
 #include "spaces.h"
 
+void func_8005727C(void);
+void func_8005700C(void);
+void func_8005835C(void);
+void func_800530E4(void);
+void func_8004220C(void);
+void func_800559BC(void);
+s8 func_8000C4A0(void);
+
+
+extern s16 D_800EE320;
+extern s16 D_800F2A78;
+void func_8003D20C(s32);
+void func_80052934(s32);
+
+
 void func_8004D0B0(s16);
 s16 GetSumOfPlayerStars(void);
 
@@ -460,10 +475,108 @@ void func_800582E4(void) {
     HuPrcVSleep();
 }
 
+// CSE keeps i * 2 across PlayerIsCPU and re-tests i == cur before the second button test (masked 11)
+#ifdef NON_MATCHING
+void func_8005835C(void) {
+    Vec2f sp10;
+    s32 cur;
+    s32 i;
+    s32 port;
+
+    while (1) {
+        HuPrcVSleep();
+        if (func_80072718() != 0 || D_800F2A78 == 0 || D_800ED0D2 == 3) {
+            continue;
+        }
+        cur = GetCurrentPlayerIndex();
+        for (i = 0; i < 4; i++) {
+            if (ContDStkTrg[i] & 0x1000) {
+                goto stick;
+            }
+            if (PlayerIsCPU(i) == 0) {
+                port = GwPlayer[i].port;
+                if (i == cur && D_800EE320 != 0 && (ContDStkTrg[port] & 0x4000)) {
+                    goto start;
+                }
+                if (i == cur && D_800EE320 != 0 && (ContDStkTrg[port] & 0x10)) {
+                    goto view;
+                }
+            }
+        }
+        continue;
+    view:
+        func_80041F84(cur);
+        func_8003D20C(port);
+        goto done;
+    start:
+        func_80041F84(i);
+        func_800591E0((void*)port);
+        func_80041FE0(i);
+        continue;
+    stick:
+        func_80041F84(cur);
+        func_8004B6D8(&sp10);
+        func_8004B61C(&sp10);
+        func_80052934(i);
+    done:
+        func_80041FE0(cur);
+    }
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/57330", func_8005835C);
+#endif
+void func_800584F0(s32 arg0) {
+    GW_PLAYER* player;
+    s32 space;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/57330", func_800584F0);
-
+    for (i = 0; i < 4; i++) {
+        player = GetPlayerStruct(i);
+        space = GetAbsSpaceIndexFromChainSpaceIndex(player->cur_chain, player->cur_space);
+        func_8004CC8C(i, space);
+    }
+    func_8004A510();
+    func_8004B5C4(1.0f);
+    func_8004B838(-1.0f);
+    func_8002578C(1);
+    switch ((u32)arg0) {
+        case 0:
+            switch (D_800D86E4) {
+                case 0:
+                case 1:
+                    SetFadeInTypeAndTime(0, 0);
+                    func_800530E4();
+                    break;
+                default:
+                    SetFadeInTypeAndTime(0xFF, 0x10);
+                    break;
+            }
+            func_8004B5DC(&GwPlayer[GwSystem.curPlayerIndex].player_obj->coords);
+            omAddPrcObj(func_8005727C, 0xEFFF, 0, 0);
+            omAddPrcObj(func_8005700C, 0x1005, 0, 0);
+            omPrcSetStatBit(omAddPrcObj(func_8005835C, 0x1005, 0, 0), 0x80);
+            D_800EE320 = 0;
+            D_800F2A78 = 0;
+            omAddPrcObj(func_80056E6C, 0x1005, 0, 0);
+            func_80056E30(1);
+            if (func_8000C4A0() < 0x7F) {
+                func_8004220C();
+            }
+            break;
+        case 1:
+            func_8004B5DC(&GwPlayer[GwSystem.curPlayerIndex].player_obj->coords);
+            for (i = 0; i < 4; i++) {
+                func_800546B4(i, GetPlayerStruct(i)->turn_status);
+            }
+            omPrcSetStatBit(omAddPrcObj(func_800582E4, 0x1005, 0, 0), 0x80);
+            D_800EE320 = 1;
+            break;
+        case 2:
+            func_800559BC();
+            func_80056E30(0);
+            break;
+    }
+}
 void ExecBoardScene(board_overlay_entrypoint* arg0, s16 arg1) {
     if (arg0->index < 0) {
         return;
