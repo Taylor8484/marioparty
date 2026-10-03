@@ -113,6 +113,10 @@ build/src/69010.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 build/src/24740.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # 34D80.c (model animation keyframes) also has the mul fix on: nop between back-to-back mul.s (func_80035824)
 build/src/34D80.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# 3DEB0.c (vector rotation) also has the mul fix on: nop between back-to-back mul.s (func_8003D64C)
+build/src/3DEB0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# 29C90.c (collision grid) also has the mul fix on: nop before a mult at a loop head (func_80029174)
+build/src/29C90.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 
 #build/src/libultra/os/%.o: CFLAGS := -O2 $(CFLAGSCOMMON)
 #build/src/libultra/libc/%.o: CFLAGS := -O2 $(CFLAGSCOMMON)
@@ -214,7 +218,8 @@ $(BUILD_DIR)/src/%.c.o: src/%.c
 # GCC's assembly with blank lines removed: KMC as adds a nop before a mul.s that follows a call when
 # GCC's blank line separates it from the call's `.set reorder`, and the original object has none there.
 # 34D80.c needs the same (func_80036B00: mul.s right after a call's return).
-$(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
+# 3DEB0.c too (func_8003D8CC: mul.s right after a call's return).
+$(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o $(BUILD_DIR)/src/3DEB0.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
 	@$(PRINT)$(GREEN)Compiling C file: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
 	@mkdir -p $(shell dirname $@)
 	@$(CC_HOST) $(CFLAGS_CHECK) $(CPPFLAGS) -MMD -MP -MT $@ -MF $@.d $<
