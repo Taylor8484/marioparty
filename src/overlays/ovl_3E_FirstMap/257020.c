@@ -120,7 +120,8 @@ void func_800F69FC_FirstMap(void) {
 }
 
 void func_800F6A04_FirstMap(void) {
-    s32 temp_s0, temp_s1, temp_s2, temp_a0;
+    s32 temp_s0, temp_s1, temp_a0;
+    unk_8003B8D4Struct* temp_s2;
     s32 i;
 
     SetPlayerAnimation(-1, -1, 2);
