@@ -1,5 +1,7 @@
 #include "common.h"
 #include "engine/mallocblock.h"
+extern unk2C0C0Struct70* D_800F37AC;
+s32 func_8009B850(unk2C0C0Struct70*, u8*);
 typedef struct unk24740Floats8 {
     /* 0x00 */ f32 v[8];
 } unk24740Floats8;
@@ -1223,10 +1225,69 @@ void func_80027440(unk2C0C0StructC0* arg0, f32 arg1, f32 arg2, u16 arg3, u16 arg
         b++;
     }
 }
-INCLUDE_ASM("asm/nonmatchings/24740", func_80027AC8);
+void func_80027AC8(s16 arg0, u8* arg1, u8* arg2) {
+    unk2C0C0Struct70* found = NULL;
+    unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
+    u16 hash = func_8001CD00(arg2);
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/24740", func_80027C1C);
+    for (i = 0; i < 128; i++) {
+        if (D_800F37AC[i].unk_20 != 0 && D_800F37AC[i].unk_20 == hash && func_8009B850(&D_800F37AC[i], arg2) == 0) {
+            found = &D_800F37AC[i];
+            break;
+        }
+    }
+    hash = func_8001CD00(arg1);
+    for (i = 0; i < model->unk_6C; i++) {
+        if (model->unk_A4[i].unk_0C->unk_20 == hash) {
+            model->unk_A4[i].unk_0C = found;
+        }
+    }
+}
+void func_80027C1C(s16 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4) {
+    u16 w;
+    u16 h;
+    s16 i;
+    u16 var_a0;
+    u16 var_a0_2;
+    s16 temp_t2;
+    unk2C0C0StructC0* temp_s0;
+    unk2C0C0StructE0* var_t0;
+    unk2C0C0StructE0* var_t1;
 
+    temp_s0 = D_800F2B7C[arg0].unk_6C;
+    if (temp_s0 != NULL) {
+        var_t0 = temp_s0->unk_04;
+        var_t1 = temp_s0->unk_08[D_800F37F0];
+        temp_t2 = temp_s0->unk_72;
+        w = arg3 << 5;
+        h = arg4 << 5;
+        var_a0 = arg1 * 32.0f;
+        var_a0_2 = arg2 * 32.0f;
+
+        if (arg1 < 0.0f) {
+            arg1 = -arg1;
+        }
+        if (arg2 < 0.0f) {
+            arg2 = -arg2;
+        }
+
+        if ((arg1 * 32.0f) > w) {
+            var_a0 = var_a0 % w;
+        }
+
+        if ((arg2 * 32.0f) > h) {
+            var_a0_2 = var_a0_2 % h;
+        }
+
+        for (i = 0; i < temp_t2; i++) {
+            var_t1->unk_08 = var_a0 + var_t0->unk_08;
+            var_t1->unk_0A = var_a0_2 + var_t0->unk_0A;
+            var_t0++;
+            var_t1++;
+        }
+    }
+}
 void func_80027E48(s16 arg0, f32 arg1, f32 arg2, u16 arg3, u16 arg4, char* arg5, u8 arg6) {
     s16 i;
     u16 var_a0;
