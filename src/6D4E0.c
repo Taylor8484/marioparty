@@ -22,7 +22,9 @@ typedef struct TWImage {
 
 typedef struct TWSprData {
     /* 0x00 */ TWImage* frames;
-    /* 0x04 */ char unk_04[0xE];
+    /* 0x04 */ char unk_04[8];
+    /* 0x0C */ void* unkC; /* palette */
+    /* 0x10 */ char unk_10[2];
     /* 0x12 */ u16 count;
 } TWSprData;
 
@@ -1035,8 +1037,44 @@ void func_8006F3BC(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4) {
         }
     }
 }
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006F718);
+u8* func_8006F718(s16 arg0, u8 arg1) {
+    TextWindow* tw = &D_800ED4B0[arg0];
+    s16 sprId = tw->unk_44;
+    TWSprite* spr = func_800675F4(sprId, arg1 + 1);
+    u8* buf;
+    s16 w;
+    s16 h;
 
+    if (arg1 < 9 && tw->unk_C0[arg1 + 1] != NULL) {
+        return spr->unk_4C->frames[arg1 + 1].data;
+    }
+    if (arg1 == 9 && tw->unk_E8 != NULL) {
+        return spr->unk_4C->frames->data;
+    }
+    arg1++;
+    w = tw->unk_1C;
+    h = tw->unk_1E;
+    if (arg1 < 10) {
+        func_80023728(spr->unk_4C->frames[arg1].data);
+        spr->unk_4C->frames[arg1].width = w;
+        spr->unk_4C->frames[arg1].height = tw->unk_1A;
+        buf = spr->unk_4C->frames[arg1].data = tw->unk_C0[arg1] = func_80023668((w * h) / 2);
+        func_8009B770(tw->unk_C0[arg1], 0, (w * h) / 2);
+    } else {
+        func_80023728(spr->unk_4C->frames->data);
+        spr->unk_4C->frames->width = w;
+        spr->unk_4C->frames->height = tw->unk_1A;
+        buf = spr->unk_4C->frames->data = tw->unk_E8 = func_80023668(w * h);
+        func_8009B770(tw->unk_E8, 0, w * h);
+        func_80023728(spr->unk_4C->unkC);
+        spr->unk_4C->unkC = func_80023668(200);
+        func_80023A38((u8*)D_800F37D4 + 0xC, spr->unk_4C->unkC, 200);
+    }
+    if (!(tw->unk_06 & 8)) {
+        func_80067480(sprId, arg1, 0x8000);
+    }
+    return buf;
+}
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006F9B0);
 
 s16 func_8006FCC0(s16 arg0) {
