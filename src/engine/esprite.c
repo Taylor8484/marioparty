@@ -131,17 +131,15 @@ void SetBasicSpritePos(s32 arg0, s16 arg1, s16 arg2) {
     spriteInstance->unk_0C = arg2;
 }
 
-// One extra register copy of arg1 (masked 1).
-#ifdef NON_MATCHING
 void func_80018CF8(s32 arg0, s32 arg1) {
+    s32 v;
     unkSpriteStruct* sprite = &D_800ED60C[arg0 & 0xFFFF];
 
-    sprite->unk_1C = sprite->unk_1E = arg1;
-    func_8006752C(sprite->unk_04, 0, arg1);
+    v = sprite->unk_1E = arg1;
+    sprite->unk_1C = v;
+    v = arg1;
+    func_8006752C(sprite->unk_04, 0, v);
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/engine/esprite", func_80018CF8);
-#endif
 void func_80018D44(s32 arg0, s32 arg1) {
     unkSpriteStruct* sprite = &D_800ED60C[arg0 & 0xFFFF];
 
