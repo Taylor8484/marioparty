@@ -1,6 +1,41 @@
 #include "common.h"
 #include "engine/process.h"
 
+typedef struct omSndFade {
+    /* 0x00 */ f32 vol[13];
+    /* 0x34 */ f32 step[13];
+    /* 0x68 */ f32 vol2[13];
+    /* 0x9C */ f32 step2[13];
+    /* 0xD0 */ u8 flags[13];
+} omSndFade; // sizeof 0xE0
+
+extern Addr D_15396A0;
+extern Addr D_1778BC0;
+extern Addr D_1832AE0;
+extern Addr D_1BB8460;
+
+void func_800117AC(s16);
+void func_8001165C(void);
+s16 func_80011530(s16);
+void func_8001286C(u8);
+void func_8001249C(s16, u8);
+s32 func_8000C144(void);
+s32 func_800115C8(s16);
+file_1ACF0_struct* func_8000B2BC(void);
+void func_80010C30(Addr*, s32, s32, s32);
+void func_8000BE98(Addr*, Addr*, s32, s32, s32);
+void func_8000B13C(void);
+void func_8000B364(s32);
+void func_800608EC(omObjData* obj);
+
+
+extern s16 D_800F0A08[];
+void func_800123DC(s16, s8);
+void func_80060BC8(s16, s16);
+void func_80012738(s8);
+void func_80012574(s16, s16);
+
+
 extern omObjData* D_800EE750;
 extern s32 D_800F6520;
 void func_800607E8(void);
@@ -86,8 +121,8 @@ extern u8 D_800C59A4;
 extern u8 D_800C5A20;
 extern u8 D_800C5A21;
 extern u8 D_800D89B0;
-extern u16 D_800C599C;
-extern u16 D_800C59A0;
+extern s16 D_800C599C;
+extern s16 D_800C59A0;
 extern u16 D_800C596C;
 extern u8 D_800F3705;
 extern u8 D_800C4250[];
@@ -155,7 +190,7 @@ extern s16 D_800ED434; // last object index
 extern s16 D_800F5468; // first object index
 extern omObjData* omDBGSysKeyObj;
 extern s8 D_800F64F8;
-extern s32 D_800F64E0;
+extern omObjData* D_800F64E0;
 extern omGrpData D_800ED618[10];
 
 void func_8005DAD4(omObjData*);
@@ -228,7 +263,7 @@ void omInitObjMan(s32 maxObjects, s32 maxProcesses) {
         prc->processInstance = NULL;
         prc->unk8 = NULL;
     }
-    D_800F64E0 = 0;
+    D_800F64E0 = NULL;
 }
 void omDestroyObjMan(void) {
     omObjData* obj;
@@ -277,7 +312,7 @@ void omDestroyObjMan(void) {
     func_80023728(D_800C5990);
     D_800C5990 = NULL;
     func_800237BC(0x7918);
-    D_800F64E0 = 0;
+    D_800F64E0 = NULL;
 }
 omObjData* omAddObj(s16 arg0, u16 arg1, u16 arg2, s16 arg3, void* arg4) {
     omObjData* temp_s0;
@@ -1336,16 +1371,45 @@ s32 PlaySound(s32 arg0) {
     }
     return func_80010C4C(arg0);
 }
-INCLUDE_ASM("asm/nonmatchings/objmain", func_8006035C);
+void func_8006035C(s16 arg0, s8 arg1) {
+    D_800F0A08[arg0] = arg1;
+    func_800123DC(arg0, arg1);
+}
+void func_80060398(s32 arg0) {
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060398);
+    if (D_800F64E0 != 0) {
+        for (i = 0; i < 13; i++) {
+            func_80060BC8(i, arg0);
+        }
+    }
+}
+void func_800603F0(s32 arg0) {
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_800603F0);
+    for (i = 0; i < 13; i++) {
+        D_800F0A08[i] = (s8)arg0;
+    }
+    func_80012738(arg0);
+}
+void func_80060440(s16 arg0, s16 arg1) {
+    func_80012574(arg0, arg1);
+}
+s16 func_80060468(s16 arg0, u8 arg1) {
+    s16 idx;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060440);
-
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060468);
-
+    if (D_800C5976 == 0) {
+        return 0;
+    }
+    idx = func_80012C7C(arg0 + arg1);
+    if (idx > 0) {
+        if (D_800D89B2[idx] == -1) {
+            D_800D89B2[idx] = func_80010C4C(arg0 + arg1);
+        }
+        return D_800D89B2[idx];
+    }
+    return func_80010C4C(arg0 + arg1);
+}
 s16 func_80060540(s16 arg0, s16 arg1) {
     s16 temp_v0;
 
@@ -1365,30 +1429,143 @@ s16 func_80060540(s16 arg0, s16 arg1) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060618);
+s16 func_80060618(s16 arg0, s16 arg1) {
+    s16 idx;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_8006071C);
+    if (D_800C5976 == 0) {
+        return 0;
+    }
+    arg0 += GwPlayer[arg1].character;
+    idx = func_80012C7C(arg0);
+    if (idx > 0) {
+        if (D_800D89B2[idx] == -1) {
+            D_800D89B2[idx] = func_80010ED4(arg0, arg1);
+        }
+        return D_800D89B2[idx];
+    }
+    return func_80010ED4(arg0, arg1);
+}
+void func_8006071C(s16 arg0) {
+    func_800117AC(arg0);
+}
+void func_8006073C(void) {
+    func_8001165C();
+}
+s16 func_80060758(s16 arg0) {
+    s16 ret = func_80011530(arg0);
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_8006073C);
+    if (ret != -1) {
+        func_800117AC(ret);
+    }
+    return ret;
+}
+void func_800607A8(s32 arg0) {
+    func_8001286C(arg0);
+}
+void func_800607C4(s16 arg0, s32 arg1) {
+    func_8001249C(arg0, arg1);
+}
+void func_800607E8(void) {
+    omSndFade* fade;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060758);
+    D_800F64E0 = omAddObj(0x7FD8, 0, 0, -1, func_800608EC);
+    D_800F64E0->unk_50 = func_80023684(sizeof(omSndFade), 0x7918);
+    omSetStatBit(D_800F64E0, 0xA0);
+    fade = D_800F64E0->unk_50;
+    for (i = 0; i < 13; i++) {
+        fade->flags[i] = 0;
+    }
+}
+void func_8006086C(void) {
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_800607A8);
+    for (i = 0; i < 6; i++) {
+        D_800D89B2[i] = -1;
+    }
+    switch (func_8000C144()) {
+    case 0:
+        D_800C5998 = (D_800C5998 | 1) & ~0xA;
+        break;
+    case 2:
+        break;
+    case 3:
+        break;
+    }
+}
+void func_800608EC(omObjData* obj) {
+    omSndFade* fade = D_800F64E0->unk_50;
+    s16 i;
+    u8 flags;
+    s32 playing;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_800607C4);
+    for (i = 0; i < 13; i++) {
+        flags = fade->flags[i];
+        playing = func_800115C8(i);
+        if (flags & 2) {
+            if (playing == 0) {
+                fade->flags[i] &= ~5;
+            } else if (flags & 4) {
+                if ((fade->vol2[i] -= fade->step2[i]) <= 0.0f) {
+                    fade->vol2[i] = 0.0f;
+                    func_800123DC(i, 0);
+                    fade->flags[i] &= ~4;
+                } else {
+                    func_800123DC(i, fade->vol2[i]);
+                }
+            }
+        } else if (fade->flags[i] & 1) {
+            if (playing == 0) {
+                fade->flags[i] &= ~1;
+            } else if ((fade->vol[i] -= fade->step[i]) <= 0.0f) {
+                fade->vol[i] = 0.0f;
+                func_800123DC(i, 0);
+                func_800117AC(i);
+                fade->flags[i] &= ~1;
+            } else {
+                func_800123DC(i, fade->vol[i]);
+            }
+        }
+    }
+}
+u16 func_80060AB4(void) {
+    u16 ret = D_800C599A != D_800C599C;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_800607E8);
+    if (D_800C599E != D_800C59A0) {
+        ret = 1;
+    }
+    return ret;
+}
+void func_80060AF0(void) {
+    file_1ACF0_struct* data = func_8000B2BC();
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_8006086C);
+    data->unk_40 = D_800C599A + 20;
+    if (D_800C599E == 0) {
+        data->unk_4C = 32;
+        func_80010C30(&D_1832AE0, 0, 0, 0);
+        func_8000BE98(&D_15396A0, &D_1778BC0, 0, 0, 0);
+    } else {
+        data->unk_4C = 45;
+        func_80010C30(&D_1BB8460, 0, 0, 0);
+        func_8000BE98(&D_1778BC0, &D_1832AE0, 0, 0, 0);
+    }
+    func_8000B13C();
+    if (_CheckFlag(0x10) != 0) {
+        func_8000B364(0);
+    } else {
+        func_8000B364(1);
+    }
+}
+void func_80060BC8(s16 ch, s16 frames) {
+    omSndFade* fade;
 
-INCLUDE_ASM("asm/nonmatchings/objmain", func_800608EC);
-
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060AB4);
-
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060AF0);
-
-INCLUDE_ASM("asm/nonmatchings/objmain", func_80060BC8);
-
+    if (D_800F64E0 != NULL && func_800115C8(ch) != 0) {
+        fade = D_800F64E0->unk_50;
+        fade->flags[ch] |= 1;
+        fade->vol[ch] = D_800F0A08[ch];
+        fade->step[ch] = (f32)D_800F0A08[ch] / frames;
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/objmain", func_80060C84);
 
 INCLUDE_ASM("asm/nonmatchings/objmain", func_80060D4C);
