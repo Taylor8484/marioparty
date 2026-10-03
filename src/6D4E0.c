@@ -50,7 +50,7 @@ s32 func_8006EB90(TextWindow* tw);
 void func_8006EA44(s16 arg0);
 s32 func_8006FE4C(s16 arg0);
 void func_8007094C(TextWindow* arg0, SubTextWindow* arg1);
-s32 func_80071278(TextWindow* arg0);
+s16 func_80071278(TextWindow* arg0);
 void func_8006E984(TextWindow* arg0);
 
 
@@ -75,6 +75,14 @@ extern s16 D_800E4330;
 extern OSMesgQueue D_800EE960;
 extern u8 D_800C5DF1;
 extern s16 D_800F2CF0[4];
+extern u8* D_800C6048[16];
+/* splat labels for D_800F2CF0[1..3] and ContDStkTrg[1..3] */
+extern u16 D_800F2CF2;
+extern u16 D_800F2CF4;
+extern u16 D_800F2CF6;
+extern u16 D_800EC6EC;
+extern u16 D_800EC6EE;
+extern u16 D_800EC6F0;
 
 typedef struct TWInput {
     /* 0x00 */ s16 v[4];
@@ -92,6 +100,10 @@ extern TWColor D_800C603C[4];
 /* splat labels for &D_800C603C[0].g and .b */
 extern TWColor D_800C603D[];
 extern TWColor D_800C603E[];
+extern TWColor D_800C5E14[10];
+/* splat labels for &D_800C5E14[0].g and .b */
+extern TWColor D_800C5E15[];
+extern TWColor D_800C5E16[];
 extern Process* D_800F2BC4;
 typedef struct FontFile {
     /* 0x00 */ s32 unk0;
@@ -1568,10 +1580,56 @@ void func_80071264(void) {
     D_800F64C4 = 0;
 }
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80071278);
+s16 func_80071278(TextWindow* tw) {
+    u16 sp10[4];
+    s16 btn = 0;
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_800713F0);
+    if (tw->unk_06 & 2) {
+        func_80071154((s16*)sp10);
+    }
+    if (tw->unk_01 & 1) {
+        if (tw->unk_06 & 2) {
+            btn |= sp10[0];
+        } else {
+            btn |= (D_800F2CF0[0] & 0x3FFF) | (ContDStkTrg[0] & 0xC000);
+        }
+    }
+    if (tw->unk_01 & 2) {
+        if (tw->unk_06 & 2) {
+            btn |= sp10[1];
+        } else {
+            btn |= (D_800F2CF2 & 0x3FFF) | (D_800EC6EC & 0xC000);
+        }
+    }
+    if (tw->unk_01 & 4) {
+        if (tw->unk_06 & 2) {
+            btn |= sp10[2];
+        } else {
+            btn |= (D_800F2CF4 & 0x3FFF) | (D_800EC6EE & 0xC000);
+        }
+    }
+    if (tw->unk_01 & 8) {
+        if (tw->unk_06 & 2) {
+            btn |= sp10[3];
+        } else {
+            btn |= (D_800F2CF6 & 0x3FFF) | (D_800EC6F0 & 0xC000);
+        }
+    }
+    return btn;
+}
+u8 func_800713F0(u8* arg0) {
+    s16 row;
+    s16 col;
 
+    for (row = 0; row < 16; row++) {
+        for (col = 0; col < 32; col += 2) {
+            if (D_800C6048[row][col] == arg0[0] && D_800C6048[row][col + 1] == arg0[1]) {
+                return col / 2 + row * 16;
+            }
+        }
+    }
+    return 16;
+}
 u8 func_800713F0(u8*);
 
 void func_8007149C(u8* arg0, u8* arg1) {
@@ -1653,16 +1711,35 @@ void func_80071788(s32 arg0, s16 arg1) {
     textWindow->unk_F4[arg1].unk0 = 2;
 }
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_800717C0);
+void func_800717C0(s32 arg0) {
+    TextWindow* tw = &D_800ED4B0[arg0];
+    s16 sprId = tw->unk_44;
+    s16 i;
 
+    for (i = 0; i < 10; i++) {
+        func_800674F4(sprId, i, D_800C5E14[i].r, D_800C5E15[i].r, D_800C5E16[i].r);
+    }
+}
 s16 func_8007186C(s32 arg0) {
     return D_800ED4B0[arg0].unk_11;
 }
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80071894);
+void func_80071894(u8* arg0, u8* arg1) {
+    while (*arg0 != 0) {
+        if (*arg0 == 10) {
+            arg0++;
+        } else {
+            *arg1++ = *arg0++;
+        }
+    }
+    *arg1 = *arg0;
+}
+void func_800718DC(s16 arg0, void* arg1, s8 arg2) {
+    TextWindow* tw = &D_800ED4B0[arg0];
 
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_800718DC);
-
+    func_8006DA5C(arg0, arg1, arg2);
+    func_80071894(tw->unk_88[arg2], tw->unk_88[arg2]);
+}
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8007194C);
 
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80071C8C);
