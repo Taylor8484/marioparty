@@ -18,7 +18,11 @@ s16 func_8001BD60(unk2C0C0StructC0*);
 s16 func_8001BF64(unk2C0C0StructC0*, u16, u8*);
 u8* func_8001C2E8(s32, u8*, u8*);
 u8* func_8001C378(u8*);
+// the unk_80 base load is emitted after the index multiply instead of before it (masked 2)
+#ifdef NON_MATCHING
 void func_8001C3A8(unk2C0C0StructC0*, s16, s16, s16);
+void func_8001C75C(unk2C0C0Struct20*, u8*, unk2C0C0StructC0*, u16*);
+void func_8001C9F4(s8*, unk2C0C0StructA0*, unk2C0C0StructA0*, unk2C0C0StructA0*);
 s16 func_8001CBD8(unk2C0C0StructC0*, u8*, s16);
 void func_8001CD60(unk2C0C0StructC0*);
 void func_8003394C(unk2C0C0StructC0*);
@@ -153,6 +157,9 @@ void func_8001AC00(unk2C0C0StructC0* arg0, u8* arg1, s16 arg2) {
 
     func_8003394C(arg0);
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/1B800", func_8001C3A8);
+#endif
 
 void func_8001B1D4(unk2C0C0StructC0* arg0) {
     s16 i;
@@ -528,10 +535,168 @@ u8* func_8001C378(u8* arg0) {
     return arg0;
 }
 
-INCLUDE_ASM("asm/nonmatchings/1B800", func_8001C3A8);
+void func_8001C3A8(unk2C0C0StructC0* arg0, s16 arg1, s16 arg2, s16 arg3) {
+    u16 flags;
+    unk2C0C0Struct20* faces;
+    u8* p;
+    u8* next;
+    unk2C0C0StructA0* v;
+    s16 i;
+    s16 j;
+    s16 n;
+    s16 minX;
+    s16 minY;
+    s16 minZ;
+    s16 maxX;
+    s16 maxY;
+    s16 maxZ;
+    s16 c;
+    u32 temp;
+    unk2C0C0Struct30* entry;
+    unk2C0C0StructA0* box;
 
+    if (arg0->unk_6E == 0) {
+        return;
+    }
+    arg0->unk_80[arg1].unk_34 = func_80023684(arg3 * sizeof(unk2C0C0Struct20), D_800F502C);
+    faces = arg0->unk_80[arg1].unk_34;
+    p = (u8*)arg0->unk_44 + 0x10;
+    for (i = 0; i < arg2; i++) {
+        if (*p == 0x16) {
+            next = p + 0x2A;
+        } else if (*p == 0x35) {
+            next = p + 0x36;
+        } else {
+            next = p + 0xC;
+        }
+        p = next;
+    }
+    minX = minY = minZ = 0x7FFF;
+    maxX = maxY = maxZ = -0x8000;
+    flags = 0;
+    for (i = 0; i < arg3; i++) {
+        func_8001C75C(&faces[i], p, arg0, &flags);
+        if (*p == 0x16) {
+            n = 3;
+        } else if (*p == 0x35) {
+            n = 4;
+        } else {
+            n = 2;
+        }
+        for (j = 0; j < n; j++) {
+            v = &arg0->unk_78[faces[i].unk_04[j]];
+            c = v->unk_00;
+            if (minX > v->unk_00) {
+                minX = c;
+            }
+            if (maxX < c) {
+                maxX = c;
+            }
+            c = v->unk_02;
+            if (minY > v->unk_02) {
+                minY = c;
+            }
+            if (maxY < c) {
+                maxY = c;
+            }
+            c = v->unk_04;
+            if (minZ > v->unk_04) {
+                minZ = c;
+            }
+            if (maxZ < c) {
+                maxZ = c;
+            }
+        }
+        if (*p != 0x16) {
+            if (*p == 0x35) {
+                next = p + 0x36;
+            } else {
+                next = p + 0xC;
+            }
+        } else {
+            next = p + 0x2A;
+        }
+        p = next;
+    }
+    entry = &arg0->unk_80[arg1];
+    temp = entry->unk_14;
+    if (flags & 1) {
+        temp |= 0x10000;
+    }
+    entry->unk_14 = temp;
+    box = (unk2C0C0StructA0*)&arg0->unk_80[arg1].unk_4A;
+    box->unk_00 = minX;
+    box->unk_02 = minY;
+    box->unk_04 = minZ;
+    box = (unk2C0C0StructA0*)&arg0->unk_80[arg1].unk_50;
+    box->unk_00 = maxX;
+    box->unk_02 = maxY;
+    box->unk_04 = maxZ;
+}
+// register allocation of the two packed-word sums (masked 0, raw 4)
+#ifdef NON_MATCHING
+void func_8001C75C(unk2C0C0Struct20* arg0, u8* arg1, unk2C0C0StructC0* arg2, u16* arg3) {
+    s32* uv0;
+    s32* uv1;
+    s16 stride;
+    s16 translucent;
+    s16 i;
+    s16 tex;
+    s16 n;
+
+    switch (*arg1) {
+        case 0x35:
+            n = 4;
+            stride = 12;
+            break;
+        case 0x16:
+            n = 3;
+            stride = 12;
+            break;
+        default:
+            n = 2;
+            stride = 4;
+            break;
+    }
+    arg0->unk_00 = n;
+    arg1++;
+    uv0 = (s32*)arg0->unk_0C;
+    uv1 = (s32*)arg0->unk_1C;
+    for (i = 0, translucent = 0; i < n; i++) {
+        arg0->unk_04[i] = (arg1[0] << 8) + arg1[1];
+        if (arg1[3] != 0xFF) {
+            translucent = -1;
+        }
+        arg0->unk_2C[i] = arg1[3];
+        *uv0 = (arg1[4] << 24) + (arg1[5] << 16) + (arg1[6] << 8) + arg1[7];
+        uv0++;
+        *uv1 = (arg1[8] << 24) + (arg1[9] << 16) + (arg1[10] << 8) + arg1[11];
+        uv1++;
+        arg0->unk_04[i] = (arg1[0] << 8) + arg1[1];
+        arg1 += stride;
+    }
+    arg0->unk_30 = (arg1[0] << 8) + arg1[1];
+    if (translucent != 0) {
+        arg0->unk_00 |= 0x80;
+    }
+    func_8001C9F4((s8*)arg0->unk_01, &arg2->unk_78[arg0->unk_04[0]], &arg2->unk_78[arg0->unk_04[1]],
+                  &arg2->unk_78[arg0->unk_04[2]]);
+    if (arg2->unk_4C != NULL) {
+        *arg3 |= (u8)arg2->unk_A8[arg0->unk_30].unk_0C;
+        if (n == 2) {
+            arg0->unk_32 = -1;
+        } else {
+            arg0->unk_32 = tex = (arg1[2] << 8) + arg1[3];
+            if (tex != -1 &&
+                (arg2->unk_A4[tex].unk_0C->unk_18 == 3 || arg2->unk_A4[tex].unk_0C->unk_19 == 3)) {
+                *arg3 |= 1;
+            }
+        }
+    }
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/1B800", func_8001C75C);
-
+#endif
 void func_8001C9F4(s8* arg0, unk2C0C0StructA0* arg1, unk2C0C0StructA0* arg2, unk2C0C0StructA0* arg3) {
     s16 ax;
     s16 bx;

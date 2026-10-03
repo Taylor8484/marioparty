@@ -525,13 +525,10 @@ typedef struct unk_Struct02 {
 typedef struct unk2C0C0Struct20 {
     /* 0x00 */ u8 unk_00;
     /* 0x01 */ char unk_01[3];
-    /* 0x04 */ s16 unk_04[2]; // unknown array size
-    /* 0x08 */ char unk_08[4];
-    /* 0x0C */ f32 unk_0C[1]; // unknown array size
-    /* 0x10 */ char unk_10[0xC];
-    /* 0x1C */ f32 unk_1C[1]; // unknown array size
-    /* 0x20 */ char unk_20[0xC];
-    /* 0x2C */ u8 unk_2C[4]; // unknown array size
+    /* 0x04 */ s16 unk_04[4]; // vertex indices
+    /* 0x0C */ f32 unk_0C[4];
+    /* 0x1C */ f32 unk_1C[4];
+    /* 0x2C */ u8 unk_2C[4];
     /* 0x30 */ s16 unk_30;
     /* 0x32 */ s16 unk_32;
 } unk2C0C0Struct20; //sizeof 0x34
