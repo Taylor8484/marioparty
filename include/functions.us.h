@@ -413,7 +413,7 @@ void omSetTra(omObjData*, f32, f32, f32);
 void func_80009458(void);
 void func_80009624(unkGlobalStruct_00*, s32);
 void func_80017DB0(omObjData*);
-void func_800184BC(omObjData*, u16);
+s32 func_800184BC(omObjData*, u16);
 void func_8006071C(s16);
 void func_80008FB8(omObjData*, f32);
 void func_80008FC4(omObjData*, f32);
