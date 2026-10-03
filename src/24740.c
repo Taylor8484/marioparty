@@ -1,5 +1,10 @@
 #include "common.h"
 #include "engine/mallocblock.h"
+typedef struct unk24740Floats8 {
+    /* 0x00 */ f32 v[8];
+} unk24740Floats8;
+
+extern const f32 D_800CA8D8[];
 void func_80026EA8(unk2C0C0StructC0*, f32, f32, u16, u16);
 void func_80027100(unk2C0C0StructC0*, f32, f32, u16, u16);
 void func_80027440(unk2C0C0StructC0*, f32, f32, u16, u16);
@@ -1103,8 +1108,45 @@ void func_80026EA8(unk2C0C0StructC0* arg0, f32 arg1, f32 arg2, u16 arg3, u16 arg
         b++;
     }
 }
-INCLUDE_ASM("asm/nonmatchings/24740", func_80027100);
+void func_80027100(unk2C0C0StructC0* arg0, f32 arg1, f32 arg2, u16 arg3, u16 arg4) {
+    unk24740Floats8 sp0 = *(unk24740Floats8*)D_800CA8D8;
+    unk2C0C0StructB0* b = &arg0->unk_D0[arg3];
+    f32 inv = 1.0f - arg1;
+    unk2C0C0StructE0* src;
+    unk2C0C0StructE0* dst;
+    s16* idx;
+    s16 cx, cy, cz;
+    s16 sx, sy, sz;
+    s16 n;
+    s16 j;
+    s16 i;
 
+    for (i = 0; i < arg4; i++) {
+        cx = b->unk_0C;
+        cy = b->unk_10;
+        cz = b->unk_14;
+        if (arg2 == 1.0f) {
+            sx = cx * arg2;
+            sy = cy * arg2;
+            sz = cz * arg2;
+        } else {
+            sx = cx * arg2 * sp0.v[i & 7];
+            sy = cy * arg2 * sp0.v[i & 7];
+            sz = cz * arg2 * sp0.v[i & 7];
+        }
+        n = (u8)(b->unk_00 & 0x7F);
+        idx = b->unk_02;
+        for (j = 0; j < n; j++) {
+            src = &arg0->unk_04[*idx];
+            dst = &arg0->unk_08[D_800F37F0][*idx];
+            dst->unk_00 = (src->unk_00 - cx) * inv + sx;
+            dst->unk_02 = (src->unk_02 - cy) * inv + sy;
+            dst->unk_04 = (src->unk_04 - cz) * inv + sz;
+            idx++;
+        }
+        b++;
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/24740", func_80027440);
 
 INCLUDE_ASM("asm/nonmatchings/24740", func_80027AC8);
@@ -1225,5 +1267,5 @@ const char D_800CA8B8[] = "ma_l_3_DEF";
 const char D_800CA8C4[] = "Model Entry Over!\n";
 
 const f32 D_800CA8D8[] = {
-    1.0f, 0.8f, 1.1f, 1.3f, 0.5f, 1.2f
+    1.0f, 0.8f, 1.1f, 1.3f, 0.5f, 1.2f, 0.9f, 1.5f
 };

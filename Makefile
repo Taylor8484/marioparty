@@ -109,6 +109,8 @@ DEPENDS := $(OBJECTS:=.d)
 build/src/overlays/ovl_23_CraneGame/%.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # 69010.c (sprite draw) was built with the assembler VR4300 mul fix on: a nop after each mul.s pair
 build/src/69010.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# 24740.c (model entries) also has the mul fix on: nop between dependent mul.s (func_80027100)
+build/src/24740.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 
 #build/src/libultra/os/%.o: CFLAGS := -O2 $(CFLAGSCOMMON)
 #build/src/libultra/libc/%.o: CFLAGS := -O2 $(CFLAGSCOMMON)

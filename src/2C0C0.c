@@ -90,8 +90,6 @@ void func_8002B808(void) {
     }
 }
 
-const f32 D_800CA8F0 = 0.9f;
-const f32 D_800CA8F4 = 1.5f;
 
 void func_8002B890(unk2C0C0StructC0* arg0) {
     unk2C0C0StructE0* temp_v0;
