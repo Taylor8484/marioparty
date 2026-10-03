@@ -833,8 +833,6 @@ void func_8001CD60(unk2C0C0StructC0* arg0) {
         func_80023A38(back + 19, D_800F33C8, size);
     }
 }
-// register allocation: rows and the hoisted 0x04000400 constant swap $s1/$s2 (masked 0, raw 6)
-#ifdef NON_MATCHING
 void func_8001CEB4(void) {
     s16 cols;
     s16 x;
@@ -843,7 +841,7 @@ void func_8001CEB4(void) {
     s16 j;
     s16 rows;
 
-    rows = 16;
+    do { rows = 16; } while (0); // block found by decomp-permuter
     if (D_800EC6DE != 4) {
         return;
     }
@@ -874,6 +872,3 @@ void func_8001CEB4(void) {
         }
     }
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/1B800", func_8001CEB4);
-#endif
