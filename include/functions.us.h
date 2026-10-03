@@ -344,7 +344,7 @@ void omOvlGotoEx(s32, s16, u16);
 void omOvlHisChg(s16 arg0, s32 overlay, s16 event, s16 stat);
 void ExecBoardScene(board_overlay_entrypoint* arg0, s16 arg1);
 void func_8006B870(void);
-s32 func_8006B8A4(s32, s32, s32, s32, s32);
+s32 func_8006B8A4(s16, s16, s16, s16, u16);
 f64 fabs(f64 f);
 u8 rand8(void);
 void func_80017660(u8, f32, f32, f32, f32);
