@@ -11,7 +11,7 @@ typedef struct unk72D90Struct0 {
 typedef struct unk72D90Struct1 {
     /* 0x00 */ s16 unk_00;
     /* 0x02 */ s16 unk_02;
-    /* 0x04 */ s32 unk_04;
+    /* 0x04 */ void* unk_04;
 } unk72D90Struct1; //sizeof unknown
 
 typedef struct unk72D90Struct2 {
@@ -49,7 +49,9 @@ Gfx* func_80073100(Gfx*, Vtx*);
 s32 func_80073560(Gfx**);
 s32 func_80073F84(Gfx**);
 s32 func_80074040(Gfx**);
-void func_80074124(s32);
+void* func_80074124(s32);
+s16 func_8006D93C(u8*);
+s32 func_80076B2C(u8*, s32);
 void func_8007420C(Gfx**, f32, f32);
 s32 func_80074C20(Gfx**);
 s32 func_80074CE0(Gfx**);
@@ -642,7 +644,20 @@ s32 func_80074040(Gfx** arg0) {
     return 1;
 }
 
-INCLUDE_ASM("asm/nonmatchings/72D90", func_80074124);
+void* func_80074124(s32 arg0) {
+    u8* data;
+    u8* p;
+
+    data = DataRead(arg0);
+    p = data + (data[2] << 8) + data[3];
+    D_800F3744.unk_00 = (p[4] << 8) + p[5];
+    D_800F3744.unk_02 = (p[6] << 8) + p[7];
+    p = data + (p[2] << 8) + p[3];
+    D_800F3744.unk_04 = func_80023684(D_800F3744.unk_00 * D_800F3744.unk_02, 0x6D60);
+    func_80023A38(p, D_800F3744.unk_04, D_800F3744.unk_00 * D_800F3744.unk_02);
+    DataClose(data);
+    return data;
+}
 
 void func_8007420C(Gfx** arg0, f32 arg1, f32 arg2) {
     s16 var_t1;
@@ -1349,7 +1364,62 @@ void GMesSprKill(unkCommonStruct0* arg0) {
     }
 }
 
+// unk_04 kept in a register across the "< 10" branch where retail reloads it (masked 8)
+#ifdef NON_MATCHING
+s32 func_800763CC(unkCommonStruct0* arg0, Gfx** arg1) {
+    f32 temp_f24;
+    f32 n;
+    f32 i;
+    s32 d;
+
+    n = 5.0f;
+
+    if (arg0->unk_04 == 0) {
+        GMesFontCreate(arg0, "START", 1, -12, 0);
+        func_80066DC4(arg0->unk_14[0], 0, 83, arg0->unk_58);
+    }
+
+    if (arg0->unk_04 > arg0->unk_06 || GMesCloseF != 0 || arg0->unk_01 == 4) {
+        GMesSprKill(arg0);
+        omSysPauseEnableFlag = 0;
+        return 0;
+    }
+
+    if (arg0->unk_04 == 10) {
+        PlaySound(0x41A);
+    }
+
+    if (arg0->unk_04 == 38) {
+        PlaySound(D_800C61B8[D_800C61C0[GwSystem.unk_1E]]);
+    }
+
+    if (arg0->unk_04 > arg0->unk_06 - 10) {
+        arg0->unk_01 = 2;
+        d = arg0->unk_04 + 10;
+        temp_f24 = d - arg0->unk_06;
+        func_800673B0(arg0->unk_14[0], 0, temp_f24 * 5.0f);
+
+        for (i = 0.0f; i < n; i++) {
+            func_80067354(arg0->unk_14[0], i + 1.0f, 1.0f - temp_f24 / 10.0f, 1.0f - temp_f24 / 10.0f);
+            func_8006752C(arg0->unk_14[0], i + 1.0f, 255.0f - temp_f24 * 25.5f);
+        }
+        return 1;
+    }
+
+    if (arg0->unk_04 < 10) {
+        func_800673B0(arg0->unk_14[0], 0, 180.0f - arg0->unk_04 * 20.0f);
+
+        for (i = 0.0f; i < n;) {
+            i++;
+            func_80067354(arg0->unk_14[0], i, arg0->unk_04 / 7.0f, arg0->unk_04 / 7.0f);
+        }
+    }
+
+    return 1;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/72D90", func_800763CC);
+#endif
 
 s16 GMesFontMesCreate(unkCommonStruct0* arg0, char* arg1, u8 arg2, s16 arg3, s16 arg4) {
     s16 i;
@@ -1362,7 +1432,85 @@ s16 GMesFontMesCreate(unkCommonStruct0* arg0, char* arg1, u8 arg2, s16 arg3, s16
     return GMesFontCreate(arg0, arg1, arg2, arg3, arg4);
 }
 
+// register allocation: retail loads the unused arg4 into s3 and copies w per loop (masked 24)
+#ifdef NON_MATCHING
+s16 GMesFontCreate(unkCommonStruct0* arg0, void* arg1, u8 arg2, s16 arg3, s16 arg4) {
+    u16 hi;
+    s16 id;
+    u8* str;
+    u8* p;
+    s16 i;
+    s16 len;
+    s16 total;
+    s16 x;
+    s16 idx;
+    u8 w;
+    u32 v;
+
+    str = arg1;
+    len = func_8006D93C(str);
+
+    for (i = 0; i < 16; i++) {
+        if (arg0->unk_34[i] == -1 && arg0->unk_14[i] == -1) {
+            break;
+        }
+    }
+
+    id = arg0->unk_14[i] = func_80064EF4((u16)(len + 1), 5);
+
+    w = 15;
+    if (arg2 & 1) {
+        w = 22;
+    }
+
+    p = str;
+    for (total = 0; *p != 0; p++) {
+        if ((u32)(*p - 'a') < 26) {
+            total += 10;
+        } else if (*p == '\\') {
+            total += (w == 15) ? 4 : 8;
+        } else if ((*p == 0x10) | (*p == ' ')) {
+            total += (w == 15) ? 8 : 11;
+        } else {
+            total = w + total;
+        }
+    }
+
+    x = -arg3;
+    if (arg3 == -1) {
+        x = (w >> 1) - total / 2;
+    }
+
+    for (idx = 1; *str != 0; idx++) {
+        v = func_80076B2C(str, arg2);
+        hi = v >> 16;
+        func_80067208(id, idx, hi, v & 0xFF);
+        func_80066DC4(id, idx, x, (u32)(*str - 'a') < 26);
+        func_8006752C(id, idx, 255);
+        func_80067384(id, idx, 5);
+        func_80067480(id, idx, 0xFFFF);
+        func_800674BC(id, idx, 0x1008);
+        if ((u32)(*str - 'a') < 26) {
+            x += 10;
+        } else if (*str == '\\') {
+            x += (w != 15) ? 12 : 8;
+        } else if ((*str == 0x10) | (*str == ' ')) {
+            x += (w == 15) ? 8 : 11;
+        } else {
+            x = w + x;
+        }
+        func_80067598(id, idx, 0);
+        str += ((u8)(str[1] + 0x80) < 2) + 1;
+    }
+
+    func_80067208(id, 0, hi, 0);
+    func_800674BC(id, 0, 0x8000);
+    func_80067598(id, 0, -1);
+    return i;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/72D90", GMesFontCreate);
+#endif
 
 s32 func_80076B2C(u8* arg0, s32 arg1) {
     u16 var_v0;
@@ -1670,12 +1818,6 @@ INCLUDE_RODATA("asm/nonmatchings/72D90", D_800CBA60);
 
 INCLUDE_RODATA("asm/nonmatchings/72D90", D_800CBA68);
 
-INCLUDE_RODATA("asm/nonmatchings/72D90", D_800CBA70);
-
-extern char D_800CBA70[]; //probably need to write the string directly in all funcs it occurs in
-
-//matches, but the string gives issues. likely due to what the comment explains on the symbol
-#ifdef NON_MATCHING
 s32 func_80077838(unkCommonStruct0* arg0, Gfx** arg1) {
     char sp18[] = "WINS\xC4"; // D_800CBA70
     f64 var_f2;
@@ -1766,9 +1908,6 @@ s32 func_80077838(unkCommonStruct0* arg0, Gfx** arg1) {
     return 1;
 }
 
-#else
-INCLUDE_ASM("asm/nonmatchings/72D90", func_80077838);
-#endif
 
 s32 func_80077FC4(unkCommonStruct0* arg0, Gfx** arg1) {
     char sp18[] = "LOSES";
@@ -2028,7 +2167,76 @@ s32 func_80079104(unkCommonStruct0* arg0, Gfx** arg1) {
     return func_80079128(arg0, "GREAT\xC4", -1);
 }
 
-INCLUDE_ASM("asm/nonmatchings/72D90", func_80079128);
+s32 func_80079128(unkCommonStruct0* arg0, char* arg1, s16 arg2) {
+    f32 a;
+    f32 x;
+    f32 y;
+    f32 b;
+    s16 i;
+    u16 t;
+    f32 c;
+    f32 c2;
+    f32 nb;
+    f32 y2;
+
+    if (arg0->unk_04 == 0) {
+        GMesFontCreate(arg0, arg1, 1, -1, -1);
+        func_80066DC4(arg0->unk_14[0], 0, arg0->unk_54, arg0->unk_58);
+        arg0->unk_08 = strlen(arg1);
+        for (i = 0; i < arg0->unk_08; i++) {
+            func_800674BC(arg0->unk_14[0], i + 1, 0x8000);
+        }
+        omSysPauseEnableFlag = 1;
+    }
+
+    if (GMesCloseF != 0 || arg0->unk_01 == 4) {
+        GMesSprKill(arg0);
+        return 0;
+    }
+
+    if ((arg0->unk_04 == 20) & (arg2 != -1)) {
+        PlaySound(arg2);
+    }
+
+    if (arg0->unk_04 >= 69) {
+        arg0->unk_01 = 2;
+    }
+
+    if (arg0->unk_04 > 20 && arg0->unk_04 < 39) {
+        t = arg0->unk_04 - 20;
+        for (i = 0; i < arg0->unk_08; i++) {
+            func_80067354(arg0->unk_14[0], i + 1, func_800AEAC0((s16)t * 10) * 0.5f + 1.0, func_800AEAC0((s16)t * 10) * 0.5f + 1.0);
+        }
+    } else if (arg0->unk_04 < 16) {
+        for (i = 0; i < arg0->unk_08; i++) {
+            t = arg0->unk_04;
+            if (t >= 15) {
+                func_80066DC4(arg0->unk_14[0], i + 1, -(arg0->unk_08 * 22) / 2 + i * 22 + 12, 0);
+            } else {
+                a = func_800AEAC0(i * 10 + 430) * 100.0f;
+                c = arg0->unk_08 * -11 + 12;
+                if (!(i & 1)) {
+                    a = -a;
+                }
+                x = c - a;
+                y = -(func_800AEFD0(i * 20 + 430) * 50.0f);
+                func_80067480(arg0->unk_14[0], i + 1, 0x8000);
+                b = (15 - (s16)t) * 10 + func_800AEAC0((s16)t * 20 + 130 + i * 10) * 100.0f;
+                c2 = x + i * 22;
+                if (!(i & 1)) {
+                    nb = -b;
+                    x = c2 + nb;
+                } else {
+                    x = c2 + b;
+                }
+                y2 = y + func_800AEFD0((s16)t * 20 + 130 + i * 20) * 50.0f;
+                func_80066DC4(arg0->unk_14[0], i + 1, x, y2);
+            }
+        }
+    }
+
+    return 1;
+}
 
 s32 func_80079608(unkCommonStruct0* arg0, Gfx** arg1) {
     return func_80079128(arg0, "BRAVO\xC4", -1);
@@ -2218,7 +2426,78 @@ s32 func_80079B2C(unkCommonStruct0* arg0, Gfx** arg1) {
     return 1;
 }
 
-INCLUDE_ASM("asm/nonmatchings/72D90", func_8007A0FC);
+s32 func_8007A0FC(unkCommonStruct0* arg0, Gfx** arg1) {
+    f32 scale;
+    f32 alpha;
+    f32 dx;
+    s16 n;
+    s16 len0;
+    s16 len1;
+    s16 i;
+    s32 d;
+
+    n = 5;
+    len0 = strlen(D_800C624C[arg0->unk_08]);
+    len1 = strlen(D_800C624C[arg0->unk_0A]);
+
+    if (arg0->unk_04 == 0) {
+        GMesFontCreate(arg0, D_800C624C[arg0->unk_08], 1, -1, -1);
+        GMesFontCreate(arg0, D_800C624C[arg0->unk_0A], 1, -1, -1);
+        GMesFontCreate(arg0, "WINS\xC4", 1, -1, -1);
+        for (i = 0; i < len0; i++) {
+            func_80067354(arg0->unk_14[0], i + 1, 5.0f, 5.0f);
+        }
+        for (i = 0; i < len1; i++) {
+            func_80067354(arg0->unk_14[1], i + 1, 5.0f, 5.0f);
+        }
+        for (i = 0; i < n; i++) {
+            func_800674BC(arg0->unk_14[2], i + 1, 0x8000);
+        }
+        func_80066DC4(arg0->unk_14[0], 0, 288, arg0->unk_58);
+        func_80066DC4(arg0->unk_14[1], 0, 32, arg0->unk_58);
+        func_80066DC4(arg0->unk_14[2], 0, 160, arg0->unk_58 + 40.0f);
+    }
+
+    if (GMesCloseF != 0 || arg0->unk_01 == 4) {
+        GMesSprKill(arg0);
+        return 0;
+    }
+
+    if (arg0->unk_04 <= 20) {
+        scale = (20 - arg0->unk_04) * 0.4f + 1.0f;
+        alpha = arg0->unk_04 * 12;
+        dx = arg0->unk_04 * 10;
+        func_80066DC4(arg0->unk_14[0], 0, 320.0f - (dx + 32.0f), arg0->unk_58);
+        for (i = 0; i < len0; i++) {
+            func_8006752C(arg0->unk_14[0], i + 1, alpha);
+            func_80067354(arg0->unk_14[0], i + 1, scale, scale);
+        }
+        func_80066DC4(arg0->unk_14[1], 0, dx + 32.0f, arg0->unk_58);
+        for (i = 0; i < len1; i++) {
+            func_8006752C(arg0->unk_14[1], i + 1, alpha);
+            func_80067354(arg0->unk_14[1], i + 1, scale, scale);
+        }
+    } else if (arg0->unk_04 >= 31 && arg0->unk_04 <= 50) {
+        if (arg0->unk_04 <= 40) {
+            d = arg0->unk_04 - 30;
+            alpha = d * 25;
+            func_800673B0(arg0->unk_14[2], 0, d * 36);
+            for (i = 0; i < n; i++) {
+                func_80067480(arg0->unk_14[2], i + 1, 0x8000);
+                func_8006752C(arg0->unk_14[2], i + 1, alpha);
+            }
+        } else {
+            scale = func_800AEAC0((arg0->unk_04 - 40) * 18) + 1.0f;
+            for (i = 0; i < n; i++) {
+                func_80067354(arg0->unk_14[2], i + 1, scale, scale);
+            }
+        }
+    } else if (arg0->unk_04 >= 81) {
+        arg0->unk_01 = 2;
+    }
+
+    return 1;
+}
 
 s32 func_8007A7A4(unkCommonStruct0* arg0, Gfx** arg1) {
     f32 temp_f20;
@@ -2275,7 +2554,7 @@ s32 func_8007A978(unkCommonStruct0* arg0, Gfx** arg1) {
         GMesFontCreate(arg0, D_800C624C[arg0->unk_08], 1, -1, -1);
         GMesFontCreate(arg0, D_800C624C[arg0->unk_0A], 1, -1, -1);
         GMesFontCreate(arg0, D_800C624C[arg0->unk_0C], 1, -1, -1);
-        GMesFontCreate(arg0, D_800CBA70, 1, -1, -1);
+        GMesFontCreate(arg0, "WINS\xC4", 1, -1, -1);
 
         for (i = 0; i < temp_s6; i++) {
             func_80067354(arg0->unk_14[0], i + 1, 5.0f, 5.0f);

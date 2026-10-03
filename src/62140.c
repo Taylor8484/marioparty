@@ -78,19 +78,19 @@ typedef struct unk62140_2 {
 } unk62140_2;
 
 typedef struct unk62140_3 {
-/* 0x00 */ s8 unk_00;
-/* 0x01 */ s8 unk_01;
-/* 0x02 */ s8 unk_02;
-/* 0x03 */ s8 unk_03; //D_800F09E7
-/* 0x04 */ s8 unk_04;
-/* 0x05 */ s8 unk_05;
-/* 0x06 */ s8 unk_06;
-/* 0x06 */ s8 unk_07;
-/* 0x06 */ s8 unk_08;
-/* 0x06 */ s8 unk_09;
-/* 0x06 */ s8 unk_0A;
-/* 0x06 */ s8 unk_0B;
-/* 0x06 */ s8 unk_0C;
+/* 0x00 */ u8 unk_00; // red
+/* 0x01 */ u8 unk_01; // green
+/* 0x02 */ u8 unk_02; // blue
+/* 0x03 */ s8 unk_03; // red step
+/* 0x04 */ s8 unk_04; // green step
+/* 0x05 */ s8 unk_05; // blue step
+/* 0x06 */ u8 unk_06; // red max
+/* 0x07 */ u8 unk_07; // green max
+/* 0x08 */ u8 unk_08; // blue max
+/* 0x09 */ u8 unk_09; // red min
+/* 0x0A */ u8 unk_0A; // green min
+/* 0x0B */ u8 unk_0B; // blue min
+/* 0x0C */ s8 unk_0C;
 } unk62140_3;
 
 typedef struct unkStruct_zz {
@@ -106,7 +106,7 @@ s32 func_80061714(void);
 s32 func_80061784(s16* arg0);
 
 extern box pfWinData[];
-extern s16 saftyFrameF;
+extern u16 saftyFrameF;
 extern OSMesgQueue D_800EE960;
 extern unk62140_3 saftyFrameColor;
 extern u16 emppfwin;
@@ -563,4 +563,180 @@ void func_80062524(s16 arg0, u8* arg1) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/62140", pfDrawFonts);
+#define RGBA32_R(color) ((color) >> 24)
+#define RGBA32_G(color) (((color) >> 16) & 0xFF)
+#define RGBA32_B(color) (((color) >> 8) & 0xFF)
+#define RGBA32_A(color) ((color) & 0xFF)
+#define FILL_COLOR_RGBA5551(r, g, b, a) ((GPACK_RGBA5551(r, g, b, a) << 16) | GPACK_RGBA5551(r, g, b, a))
+
+extern u8 D_800C0A70[];
+extern u16 D_800C1670[16][16];
+extern u16 D_800C5B34;
+
+Gfx *pfDrawFonts(Gfx *gfx) {
+    u16 count;
+    s32 i;
+    u16 pal;
+    u16 color;
+    u16 x;
+    u16 y;
+    u8 *str;
+    u8 c;
+    s8 speed;
+
+    count = strlinecnt;
+
+    if (emppfwin != 0) {
+        gDPSetScissor(gfx++, G_SC_NON_INTERLACE, 0, 0, 319, 339);
+        gDPPipeSync(gfx++);
+        gDPSetTextureLOD(gfx++, G_TL_LOD);
+        gSPTexture(gfx++, 0x8000, 0x8000, 0, G_TX_RENDERTILE, G_ON);
+        gDPSetTexturePersp(gfx++, G_TP_NONE);
+        gDPSetAlphaCompare(gfx++, G_AC_THRESHOLD);
+        for (i = 0; i < 4; i++) {
+            if (pfWinData[i].activeBool != 0) {
+                if (RGBA32_A(pfWinData[i].rgba) == 0xFF) {
+                    gDPPipeSync(gfx++);
+                    gDPSetCycleType(gfx++, G_CYC_FILL);
+                    gDPSetRenderMode(gfx++, G_RM_NOOP, G_RM_NOOP2);
+                    gDPSetFillColor(gfx++, FILL_COLOR_RGBA5551(RGBA32_R(pfWinData[i].rgba),
+                                                               RGBA32_G(pfWinData[i].rgba),
+                                                               RGBA32_B(pfWinData[i].rgba),
+                                                               RGBA32_A(pfWinData[i].rgba)));
+                } else {
+                    gDPPipeSync(gfx++);
+                    gDPSetCycleType(gfx++, G_CYC_1CYCLE);
+                    gDPSetCombineMode(gfx++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+                    gDPSetRenderMode(gfx++, G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2);
+                    gDPSetPrimColor(gfx++, 0, 0, RGBA32_R(pfWinData[i].rgba),
+                                    RGBA32_G(pfWinData[i].rgba), RGBA32_B(pfWinData[i].rgba),
+                                    RGBA32_A(pfWinData[i].rgba));
+                }
+                gDPFillRectangle(gfx++, pfWinData[i].xPosStart, pfWinData[i].yPosStart,
+                                 pfWinData[i].width, pfWinData[i].height);
+            }
+        }
+    }
+
+    if (saftyFrameF != 0) {
+        if (saftyFrameColor.unk_03 != 0) {
+            speed = saftyFrameColor.unk_03;
+            if (speed < 0) {
+                if (saftyFrameColor.unk_00 + speed >= saftyFrameColor.unk_09) {
+                    saftyFrameColor.unk_00 += speed;
+                } else {
+                    saftyFrameColor.unk_00 = saftyFrameColor.unk_09;
+                    saftyFrameColor.unk_03 = -saftyFrameColor.unk_03;
+                }
+            } else {
+                if (saftyFrameColor.unk_00 + speed <= saftyFrameColor.unk_06) {
+                    saftyFrameColor.unk_00 += speed;
+                } else {
+                    saftyFrameColor.unk_00 = saftyFrameColor.unk_06;
+                    saftyFrameColor.unk_03 = -saftyFrameColor.unk_03;
+                }
+            }
+        }
+        if (saftyFrameColor.unk_04 != 0) {
+            speed = saftyFrameColor.unk_04;
+            if (speed < 0) {
+                if (saftyFrameColor.unk_01 + speed >= saftyFrameColor.unk_0A) {
+                    saftyFrameColor.unk_01 += speed;
+                } else {
+                    saftyFrameColor.unk_01 = saftyFrameColor.unk_0A;
+                    saftyFrameColor.unk_04 = -saftyFrameColor.unk_04;
+                }
+            } else {
+                if (saftyFrameColor.unk_01 + speed <= saftyFrameColor.unk_07) {
+                    saftyFrameColor.unk_01 += speed;
+                } else {
+                    saftyFrameColor.unk_01 = saftyFrameColor.unk_07;
+                    saftyFrameColor.unk_04 = -saftyFrameColor.unk_04;
+                }
+            }
+        }
+        if (saftyFrameColor.unk_05 != 0) {
+            speed = saftyFrameColor.unk_05;
+            if (speed < 0) {
+                if (saftyFrameColor.unk_02 + speed >= saftyFrameColor.unk_0B) {
+                    saftyFrameColor.unk_02 += speed;
+                } else {
+                    saftyFrameColor.unk_02 = saftyFrameColor.unk_0B;
+                    saftyFrameColor.unk_05 = -saftyFrameColor.unk_05;
+                }
+            } else {
+                if (saftyFrameColor.unk_02 + speed <= saftyFrameColor.unk_08) {
+                    saftyFrameColor.unk_02 += speed;
+                } else {
+                    saftyFrameColor.unk_02 = saftyFrameColor.unk_08;
+                    saftyFrameColor.unk_05 = -saftyFrameColor.unk_05;
+                }
+            }
+        }
+        gDPPipeSync(gfx++);
+        gDPSetCycleType(gfx++, G_CYC_FILL);
+        gDPSetRenderMode(gfx++, G_RM_NOOP, G_RM_NOOP2);
+        gDPSetFillColor(gfx++, FILL_COLOR_RGBA5551(saftyFrameColor.unk_00, saftyFrameColor.unk_01,
+                                                   saftyFrameColor.unk_02, 1));
+        gDPFillRectangle(gfx++, 24, 16, 296, 16);
+        gDPFillRectangle(gfx++, 24, 224, 296, 224);
+        gDPFillRectangle(gfx++, 24, 16, 24, 224);
+        gDPFillRectangle(gfx++, 296, 16, 296, 224);
+    }
+
+    gDPSetScissor(gfx++, G_SC_NON_INTERLACE, 0, 0, 319, 339);
+    gDPPipeSync(gfx++);
+    gDPSetCycleType(gfx++, G_CYC_COPY);
+    gDPSetAlphaCompare(gfx++, G_AC_THRESHOLD);
+    gDPSetTextureLOD(gfx++, G_TL_LOD);
+    gDPSetRenderMode(gfx++, G_RM_NOOP, G_RM_NOOP2);
+    gSPTexture(gfx++, 0x8000, 0x8000, 0, G_TX_RENDERTILE, G_ON);
+    gDPSetTexturePersp(gfx++, G_TP_NONE);
+    gDPSetTextureLUT(gfx++, G_TT_RGBA16);
+    gDPSetBlendColor(gfx++, 0xFF, 0xFF, 0xFF, 0xFF);
+    gDPLoadTextureBlock_4b(gfx++, D_800C0A70, G_IM_FMT_CI, 64, 64, D_800C5B34,
+                           G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
+                           G_TX_NOLOD, G_TX_NOLOD);
+    gDPSetBlendColor(gfx++, 0, 0, 0, 1);
+    for (pal = 0; pal < 16; pal++) {
+        gDPLoadTLUT_pal16(gfx++, pal, D_800C1670[pal]);
+    }
+
+    for (i = 0; i < 0x200; i++) {
+        if (D_800D9370[i].str[0] != '\0') {
+            str = D_800D9370[i].str;
+            color = D_800D9370[i].color;
+            x = D_800D9370[i].x;
+            y = D_800D9370[i].y;
+            if (color != D_800C5B34) {
+                D_800C5B34 = color;
+                gDPTileSync(gfx++);
+                gDPSetTile(gfx++, G_IM_FMT_CI, G_IM_SIZ_4b, 4, 0, G_TX_RENDERTILE, color, 0, 0, 0, 0, 0, 0);
+            }
+            for (; *str != '\0'; str++) {
+                if (*str >= ' ') {
+                    c = *str - ' ';
+                    gSPTextureRectangle(gfx++, x << 2, y << 2, (x + 7) << 2, (y + 7) << 2, G_TX_RENDERTILE,
+                                        ((c % 8) * 8) << 5, ((c / 8) * 8) << 5, 4 << 10, 1 << 10);
+                    x += 8;
+                    if (x >= 320) {
+                        x = 0;
+                        y += 8;
+                    }
+                }
+            }
+            if (--count == 0) {
+                break;
+            }
+        }
+    }
+
+    gDPPipeSync(gfx++);
+    gSPTexture(gfx++, 0, 0, 0, G_TX_RENDERTILE, G_OFF);
+    gDPSetCombineMode(gfx++, G_CC_SHADE, G_CC_SHADE);
+    gDPSetRenderMode(gfx++, G_RM_ZB_OPA_SURF, G_RM_ZB_OPA_SURF2);
+    gDPSetTextureLUT(gfx++, G_TT_NONE);
+    gDPSetTexturePersp(gfx++, G_TP_PERSP);
+    gDPSetTextureFilter(gfx++, G_TF_BILERP);
+    return gfx;
+}
