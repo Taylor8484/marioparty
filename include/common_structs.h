@@ -573,8 +573,8 @@ typedef struct unk2C0C0Struct40 {
     /* 0x20 */ Vec3f unk_20;
     /* 0x2C */ Vec3f unk_2C;
     /* 0x38 */ Vec3f unk_38;
-    /* 0x44 */ s8 unk_44;
-    /* 0x45 */ s8 unk_45;
+    /* 0x44 */ u8 unk_44;
+    /* 0x45 */ u8 unk_45;
     /* 0x46 */ char unk_46[2];
     /* 0x48 */ struct unk2C0C0StructC0* unk_48;
     /* 0x4C */ Matrix4f unk_4C;
@@ -591,9 +591,9 @@ typedef struct unk2C0C0Struct50 {
     /* 0x38 */ Vec3f unk_38;
     /* 0x44 */ Vec3f unk_44;
     /* 0x50 */ Vec3f unk_50;
-    /* 0x5C */ s8 unk_5C;
-    /* 0x5D */ s8 unk_5D;
-    /* 0x5E */ s8 unk_5E;
+    /* 0x5C */ u8 unk_5C;
+    /* 0x5D */ u8 unk_5D;
+    /* 0x5E */ u8 unk_5E;
     /* 0x5F */ char unk_5F;
     /* 0x60 */ struct unk2C0C0StructC0* unk_60;
     /* 0x64 */ Matrix4f unk_64;
