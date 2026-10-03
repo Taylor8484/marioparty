@@ -783,9 +783,9 @@ typedef struct unk_ovl_2D_struct { //actually global??
     /* 0x12 */ s16 unk_12;
     /* 0x14 */ s16 unk_14;
     /* 0x16 */ s16 unk_16;
-    /* 0x18 */ char unk_18[2];
+    /* 0x18 */ s16 unk_18;
     /* 0x1A */ s16 unk_1A;
-    /* 0x1C */ char unk_1C[4];
+    /* 0x1C */ f32 unk_1C;
     /* 0x20 */ s32 unk_20;
     /* 0x24 */ f32 unk_24;
     /* 0x28 */ f32 unk_28;
@@ -806,7 +806,9 @@ typedef struct unk_ovl_2D_struct { //actually global??
     /* 0x64 */ f32 unk_64;
     /* 0x68 */ f32 unk_68;
     /* 0x6C */ unk2C0C0StructC0* unk_6C;
-    /* 0x70 */ char pad70[0xC];
+    /* 0x70 */ struct unk2C0C0StructC0* unk_70;
+    /* 0x74 */ struct unk2C0C0StructC0* unk_74;
+    /* 0x78 */ void (*unk_78)(Gfx**, Mtx*, struct camera*);
     /* 0x7C */ Mat4 unk7C; // Transformation Matrix
     /* 0xBC */ void* unk_BC;
 } unk_ovl_2D_struct; //sizeof 0xC0

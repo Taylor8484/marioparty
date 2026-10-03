@@ -33,7 +33,7 @@ void func_8005DC18(omObjData*, s32);
 s16 func_80038A9C(unk2C0C0StructC0*, void*, s32, char*);
 f32 func_8000A72C(f32, f32, f32, f32);
 u8 func_800179C0(s32);
-void func_80028510(s32, s32, s32, s32, s32);
+void func_80028510(s16, s16, u8, u8, u8);
 void func_80028BE0(s32);
 u16 func_800594FC(s16);
 void func_800603F0(s32);
@@ -314,7 +314,7 @@ void func_80079078(s16);
 void omDelObj(void*); //idk what type this arg is, either omObjData* or Object*
 s32 func_8005021C(f32); //getRandInRange
 void func_800A0D00(void*, f32, f32, f32);
-void func_80025CA8(s16, s32);
+void func_80025CA8(s16, f32);
 void func_80025B34(s16);
 void func_80026040(s16);
 void func_80039C48(char*, void*);
