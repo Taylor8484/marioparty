@@ -211,13 +211,13 @@ extern Vec3f D_800EDED4[];
 extern Vec3f D_800EDED8[];
 f32 func_800296FC(f32, f32, ColVtx*, ColVtx*);
 
-// register allocation (masked 58): vertex/direction floats land in swapped callee-saved FPRs
-#ifdef NON_MATCHING
 f32 func_80000530(f32 x, f32 y, f32 z, ColVtx* verts, ColTri* tri, Vec3f* dir, Vec3f* out) {
     Vec3f n;
     f32 vx, vy, vz;
     f32 dx, dy, dz;
     f32 t;
+    f32 d;
+    f32 nx, ny, nz;
     ColVtx* v = &verts[tri->v[0]];
 
     vx = v->x;
@@ -227,10 +227,11 @@ f32 func_80000530(f32 x, f32 y, f32 z, ColVtx* verts, ColTri* tri, Vec3f* dir, V
     dy = dir->y;
     dz = dir->z;
     func_800295FC(v, &verts[tri->v[1]], &verts[tri->v[2]], &n);
-    vx -= x;
-    vy -= y;
-    vz -= z;
-    t = (n.x * vx + n.y * vy + n.z * vz) / (n.x * dx + n.y * dy + n.z * dz);
+    nx = n.x;
+    ny = n.y;
+    nz = n.z;
+    d = nx * dx + ny * dy + nz * dz;
+    t = (nx * (vx - x) + ny * (vy - y) + nz * (vz - z)) / d;
     x += dx * t;
     out->x = x;
     y += dy * t;
@@ -239,9 +240,6 @@ f32 func_80000530(f32 x, f32 y, f32 z, ColVtx* verts, ColTri* tri, Vec3f* dir, V
     out->z = z;
     return y;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/1130", func_80000530);
-#endif
 f32 func_800006E4(omObjData* obj, f32 y) {
     u8* w = obj->unk_50;
     f32 r = obj->trans.y;
