@@ -1,5 +1,23 @@
 #include "common.h"
 
+void func_8003EE68(s16, s16);
+void func_8003EF98(s16, s16);
+void func_8003F008(s16, s16);
+void func_8003F07C(s16, s16);
+void func_8003F1C0(s16, s16);
+void func_8003F384(s16, s16);
+s32 func_800559A8(void);
+void func_800559BC(void);
+void func_800559F8(void);
+void func_800244C4(s16, u8);
+s32 func_80051198(s32);
+s32 func_80051428(s32);
+s32 func_80051AE0(s32);
+s32 func_80052614(s32);
+extern s8 D_800F384E;
+extern s16 D_800F329E;
+
+
 s32 func_800141FC(s16);
 extern s16 D_800D8378;
 extern s16 D_800C53AC[];
@@ -536,10 +554,112 @@ void func_80051954(void) {
 }
 INCLUDE_ASM("asm/nonmatchings/51200", func_80051AE0);
 
+// retail holds the return value 1 in s2 across the loop; this returns it with li (masked 5)
+#ifdef NON_MATCHING
+s32 func_80052614(s32 arg0) {
+    s32 id = func_80045D84(8, 0xBC, 0);
+
+    do {
+        HuPrcVSleep();
+        func_8003F384(3, 3);
+        func_8003EE68(3, 5);
+        func_8003F008(3, 11);
+        func_8003F07C(3, 13);
+        func_8003EF98(3, 18);
+        func_8003F1C0(13, 11);
+    } while (!(ContBtnTrg[arg0] & 0x4000));
+    func_80045E6C(id);
+    return 1;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/51200", func_80052614);
+#endif
+s16 func_800526D8(s16 arg0, s32 arg1) {
+    switch (arg0) {
+    case 1:
+        return func_80050A98(arg1);
+    case 2:
+        return func_80051AE0(arg1);
+    case 4:
+        return func_80050E7C(arg1);
+    case 5:
+        return func_80051198(arg1);
+    case 6:
+        return func_800512F4(arg1);
+    case 7:
+        return func_80051428(arg1);
+    case 8:
+        return func_80051548(arg1);
+    case 3:
+        return func_80052614(arg1);
+    }
+    return 0;
+}
+void func_800527A0(void) {
+    s32 arg = (s32)HuPrcCurrentGet()->user_data;
+    s16 state = 1;
+    s16 paused = func_800559A8();
+    unk_Struct02* sprite;
+    void* data;
 
-INCLUDE_ASM("asm/nonmatchings/51200", func_800526D8);
+    if (paused != 0) {
+        func_800559BC();
+    }
+    HuPrcVSleep();
+    D_800F384E = 1;
+    sprite = func_800533F8(1, 0);
+    data = DataRead(0xA012A);
+    sprite->unk_0C[0] = func_800678A4(data);
+    func_80067208(sprite->unk_0A, 0, sprite->unk_0C[0], 0);
+    func_80067384(sprite->unk_0A, 0, 9);
+    func_800674BC(sprite->unk_0A, 0, 0x1000);
+    func_80066DC4(sprite->unk_0A, 0, 0xA0, 0x78);
+    func_80067354(sprite->unk_0A, 0, 40.0f, 30.0f);
+    func_80067558(sprite->unk_0A, 0, 0, 0, 0, 0xC0);
+    DataClose(data);
+    do {
+        HuPrcVSleep();
+        state = func_800526D8(state, arg);
+    } while (state != 0);
+    if (D_800D8376 == 0) {
+        D_800F384E = 0;
+    }
+    func_80053454(sprite);
+    if (paused != 0) {
+        func_800559F8();
+    }
+    EndProcess(NULL);
+}
+void func_80052934(s32 arg0) {
+    Process* parent;
+    Process* proc;
 
-INCLUDE_ASM("asm/nonmatchings/51200", func_800527A0);
-
-INCLUDE_ASM("asm/nonmatchings/51200", func_80052934);
+    D_800ECC22 = 1;
+    func_8005FD7C();
+    func_80060214(0x60);
+    func_800244C4(D_800F329E, 2);
+    func_80025F10(D_800F329E, 1);
+    D_800D8370 = NULL;
+    D_800D8374 = 0;
+    D_800D8376 = 0;
+    parent = HuPrcCurrentGet();
+    proc = omAddPrcObj(func_800527A0, 0xEFFF, 0, 0);
+    proc->user_data = (void*)arg0;
+    omPrcSetStatBit(proc, 0x80);
+    HuPrcChildLink(parent, proc);
+    HuPrcChildWatch();
+    func_800244C4(D_800F329E, 6);
+    func_80060214(0x7F);
+    if (D_800D8376 != 0) {
+        func_800601D4(0x5A);
+        func_800726AC(0, 0x10);
+        HuPrcSleep(0x11);
+        func_80056AF4();
+        func_80056984();
+        omOvlReturnEx(1);
+        omOvlKill();
+        HuPrcVSleep();
+    }
+    func_8005FECC();
+    D_800ECC22 = 0;
+}
