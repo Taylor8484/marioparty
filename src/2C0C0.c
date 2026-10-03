@@ -634,8 +634,6 @@ void func_8002D270(unk2C0C0StructC0* arg0, s16 arg1, void* arg2) {
     func_800A0B90(sp10, arg2);
     func_8002D2CC(arg0, arg1, arg2, sp10);
 }
-// Matches without --vr4300mul-off
-#ifdef NON_MATCHING
 void func_8002D2CC(unk2C0C0StructC0* arg0, s16 arg1, void* arg2, Matrix4f arg3) {
     f32 temp_f4;
     f32 temp_f0;
@@ -652,7 +650,7 @@ void func_8002D2CC(unk2C0C0StructC0* arg0, s16 arg1, void* arg2, Matrix4f arg3) 
     temp_v0 = D_800F6538[temp_s4];
 
     if (temp_v0 >= D_800C3500[temp_s4]) {
-        osSyncPrintf(D_800CA938, temp_s4);
+        osSyncPrintf("Model Object Entry Over!! UCODE%d\n", temp_s4);
         return;
     }
 
@@ -708,9 +706,6 @@ void func_8002D2CC(unk2C0C0StructC0* arg0, s16 arg1, void* arg2, Matrix4f arg3) 
 
     D_800F3100 += arg0->unk_80[arg1].unk_04;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/2C0C0", func_8002D2CC);
-#endif
 
 Gfx* func_8002D614(s16 arg0, Gfx* arg1, Gfx* arg2) {
     unk2C0C0StructF0* temp_s0;
