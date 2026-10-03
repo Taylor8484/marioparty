@@ -622,8 +622,242 @@ f32 func_80035824(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4) {
 
     return uu * (u * arg1 + arg0 * 3.0f * arg2) + tt * (u * 3.0f * arg3 + arg0 * arg4);
 }
-INCLUDE_ASM("asm/nonmatchings/34D80", func_8003589C);
+void func_8003589C(unk2C0C0StructC0* arg0, s32 arg1, s32 arg2) {
+    unk34D80Struct80* anim;
+    unk34D80Struct60* e;
+    unk2C0C0Struct40* p40;
+    unk2C0C0Struct50* p50;
+    f32* dst;
+    f32 time;
+    f32 w;
+    f32 inv;
+    f32 val;
+    s32 axis;
+    u8 f;
+    s16 idx;
+    s16 i;
+    union {
+        s32 i;
+        f32 f;
+    } u1, u2;
 
+    u1.i = arg1;
+    u2.i = arg2;
+    time = u1.f;
+    w = u2.f;
+    anim = (unk34D80Struct80*) arg0->unk_B0;
+    inv = 1.0f - w;
+    for (i = 0; i < anim->unk_00; i++) {
+        e = anim->unk_04[i];
+        idx = e->unk_08 & 0x7FFF;
+        if (idx == 0x7FFF) {
+            idx = 0;
+        }
+        if (time < anim->unk_0C[e->unk_0A]) {
+            continue;
+        }
+        if (e->unk_01 != 'E') {
+            axis = 2;
+            if (e->unk_01 == 'F') {
+                axis = 1;
+            }
+        } else {
+            axis = 0;
+        }
+        switch (anim->unk_08[i]) {
+            case 78:
+                switch (e->unk_00) {
+                    case 76:
+                    dst = &(&arg0->unk_88[idx].unk_38.x)[axis];
+                    if (e->unk_02 == 'I') {
+                        val = func_800354D4(anim, e, time);
+                    } else {
+                        val = func_80035630(anim, e, time);
+                    }
+                    if (val < -180.0f) {
+                        val += 360.0f;
+                    }
+                    if (*dst < -180.0f) {
+                        *dst += 360.0f;
+                    }
+                    if (val > 180.0f) {
+                        val -= 360.0f;
+                    }
+                    if (*dst > 180.0f) {
+                        *dst -= 360.0f;
+                    }
+                    *dst = inv * *dst + val * w;
+                    arg0->unk_88[idx].unk_45 |= (1 << axis) | 0x40;
+                    break;
+                    case 79:
+                    dst = &(&arg0->unk_88[idx].unk_2C.x)[axis];
+                    if (e->unk_02 == 'I') {
+                        val = func_800354D4(anim, e, time);
+                    } else {
+                        val = func_80035630(anim, e, time);
+                    }
+                    *dst = inv * *dst + val * w;
+                    arg0->unk_88[idx].unk_44 |= (1 << axis) | 0x40;
+                    break;
+                }
+                break;
+            case 13:
+                switch (e->unk_00) {
+                    case 23:
+                    dst = &(&arg0->unk_A0[idx].unk_38.x)[axis];
+                    if (e->unk_02 == 'I') {
+                        val = func_800354D4(anim, e, time);
+                    } else {
+                        val = func_80035630(anim, e, time);
+                    }
+                    *dst = inv * *dst + val * w;
+                    arg0->unk_A0[idx].unk_5C |= (1 << axis) | 0x40;
+                    break;
+                    case 76:
+                    dst = &(&arg0->unk_A0[idx].unk_44.x)[axis];
+                    if (e->unk_02 == 'I') {
+                        val = func_800354D4(anim, e, time);
+                    } else {
+                        val = func_80035630(anim, e, time);
+                    }
+                    if (val < 0.0f) {
+                        val += 360.0f;
+                    }
+                    if (*dst < 0.0f) {
+                        *dst += 360.0f;
+                    }
+                    if (val < 180.0f) {
+                        if (val + 180.0f < *dst) {
+                            *dst -= 360.0f;
+                        }
+                    } else if (*dst < val - 180.0f) {
+                        val -= 360.0f;
+                    }
+                    *dst = inv * *dst + val * w;
+                    arg0->unk_A0[idx].unk_5D |= (1 << axis) | 0x40;
+                    break;
+                    case 27:
+                    dst = &(&arg0->unk_A0[idx].unk_50.x)[axis];
+                    if (e->unk_02 == 'I') {
+                        val = func_800354D4(anim, e, time);
+                    } else {
+                        val = func_80035630(anim, e, time);
+                    }
+                    *dst = inv * *dst + val * w;
+                    arg0->unk_A0[idx].unk_5E |= (1 << axis) | 0x40;
+                    break;
+                }
+                break;
+        }
+    }
+
+    if (arg0->unk_A0 == (unk2C0C0Struct50*) -1) {
+        p40 = arg0->unk_88;
+        idx = arg0->unk_84;
+        for (i = 0; i < idx; i++) {
+            if (p40->unk_44 != 0) {
+            f = p40->unk_44;
+            dst = &p40->unk_2C.x;
+            if (!(f & 0x40)) {
+                dst[0] = inv * dst[0] + w * p40->unk_08.x;
+                dst[1] = inv * dst[1] + w * p40->unk_08.y;
+                dst[2] = inv * dst[2] + w * p40->unk_08.z;
+            } else {
+                if (!(f & 1)) {
+                    dst[0] = inv * dst[0] + w * p40->unk_08.x;
+                }
+                if (!(f & 2)) {
+                    dst[1] = inv * dst[1] + w * p40->unk_08.y;
+                }
+                if (!(f & 4)) {
+                    dst[2] = inv * dst[2] + w * p40->unk_08.z;
+                }
+            }
+        }
+            if (p40->unk_45 != 0) {
+            f = p40->unk_45;
+            dst = &p40->unk_38.x;
+            if (!(f & 0x40)) {
+                dst[0] = inv * dst[0] + w * p40->unk_14.x;
+                dst[1] = inv * dst[1] + w * p40->unk_14.y;
+                dst[2] = inv * dst[2] + w * p40->unk_14.z;
+            } else {
+                if (!(f & 1)) {
+                    dst[0] = inv * dst[0] + w * p40->unk_14.x;
+                }
+                if (!(f & 2)) {
+                    dst[1] = inv * dst[1] + w * p40->unk_14.y;
+                }
+                if (!(f & 4)) {
+                    dst[2] = inv * dst[2] + w * p40->unk_14.z;
+                }
+            }
+        }
+            p40++;
+        }
+    } else {
+        for (i = 0; i < arg0->unk_70; i++) {
+            p50 = &arg0->unk_A0[i];
+            if (p50->unk_5C != 0) {
+            f = p50->unk_5C;
+            dst = &p50->unk_38.x;
+            if (!(f & 0x40)) {
+                dst[0] = inv * dst[0] + w * p50->unk_08.x;
+                dst[1] = inv * dst[1] + w * p50->unk_08.y;
+                dst[2] = inv * dst[2] + w * p50->unk_08.z;
+            } else {
+                if (!(f & 1)) {
+                    dst[0] = inv * dst[0] + w * p50->unk_08.x;
+                }
+                if (!(f & 2)) {
+                    dst[1] = inv * dst[1] + w * p50->unk_08.y;
+                }
+                if (!(f & 4)) {
+                    dst[2] = inv * dst[2] + w * p50->unk_08.z;
+                }
+            }
+        }
+            if (p50->unk_5D != 0) {
+            f = p50->unk_5D;
+            dst = &p50->unk_44.x;
+            if (!(f & 0x40)) {
+                dst[0] = inv * dst[0] + w * p50->unk_14.x;
+                dst[1] = inv * dst[1] + w * p50->unk_14.y;
+                dst[2] = inv * dst[2] + w * p50->unk_14.z;
+            } else {
+                if (!(f & 1)) {
+                    dst[0] = inv * dst[0] + w * p50->unk_14.x;
+                }
+                if (!(f & 2)) {
+                    dst[1] = inv * dst[1] + w * p50->unk_14.y;
+                }
+                if (!(f & 4)) {
+                    dst[2] = inv * dst[2] + w * p50->unk_14.z;
+                }
+            }
+        }
+            if (p50->unk_5E != 0) {
+            f = p50->unk_5E;
+            dst = &p50->unk_50.x;
+            if (!(f & 0x40)) {
+                dst[0] = inv * dst[0] + w * p50->unk_20.x;
+                dst[1] = inv * dst[1] + w * p50->unk_20.y;
+                dst[2] = inv * dst[2] + w * p50->unk_20.z;
+            } else {
+                if (!(f & 1)) {
+                    dst[0] = inv * dst[0] + w * p50->unk_20.x;
+                }
+                if (!(f & 2)) {
+                    dst[1] = inv * dst[1] + w * p50->unk_20.y;
+                }
+                if (!(f & 4)) {
+                    dst[2] = inv * dst[2] + w * p50->unk_20.z;
+                }
+            }
+        }
+        }
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/34D80", func_800363C8);
 
 INCLUDE_ASM("asm/nonmatchings/34D80", func_800368AC);
