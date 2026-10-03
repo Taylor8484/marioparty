@@ -1,5 +1,13 @@
 #include "common.h"
 
+extern s32 D_800C5370[];
+void func_8004D0B0(s16);
+
+/* The menu windows below called func_8006D010 unprototyped (int return: no sign extension after
+   the call). Every use passes the id on as an s16, so the s16 the function returns survives. */
+#define CreateMenuWindow ((s32 (*)(s16, s16, s16, s16, s32, s16))func_8006D010)
+
+
 typedef struct unk51200 {
 /* 0x00 */ Object* obj;
 /* 0x04 */ u16 unk4;
@@ -317,45 +325,109 @@ extern s32 D_800C5368[2];
 
 
 
+// retail sign-extends the result fully (sll+sra) before the bgez; this gives sll only (masked 2)
 #ifdef NON_MATCHING
-s32 func_80051198(s16 arg0) {
-    Process* temp_s2;
-    s16 temp_v0;
-    s16 temp_v0_2;
+s32 func_80051198(s32 arg0) {
+    Process* proc;
+    s16 v;
+    s32 win;
     GW_SYSTEM* system = &GwSystem;
 
-    temp_v0 = func_8006D010(0x5A, 0x50, 0xA2, 0x22, 0, 0);
-    func_8006E0A4(temp_v0, 5);
-    func_8006E154(temp_v0, 0);
-    LoadStringIntoWindow(temp_v0, (void* )0x160, -1, -1);
-    func_8006E070(temp_v0, 0);
-    while ((func_8006FCC0(temp_v0)) != 0) {
+    win = CreateMenuWindow(0x5A, 0x50, 0xA2, 0x22, 0, 0);
+    func_8006E0A4(win, 5);
+    func_8006E154(win, 0);
+    LoadStringIntoWindow(win, (void*)0x160, -1, -1);
+    func_8006E070(win, 0);
+    while (func_8006FCC0(win) != 0) {
         HuPrcVSleep();
     }
     if (_CheckFlag(0x2C) == 0) {
-        temp_s2 = func_80050E10(temp_v0, D_800C5360);
+        proc = func_80050E10(win, D_800C5360);
     } else {
-        temp_s2 = func_80050E10(temp_v0, D_800C5368);
+        proc = func_80050E10(win, D_800C5368);
     }
-    func_8007155C(temp_v0, (0x10000 << arg0) >> 0x10); //?
-    temp_v0_2 = func_8006FCF0(temp_v0, system->minigameExplanation, 0);
-    if (temp_v0_2 >= 0) {
-        system->minigameExplanation = temp_v0_2;
+    func_8007155C(win, (s16)(1 << arg0));
+    v = func_8006FCF0(win, system->minigameExplanation, 0);
+    if (v >= 0) {
+        system->minigameExplanation = v;
     }
-    EndProcess(temp_s2);
-    func_80070D90(temp_v0);
+    EndProcess(proc);
+    func_80070D90(win);
     return 4;
 }
 #else
 INCLUDE_ASM("asm/nonmatchings/51200", func_80051198);
 #endif
 
-INCLUDE_ASM("asm/nonmatchings/51200", func_800512F4);
+s32 func_800512F4(s32 arg0) {
+    Process* proc;
+    s16 v;
+    s32 win;
+    GW_SYSTEM* system = &GwSystem;
 
+    win = CreateMenuWindow(0x69, 0x46, 0x8C, 0x30, 0, 0);
+    func_8006E0A4(win, 5);
+    func_8006E154(win, 0);
+    LoadStringIntoWindow(win, (void*)0x163, -1, -1);
+    func_8006E070(win, 0);
+    while (func_8006FCC0(win) != 0) {
+        HuPrcVSleep();
+    }
+    proc = func_80050E10(win, D_800C5370);
+    func_8007155C(win, (s16)(1 << arg0));
+    v = func_8006FCF0(win, (s8)system->saveSetting, 0);
+    if (v >= 0) {
+        system->saveSetting = v;
+    }
+    EndProcess(proc);
+    func_80070D90(win);
+    return 4;
+}
+// register choice: the bit-15 test reads a0 instead of v0 (raw 1, masked 0)
+#ifdef NON_MATCHING
+s32 func_80051428(s32 arg0) {
+    s32 v;
+    s32 win;
+    GW_SYSTEM* system = &GwSystem;
+
+    win = CreateMenuWindow(0x87, 0x46, 0x34, 0x30, 0, 0);
+    func_8006E0A4(win, 5);
+    func_8006E154(win, 0);
+    LoadStringIntoWindow(win, (void*)0x169, -1, -1);
+    func_8006E070(win, 0);
+    while (func_8006FCC0(win) != 0) {
+        HuPrcVSleep();
+    }
+    func_8007155C(win, (s16)(1 << arg0));
+    v = func_8006FCF0(win, (s8)system->messageSpeed, 0);
+    if ((s16)v >= 0) {
+        system->messageSpeed = v;
+        func_8004D0B0((s8)v);
+    }
+    func_80070D90(win);
+    return 4;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/51200", func_80051428);
+#endif
+s32 func_80051548(s32 arg0) {
+    s32 win;
 
-INCLUDE_ASM("asm/nonmatchings/51200", func_80051548);
-
+    win = CreateMenuWindow(0x5F, 0x46, 0x8C, 0x30, 0, 0);
+    func_8006E0A4(win, 5);
+    func_8006E154(win, 0);
+    LoadStringIntoWindow(win, (void*)0x168, -1, -1);
+    func_8006E070(win, 0);
+    while (func_8006FCC0(win) != 0) {
+        HuPrcVSleep();
+    }
+    func_8007155C(win, (s16)(1 << arg0));
+    if ((s16)func_8006FCF0(win, 0, 0) == 1) {
+        D_800D8376 = 1;
+    }
+    func_80070D90(win);
+    return 4;
+}
 INCLUDE_ASM("asm/nonmatchings/51200", func_8005165C);
 
 INCLUDE_ASM("asm/nonmatchings/51200", func_800516C8);
