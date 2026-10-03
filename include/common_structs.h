@@ -680,7 +680,7 @@ typedef struct unk2C0C0StructB8 {
     /* 0x02 */ s16 unk_02;
     /* 0x04 */ s16 unk_04;
     /* 0x06 */ char unk_06[2];
-    /* 0x08 */ s32 unk_08;
+    /* 0x08 */ f32 unk_08;
     /* 0x0C */ unk2C0C0StructB4 unk_0C[16]; // array size unknown
 } unk2C0C0StructB8; //sizeof 0x10C
 

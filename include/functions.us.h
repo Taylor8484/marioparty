@@ -269,7 +269,7 @@ void func_8004F00C(Object*, f32, f32);
 void func_8004F044(Object*);
 void func_8004F4D4(void*, s32, s32);
 s16 func_80060468(s16, u8);
-void MBMotionSet(Object*, s32, u16);
+void MBMotionSet(Object*, s16, u16);
 void func_800A40D0(void*, f32);
 u16 MBMotionCheck(Object*);
 omObjData* func_8004E3E0(s32, Vec3f*, s32, void*); //arg2 should be Vec3f*
