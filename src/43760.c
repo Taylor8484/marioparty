@@ -28,6 +28,15 @@ extern u16 D_800D6404;
 extern s8 D_800D6459;
 extern u8 D_800C4DC0[];
 extern u8 D_800C4DC4[];
+extern s8 D_800D6438[4][5];
+extern s8 D_800D644C[4];
+extern s8 D_800D6462[5];
+extern s8 D_800D6467;
+
+s32 func_80054730(s32);
+s32 func_80047D38(void);
+void func_800550C4(void);
+void func_80055228(void);
 
 void func_80042B60(void) {
     if (D_800F383C >= (D_800C4E0C + 4)) {
@@ -38,7 +47,21 @@ void func_80042B60(void) {
 
 INCLUDE_ASM("asm/nonmatchings/43760", func_80042BAC);
 
-INCLUDE_ASM("asm/nonmatchings/43760", func_80043460);
+void func_80043460(void) {
+    s32 i;
+    s32 j;
+
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 5; j++) {
+            D_800D6438[i][j] = -1;
+        }
+        D_800D644C[i] = 0;
+    }
+    for (i = 0; i < 5; i++) {
+        D_800D6462[i] = -1;
+    }
+    D_800D6467 = 0;
+}
 
 void func_800434E4(void) {
     s32 i;
@@ -54,7 +77,38 @@ void func_800434E4(void) {
     D_800D645E = -1;
 }
 
-INCLUDE_ASM("asm/nonmatchings/43760", func_80043544);
+void func_80043544(void) {
+    s32 i;
+    unk43760* p;
+
+    for (i = 0; i < ARRAY_COUNT(D_800D6400); i++) {
+        p = &D_800D6400[i];
+        if (p->unk_00 != -1) {
+            func_80070D90(p->unk_00);
+            p->unk_00 = -1;
+        }
+    }
+    if (D_800D6450 != NULL) {
+        omDelObj(D_800D6450);
+        D_800D6450 = NULL;
+    }
+    if (D_800D645A != -1) {
+        func_80064D38(D_800D645A);
+        D_800D645A = -1;
+    }
+    if (D_800D645C != -1) {
+        func_80067704(D_800D645C);
+        D_800D645C = -1;
+    }
+    if (D_800D645E != -1) {
+        func_80064D38(D_800D645E);
+        D_800D645E = -1;
+    }
+    if (D_800D6460 != -1) {
+        func_80067704(D_800D6460);
+        D_800D6460 = -1;
+    }
+}
 
 void func_8004367C(void) {
     void* temp_s0;
@@ -102,11 +156,251 @@ void func_80043D68(void) {
     D_800D6450->work[0] = 0;
 }
 
-INCLUDE_ASM("asm/nonmatchings/43760", func_80043D78);
+void func_80043D78(u8* out, s32 n) {
+    u8 buf[256];
+    s32 i;
+    s32 j;
 
-INCLUDE_ASM("asm/nonmatchings/43760", func_80043E7C);
+    for (i = 0; i <= n; i++) {
+        buf[i] = i;
+    }
+    for (i = 0; i <= n; i++) {
+        j = rand8() % (n - i + 1);
+        out[i] = buf[j];
+        for (; j < n; j++) {
+            buf[j] = buf[j + 1];
+        }
+    }
+}
 
-INCLUDE_ASM("asm/nonmatchings/43760", func_800441D4);
+void func_80043E7C(u8* out) {
+    s32 res[4];
+    u8 order[4];
+    s32 i;
+    s32 n4;
+    s32 n1;
+    s32 r;
+
+    for (i = 0; i < 4; i++) {
+        res[i] = 0;
+    }
+    n4 = 0;
+    n1 = 0;
+    for (i = 0; i < 4; i++) {
+        if (func_80054730(i) == 1) {
+            n1++;
+        } else if (func_80054730(i) != 2) {
+            n4 += func_80054730(i) == 4;
+        }
+    }
+    r = func_8005021C(100.0f);
+    switch (n4) {
+        case 1:
+            switch (n1) {
+                case 3:
+                    if (r < 20) {
+                        res[0] = 1;
+                    }
+                    break;
+                case 2:
+                    if (r < 40) {
+                        res[0] = 1;
+                    }
+                    break;
+                case 1:
+                    if (r < 70) {
+                        res[0] = 1;
+                    }
+                    break;
+                case 0:
+                    if (r < 90) {
+                        res[0] = 1;
+                    }
+                    break;
+            }
+            break;
+        case 2:
+            switch (n1) {
+                case 2:
+                    if (r < 10) {
+                        res[0] = res[1] = 1;
+                    } else if (r < 30) {
+                        res[1] = 1;
+                    }
+                    break;
+                case 1:
+                    if (r < 30) {
+                        res[0] = res[1] = 1;
+                    } else if (r < 70) {
+                        res[1] = 1;
+                    }
+                    break;
+                case 0:
+                    if (r < 70) {
+                        res[0] = res[1] = 1;
+                    } else if (r < 90) {
+                        res[1] = 1;
+                    }
+                    break;
+            }
+            break;
+        case 3:
+            switch (n1) {
+                case 1:
+                    if (r < 10) {
+                        res[0] = res[1] = res[2] = 1;
+                    } else if (r < 40) {
+                        res[1] = res[2] = 1;
+                    } else if (r < 50) {
+                        res[2] = 1;
+                    }
+                    break;
+                case 0:
+                    if (r < 50) {
+                        res[0] = res[1] = res[2] = 1;
+                    } else if (r < 60) {
+                        res[1] = res[2] = 1;
+                    } else if (r < 90) {
+                        res[2] = 1;
+                    }
+                    break;
+            }
+            break;
+        case 4:
+            if (r < 30) {
+                res[0] = res[1] = res[2] = res[3] = 1;
+            } else if (r < 40) {
+                res[1] = res[2] = res[3] = 1;
+            } else if (r < 70) {
+                res[2] = res[3] = 1;
+            } else if (r < 80) {
+                res[3] = 1;
+            }
+            break;
+    }
+    func_80043D78(order, n4 - 1);
+    n1 = 0;
+    for (i = 0; i < 4; i++) {
+        switch (func_80054730(i)) {
+            case 1:
+                out[i] = 1;
+                break;
+            case 2:
+                out[i] = 2;
+                break;
+            case 4:
+                if (res[order[n1++]] == 0) {
+                    out[i] = 1;
+                } else {
+                    out[i] = 2;
+                }
+                break;
+        }
+    }
+}
+
+void func_800441D4(void) {
+    u8 isFour[4];
+    u8 saved[4];
+    unkUserData_00* data;
+    s32 i;
+    s32 j;
+
+    data = HuPrcCurrentGet()->user_data;
+    while (1) {
+        switch (data->unk_00) {
+            case 0:
+                func_80054868(4);
+                data->unk_00 = 10;
+                break;
+            case 10:
+                if (func_80054FA8() == 0) {
+                    data->unk_00 = 11;
+                }
+                break;
+            case 11:
+                j = 0;
+                for (i = 0; i < 4; i++) {
+                    if (func_80054730(i) == 4) {
+                        j = 1;
+                        isFour[i] = 1;
+                    } else {
+                        isFour[i] = 0;
+                    }
+                }
+                if (j != 0) {
+                    data->unk_00 = 12;
+                } else {
+                    data->unk_00 = 1;
+                }
+                break;
+            case 12:
+                func_80043E7C(saved);
+                PlaySound(0x77);
+                for (i = 0; i < 24; i++) {
+                    for (j = 0; j < 4; j++) {
+                        if (isFour[j]) {
+                            func_800546B4(j, i + 5);
+                        }
+                    }
+                    HuPrcVSleep();
+                }
+                for (i = 0; i < 4; i++) {
+                    if (func_80054730(i) != saved[i]) {
+                        func_800546B4(i, saved[i]);
+                    }
+                }
+                data->unk_00 = 1;
+                break;
+            case 1:
+                if (func_80054FA8() == 0) {
+                    HuPrcSleep(1);
+                    func_80047BE0(0);
+                    HuPrcSleep(5);
+                    data->unk_00++;
+                }
+                break;
+            case 2:
+                func_80054868(2);
+                func_800550C4();
+                data->unk_00++;
+                break;
+            case 3:
+                if (func_80054FA8() == 0) {
+                    for (i = 0; i < 4; i++) {
+                        if (!(GwPlayer[i].flags & 1)) {
+                            break;
+                        }
+                    }
+                    if (i != 4) {
+                        for (i = 0; i < 4; i++) {
+                            if ((ContBtnTrg[GwPlayer[i].port] & 0x8000) && !(GwPlayer[i].flags & 1)) {
+                                break;
+                            }
+                        }
+                        if (i == 4) {
+                            break;
+                        }
+                    }
+                    if (func_80054FE4() != -1) {
+                        func_80043D68();
+                        func_80054868(5);
+                    } else {
+                        func_80059348(-1);
+                    }
+                    data->unk_00++;
+                }
+                break;
+            case 4:
+                if (func_80054FE4() == -1 || func_80047D38() == 0) {
+                    func_80055228();
+                    EndProcess(NULL);
+                }
+                break;
+        }
+        HuPrcVSleep();
+    }
+}
 
 Process* func_800444DC(void) {
     Process* process;
@@ -170,7 +464,62 @@ Process* func_80044680(s32 arg0) {
     return process;
 }
 
-INCLUDE_ASM("asm/nonmatchings/43760", func_800446E0);
+void func_800446E0(void) {
+    u8 isFour[4];
+    u8 saved[4];
+    unkUserData_00* data;
+    s32 i;
+    s32 j;
+
+    data = HuPrcCurrentGet()->user_data;
+    while (1) {
+        switch (data->unk_00) {
+            case 10:
+                if (func_80054FA8() == 0) {
+                    data->unk_00 = 11;
+                }
+                break;
+            case 11:
+                j = 0;
+                for (i = 0; i < 4; i++) {
+                    if (func_80054730(i) == 4) {
+                        j = 1;
+                        isFour[i] = 1;
+                    } else {
+                        isFour[i] = 0;
+                    }
+                }
+                if (j == 0) {
+                    data->unk_00 = 1;
+                } else {
+                    data->unk_00 = 12;
+                }
+                break;
+            case 12:
+                func_80043E7C(saved);
+                PlaySound(0x77);
+                for (i = 0; i < 24; i++) {
+                    for (j = 0; j < 4; j++) {
+                        if (isFour[j]) {
+                            func_800546B4(j, i + 5);
+                        }
+                    }
+                    HuPrcVSleep();
+                }
+                for (i = 0; i < 4; i++) {
+                    if (func_80054730(i) != saved[i]) {
+                        func_800546B4(i, saved[i]);
+                    }
+                }
+                data->unk_00 = 1;
+                break;
+            case 1:
+                EndProcess(NULL);
+                break;
+        }
+        HuPrcVSleep();
+    }
+}
 
 Process* func_800448A0(s32 arg0) {
     Process* process;
