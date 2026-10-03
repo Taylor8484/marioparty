@@ -271,7 +271,7 @@ s32 func_80000710(Vec3f* pos, ColTri* tri, ColVtx* verts) {
     return ret;
 }
 
-// register allocation (masked 0, raw 17): s0/s1 swapped for the sphere and triangle pointers
+// register allocation (masked 0): s0/s1 swapped for the sphere and polygon pointers
 #ifdef NON_MATCHING
 s32 func_80000828(Vec4f* s, s16* tri, ColVtx* verts) {
     s32 side = -1;
@@ -1038,28 +1038,33 @@ void func_80003460(omObjData* obj, ColSphere* s) {
         }
     }
 }
-// register allocation (masked 33): s0/s1 and FPRs swapped
+// register allocation (masked 0): s0/s1 swapped for the sphere and box pointers
 #ifdef NON_MATCHING
 s32 func_8000396C(ColSphere* s, GroundWork* g) {
     f32 x = s->x;
     f32 z;
     f32 dx, dz;
+    f32 d;
 
-    if (x <= g->unk_18) {
-        dx = g->unk_18 - x;
+    dx = g->unk_18;
+    if (x <= dx) {
+        dx -= x;
         z = s->z;
-        if (z <= g->unk_1C) {
-            dz = g->unk_1C - z;
-            if (func_800B1750(dx * dx + dz * dz) - s->r < 0.0f) {
+        dz = g->unk_1C;
+        if (z <= dz) {
+            dz -= z;
+            d = func_800B1750(dx * dx + dz * dz) - s->r;
+            if (d < 0.0f) {
                 D_800EDED0[D_800B8956].x = g->unk_18;
                 D_800EDED4[D_800B8956].x = s->y;
                 D_800EDED8[D_800B8956].x = g->unk_1C;
                 D_800B8956++;
                 return 0;
             }
-        } else if (g->unk_24 <= z) {
-            dz = g->unk_24 - z;
-            if (func_800B1750(dx * dx + dz * dz) - s->r < 0.0f) {
+        } else if ((dz = g->unk_24) <= z) {
+            dz -= z;
+            d = func_800B1750(dx * dx + dz * dz) - s->r;
+            if (d < 0.0f) {
                 D_800EDED0[D_800B8956].x = g->unk_18;
                 D_800EDED4[D_800B8956].x = s->y;
                 D_800EDED8[D_800B8956].x = g->unk_24;
@@ -1067,21 +1072,24 @@ s32 func_8000396C(ColSphere* s, GroundWork* g) {
                 return 0;
             }
         }
-    } else if (g->unk_20 <= x) {
-        dx = g->unk_20 - x;
+    } else if ((dx = g->unk_20) <= x) {
+        dx -= x;
         z = s->z;
-        if (z <= g->unk_1C) {
-            dz = g->unk_1C - z;
-            if (func_800B1750(dx * dx + dz * dz) - s->r < 0.0f) {
+        dz = g->unk_1C;
+        if (z <= dz) {
+            dz -= z;
+            d = func_800B1750(dx * dx + dz * dz) - s->r;
+            if (d < 0.0f) {
                 D_800EDED0[D_800B8956].x = g->unk_20;
                 D_800EDED4[D_800B8956].x = s->y;
                 D_800EDED8[D_800B8956].x = g->unk_1C;
                 D_800B8956++;
                 return 0;
             }
-        } else if (g->unk_24 <= z) {
-            dz = g->unk_24 - z;
-            if (func_800B1750(dx * dx + dz * dz) - s->r < 0.0f) {
+        } else if ((dz = g->unk_24) <= z) {
+            dz -= z;
+            d = func_800B1750(dx * dx + dz * dz) - s->r;
+            if (d < 0.0f) {
                 D_800EDED0[D_800B8956].x = g->unk_20;
                 D_800EDED4[D_800B8956].x = s->y;
                 D_800EDED8[D_800B8956].x = g->unk_24;
