@@ -1,5 +1,8 @@
 #include "common.h"
 
+void func_80041250(s32);
+
+
 void func_80067284(s16, s16, f32);
 s16 func_80056990(void);
 
@@ -33,7 +36,7 @@ typedef struct DiceBlockWork {
 } DiceBlockWork; /* size = 0x44 */
 
 extern DiceBlockWork D_800D62D0[4];
-extern s8 D_800D63E0;
+extern u8 D_800D63E0;
 extern u8 D_800D63E1;
 extern u8 D_800D63E2;
 extern s32 D_800D63E4;
@@ -278,8 +281,75 @@ void func_8003F384(s16 x, s16 y) {
     sprintf(pfStrBuf, "MAP: %d    TURN: %d", GwSystem.curBoardIndex + 1, GwSystem.currentTurn);
     func_8003ECB0(x * 8, y * 8, (s32)pfStrBuf, 15, 9);
 }
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8003F400);
+void func_8003F400(omObjData* obj) {
+    DiceBlockWork* work = &D_800D62D0[obj->work[3]];
+    s32 i;
+    s32 sound;
 
+    switch (obj->work[0]) {
+    case 0:
+        if (D_800F384E != 0) {
+            break;
+        }
+        obj->scale.x = obj->scale.y = obj->scale.z = sinf(obj->work[1] * 2 * (M_PI / 180.0)) * work->unk40 + 1.0f;
+        obj->rot.y += 22.5f;
+        obj->work[1] += 25;
+        obj->work[1] %= 180;
+        work->unk40 -= 0.05;
+        if (work->unk40 <= 0.0f) {
+            work->unk40 = 0.0f;
+            obj->scale.x = obj->scale.y = obj->scale.z = 1.0f;
+            obj->work[1] = 0;
+            obj->work[0] = 1;
+            if (D_800D63E1 == 1) {
+                for (i = 0; i < 4; i++) {
+                    if (D_800D62D0[i].unk1E != -1) {
+                        break;
+                    }
+                }
+                if (i == 4) {
+                    sound = (GwSystem.curBoardIndex == 8) ? 0x2E : 0x2D;
+                    goto play;
+                }
+                work->unk1E = D_800D62D0[i].unk1E;
+            } else if (work->unk20 == 0) {
+                if (D_800D63E1 == 3) {
+                    sound = 0x4F;
+                    goto play;
+                }
+                if (work->unk5 != 5 && D_800D63E1 != 4) {
+                    sound = 0x2D;
+                play:
+                    work->unk1E = PlaySound(sound);
+                }
+            }
+        }
+        break;
+    case 1:
+        if (D_800F384E != 0) {
+            break;
+        }
+        obj->trans.y = GwPlayer[obj->work[3]].player_obj->coords.y + D_800D63E4 +
+                       sinf(obj->work[1] * 2 * (M_PI / 180.0)) * 10.0f;
+        obj->work[1] += 5;
+        obj->work[1] %= 180;
+        break;
+    case 2:
+        D_800C34A4 = work->unk40;
+        func_80025930(obj->model[0], 0x22000, 0x20000);
+        func_80026B8C(obj->model[0], work->unk38, work->unk3C, 2);
+        if (D_800F384E != 0) {
+            break;
+        }
+        work->unk40 += 39.0f;
+        work->unk38 += 0.05f;
+        work->unk3C += (10.0f - work->unk3C) / 30.0f;
+        if (work->unk38 > 1.0f) {
+            func_80041250(obj->work[3]);
+        }
+        break;
+    }
+}
 void func_8003F7FC(omObjData* obj) {
     DiceBlockWork* work = &D_800D62D0[obj->work[3]];
     Vec3f pos;
@@ -449,20 +519,135 @@ void func_8003FEFC(s32 idx) {
         }
     }
 }
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8004017C);
+void func_8004017C(s32 idx) {
+    DiceBlockWork* work = &D_800D62D0[idx];
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80040590);
+    if (work->unk6 == 0) {
+        func_800405DC(idx);
+    }
+    work->unk6 = 0;
+    if (D_800D63E1 == 2) {
+        if (D_800D63E0 == 0) {
+            if ((work->unk0 = rand8() % 3 + 1) != 1) {
+                goto set2;
+            }
+            goto call5;
+        }
+        if ((work->unk0 = rand8() % 3 + 1) == 1) {
+            goto call5;
+        }
+    set2:
+        work->unk0 = 2;
+    } else if (D_800D63E1 == 5) {
+        if ((work->unk0 = rand8() % 3 + 8) != 9) {
+            work->unk0 = 8;
+        }
+        if (work->unk0 == 8) {
+        call5:
+            func_800503B0(idx, 5);
+        } else {
+            func_800503B0(idx, 4);
+        }
+    } else if (D_800D63E1 == 3) {
+        if (work->unk2 != 0) {
+            work->unk1 = work->unk0 = work->unk2;
+            work->unk2 = 0;
+        } else {
+            work->unk1 = work->unk0 = rand8() % 3 + 3;
+            if (work->unk0 == 3) {
+                func_800503B0(idx, 6);
+            } else {
+                work->unk1 = work->unk0 = 4;
+            }
+        }
+    } else if (D_800D63E1 == 4) {
+        work->unk1 = work->unk0 = rand8() % 3 + 5;
+    } else if (D_800D63E1 == 1) {
+        do {
+            if (work->unk2 != 0) {
+                work->unk3 = work->unk2;
+                work->unk2 = 0;
+            } else {
+                work->unk3 = rand8() % 10 + 1;
+            }
+            for (i = 0; i < 4; i++) {
+                if (i != idx && D_800D62D0[i].unk3 == work->unk3) {
+                    break;
+                }
+            }
+        } while (i != 4);
+    } else {
+        switch (work->unk5) {
+        case 0:
+        case 1:
+        case 2:
+            if (work->unk2 != 0) {
+                work->unk3 = work->unk2;
+                work->unk2 = 0;
+            } else {
+                work->unk3 = rand8() % 10 + 1;
+            }
+            break;
+        case 3:
+            work->unk3 = rand8() % 3 + 8;
+            break;
+        case 4:
+            work->unk3 = rand8() % 3 + 1;
+            break;
+        case 5:
+            work->unk3 = 0;
+            break;
+        }
+    }
+    func_8003FEFC(idx);
+}
+void func_80040590(s32 idx) {
+    DiceBlockWork* work = &D_800D62D0[idx];
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_800405DC);
+    if (work->unk34 != NULL) {
+        omDelObj(work->unk34);
+        work->unk34 = NULL;
+    }
+}
+void func_800405DC(s32 idx) {
+    DiceBlockWork* work = &D_800D62D0[idx];
 
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_8004068C);
-
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_800406E4);
-
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80040724);
-
-INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80040764);
-
+    work->unk0 = 0;
+    if (work->unk8 != -1) {
+        func_80064D38(work->unk8);
+        work->unk8 = -1;
+    }
+    if (work->unkA != -1 && work->unk7 != 0) {
+        if (--work->unk7 == 0) {
+            func_80067704(work->unkA);
+            work->unkA = -1;
+        }
+    }
+    if (work->unk34 != NULL) {
+        omDelObj(work->unk34);
+        work->unk34 = NULL;
+    }
+}
+void func_8004068C(s32 idx) {
+    D_800D62D0[idx].unk3--;
+    if (D_800D62D0[idx].unk3 <= 0) {
+        func_800405DC(idx);
+    }
+}
+void func_800406E4(s32 idx) {
+    if (D_800D62D0[idx].unkC != -1) {
+        func_800258EC(D_800D62D0[idx].unkC, 4, 4);
+    }
+}
+void func_80040724(s32 idx) {
+    if (D_800D62D0[idx].unkC != -1) {
+        func_800258EC(D_800D62D0[idx].unkC, 4, 0);
+    }
+}
+void func_80040764(s32 idx, s8 value) {
+    D_800D62D0[idx].unk4 = value;
+}
 INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80040780);
 
 INCLUDE_ASM("asm/nonmatchings/3F5B0", func_80040D9C);
