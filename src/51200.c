@@ -516,9 +516,7 @@ void func_80051954(void) {
         HuPrcVSleep();
         if (D_800D8378 != 0) {
             alpha = func_800AEAC0(angle) * 255.0f;
-            if (alpha < 0) {
-                alpha = -(s32)alpha;
-            }
+            alpha = (alpha < 0) ? -alpha : alpha;
             angle += 6.0f;
             if (angle > 360.0f) {
                 angle -= 360.0f;
