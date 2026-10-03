@@ -1172,8 +1172,229 @@ s32 func_8006FCF0(s16 arg0, s32 arg1, s32 arg2) {
 #else
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006FCF0);
 #endif
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006FE4C);
+// register allocation in the cursor-move tail: the new entry's index reuses the compare's sign-extension (masked 9)
+#ifdef NON_MATCHING
+s32 func_8006FE4C(s16 arg0) {
+    TextWindow* tw = &D_800ED4B0[arg0];
+    SubTextWindow* sub;
+    s16 cur;
+    s16 sel;
+    s16 dir;
+    s16 x;
+    s16 y;
+    s16 count;
+    s16 i;
+    s16 best;
+    s16 dy;
+    s16 d2;
+    s16 dx;
+    s16 btn;
+    s16 cancel;
+    f32 d;
+    f32 bestDx;
+    f32 bestDy;
 
+    sel = cur = tw->unk_11;
+    dir = -1;
+    if (tw->unk_6E != 3) {
+        btn = func_80071278(tw);
+    } else {
+        btn = 0;
+    }
+    if (btn & 0x200) {
+        dir = 0;
+    }
+    if (btn & 0x100) {
+        dir = 2;
+    }
+    if (btn & 0x800) {
+        dir = 1;
+    }
+    if (btn & 0x400) {
+        dir = 3;
+    }
+    x = tw->unk_F4[cur].unk2;
+    y = tw->unk_F4[cur].unk4;
+    bestDx = 100000.0f;
+    count = tw->unk_10;
+    bestDy = bestDx;
+    switch (dir) {
+    case 0:
+        for (i = 0; i < count; i++) {
+            if (i != cur && tw->unk_F4[i].unk4 == y && tw->unk_F4[i].unk2 < x) {
+                break;
+            }
+        }
+        if (i != count) {
+            for (i = 0; i < count; i++) {
+                if (i != cur && tw->unk_F4[i].unk4 == y && tw->unk_F4[i].unk2 < x) {
+                    d = x - tw->unk_F4[i].unk2;
+                    if (d < bestDy) {
+                        bestDy = d;
+                        sel = i;
+                    }
+                }
+            }
+        } else {
+            best = -1000;
+            for (i = 0; i < count; i++) {
+                if (i != cur && tw->unk_F4[i].unk4 == y && tw->unk_F4[i].unk2 > best) {
+                    best = tw->unk_F4[i].unk2;
+                    sel = i;
+                }
+            }
+        }
+        break;
+    case 1:
+        for (i = 0; i < count; i++) {
+            if (i != cur && tw->unk_F4[i].unk4 < y) {
+                break;
+            }
+        }
+        if (i != count) {
+            for (i = 0; i < count; i++) {
+                if (i != cur && tw->unk_F4[i].unk4 < y) {
+                    dy = y - tw->unk_F4[i].unk4;
+                    if (dy <= bestDy) {
+                        if (dy < bestDy) {
+                            bestDx = 100000.0f;
+                        }
+                        dx = x - tw->unk_F4[i].unk2;
+                        d2 = dx * dx;
+                        if (d2 < bestDx) {
+                            bestDy = dy;
+                            bestDx = d2;
+                            sel = i;
+                        }
+                    }
+                }
+            }
+        } else {
+            best = -1000;
+            for (i = 0; i < count; i++) {
+                if (i != cur && tw->unk_F4[i].unk4 > best) {
+                    best = tw->unk_F4[i].unk4;
+                }
+            }
+            bestDx = 100000.0f;
+            for (i = 0; i < count; i++) {
+                if (i != cur && tw->unk_F4[i].unk4 == best) {
+                    dx = x - tw->unk_F4[i].unk2;
+                    d2 = dx * dx;
+                    if (d2 < bestDx) {
+                        bestDx = d2;
+                        sel = i;
+                    }
+                }
+            }
+        }
+        break;
+    case 2:
+        for (i = 0; i < count; i++) {
+            if (i != cur && tw->unk_F4[i].unk4 == y && x < tw->unk_F4[i].unk2) {
+                break;
+            }
+        }
+        if (i != count) {
+            for (i = 0; i < count; i++) {
+                if (i != cur && tw->unk_F4[i].unk4 == y && x < tw->unk_F4[i].unk2) {
+                    d = tw->unk_F4[i].unk2 - x;
+                    if (d < bestDy) {
+                        bestDy = d;
+                        sel = i;
+                    }
+                }
+            }
+        } else {
+            best = 1000;
+            for (i = 0; i < count; i++) {
+                if (i != cur && tw->unk_F4[i].unk4 == y && tw->unk_F4[i].unk2 < best) {
+                    best = tw->unk_F4[i].unk2;
+                    sel = i;
+                }
+            }
+        }
+        break;
+    case 3:
+        for (i = 0; i < count; i++) {
+            if (i != cur && y < tw->unk_F4[i].unk4) {
+                break;
+            }
+        }
+        if (i != count) {
+            for (i = 0; i < count; i++) {
+                if (i != cur && y < tw->unk_F4[i].unk4) {
+                    dy = tw->unk_F4[i].unk4 - y;
+                    if (dy <= bestDy) {
+                        if (dy < bestDy) {
+                            bestDx = 100000.0f;
+                        }
+                        dx = x - tw->unk_F4[i].unk2;
+                        d2 = dx * dx;
+                        if (d2 < bestDx) {
+                            bestDy = dy;
+                            bestDx = d2;
+                            sel = i;
+                        }
+                    }
+                }
+            }
+        } else {
+            best = 1000;
+            for (i = 0; i < count; i++) {
+                if (i != cur && tw->unk_F4[i].unk4 < best) {
+                    best = tw->unk_F4[i].unk4;
+                }
+            }
+            bestDx = 100000.0f;
+            for (i = 0; i < count; i++) {
+                if (i != cur && tw->unk_F4[i].unk4 == best) {
+                    dx = x - tw->unk_F4[i].unk2;
+                    d2 = dx * dx;
+                    if (d2 < bestDx) {
+                        bestDx = d2;
+                        sel = i;
+                    }
+                }
+            }
+        }
+        break;
+    }
+    if (tw->unk_11 != sel) {
+        sub = &tw->unk_F4[tw->unk_11];
+        tw->unk_11 = sel;
+        tw->unk_6E = 3;
+        tw->unk_70 = sub->unk2 - 12;
+        tw->unk_72 = sub->unk4 + 8;
+        sub = &tw->unk_F4[sel];
+        tw->unk_74 = sub->unk2 - 12;
+        tw->unk_76 = sub->unk4 + 8;
+        tw->unk_78 = 0;
+        PlaySound(0xF5);
+    }
+    cancel = (tw->unk_06 & 1) ? 0 : 0x4000;
+    if (btn & 0x8000) {
+        if (tw->unk_F4[tw->unk_11].unk0 == 2) {
+            PlaySound(0xF9);
+            return 1;
+        }
+        tw->unk_6E = 4;
+        tw->unk_78 = 0;
+        PlaySound(0xF7);
+        return 0;
+    }
+    if (btn & cancel) {
+        tw->unk_6E = 0;
+        tw->unk_78 = 0;
+        tw->unk_11 = -1;
+        PlaySound(0xF8);
+        return 0;
+    }
+    return 1;
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006FE4C);
+#endif
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8007094C);
 
 INCLUDE_ASM("asm/nonmatchings/6D4E0", func_80070D90);

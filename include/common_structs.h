@@ -812,7 +812,7 @@ typedef struct unk_ovl_2D_struct { //actually global??
 } unk_ovl_2D_struct; //sizeof 0xC0
 
 typedef struct SubTextWindow {
-    s8 unk0;
+    u8 unk0;
     char unk_01;
     s16 unk2;
     s16 unk4;
