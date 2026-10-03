@@ -412,7 +412,7 @@ void func_800546B4(s32 arg0, s32 arg1) {
     func_800674F4(D_800D83A8[arg0].unk_06, 0, D_800C55B8[arg1][0], D_800C55B8[arg1][1], D_800C55B8[arg1][2]);
     D_800D83A8[arg0].unk_03 = arg1;
 }
-u8 func_80054730(s32 arg0) {
+s32 func_80054730(s32 arg0) {
     return D_800D83A8[arg0].unk_03;
 }
 void func_80054744(s32 arg0, s8 arg1) {

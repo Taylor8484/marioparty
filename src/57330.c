@@ -1,6 +1,48 @@
 #include "common.h"
 #include "spaces.h"
 
+s32 ExecuteEventForSpace(s16, s16);
+s16 GetRandomChanceSpace(void);
+void func_8004068C(s32);
+s32 func_800415E8(s32);
+s32 func_80041644(s32);
+s32 func_80041664(s32);
+Process* func_80041F24(s32);
+Process* func_800444DC(void);
+Process* func_80044680(s32);
+void func_800466C0(void);
+s32 func_80046710(void);
+Process* func_80047E54(void);
+void func_8004D4A8(s16, s32);
+void func_8004D6FC(s16, f32);
+void func_8004DBD4(s32, u8);
+void func_80052C44(s32, s32, s32, s32, s32);
+s32 func_80054730(s32);
+extern s32 D_800D86E8;
+void func_80056F40(void);
+s32 func_80056FA8(void);
+
+/* Object with the s16 at 0x46 that the board player model uses (Object types 0x44 as f32) */
+typedef struct BoardPlayerObj {
+    /* 0x00 */ struct Object* prev;
+    /* 0x04 */ struct Object* next;
+    /* 0x08 */ s16 unk_08;
+    /* 0x0A */ u16 unk_0A;
+    /* 0x0C */ Vec3f coords;
+    /* 0x18 */ Vec3f unk_18;
+    /* 0x24 */ f32 xScale;
+    /* 0x28 */ f32 yScale;
+    /* 0x2C */ f32 zScale;
+    /* 0x30 */ f32 unk_30;
+    /* 0x34 */ f32 unk_34;
+    /* 0x38 */ f32 unk_38;
+    /* 0x3C */ unk_Struct04* unk_3C;
+    /* 0x40 */ unk_Struct04* unk_40;
+    /* 0x44 */ s16 unk_44;
+    /* 0x46 */ s16 unk_46;
+} BoardPlayerObj;
+
+
 void func_8005727C(void);
 void func_8005700C(void);
 void func_8005835C(void);
@@ -17,6 +59,7 @@ void func_80052934(s32);
 
 
 void func_8004D0B0(s16);
+void func_80056B78(void);
 s16 GetSumOfPlayerStars(void);
 
 
@@ -378,6 +421,7 @@ s32 func_80056FA8(void) {
 #else
 INCLUDE_ASM("asm/nonmatchings/57330", func_80056FA8);
 #endif
+
 // GCC keeps &GwSystem.curBoardIndex in s0 across the calls; retail reloads it (masked 25)
 #ifdef NON_MATCHING
 void func_8005700C(void) {
@@ -437,6 +481,7 @@ loop:
 #else
 INCLUDE_ASM("asm/nonmatchings/57330", func_8005700C);
 #endif
+
 void func_80057208(s16 arg0) {
     switch (--arg0) {
     case 3:
@@ -462,8 +507,458 @@ void func_80057208(s16 arg0) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/57330", func_8005727C);
+void func_8005727C(void) {
+    Vec3f sp18;
+    Process* proc;
+    GW_SYSTEM* gs = &GwSystem;
+    GW_PLAYER* player;
+    BoardSpace* spc;
+    s16 spaceIdx;
+    s16 win;
+    s32 h1;
+    s32 h2;
+    s32 h3;
+    s32 n;
+    s32 j;
+    s32 i;
+    s32 mult;
+    s16 remain;
 
+    proc = HuPrcCurrentGet();
+    while (1) {
+        if ((u32)D_800D86E4 < 2 && gs->curPlayerIndex == 0) {
+            for (i = 0; i < 4; i++) {
+                player = GetPlayerStruct(i);
+                player->turn_status = 0;
+                player->flags &= ~2;
+            }
+            if (gs->maxTurns >= 0) {
+                remain = gs->maxTurns - gs->currentTurn + 1;
+                if (remain < 6) {
+                    if (remain > 0 && _CheckFlag(0x2C) == 0) {
+                        SetBoardFeatureFlag(0x42);
+                    }
+                }
+            }
+            if (_CheckFlag(0x41) == 0) {
+                switch ((s8)gs->saveSetting) {
+                    case 1:
+                        gs->saveSetting = 0;
+                    case 2:
+                        SetBoardFeatureFlag(0);
+                        SetBoardFeatureFlag(0x40);
+                        win = CreateTextWindow(0x58, 0x6C, 0xD, 1);
+                        func_8006E154(win, 0);
+                        LoadStringIntoWindow(win, (void*)0x178, -1, -1);
+                        func_8006E070(win, 0);
+                        while (func_8006FCC0(win) != 0) {
+                            HuPrcVSleep();
+                        }
+                        func_8005B3B0();
+                        func_8006EB40(win);
+                        LoadStringIntoWindow(win, (void*)0x179, -1, -1);
+                        func_8006E070(win, 0);
+                        WaitForTextConfirmation(win);
+                        func_80070D90(win);
+                        break;
+                }
+            }
+            ClearBoardFeatureFlag(0x41);
+            D_800D86E8 = ExecuteEventForSpace(-2, 7);
+        }
+        for (i = 0; i < 4; i++) {
+            player = GetPlayerStruct(i);
+            func_800546B4(i, player->turn_status);
+            if ((s8)player->poisoned_flag != 0) {
+                SetPlayerAnimation(i, 4, 2);
+            }
+        }
+        if (_CheckFlag(0x2C) == 0 && _CheckFlag(0xC) != 0 && D_800F2CDC == -1) {
+            D_800F2CDC = GetRandomChanceSpace();
+        }
+        player = GetPlayerStruct(gs->curPlayerIndex);
+        spaceIdx = GetAbsSpaceIndexFromChainSpaceIndex(player->cur_chain, player->cur_space);
+        spc = BoardSpaceGet(spaceIdx);
+        if ((u32)D_800D86E4 >= 2) {
+            while (func_80072718() != 0) {
+                HuPrcVSleep();
+            }
+            func_8004A520();
+            func_8004B5C4(3.0f);
+            D_800F2A78 = 1;
+            switch (D_800D86E4) {
+                case 2:
+                    goto state2;
+                case 3:
+                    goto state3;
+                case 4:
+                    goto state4;
+                case 5:
+                    goto state5;
+                case 6:
+                    goto state6;
+                case 7:
+                    goto state7;
+                case 8:
+                    goto state8;
+                case 9:
+                    goto state9;
+            }
+        } else {
+            func_8004A520();
+            func_8004B5C4(3.0f);
+            ExecuteEventForSpace(-4, 7);
+            HuPrcChildLink(proc, func_800532B4());
+            HuPrcChildWatch();
+        }
+        HuPrcSleep(4);
+        func_80058910(-1, 3);
+        HuPrcChildLink(proc, func_80048000(gs->curPlayerIndex));
+        HuPrcChildWatch();
+        ExecuteEventForSpace(-5, 7);
+        if ((s8)player->poisoned_flag != 0) {
+            player->poisoned_flag--;
+            win = CreateTextWindow(0x1E, 0x3C, 0x17, 1);
+            LoadStringIntoWindow(win, (void*)0x17C, -1, -1);
+            func_8006E070(win, 0);
+            PlaySound(0x100);
+            ShowTextWindow(win);
+            func_8004DBD4(win, player->player_index);
+            HideTextWindow(win);
+            SetPlayerLandedSpaceType(-1, spc->spaceType);
+            func_800546B4(gs->curPlayerIndex, player->turn_status);
+            goto turn_end;
+        }
+    roll:
+        h1 = func_80045D84(2, 0xA0, 1);
+        h2 = func_80045D84(3, 0xAE, 1);
+        h3 = func_80045D84(0xB, 0xBC, 1);
+        D_800EE320 = 1;
+        D_800F2A78 = 1;
+        func_80045EE0();
+        HuPrcChildLink(proc, func_800419D8(gs->curPlayerIndex));
+        HuPrcChildWatch();
+        D_800EE320 = 0;
+        func_80045E6C(h1);
+        func_80045E6C(h2);
+        func_80045E6C(h3);
+        D_800F3FF0 = func_800415E8(gs->curPlayerIndex);
+        if (func_80046710() != -1) {
+            func_800466C0();
+            func_80057208(BoardSpaceGet(GetAbsSpaceIndexFromChainSpaceIndex(player->cur_chain, player->cur_space))->spaceType);
+            goto landed;
+        }
+        SetPlayerAnimation(-1, 0, 2);
+        while (D_800F3FF0 != 0) {
+            if ((u16)BoardSpaceGet(GetAbsSpaceIndexFromChainSpaceIndex(player->next_chain, player->next_space))->unk2 & 0x8000) {
+                func_80060468(0x127, 0);
+                SetPlayerAnimation(-1, 2, 0);
+                player->player_obj->unk_34 = 40.0f;
+                player->player_obj->unk_38 = -4.0f;
+                func_8004D4A8(gs->curPlayerIndex, 20);
+            } else {
+                if (((BoardPlayerObj*)player->player_obj)->unk_46 != 0) {
+                    SetPlayerAnimation(-1, 0, 2);
+                }
+                func_8004D6FC(gs->curPlayerIndex, 19.0f);
+            }
+            player->cur_chain = player->next_chain;
+            player->cur_space = player->next_space;
+            player->next_space++;
+            spaceIdx = GetAbsSpaceIndexFromChainSpaceIndex(player->cur_chain, player->cur_space);
+            spc = BoardSpaceGet(spaceIdx);
+            SetCurrentSpaceIndex(spaceIdx);
+            switch (spc->spaceType) {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 6:
+                case 8:
+                case 9:
+                    func_8004068C(gs->curPlayerIndex);
+                    D_800F3FF0--;
+                    SetSpaceStepAnim(spaceIdx);
+                    break;
+            }
+            if (D_800F3FF0 != 0) {
+                switch (spc->spaceType) {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 6:
+                    case 8:
+                    case 9:
+                        PlaySound(0x2F);
+                        break;
+                    case 5:
+                        PlaySound(0x5B);
+                        break;
+                }
+            } else {
+                func_80057208(spc->spaceType);
+            }
+            D_800D86E8 = ExecuteEventForSpace(spaceIdx, 1);
+            if (D_800D86EC < 0) {
+                continue;
+            }
+            SetPlayerAnimation(-1, -1, 2);
+            D_800D86E4 = 2;
+            HuPrcSleep(-1);
+        state2:
+            if (D_800D86E8 & 1) {
+                D_800D86E8 = ExecuteEventForSpace(GetCurrentSpaceIndex(), 2);
+                if (D_800D86EC >= 0) {
+                    D_800D86E4 = 3;
+                    HuPrcSleep(-1);
+                }
+            }
+        state3:
+            if (D_800D86E8 & 2) {
+                D_800F3FF0 = 0;
+            } else {
+                func_8003FEFC(gs->curPlayerIndex);
+            }
+        }
+    landed:
+        SetPlayerAnimation(-1, -1, 2);
+        spaceIdx = GetAbsSpaceIndexFromChainSpaceIndex(player->cur_chain, player->cur_space);
+        switch (BoardSpaceGet(spaceIdx)->spaceType) {
+            case 4:
+                func_80058910(-1, 0);
+                player->happening_count++;
+                break;
+            case 2:
+                player->red_count++;
+                break;
+            case 1:
+                player->blue_count++;
+                break;
+            case 3:
+                player->minigame_count++;
+                break;
+            case 6:
+                func_80058910(-1, 0);
+                player->chance_count++;
+                break;
+            case 8:
+                player->mushroom_count++;
+                break;
+            case 9:
+                player->bowser_count++;
+                break;
+        }
+        func_80045EE0();
+        D_800D86E4 = 4;
+        D_800D86E8 = ExecuteEventForSpace(spaceIdx, 3);
+        if (D_800D86EC >= 0) {
+            HuPrcSleep(-1);
+        state4:
+            if (D_800D86E8 & 1) {
+                D_800D86E8 = ExecuteEventForSpace(GetCurrentSpaceIndex(), 4);
+                if (D_800D86EC >= 0) {
+                    D_800D86E4 = 5;
+                    HuPrcSleep(-1);
+                }
+            }
+        state5:
+            HuPrcSleep(30);
+        }
+        if (func_80046710() != -1) {
+            func_800466C0();
+        }
+        func_8004CD84(&sp18);
+        func_8004D1EC(&player->player_obj->unk_18, &sp18, &player->player_obj->unk_18, 8);
+        spaceIdx = GetAbsSpaceIndexFromChainSpaceIndex(player->cur_chain, player->cur_space);
+        spc = BoardSpaceGet(spaceIdx);
+        if (D_800F2CDC == spaceIdx) {
+            D_800F37E8++;
+            win = CreateTextWindow(0x38, 0x3C, 0x12, 1);
+            LoadStringIntoWindow(win, (void*)0x180, -1, -1);
+            func_8006E070(win, 0);
+            ShowTextWindow(win);
+            func_8004DBD4(win, player->player_index);
+            HideTextWindow(win);
+            h1 = func_80045D84(2, 0xA0, 1);
+            HuPrcChildLink(proc, func_80041F24(gs->curPlayerIndex));
+            HuPrcChildWatch();
+            func_80045E6C(h1);
+            switch (func_80041664(gs->curPlayerIndex)) {
+                case 0:
+                    func_800587EC(0x65, 0, 1);
+                    break;
+                case 1:
+                    func_800587EC(0x60, 0, 1);
+                    break;
+                case 2:
+                    func_800587BC(0x45, 0, 3, 1);
+                    break;
+            }
+            D_800F2CDC = -1;
+            D_800D86E4 = 7;
+            HuPrcSleep(-1);
+        }
+    state7:
+        SetPlayerLandedSpaceType(-1, spc->spaceType);
+        func_800546B4(gs->curPlayerIndex, player->turn_status);
+        switch (spc->spaceType) {
+            case 1:
+                if (_CheckFlag(0x2C) != 0) {
+                    HuPrcSleep(20);
+                } else {
+                    if (_CheckFlag(0x42) != 0) {
+                        mult = 2;
+                    } else {
+                        mult = 1;
+                    }
+                    ShowPlayerCoinChange(gs->curPlayerIndex, mult * 3);
+                    func_80055960(gs->curPlayerIndex, mult * 3);
+                    HuPrcSleep(30);
+                }
+                break;
+            case 2:
+                if (_CheckFlag(0x2C) == 0) {
+                    func_80058910(-1, 2);
+                    if (_CheckFlag(0x42) != 0) {
+                        mult = 2;
+                    } else {
+                        mult = 1;
+                    }
+                    ShowPlayerCoinChange(gs->curPlayerIndex, -(mult * 3));
+                    func_80055960(gs->curPlayerIndex, -(mult * 3));
+                    HuPrcSleep(30);
+                } else {
+                    HuPrcSleep(20);
+                }
+                break;
+            case 3:
+                D_800F2A78 = 0;
+                HuPrcSleep(8);
+                HuPrcChildLink(proc, func_80044680(gs->curPlayerIndex));
+                HuPrcChildWatch();
+                D_800D86E4 = 6;
+                D_800D86EC = 2;
+                D_800D86F0 = 1;
+                D_800F65B8++;
+                HuPrcSleep(-1);
+            state6:
+                HuPrcSleep(30);
+                break;
+            case 9:
+                func_80058910(-1, 3);
+                D_800D86E4 = 8;
+                func_800587BC(0x46, 0, 3, 1);
+                HuPrcSleep(-1);
+            state8:
+                HuPrcSleep(30);
+                break;
+            case 8:
+                if ((s8)player->poisoned_flag != 0) {
+                    break;
+                }
+                h1 = func_80045D84(2, 0xA0, 1);
+                HuPrcChildLink(proc, func_80041C04(gs->curPlayerIndex));
+                HuPrcChildWatch();
+                func_80045E6C(h1);
+                if (func_80041644(gs->curPlayerIndex) == 1) {
+                    func_80052C44(-1, 5, 0, 6, 0);
+                    HuPrcSleep(12);
+                    func_80060618(0x451, player->player_index);
+                    while (MBMotionCheck(player->player_obj) == 0) {
+                        HuPrcVSleep();
+                    }
+                    func_800405DC(gs->curPlayerIndex);
+                    goto roll;
+                }
+                win = CreateTextWindow(0x3C, 0x96, 0x12, 1);
+                LoadStringIntoWindow(win, (void*)0x17B, -1, -1);
+                func_8006E070(win, 0);
+                ShowTextWindow(win);
+                func_8004DBD4(win, player->player_index);
+                HideTextWindow(win);
+                func_80052C44(-1, 3, 0, 6, 0);
+                HuPrcSleep(9);
+                func_80060618(0x44A, player->player_index);
+                player->poisoned_flag = 1;
+                func_800405DC(gs->curPlayerIndex);
+                HuPrcSleep(40);
+                break;
+        }
+        D_800D86E4 = 9;
+        D_800D86E8 = ExecuteEventForSpace(spaceIdx, 5);
+        if (D_800D86EC >= 0) {
+            HuPrcSleep(-1);
+        state9:
+            HuPrcSleep(30);
+        }
+    turn_end:
+        D_800F2A78 = 0;
+        if (gs->curPlayerIndex >= 3) {
+            HuPrcChildLink(proc, func_800444DC());
+            HuPrcChildWatch();
+            if (gs->unk_1E >= 0) {
+                D_800D86E4 = 0;
+                if (gs->maxTurns >= 0 && gs->currentTurn >= gs->maxTurns) {
+                    D_800D86EC = 0x23;
+                } else {
+                    D_800D86EC = 3;
+                }
+                D_800D86F0 = 1;
+                n = 0;
+                for (j = 0; j < 4; j++) {
+                    n += func_80054730(j) == 1;
+                }
+                switch (n) {
+                    case 0:
+                    case 4:
+                        D_800F64C6++;
+                        break;
+                    case 1:
+                    case 3:
+                        D_800F37A8++;
+                        break;
+                    case 2:
+                        D_800EE986++;
+                        break;
+                }
+                HuPrcSleep(-1);
+            }
+            func_80054868(3);
+            while (func_80054FA8() != 0) {
+                HuPrcVSleep();
+            }
+            if (gs->maxTurns >= 0 && gs->currentTurn >= gs->maxTurns) {
+                D_800F2A78 = 0;
+                HuPrcChildLink(proc, func_80047E54());
+                HuPrcChildWatch();
+                D_800D86EC = 0x20;
+                D_800D86F0 = 1;
+                HuPrcSleep(-1);
+            }
+        }
+        if (func_80056FA8() != 0) {
+            D_800D86E4 = 0;
+            D_800D86EC = 1;
+            HuPrcSleep(-1);
+        }
+        HuPrcSleep(4);
+        HuPrcChildLink(proc, func_800531E8());
+        HuPrcChildWatch();
+        func_80056F40();
+        for (i = 0; i < 4; i++) {
+            func_80052FD4(i);
+            func_80052E84(i);
+            player = GetPlayerStruct(i);
+            func_8003E174(player->player_obj);
+            player->player_obj->unk_0A |= 2;
+            func_8004CC8C(i, GetAbsSpaceIndexFromChainSpaceIndex(player->cur_chain, player->cur_space));
+            func_8004CDA0(i);
+        }
+        func_8005884C(NULL);
+        D_800D86E4 = 1;
+    }
+}
 void func_800582E4(void) {
     HuPrcVSleep();
     func_8004A520();
@@ -525,6 +1020,7 @@ void func_8005835C(void) {
 #else
 INCLUDE_ASM("asm/nonmatchings/57330", func_8005835C);
 #endif
+
 void func_800584F0(s32 arg0) {
     GW_PLAYER* player;
     s32 space;
