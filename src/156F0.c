@@ -35,8 +35,13 @@ typedef struct ChoiceRect {
     /* 0x06 */ s16 y1;
 } ChoiceRect;
 
+#ifdef TARGET_PC /* ROM offsets linked as symbol addresses (pb_host.h) */
+#define D_31BFE0 PB_ROM_ADDR(0x31BFE0)
+#define D_31C7E0 PB_ROM_ADDR(0x31C7E0)
+#else
 extern u8 D_31BFE0[];
 extern u8 D_31C7E0[];
+#endif
 extern u8* D_800C1910; /* 8x8 1-bit font */
 extern u8* D_800C1914; /* window background texture */
 extern u8* D_800C1918; /* window palette */

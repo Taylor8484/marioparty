@@ -11,7 +11,11 @@ typedef struct {
     s32 unk08;
 } unk3BF30SchedClient;
 
+#ifdef TARGET_PC /* ROM offsets linked as symbol addresses (pb_host.h) */
+#define D_31C7E0 PB_ROM_ADDR(0x31C7E0)
+#else
 extern u8 D_31C7E0[];
+#endif
 extern void* D_800C4250[];
 extern u64* D_800C425C[];
 extern PB_PTR32 D_800C426C[];

@@ -45,11 +45,19 @@ s32 func_8005B0C4(void);
 void func_8005B6D0(Addr*);
 void pfInit(void);
 void func_80072190(void);
+#ifdef TARGET_PC /* ROM offsets linked as symbol addresses (pb_host.h) */
+#define D_1778BC0 PB_ROM_ADDR(0x1778BC0)
+#define D_1832AE0 PB_ROM_ADDR(0x1832AE0)
+#define D_1BB8460 PB_ROM_ADDR(0x1BB8460)
+#define D_1CECC60 PB_ROM_ADDR(0x1CECC60)
+#define D_1CED490 PB_ROM_ADDR(0x1CED490)
+#else
 extern Addr D_1778BC0;
 extern Addr D_1832AE0;
 extern Addr D_1BB8460;
 extern Addr D_1CECC60;
 extern Addr D_1CED490;
+#endif
 extern s16 D_800C599E;
 extern s16 D_800C59A0;
 extern f32 CZoomM[4];
@@ -61,7 +69,11 @@ extern u16 D_800F3F30;
 extern Vec3f CenterM[4];
 extern u16 D_800F64EC;
 extern Vec3f CRotM[6];
+#ifdef TARGET_PC /* ROM offsets linked as symbol addresses (pb_host.h) */
+#define D_FCB860 PB_ROM_ADDR(0xFCB860)
+#else
 extern Addr D_FCB860;
+#endif
 
 void func_8001A0F0(void) {
     file_1ACF0_struct* temp_s1;

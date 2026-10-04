@@ -12,7 +12,11 @@ extern u16 ContDStkTrg[];
 extern u8 D_800ECC22;
 extern u8 D_800ED0D2;
 //extern s16 D_800ED15E;
+#ifdef TARGET_PC /* ROM offsets linked as symbol addresses (pb_host.h) */
+#define D_FE2310 PB_ROM_ADDR(0xFE2310)
+#else
 extern Addr D_FE2310;
+#endif
 extern u16 D_800F5144;
 extern s16 D_800C597A;
 extern GW_PLAYER GwPlayer[4];

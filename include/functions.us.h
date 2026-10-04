@@ -245,6 +245,12 @@ void func_8004F2EC(void);
 void func_8004F5F0(void);
 void func_80067704(s16);
 void func_80067384(s16, s16, u16);
+#ifdef TARGET_PC
+/* Host: the game's coroutine setjmp/longjmp (an SDK-region asm unit, own jmp_buf with sp/func)
+   must not bind to the C library's. engine/process.c needs a host implementation (fibers). */
+#define setjmp pb_n64_setjmp
+#define longjmp pb_n64_longjmp
+#endif
 s32 setjmp(jmp_buf* jump_buf);
 s32 longjmp(jmp_buf* jump_buf, s32 val);
 s32 HuMemMemoryAllocSizeGet(s32 value);

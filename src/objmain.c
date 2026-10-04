@@ -22,10 +22,17 @@ typedef struct omSndFade {
     /* 0xD0 */ u8 flags[13];
 } omSndFade; // sizeof 0xE0
 
+#ifdef TARGET_PC /* ROM offsets linked as symbol addresses (pb_host.h) */
+#define D_15396A0 PB_ROM_ADDR(0x15396A0)
+#define D_1778BC0 PB_ROM_ADDR(0x1778BC0)
+#define D_1832AE0 PB_ROM_ADDR(0x1832AE0)
+#define D_1BB8460 PB_ROM_ADDR(0x1BB8460)
+#else
 extern Addr D_15396A0;
 extern Addr D_1778BC0;
 extern Addr D_1832AE0;
 extern Addr D_1BB8460;
+#endif
 
 void func_800117AC(s16);
 void func_8001165C(void);

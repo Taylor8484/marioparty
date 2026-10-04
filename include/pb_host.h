@@ -10,6 +10,7 @@
  *
  *   PB_PTR32   s32 on N64, intptr_t on the host: a signed 32-bit integer that holds a pointer.
  *   PB_UPTR32  u32 on N64, uintptr_t on the host: the unsigned counterpart.
+ *   PB_ROM_ADDR(a)  host only: a ROM offset that the N64 links as a symbol (see below).
  *   PB_HOSTCAST(T, x)  ((T)(x)) on the host, (x) on N64: a conversion the N64 code performs
  *              implicitly (an int passed where a pointer is expected, or back), made explicit
  *              for the host only.
@@ -33,6 +34,10 @@ int bcmp(const void *a, const void *b, size_t len);
 typedef intptr_t PB_PTR32;
 typedef uintptr_t PB_UPTR32;
 #define PB_HOSTCAST(T, x) ((T)(x))
+/* A ROM offset the N64 links as a symbol address (an Addr label in undefined_syms.txt or
+   ld_addrs.h): an lvalue of type Addr at that numeric address, so &sym and its decay give the
+   offset, as on the N64. Never dereferenced: ROM reads go through PI DMA. */
+#define PB_ROM_ADDR(a) (*(u8 (*)[])(uintptr_t)(a))
 #else
 typedef s32 PB_PTR32;
 typedef u32 PB_UPTR32;
