@@ -83,68 +83,87 @@ void func_80013AEC(s8 arg0, s8 arg1) {
 
 s16 func_80013B00(void);
 
-// logic rewritten from the asm 2026-10-03 (upstream C read the wrong slot and pad);
-// register choice and load order remain (masked 16)
-#ifdef NON_MATCHING
-/* Consumes the oldest queued read: updates held/triggered/repeat buttons and the dead-zoned,
- * clamped sticks for every pad. Returns the queue count before this read (0 = nothing read). */
-s16 func_80013B00(void) {
-    s16 count;
-    s16 i;
-    OSContPad* slot;
-    u16 btn;
-
-    osRecvMesg(&D_800D12D0, NULL, 1);
-    count = D_800D12B0;
-    if (count != 0) {
-        D_800D12B0 = count - 1;
-        slot = D_800D1170[D_800D12B2].pad;
-        if (++D_800D12B2 >= 8) {
-            D_800D12B2 = 0;
-        }
-        for (i = 0; i < PAD_COUNT; i++) {
-            D_800D12BA[i] = slot[i].errno != CONT_NO_RESPONSE_ERROR;
-            btn = slot[i].button;
-            ContBtn[i] = btn;
-            ContStkX[i] = slot[i].stick_x;
-            D_800F2CE2[i] = ContStkX[i];
-            ContStkY[i] = slot[i].stick_y;
-            D_800F33CC[i] = ContStkY[i];
-            ContBtnTrg[i] = btn & (btn ^ D_800ECE08[i]);
-            if (D_800ECE08[i] == btn) {
-                if (--D_800D12B6[i] == 0) {
-                    D_800F338C[i] = btn;
-                    D_800D12B6[i] = 10;
-                } else {
-                    D_800F338C[i] = 0;
-                }
-            } else {
-                D_800F338C[i] = ContBtnTrg[i];
-                D_800D12B6[i] = 30;
-            }
-            if ((u8)(ContStkX[i] + 9) < 19) {
-                ContStkX[i] = 0;
-            } else if (ContStkX[i] > D_800D12BE) {
-                ContStkX[i] = D_800D12BE;
-            } else if (ContStkX[i] < -D_800D12BE) {
-                ContStkX[i] = -D_800D12BE;
-            }
-            if ((u8)(ContStkY[i] + 9) < 19) {
-                ContStkY[i] = 0;
-            } else if (ContStkY[i] > D_800D12BF) {
-                ContStkY[i] = D_800D12BF;
-            } else if (ContStkY[i] < -D_800D12BF) {
-                ContStkY[i] = -D_800D12BF;
-            }
-            D_800ECE08[i] = btn;
-        }
+// Logic rewritten from the asm 2026-10-03 (upstream C read the wrong slot and pad), then matched.
+// Consumes the oldest queued read: updates held/triggered/repeat buttons and the dead-zoned,
+// clamped sticks for every pad. Returns the queue count before this read (0 = nothing read).
+// decomp-permuter
+s16 func_80013B00(void)
+{
+  s16 count;
+  s16 i;
+  OSContPad *slot;
+  u16 btn;
+  osRecvMesg(&D_800D12D0, 0, 1);
+  count = D_800D12B0;
+  if (count != 0)
+  {
+    D_800D12B0 = count - 1;
+    slot = D_800D1170[D_800D12B2].pad;
+    if ((++D_800D12B2) >= 8)
+    {
+      D_800D12B2 = 0;
     }
-    osSendMesg(&D_800D12D0, NULL, 1);
-    return count;
+    for (i = 0; i < 4; i++)
+    {
+      D_800D12BA[i] = slot[i].errno != 0x8;
+      btn = (ContBtn[i] = slot[i].button);
+      ContStkX[i] = slot[i].stick_x;
+      D_800F2CE2[i] = ContStkX[i];
+      ContStkY[i] = slot[i].stick_y;
+      D_800F33CC[i] = ContStkY[i];
+      ContBtnTrg[i] = btn & (btn ^ D_800ECE08[i]);
+      if (D_800ECE08[i] == btn)
+      {
+        if ((--D_800D12B6[i]) == 0)
+        {
+          D_800F338C[i] = btn;
+          D_800D12B6[i] = 10;
+        }
+        else
+        {
+          D_800F338C[i] = 0;
+        }
+      }
+      else
+      {
+        D_800F338C[i] = ContBtnTrg[i];
+        D_800D12B6[i] = 30;
+      }
+      if (((u8) (ContStkX[i] + 9)) < 19)
+      {
+        ContStkX[i] = 0;
+      }
+      else
+        if (ContStkX[i] > D_800D12BE)
+      {
+        ContStkX[i] = D_800D12BE;
+      }
+      else
+        if (ContStkX[i] < (-D_800D12BE))
+      {
+        ContStkX[i] = -D_800D12BE;
+      }
+      if (((u8) (ContStkY[i] + 9)) < 19)
+      {
+        ContStkY[i] = 0;
+      }
+      else
+        if (ContStkY[i] > D_800D12BF)
+      {
+        ContStkY[i] = D_800D12BF;
+      }
+      else
+        if (ContStkY[i] < (-D_800D12BF))
+      {
+        ContStkY[i] = -D_800D12BF;
+      }
+      D_800ECE08[i] = btn;
+    }
+
+  }
+  osSendMesg(&D_800D12D0, 0, 1);
+  return count;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/engine/pad", func_80013B00);
-#endif
 
 extern s8 D_800F0A40[PAD_COUNT][8];   /* per-pad stick X history, one entry per queued read */
 extern s8 D_800F5258[PAD_COUNT][8];   /* per-pad stick Y history */
