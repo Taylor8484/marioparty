@@ -1180,9 +1180,7 @@ s16 func_8006FCC0(s16 arg0) {
     return D_800ED4B0[arg0].unk_00;
 }
 
-// parameter copies of arg1/arg2 land in s3/s2 swapped; retail arg1 is probably s8 but callers pass it unextended (masked 0)
-#ifdef NON_MATCHING
-s32 func_8006FCF0(s16 arg0, s32 arg1, s32 arg2) {
+s32 func_8006FCF0(s16 arg0, s8 arg1, s32 arg2) {
     TextWindow* tw = &D_800ED4B0[arg0];
     void* file;
 
@@ -1208,9 +1206,6 @@ s32 func_8006FCF0(s16 arg0, s32 arg1, s32 arg2) {
     }
     return tw->unk_11;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006FCF0);
-#endif
 // register allocation in the cursor-move tail: the new entry's index reuses the compare's sign-extension (masked 9)
 #ifdef NON_MATCHING
 s32 func_8006FE4C(s16 arg0) {
@@ -1753,9 +1748,7 @@ void func_800718DC(s16 arg0, void* arg1, s8 arg2) {
     func_8006DA5C(arg0, arg1, arg2);
     func_80071894(tw->unk_88[arg2], tw->unk_88[arg2]);
 }
-// register allocation: the return value comes from the s16 copy of id instead of id itself (masked 0)
-#ifdef NON_MATCHING
-s16 func_8007194C(s32 arg0, s32 arg1, s32 arg2) {
+s32 func_8007194C(s32 arg0, s32 arg1, s32 arg2) {
     TWStyle* style = &D_800C6050[arg2];
     TextWindow* tw;
     TWSprite* spr;
@@ -1804,9 +1797,6 @@ s16 func_8007194C(s32 arg0, s32 arg1, s32 arg2) {
     func_8006DE20(id, 0.0f, 0.0f);
     return id;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8007194C);
-#endif
 void func_80071C8C(s32 a, s32 b) {
     TextWindow* tw = &D_800ED4B0[a];
     f32 scale;
