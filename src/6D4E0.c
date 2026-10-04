@@ -307,43 +307,44 @@ void func_8006CE64(s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
     sp20[3] = arg3;
     RequestSIFunction(&sp10, (void*)func_8006CE0C, sp20, 1);
 }
-// condition on D_800C5DF2: retail tests ==0, <0, <4 as branches; GCC folds to setcc/range (masked 7)
-#ifdef NON_MATCHING
-void func_8006CEA0(void) {
-    s16 i;
-    s32 mode;
-
-    if (D_800C5DF1 == 0) {
-        D_800ED4B0 = MallocTemp(0x22C8);
-        for (i = 0; i < 14; i++) {
-            D_800ED4B0[i].unk_36 = -1;
-        }
-        D_800ED4B0[0].unk_3A = -1;
-        D_800ED4B0[0].unk_3C = 1;
-        D_800ED4B0[0].unk_36 = 0;
-        D_800ED4B0[1].unk_3A = 0;
-        D_800ED4B0[1].unk_3C = -1;
-        D_800ED4B0[1].unk_36 = -0x218;
-        D_800F64C4 = 0;
-        D_800F3718 = 0;
-        D_800E4330 = 10000;
-        mode = D_800C5DF2;
-        if (mode == 0 || (mode >= 0 && mode < 4)) {
-            D_800F37D4 = func_80014614(0x7A);
-            D_800F3294 = func_80014614(0x86);
-        }
-        D_800F2BC4 = omAddPrcObj(func_8006F9B0, 0x1001, 0x800, 0);
-        omPrcSetStatBit(D_800F2BC4, 0xA0);
-        D_800C5DF1 = 1;
-        D_800ED722 = 0;
-        D_800ECC22 = 0;
-        D_800F3F34 = func_80014614(0x77);
-        D_800F3F38 = func_80014614(0x78);
+// decomp-permuter
+void func_8006CEA0(void)
+{
+  s16 i;
+  s32 mode;
+  if (D_800C5DF1 == 0)
+  {
+    D_800ED4B0 = MallocTemp(0x22C8);
+    for (i = 0; i < 14; i++)
+    {
+      D_800ED4B0[i].unk_36 = -1;
     }
+
+    D_800ED4B0[0].unk_3A = -1;
+    D_800ED4B0[0].unk_3C = 1;
+    D_800ED4B0[0].unk_36 = 0;
+    D_800ED4B0[1].unk_3A = 0;
+    D_800ED4B0[1].unk_3C = -1;
+    D_800ED4B0[1].unk_36 = -0x218;
+    D_800F64C4 = 0;
+    D_800F3718 = 0;
+    D_800E4330 = 10000;
+    i = 4;
+    mode = D_800C5DF2;
+    if ((mode == 0) || ((mode >= 0) && (mode < i)))
+    {
+      D_800F37D4 = func_80014614(0x7A);
+      D_800F3294 = func_80014614(0x86);
+    }
+    D_800F2BC4 = omAddPrcObj(func_8006F9B0, 0x1001, 0x800, 0);
+    omPrcSetStatBit(D_800F2BC4, 0xA0);
+    D_800C5DF1 = 1;
+    D_800ED722 = 0;
+    D_800ECC22 = 0;
+    D_800F3F34 = func_80014614(0x77);
+    D_800F3F38 = func_80014614(0x78);
+  }
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/6D4E0", func_8006CEA0);
-#endif
 s16 func_8006D010(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4, s16 arg5) {
     TextWindow* tw;
     TWSprite* spr;
