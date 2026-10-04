@@ -646,7 +646,7 @@ unk1EA70Struct48* func_80020CFC(s16 arg0, char* arg1) {
 
     obj = &D_800F2B7C[arg0];
     ret = func_80023684(sizeof(unk1EA70Struct48), obj->unk_6C->unk_68 + 1);
-    idx = func_8002451C(0, func_80020DCC, 2);
+    idx = func_8002451C(0, PB_HOSTCAST(void (*)(Gfx**, Mtx*, camera*), func_80020DCC), 2);
     ret->unk_02 = idx;
     D_800F2B7C[idx].unk_BC = ret;
     ret->unk_44 = obj->unk_6C;

@@ -103,9 +103,9 @@ void func_80058E64(omObjData *arg0)
   f32 zoom;
   f32 scale;
   s32 port;
-  s32 label2;
+  PB_PTR32 label2; /* PartyBoard: a func_80045D84 window handle (pointer) */
   unk_Struct02 *icons;
-  s32 label1;
+  PB_PTR32 label1;
   s16 moved;
   label2 = 0;
   port = (s32) PB_HOSTCAST(PB_PTR32, HuPrcCurrentGet()->user_data);

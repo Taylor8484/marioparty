@@ -96,7 +96,7 @@ void func_80014AF0(void) {
     size = D_31C7E0 - D_31BFE0;
     D_800C1910 = func_80023684(size, 0x7918);
     dmaRead(D_31BFE0, D_800C1910, size);
-    D_800ED724 = func_8002451C(0, func_80014F7C, 6);
+    D_800ED724 = func_8002451C(0, PB_HOSTCAST(void (*)(Gfx**, Mtx*, camera*), func_80014F7C), 6);
 }
 
 s16 func_80014C0C(s16 prio) {

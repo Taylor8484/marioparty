@@ -42,7 +42,7 @@ s16 func_8002451C(u32, void (*)(Gfx**, Mtx*, camera*), u8); /* host: returns s16
 #else
 s32 func_8002451C(s32, void (*)(Gfx**), s32);
 #endif
-void func_8003A060(Gfx**, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+void func_8003A060(Gfx**, PB_PTR32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
 s16 func_8006DB3C(s16, s32, s16, s16, s16);
 s16 func_8006DD8C(s16, s16);
 void func_80071598(s16);
@@ -52,9 +52,9 @@ s32 func_8007281C(Gfx**);
 void func_800728F4(Gfx**, u8, s32*);
 s32 func_800729C8(Gfx**);
 s32 func_80072B5C(Gfx**);
-void func_80072C34(Gfx**, s32);
+void func_80072C34(Gfx**, PB_PTR32);
 void func_80072E1C(Gfx**);
-void func_80072E5C(Gfx**, s32);
+void func_80072E5C(Gfx**, PB_PTR32);
 s32 func_80073008(Gfx**);
 s32 func_800730E4(Gfx**);
 Gfx* func_80073100(Gfx*, Vtx*);
@@ -404,7 +404,7 @@ s32 func_80072B5C(Gfx** arg0) {
     return 1;
 }
 
-void func_80072C34(Gfx** arg0, s32 arg1) {
+void func_80072C34(Gfx** arg0, PB_PTR32 arg1) {
     s16 i;
     s16 j;
 
@@ -425,7 +425,7 @@ void func_80072E1C(Gfx** arg0) {
     func_80072E5C(arg0, D_800F545C);
 }
 
-void func_80072E5C(Gfx** arg0, s32 arg1) {
+void func_80072E5C(Gfx** arg0, PB_PTR32 arg1) {
     s16 i;
     s16 j;
 
@@ -2648,7 +2648,7 @@ void func_8007B210(void) {
     sp10 = D_800E434C = func_80023668(6400);
 
     D_800E4344 = ((PB_PTR32) D_800E4340 + 63) & ~63;
-    D_800E4350 = func_8002451C(0, &func_8007B420, 6);
+    D_800E4350 = func_8002451C(0, PB_HOSTCAST(void (*)(Gfx**, Mtx*, camera*), &func_8007B420), 6);
 
     gSPDisplayList(sp10++, D_800C6108);
     func_80072C34(&sp10, D_800E4344);
@@ -2672,7 +2672,7 @@ void func_8007B310(void) {
     Gfx* sp10;
 
     sp10 = D_800E434C = func_80023668(6400);
-    D_800E4352 = func_8002451C(0, &func_8007B458, 0);
+    D_800E4352 = func_8002451C(0, PB_HOSTCAST(void (*)(Gfx**, Mtx*, camera*), &func_8007B458), 0);
 
     gSPDisplayList(sp10++, D_800C6108);
     gDPSetCombineMode(sp10++, G_CC_MODULATEI_PRIM, G_CC_MODULATEI_PRIM);

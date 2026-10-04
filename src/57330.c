@@ -531,9 +531,9 @@ void func_8005727C(void) {
     BoardSpace* spc;
     s16 spaceIdx;
     s16 win;
-    s32 h1;
-    s32 h2;
-    s32 h3;
+    PB_PTR32 h1; /* PartyBoard: a func_80045D84 window handle (pointer) */
+    PB_PTR32 h2;
+    PB_PTR32 h3;
     s32 n;
     s32 j;
     s32 i;

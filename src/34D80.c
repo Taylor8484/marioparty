@@ -1188,7 +1188,7 @@ void func_800373C0(void) {
             break;
         case 1:
             if (ContBtnTrg[0] & 0x8000) {
-                func_80015970(D_800C41A2 = func_80014C0C(90), 240, 48, 64, 12, func_8003796C);
+                func_80015970(D_800C41A2 = func_80014C0C(90), 240, 48, 64, 12, PB_HOSTCAST(void (*)(s16), func_8003796C));
             }
             break;
         case 2:
@@ -1282,7 +1282,7 @@ void func_8003796C(void) {
 }
 
 void func_80037C40(void) {
-    func_80015970(D_800C41A4 = func_80014C0C(100), 16, 16, 288, 24, func_800373C0);
+    func_80015970(D_800C41A4 = func_80014C0C(100), 16, 16, 288, 24, PB_HOSTCAST(void (*)(s16), func_800373C0));
 }
 
 void func_80037C90(void) {

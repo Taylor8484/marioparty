@@ -744,7 +744,7 @@ void LoadBackgroundIndex(s32 arg0) {
     D_800D6736 = (D_800C4F78->unk0 * D_800C4F78->unk8) / 2;
     D_800D6738 = (D_800C4F78->unk4 * D_800C4F78->unkC) / 2;
     D_800D6730 = 1;
-    func_80028E8C(0, &func_8004ACEC);
+    func_80028E8C(0, PB_HOSTCAST(void (*)(Gfx**, Mtx*, u8), &func_8004ACEC));
     func_8004A7A4();
     func_8004A510();
     func_8004AFFC();

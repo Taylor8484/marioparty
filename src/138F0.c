@@ -101,7 +101,11 @@ void func_80063A5C(void*);
 void func_800130E8(void* arg);
 u32 func_80013234(AudioInfo* info, AudioInfo* lastInfo);
 void func_80013358(AudioInfo* info);
+#ifdef TARGET_PC
+intptr_t func_80013360(intptr_t addr, s32 len, void* state); /* host: ALDMAproc is pointer-width */
+#else
 s32 func_80013360(s32 addr, s32 len, void* state);
+#endif
 ALDMAproc func_8001350C(void* state);
 void func_80013524(void);
 void func_8001365C(s32 arg0, s32 remove);
@@ -256,7 +260,13 @@ u32 func_80013234(AudioInfo* info, AudioInfo* lastInfo) {
 void func_80013358(AudioInfo* info) {
 }
 
+#ifdef TARGET_PC
+/* Host: ALDMAproc returns a RAM address (pointer-width). addr is a ROM offset (32 bits). */
+intptr_t func_80013360(intptr_t romAddr, s32 len, void* state) {
+    s32 addr = (s32)romAddr;
+#else
 s32 func_80013360(s32 addr, s32 len, void* state) {
+#endif
     void* foundBuffer;
     s32 delta;
     s32 addrEnd;

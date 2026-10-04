@@ -216,8 +216,8 @@ void func_8003CAB4(void) {
     unk_Struct02* icons;
     s16 x;
     s16 y;
-    s32 label1;
-    s32 label2;
+    PB_PTR32 label1; /* PartyBoard: a func_80045D84 window handle (pointer) */
+    PB_PTR32 label2;
     s16 dir;
     u16 pad;
 

@@ -185,9 +185,9 @@ void func_80064B70(void) {
     D_800EE978[0] = D_800EE978[1] = D_800EE978[2] = D_800F54B4 = NULL;
     D_800F37CC = 0;
     guOrtho(&D_800E40E0, -160.0f, 160.0f, -120.0f, 120.0f, 0.0f, 2000.0f, 1.0f);
-    D_800F2BD8 = func_8002451C(0, func_8006677C, 0);
+    D_800F2BD8 = func_8002451C(0, PB_HOSTCAST(void (*)(Gfx**, Mtx*, camera*), func_8006677C), 0);
     func_80025F10(D_800F2BD8, 1);
-    D_800F329E = func_8002451C(0, func_80066B3C, 6);
+    D_800F329E = func_8002451C(0, PB_HOSTCAST(void (*)(Gfx**, Mtx*, camera*), func_80066B3C), 6);
     func_800676BC();
 }
 unk65770Grp* func_80064C94(s16 num, u16 attr) {

@@ -65,12 +65,12 @@ void func_8003B0AC(unk3AC60Struct1* arg0, f64 arg1, f64 arg2, f64 arg3);
 void func_8003B190(unk3AC60Struct0* arg0, unk3AC60Struct1* arg1, unk3AC60Struct2* arg2);
 void guMtxIdent(Mtx* m);
 
-void func_8003A060(Gfx**, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
-void func_8003A28C(Gfx**, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+void func_8003A060(Gfx**, PB_PTR32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+void func_8003A28C(Gfx**, PB_PTR32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
 void func_8003A4EC(Gfx**, PB_PTR32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
-void func_8003A828(Gfx**, s32, s32, u32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
-void func_8003AA98(Gfx**, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
-void func_8003AE00(Gfx**, s32, s32, u32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+void func_8003A828(Gfx**, PB_PTR32, s32, u32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+void func_8003AA98(Gfx**, PB_PTR32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+void func_8003AE00(Gfx**, PB_PTR32, s32, u32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
 void func_80069394(Gfx** arg0, unk69010Sprite* arg1);
 void func_8006B014(Gfx** arg0, unk69010Sprite* arg1, u16 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, u16 arg7, u16 arg8, u16 arg9, u16 arg10);
 void func_8006B464(Gfx** arg0, unk69010Sprite* arg1, u16 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, u16 arg7, u16 arg8, u16 arg9, u16 arg10);

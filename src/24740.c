@@ -505,7 +505,12 @@ void func_800247FC(OSMesgQueue* arg0, s32 arg1) {
             if (p->unk_6C != NULL && !(p->unk_20 & 4) && (mask & (u16)p->unk_02) &&
                 ((u8)p->unk_00 == 0 || ((u8)p->unk_00 & 6) == 4)) {
             if (p->unk_6C->unk_60 != NULL && CAM->unkE8 != 0) {
+#ifdef TARGET_PC
+                /* The argument is a pointer (func_8001D8A0's second word, e.g. &D_800EE738). */
+                ((void (*)(void*, unk_ovl_2D_struct*))CAM->unkE8)((void*)CAM->unkEC, p);
+#else
                 ((void (*)(s32, unk_ovl_2D_struct*))CAM->unkE8)(CAM->unkEC, p);
+#endif
             } else {
             if (p->unk_1A != -1) {
                 func_80028A34(i);

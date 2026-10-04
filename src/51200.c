@@ -155,8 +155,8 @@ s32 func_80050A98(s32 arg0) {
     s32 var_s0;
     PB_PTR32 temp_s1;
     unk_Struct02* temp_s3;
-    s32 temp_s4;
-    s32 temp_s5;
+    PB_PTR32 temp_s4; /* PartyBoard: a func_80045D84 window handle (pointer) */
+    PB_PTR32 temp_s5;
     u16* temp_s0;
 
     temp_s1 = func_8003EDDC(&D_800C52FC);
@@ -801,7 +801,7 @@ INCLUDE_ASM("asm/nonmatchings/51200", func_80051AE0);
 // retail holds the return value 1 in s2 across the loop; this returns it with li (masked 5)
 #ifdef NON_MATCHING
 s32 func_80052614(s32 arg0) {
-    s32 id = func_80045D84(8, 0xBC, 0);
+    PB_PTR32 id = func_80045D84(8, 0xBC, 0);
 
     do {
         HuPrcVSleep();
