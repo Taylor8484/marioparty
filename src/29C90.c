@@ -434,70 +434,78 @@ s32 func_8002A784(f32 x, f32 z, ColVtx* v) {
     return 1;
 }
 
-// register allocation: column counter and cell index swap $s0/$s1 (masked 0)
-#ifdef NON_MATCHING
-void func_8002A92C(HitViewCircle* view, unk_ovl_2D_struct* m) {
-    Matrix4f mtx;
-    Matrix4f ident;
-    f32* rp;
-    s16 gi;
-    s32 x0;
-    s32 x1;
-    s32 z0;
-    s32 z1;
-    s32 x;
-    s32 z;
-    s32 idx;
-    s16 id;
-    f32 dx;
-    f32 dz;
-
-    rp = &view->r;
-    gi = m->unk_04;
-    func_80029AEC(m, mtx);
-    guMtxIdentF(ident);
-    x0 = (view->x - view->r + (D_800F32AC[gi].w * D_800F32AC[gi].cw) / 2.0f) / D_800F32AC[gi].cw;
-    x1 = (view->x + view->r + (D_800F32AC[gi].w * D_800F32AC[gi].cw) / 2.0f) / D_800F32AC[gi].cw;
-    z0 = (view->z - view->r + (D_800F32AC[gi].h * D_800F32AC[gi].ch) / 2.0f) / D_800F32AC[gi].ch;
-    z1 = (view->z + view->r + (D_800F32AC[gi].h * D_800F32AC[gi].ch) / 2.0f) / D_800F32AC[gi].ch;
-    if (x0 < 0) {
-        x0 = 0;
-    }
-    if (z0 < 0) {
-        z0 = 0;
-    }
-    if (D_800F32AC[gi].w < x1) {
-        x1 = D_800F32AC[gi].w;
-    }
-    if (D_800F32AC[gi].h < z1) {
-        z1 = D_800F32AC[gi].h;
-    }
-    for (z = z0; z < z1; z++) {
-        dz = (z * D_800F32AC[gi].ch + m->unk_2C + D_800F32AC[gi].ch / 2.0f) - ((D_800F32AC[gi].h * D_800F32AC[gi].ch) / 2.0f + view->z);
-        for (x = x0; x < x1; x++) {
-            dx = (x * D_800F32AC[gi].cw + m->unk_24 + D_800F32AC[gi].cw / 2.0f) - ((D_800F32AC[gi].w * D_800F32AC[gi].cw) / 2.0f + view->x);
-            if (func_800B1750(dx * dx + dz * dz) < *rp) {
-                idx = z * D_800F32AC[gi].w + x;
-                id = D_800F32AC[gi].map0[idx];
-                if (id != -1) {
-                    func_8002D2CC(m->unk_6C, id, (u8*)D_800F374C + D_800ED52C * 0x40, mtx);
-                }
-                id = D_800F32AC[gi].map1[idx];
-                if (id != -1) {
-                    func_8002D2CC(m->unk_6C, id, (u8*)D_800F374C + D_800ED52C * 0x40, mtx);
-                }
-                id = D_800F32AC[gi].map2[idx];
-                if (id != -1) {
-                    func_8002D2CC(m->unk_6C, id, (u8*)D_800F374C + D_800ED52C * 0x40, mtx);
-                }
-            }
+// decomp-permuter
+void func_8002A92C(HitViewCircle *view, unk_ovl_2D_struct *m)
+{
+  Matrix4f mtx;
+  Matrix4f ident;
+  f32 *rp;
+  s16 gi;
+  s32 x0;
+  s32 x1;
+  s32 z0;
+  s32 z1;
+  s32 x;
+  s32 z;
+  s32 idx;
+  unsigned int id;
+  f32 dx;
+  f32 dz;
+  rp = &view->r;
+  gi = m->unk_04;
+  func_80029AEC(m, mtx);
+  guMtxIdentF(ident);
+  x0 = ((view->x - view->r) + ((D_800F32AC[gi].w * D_800F32AC[gi].cw) / 2.0f)) / D_800F32AC[gi].cw;
+  x1 = ((view->x + view->r) + ((D_800F32AC[gi].w * D_800F32AC[gi].cw) / 2.0f)) / D_800F32AC[gi].cw;
+  z0 = ((view->z - view->r) + ((D_800F32AC[gi].h * D_800F32AC[gi].ch) / 2.0f)) / D_800F32AC[gi].ch;
+  z1 = ((view->z + view->r) + ((D_800F32AC[gi].h * D_800F32AC[gi].ch) / 2.0f)) / D_800F32AC[gi].ch;
+  if (x0 < 0)
+  {
+    x0 = 0;
+  }
+  if (z0 < 0)
+  {
+    z0 = 0;
+  }
+  if (D_800F32AC[gi].w < x1)
+  {
+    x1 = D_800F32AC[gi].w;
+  }
+  if (D_800F32AC[gi].h < z1)
+  {
+    z1 = D_800F32AC[gi].h;
+  }
+  for (z = z0; z < z1; z++)
+  {
+    dz = (((z * D_800F32AC[gi].ch) + m->unk_2C) + (D_800F32AC[gi].ch / 2.0f)) - (((D_800F32AC[gi].h * D_800F32AC[gi].ch) / 2.0f) + view->z);
+    for (x = x0; x < x1; x++)
+    {
+      dx = (((x * D_800F32AC[gi].cw) + m->unk_24) + (D_800F32AC[gi].cw / 2.0f)) - (((D_800F32AC[gi].w * D_800F32AC[gi].cw) / 2.0f) + view->x);
+      if (func_800B1750((dx * dx) + (dz * dz)) < (*rp))
+      {
+        idx = (z * D_800F32AC[gi].w) + x;
+        id = D_800F32AC[gi].map0[idx];
+        if (id != (-1))
+        {
+          func_8002D2CC(m->unk_6C, id, ((u8 *) D_800F374C) + (D_800ED52C * 0x40), mtx);
         }
+        id = D_800F32AC[gi].map1[idx];
+        if (id != (-1))
+        {
+          func_8002D2CC(m->unk_6C, id, ((u8 *) D_800F374C) + (D_800ED52C * 0x40), mtx);
+        }
+        id = D_800F32AC[gi].map2[idx];
+        if (id != (-1))
+        {
+          func_8002D2CC(m->unk_6C, id, ((u8 *) D_800F374C) + (D_800ED52C * 0x40), mtx);
+        }
+      }
     }
-    D_800ED52C++;
+
+  }
+
+  D_800ED52C++;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/29C90", func_8002A92C);
-#endif
 void func_8002AD04(void) {
     func_800237BC(0x55F0);
     D_800D6000 = 0;
