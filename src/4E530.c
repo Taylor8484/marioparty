@@ -611,33 +611,39 @@ void func_8004F358(omObjData* arg0) {
         omDelObj(arg0);
     }
 }
-// register allocation of the three arguments (raw 6, masked 0)
-#ifdef NON_MATCHING
-s32 func_8004F40C(Object* arg0, s32 arg1, s32 arg2) {
-    Unk4E530Motion* p;
-    omObjData* obj;
-    s32 i;
+// decomp-permuter
+s32 func_8004F40C(Object *arg0, s32 arg1, s32 arg2)
+{
+  Unk4E530Motion *p;
+  omObjData *obj;
+  s32 i;
+  for (i = 0; i < 16; i++)
+  {
+    p = &D_800D8160[i];
+    if (p->unk8 == 0)
+    {
+      break;
+    }
+  }
 
-    for (i = 0; i < 16; i++) {
-        p = &D_800D8160[i];
-        if (p->unk8 == NULL) {
-            break;
-        }
+  if (i == 16)
+  {
+    if (1)
+    {
+      return -1;
     }
-    if (i == 16) {
-        return -1;
-    }
-    obj = omAddObj(0x2000, 0, 0, -1, func_8004F358);
-    p->unk8 = obj;
-    obj->work[0] = i;
-    p->unk4 = arg0;
-    p->unk0 = arg1;
-    p->unk2 = arg2;
-    return i;
+  }
+  obj = omAddObj(0x2000, 0, 0, -1, func_8004F358);
+  p->unk8 = obj;
+  obj->work[0] = i;
+  p->unk4 = arg0;
+  p->unk0 = arg1;
+  arg2++;
+  arg2--;
+  arg1 = arg2;
+  p->unk2 = arg1;
+  return i;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/4E530", func_8004F40C);
-#endif
 void func_8004F4D4(void* arg0, s32 arg1, s32 arg2) {
     MBMotionShiftSet(arg0, arg1, 0, 0xA, arg2);
 }
