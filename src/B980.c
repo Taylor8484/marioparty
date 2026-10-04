@@ -1104,29 +1104,40 @@ void func_8000C250(s16 arg0) {
     }
 }
 
-// branch polarity/delay slot of the final sign flip (masked 4)
-#ifdef NON_MATCHING
-s16 func_8000C2D4(void) {
-    f32 rate;
-    s32 frames;
-
-    if (D_800CDAEC != 1 || D_800CDAF4 == 0.0f) {
-        return 0;
-    }
-    if (D_800CDAF4 < 0.0f) {
-        rate = -D_800CDAF4;
-    } else {
-        rate = D_800CDAF4;
-    }
-    frames = D_800CDB02 / rate - D_800CDAF8 / rate;
-    if (D_800CDAF4 < 0.0f) {
-        frames = -frames;
-    }
-    return frames;
+// decomp-permuter
+s16 func_8000C2D4(void)
+{
+  s32 new_var;
+  f32 rate;
+  s32 frames;
+  if ((D_800CDAEC != 1) || (D_800CDAF4 == 0.0f))
+  {
+    return 0;
+  }
+  if (D_800CDAF4 < 0.0f)
+  {
+    rate = -D_800CDAF4;
+  }
+  else
+  {
+    rate = D_800CDAF4;
+  }
+  frames = (new_var = (D_800CDB02 / rate) - (D_800CDAF8 / rate));
+  if (D_800CDAF4 < 0.0f)
+  {
+    frames = -frames;
+  }
+  if (D_800CDAF4)
+  {
+    new_var = frames;
+    return new_var;
+  }
+  else
+  {
+    new_var = frames;
+    return new_var;
+  }
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/B980", func_8000C2D4);
-#endif
 
 void func_8000C390(s8 arg0) {
     if (D_800CDAF0 & 0x8000) {
@@ -1205,23 +1216,33 @@ void func_8000C64C(s16 frames) {
     }
 }
 
-// register allocation: one temp in a1 instead of v0 (masked 0)
-#ifdef NON_MATCHING
-void func_8000C748(u8 chan, B980ChlInfo* info) {
-    if (D_800CDAF0 & 0x8000) {
-        D_800CDAF0 |= 0x10;
-        if (D_800CDAEC == 1) {
-            info->program = alSeqpGetChlProgram(D_800CDAD4, chan);
-            info->vol = alSeqpGetChlVol(D_800CDAD4, chan);
-            info->pan = alSeqpGetChlPan(D_800CDAD4, chan);
-            info->fxmix = alSeqpGetChlFXMix(D_800CDAD4, chan);
-            D_800CDAF0 &= ~0x10;
-        }
+// decomp-permuter
+void func_8000C748(u8 chan, B980ChlInfo *info)
+{
+  if (D_800CDAF0 & 0x8000)
+  {
+    D_800CDAF0 |= 0x10;
+    if (D_800CDAEC == 1)
+    {
+      if (D_800CDAF0 || info)
+      {
+        info->program = alSeqpGetChlProgram(D_800CDAD4, chan);
+        info->vol = alSeqpGetChlVol(D_800CDAD4, chan);
+        info->pan = alSeqpGetChlPan(D_800CDAD4, chan);
+        info->fxmix = alSeqpGetChlFXMix(D_800CDAD4, chan);
+        D_800CDAF0 &= ~0x10;
+      }
+      else
+      {
+        info->program = alSeqpGetChlProgram(D_800CDAD4, chan);
+        info->vol = alSeqpGetChlVol(D_800CDAD4, chan);
+        info->pan = alSeqpGetChlPan(D_800CDAD4, chan);
+        info->fxmix = alSeqpGetChlFXMix(D_800CDAD4, chan);
+        D_800CDAF0 &= ~0x10;
+      }
     }
+  }
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/B980", func_8000C748);
-#endif
 
 s32 func_8000C808(B980Osc** oscState, f32* initVal, u8 oscType, u8 oscRate, u8 oscDepth, u8 oscDelay) {
     B980Osc* osc;
@@ -1907,75 +1928,87 @@ void func_8000DE5C(s16 idx) {
     voice->unk_0C = 1;
 }
 
-// register allocation: 0x5431 entry address built in s1 instead of v0 (masked 0)
-#ifdef NON_MATCHING
-B980SfxEnt* func_8000DF98(s16 id, B980SndParam* param) {
-    B980SfxEnt* ent;
-    B980SfxEnt* e;
-    B980SfxExt* ext;
+// decomp-permuter
+B980SfxEnt *func_8000DF98(s16 id, B980SndParam *param)
+{
+  B980SfxEnt *ent;
+  int new_var;
+  B980SfxEnt *e;
+  B980SfxExt *ext;
+  param->id = id;
+  param->vol = 0x7F;
+  param->pan = 0x40;
+  param->unk_0E = -1;
+  param->flags = 0;
+  param->unk_15 = 0;
+  param->unk_16 = 0;
+  param->unk_14 = 0;
+  param->unk_17 = 0;
+  param->unk_18 = 0;
+  switch (D_800CEA90->magic)
+  {
+    case 0x5431:
+      new_var = (((s32) D_800CEA90) + (id * 8)) + 4;
+      ent = (B980SfxEnt *) new_var;
+      param->sound = (s32) func_8000E2D0(D_800CEA88, ent->b0, ent->b1, ent->b2);
+      param->pitch = ((f32) ent->rate) / ((f32) D_800C18A8);
+      param->unk_13 = ent->b3;
+      break;
 
-    param->id = id;
-    param->vol = 0x7F;
-    param->pan = 0x40;
-    param->unk_0E = -1;
-    param->flags = 0;
-    param->unk_15 = 0;
-    param->unk_16 = 0;
-    param->unk_14 = 0;
-    param->unk_17 = 0;
-    param->unk_18 = 0;
-    switch (D_800CEA90->magic) {
-        case 0x5431:
-            ent = (B980SfxEnt*)((s32)D_800CEA90 + id * 8 + 4);
-            param->sound = (s32)func_8000E2D0(D_800CEA88, ent->b0, ent->b1, ent->b2);
-            param->pitch = (f32)ent->rate / (f32)D_800C18A8;
-            param->unk_13 = ent->b3;
-            break;
-        case 0x5432:
-        case 0x5433:
-            ent = e = (B980SfxEnt*)((s32)D_800CEA90 + id * 8 + 4);
-            param->sound = (s32)&((B980Sound*)D_800CEA88)[e->flags & 0x1FFF];
-            if (e->flags & 0x8000) {
-                param->flags |= 0x10;
-            }
-            if (e->flags & 0x4000) {
-                param->flags |= 0x40;
-            }
-            if (e->flags & 0x2000) {
-                param->unk_18 = 1;
-            }
-            if (e->b0 < 0 && D_800CEABC != NULL) {
-                param->unk_0E = ((e->b0 & 0x7F) << 8) + (u8)e->b1;
-            } else {
-                param->vol = e->b1 & 0x7F;
-                param->pan = e->b0 & 0x7F;
-                if (e->b1 < 0) {
-                    param->flags |= 0x100;
-                }
-            }
-            param->unk_14 = e->b2;
-            param->pitch = (f32)e->rate / (f32)D_800C18A8;
-            param->unk_13 = e->b3;
-            if (D_800CEA90->magic != 0x5432 && D_800CEA98 != 0) {
-                ext = &((B980SfxExt*)D_800CEA98)[id];
-                param->unk_15 = ext->b0;
-                param->unk_16 = ext->b1;
-                param->unk_17 = ext->b2;
-                param->unk_18 = ext->b3;
-            }
-            break;
-        default:
-            ent = NULL;
-            param->sound = (s32)func_8000E340(D_800CEA88, id);
-            param->pitch = 1.0f;
-            param->unk_13 = 0x50;
-            break;
+    case 0x5432:
+
+    case 0x5433:
+      ent = (e = (B980SfxEnt *) ((((s32) D_800CEA90) + (id * 8)) + 4));
+      param->sound = (s32) (&((B980Sound *) D_800CEA88)[e->flags & 0x1FFF]);
+      if (e->flags & 0x8000)
+    {
+      param->flags |= 0x10;
     }
-    return ent;
+      if (e->flags & 0x4000)
+    {
+      param->flags |= 0x40;
+    }
+      if (e->flags & 0x2000)
+    {
+      param->unk_18 = 1;
+    }
+      if ((e->b0 < 0) && (D_800CEABC != 0))
+    {
+      param->unk_0E = ((e->b0 & 0x7F) << 8) + ((u8) e->b1);
+    }
+    else
+    {
+      param->vol = e->b1 & 0x7F;
+      param->pan = e->b0 & 0x7F;
+      if (e->b1 < 0)
+      {
+        param->flags |= 0x100;
+      }
+    }
+      param->unk_14 = e->b2;
+      param->pitch = ((f32) e->rate) / ((f32) D_800C18A8);
+      param->unk_13 = e->b3;
+      if ((D_800CEA90->magic != 0x5432) && (D_800CEA98 != 0))
+    {
+      ext = &((B980SfxExt *) D_800CEA98)[id];
+      param->unk_15 = ext->b0;
+      param->unk_16 = ext->b1;
+      param->unk_17 = ext->b2;
+      param->unk_18 = ext->b3;
+    }
+      break;
+
+    default:
+      ent = 0;
+      param->sound = (s32) func_8000E340(D_800CEA88, id);
+      param->pitch = 1.0f;
+      param->unk_13 = 0x50;
+      break;
+
+  }
+
+  return ent;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/B980", func_8000DF98);
-#endif
 
 s16 func_8000E21C(B980BankFile* bankFile) {
     s16 total = 0;
@@ -2362,57 +2395,72 @@ void func_8000F238(void) {
     }
 }
 
-// register allocation: slot index in t1 instead of a2 (masked 0)
-#ifdef NON_MATCHING
-void func_8000F294(s16 idx, s8 mode) {
-    s32 i;
-    s32 slot = 0;
-    B980SfxSlot* s;
-    unkB980Struct2* voice;
+// decomp-permuter
+void func_8000F294(s16 idx, s8 mode)
+{
+  s32 i;
+  s32 slot = 0;
+  B980SfxSlot *s;
+  unkB980Struct2 *voice;
+  if ((((((D_800CEAF0 == 0) || (D_800CEA94[idx].unk_08 & 0x20)) || (D_800CEAF4 <= 0)) || (D_800CEAF5 < 2)) || (D_800CEAE8 == 0.0f)) || (D_800CEAEC == 0.0f))
+  {
+    return;
+  }
+  if ((idx != 0) || (D_800C18DC[0] < 2))
+  {
+    for (i = 0; i < D_800CEAF0; i++)
+    {
+      s = &D_800CEAE4[i];
+      if ((s->id >= 0) && (s->voice == idx))
+      {
+        slot = i;
+        break;
+      }
+    }
 
-    if (D_800CEAF0 == 0 || (D_800CEA94[idx].unk_08 & 0x20) || D_800CEAF4 <= 0 || D_800CEAF5 < 2
-        || D_800CEAE8 == 0.0f || D_800CEAEC == 0.0f) {
-        return;
+    if (mode == 0)
+    {
+      if (i < D_800CEAF0)
+      {
+ do { D_800CEAE4[slot].id = -1; } while (0);
+      }
+      return;
     }
-    if (idx != 0 || D_800C18DC[0] < 2) {
-        for (i = 0; i < D_800CEAF0; i++) {
-            s = &D_800CEAE4[i];
-            if (s->id >= 0 && s->voice == idx) {
-                slot = i;
-                break;
-            }
-        }
-        if (mode == 0) {
-            if (i < D_800CEAF0) {
-                D_800CEAE4[slot].id = -1;
-            }
-            return;
-        }
-        if (i != D_800CEAF0) {
-            goto fill;
-        }
-    } else if (mode == 0) {
-        return;
+    if (i != D_800CEAF0)
+    {
+      if (voice->unk_22)
+      {
+        goto fill;
+      }
+      else
+      {
+        goto fill;
+      }
     }
-    slot = (s8)D_800CEAF6++;
-fill:
-    if (D_800CEAF6 >= D_800CEAF0) {
-        D_800CEAF6 = 0;
-    }
-    voice = &D_800CEA94[idx];
-    s = &D_800CEAE4[slot];
-    s->id = voice->unk_14;
-    s->voice = idx;
-    s->vol = voice->unk_22;
-    s->unk_05 = voice->unk_23;
-    s->unk_06 = voice->unk_25;
-    s->mode = mode;
-    s->delay = D_800CEAF4;
-    s->count = D_800CEAF5;
+  }
+  else
+    if (mode == 0)
+  {
+    return;
+  }
+  slot = (s8) (D_800CEAF6++);
+  fill:
+  if (D_800CEAF6 >= D_800CEAF0)
+  {
+    D_800CEAF6 = 0;
+  }
+
+  voice = &D_800CEA94[idx];
+  s = &D_800CEAE4[slot];
+  s->id = voice->unk_14;
+  s->voice = idx;
+  s->vol = voice->unk_22;
+  s->unk_05 = voice->unk_23;
+  s->unk_06 = voice->unk_25;
+  s->mode = mode;
+  s->delay = D_800CEAF4;
+  s->count = D_800CEAF5;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/B980", func_8000F294);
-#endif
 
 // delay-slot/branch layout around the func_80010C4C result test (masked 7)
 #ifdef NON_MATCHING
@@ -3351,31 +3399,36 @@ void func_80011A30(s16 frames) {
     D_800CEAA8 = (f32)D_800CEAB0 / frames;
 }
 
-// branch polarity/delay slot of the final sign flip (masked 8)
-#ifdef NON_MATCHING
-s16 func_80011A80(void) {
-    f32 rate;
-    s32 frames;
-    s32 ret;
-
-    if (D_800CEAA8 != 0.0f) {
-        if (D_800CEAA8 < 0.0f) {
-            rate = -D_800CEAA8;
-        } else {
-            rate = D_800CEAA8;
-        }
-        frames = D_800CEAB0 / rate - D_800CEAAC / rate;
-        ret = frames;
-        if (D_800CEAA8 < 0.0f) {
-            ret = -ret;
-        }
-        return ret;
+// decomp-permuter
+s16 func_80011A80(void)
+{
+  f32 rate;
+  f32 new_var;
+  s32 frames;
+  s32 ret;
+  if (D_800CEAA8 != 0.0f)
+  {
+ do { } while (0);
+    if (D_800CEAA8 < 0.0f)
+    {
+      rate = -D_800CEAA8;
     }
-    return 0;
+    else
+    {
+      rate = D_800CEAA8;
+    }
+    frames = (D_800CEAB0 / rate) - (D_800CEAAC / rate);
+    new_var = D_800CEAA8;
+    ret = frames;
+    if (new_var < 0.0f)
+    {
+      ret = -ret;
+    }
+    frames = ret;
+    return frames;
+  }
+  return 0;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/B980", func_80011A80);
-#endif
 
 void func_80011B2C(void) {
     s32 i;
