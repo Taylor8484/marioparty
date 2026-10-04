@@ -1141,9 +1141,17 @@ extern unk34D80Light D_800EE9A2[];
 extern s16 D_800F33E8;
 extern unk34D80Menu D_800F3B88[];
 
+#ifdef TARGET_PC
+s16 func_80014C0C(s16); /* host: matches the definition */
+#else
 s16 func_80014C0C(s32);
+#endif
 void func_80014DF4(s16);
+#ifdef TARGET_PC
+u8* func_80015970(s16, s16, s16, s16, s16, void (*)(s16)); /* host: matches the definition */
+#else
 void func_80015970(s16, s32, s32, s32, s32, void*);
+#endif
 void func_8001636C(char*, ...);
 s16 func_80016C84(void);
 void func_8002346C(s16, s32, s32);

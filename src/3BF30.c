@@ -14,7 +14,7 @@ typedef struct {
 extern u8 D_31C7E0[];
 extern void* D_800C4250[];
 extern u64* D_800C425C[];
-extern s32 D_800C426C[];
+extern PB_PTR32 D_800C426C[];
 extern s32 D_800C42B0;
 extern s32 D_800C32B0;
 extern OSMesgQueue D_800ED538;
@@ -31,13 +31,17 @@ s16 func_80013E84(void);
 void func_80014220(void);
 void func_8001429C(void);
 void func_8001A0F0(void);
-void func_8001A600(void** arg1, s32 arg2, s32 arg3, u64** arg4, s32* arg5);
+void func_8001A600(void** arg1, s32 arg2, s32 arg3, u64** arg4, PB_PTR32* arg5);
 void func_8001ABF4(u32 arg0);
 void func_80060F70(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u16 arg4);
 void func_80061354(void);
 void func_800613A0(void);
 void func_80061F60(void);
+#ifdef TARGET_PC
+void func_800637C0(u8, u8); /* host: matches the definition */
+#else
 void func_800637C0(s32, s32);
+#endif
 void func_80063F40(void);
 void func_8006CBB0(void);
 void func_8003B5EC(s16 arg0);

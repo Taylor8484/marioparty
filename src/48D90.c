@@ -81,7 +81,11 @@ extern Vec3f D_800D80D8;
 extern Vec3f D_800D80E4;
 extern Vec3f D_800D80F0;
 
+#ifdef TARGET_PC
+void func_80028E8C(s16, void (*)(Gfx**, Mtx*, u8)); /* host: matches the definition */
+#else
 void func_80028E8C(s32, void*);
+#endif
 void func_8004A7A4(void);
 void func_8004AFFC(void);
 void func_8004B7F8(s32);

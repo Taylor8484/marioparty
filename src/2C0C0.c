@@ -745,7 +745,7 @@ Gfx* func_8002D614(s16 arg0, Gfx* arg1, Gfx* arg2) {
         if (var_fp != 0) {
             gDPFullSync(D_800F37DC++);
             gSPEndDisplayList(D_800F37DC++);
-            func_8001AAC4(var_s7, D_800EE754, 0, NULL, 0);
+            func_8001AAC4(PB_HOSTCAST(PB_PTR32, var_s7), D_800EE754, 0, NULL, 0);
             var_s7 = D_800F37DC;
         }
 

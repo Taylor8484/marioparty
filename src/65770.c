@@ -156,7 +156,11 @@ extern u16 D_800ED3EC;
 extern s8 D_800F384E;
 void func_80067E38(unk65770Obj* obj);
 void func_80068124(unk65770Obj* obj);
+#ifdef TARGET_PC
+s16 func_8002451C(u32, void (*)(Gfx**, Mtx*, camera*), u8); /* host: matches the definition */
+#else
 s16 func_8002451C(s32, void*, s32);
+#endif
 f64 func_8009B618(f64, f64);
 void func_8003B6E4(void*, u32);
 void func_8006677C(Gfx** gfx, Mtx* mtx, unk_Struct00* cam);

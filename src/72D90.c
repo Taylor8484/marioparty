@@ -32,8 +32,16 @@ u32 strlen(const char*);
 #endif
 void* func_80014614(s32);
 void DataCloseTemp(void*);
+#ifdef TARGET_PC
+void func_800238F0(s16); /* host: matches the definition */
+#else
 void func_800238F0(s32);
+#endif
+#ifdef TARGET_PC
+s16 func_8002451C(u32, void (*)(Gfx**, Mtx*, camera*), u8); /* host: returns s16 */
+#else
 s32 func_8002451C(s32, void (*)(Gfx**), s32);
+#endif
 void func_8003A060(Gfx**, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
 s16 func_8006DB3C(s16, s32, s16, s16, s16);
 s16 func_8006DD8C(s16, s16);

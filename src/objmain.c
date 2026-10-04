@@ -7,7 +7,11 @@ extern u8 D_800F64E8[];
 extern u8 D_800F3388[];
 extern u16 D_800F338C[];
 extern u16 D_800ECC24[];
+#ifdef TARGET_PC
+void func_8006CE64(s16, s16, s16, s16); /* host: matches the definition */
+#else
 void func_8006CE64(u8, s16, s16, s16);
+#endif
 
 
 typedef struct omSndFade {
@@ -89,10 +93,18 @@ extern s16 D_800D89BE;
 extern s16 D_800D89C0;
 extern omSaftyFrameColor saftyFrameColor;
 
+#ifdef TARGET_PC
+void saftyFrameFlashSet(s8, s8, s8, s8, u8, u8, u8, u8, u8); /* host: matches the definition */
+#else
 void saftyFrameFlashSet(s32, s32, s32, s32, s32, s32, s32, s32, s32);
+#endif
 void saftyFrameFlashReset(void);
 void saftyFrameReset(void);
+#ifdef TARGET_PC
+void saftyFrameSet(s8, s8, s8); /* host: matches the definition */
+#else
 void saftyFrameSet(s32, s32, s32);
+#endif
 void pfWinClose(void);
 void pfWinKill(s16);
 void func_80070ED4(void);
@@ -141,10 +153,22 @@ s16 pfWinCreate(s32, s32, s32, s32, s32);
 s32 func_8003B710(void);
 s32 func_8003B730(void);
 void func_800255DC(void);
+#ifdef TARGET_PC
+void func_8001AB84(void**, u16, u16); /* host: matches the definition */
+#else
 void func_8001AB84(void*, u8, s32);
+#endif
+#ifdef TARGET_PC
+void func_80023B40(void* (*)(s32), void (*)(void*), u16, u16, u16, u8); /* host: matches the definition */
+#else
 void func_80023B40(void* (*)(s32), void (*)(void*), u16, u16, s32, s32);
+#endif
 void func_8002B6C8(void);
+#ifdef TARGET_PC
+void func_80025658(void*, void*); /* host: matches the definition */
+#else
 void func_80025658(s32, s32);
+#endif
 void MakeTempHeap(void*, s32);
 void func_8006CD0C(s16);
 void func_80018870(void);
@@ -828,7 +852,7 @@ void omMain(void) {
                 func_8001AB84(D_800C4250, D_800F3705, 2);
                 func_80023B40(HuMemDirectMalloc, HuMemDirectFree, D_800F3F30, D_800ED726, D_800F64EC, D_800F3705);
                 func_8002B6C8();
-                func_80025658(0x02000000, 0x3D0800);
+                func_80025658(PB_HOSTCAST(void*, 0x02000000), PB_HOSTCAST(void*, 0x3D0800));
                 InitCameras(1);
             }
             D_800C5994 = 0;

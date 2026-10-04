@@ -17,7 +17,11 @@ void func_80064B70(void);
 void func_80068398(void);
 void func_80066DC4(s16, s16, s16, s16);
 void func_80067284(s16, s16, f32);
+#ifdef TARGET_PC
+u8 func_80067328(s16, s16); /* host: returns u8: x86-64 leaves the upper bits of a narrow return undefined */
+#else
 s32 func_80067328(s16, s16);
+#endif
 
 
 void func_80018870(void) {

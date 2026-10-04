@@ -11,12 +11,24 @@ Process* func_80041F24(s32);
 Process* func_800444DC(void);
 Process* func_80044680(s32);
 void func_800466C0(void);
+#ifdef TARGET_PC
+s16 func_80046710(void); /* host: returns s16: x86-64 leaves the upper bits of a narrow return undefined */
+#else
 s32 func_80046710(void);
+#endif
 Process* func_80047E54(void);
 void func_8004D4A8(s16, s32);
 void func_8004D6FC(s16, f32);
+#ifdef TARGET_PC
+void func_8004DBD4(s32, s32); /* host: matches the definition */
+#else
 void func_8004DBD4(s32, u8);
+#endif
+#ifdef TARGET_PC
+void func_80052C44(s32, s16, s16, s16, u16); /* host: matches the definition */
+#else
 void func_80052C44(s32, s32, s32, s32, s32);
+#endif
 s32 func_80054730(s32);
 extern s32 D_800D86E8;
 void func_80056F40(void);
@@ -54,7 +66,11 @@ s8 func_8000C4A0(void);
 
 extern s16 D_800EE320;
 extern s16 D_800F2A78;
+#ifdef TARGET_PC
+void func_8003D20C(void*); /* host: takes a pointer; the port number travels in it */
+#else
 void func_8003D20C(s32);
+#endif
 void func_80052934(s32);
 
 
@@ -1001,7 +1017,7 @@ void func_8005835C(void) {
         continue;
     view:
         func_80041F84(cur);
-        func_8003D20C(port);
+        func_8003D20C(PB_HOSTCAST(void*, PB_HOSTCAST(PB_PTR32, port)));
         goto done;
     start:
         func_80041F84(i);

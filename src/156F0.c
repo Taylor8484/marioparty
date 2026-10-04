@@ -56,7 +56,11 @@ extern s16 D_800F3968;
 extern Win D_800F3B88[18];
 extern s16 D_800F5248;
 
+#ifdef TARGET_PC
+s16 func_8002451C(u32, void (*)(Gfx**, Mtx*, camera*), u8); /* host: matches the definition */
+#else
 s32 func_8002451C(s32, void (*)(void), s32);
+#endif
 void func_80023888(void*);
 void func_8009B960(char*, char*);
 

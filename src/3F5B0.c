@@ -12,7 +12,11 @@ void func_80039ACC(s16);
 void func_80047694(s32);
 s32 func_80047B68(void);
 void func_800471FC(void);
+#ifdef TARGET_PC
+void func_80052C44(s32, s16, s16, s16, u16); /* host: matches the definition */
+#else
 void func_80052C44(s32, s32, s32, s32, s32);
+#endif
 s32 func_80041644(s32);
 s32 func_80041664(s32);
 extern s16 D_800EE320;
@@ -20,9 +24,17 @@ extern s16 D_800EE320;
 
 extern s32 D_800C4C40[];
 extern s32 D_800C4C58[];
+#ifdef TARGET_PC
+s16 func_80038D5C(unk2C0C0StructC0*, u16, s16, char*); /* host: matches the definition */
+#else
 s16 func_80038D5C(unk2C0C0StructC0*, u16, s32, char*);
+#endif
 void func_8003967C(s16, u8);
+#ifdef TARGET_PC
+void func_800396B0(s16, s32); /* host: matches the definition */
+#else
 void func_800396B0(s16, u8);
+#endif
 s32 func_8004606C(void);
 
 

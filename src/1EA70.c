@@ -91,11 +91,27 @@ void func_80020654(unk2C0C0StructC0* arg0, s16 arg1, s16 arg2);
 void func_80020DCC(s32 arg0, u8* arg1);
 s32 func_80021C50(s16 arg0, s16 arg1, s16 arg2);
 void func_80021EA0(void);
+#ifdef TARGET_PC
+s16 func_80024198(u32, Gfx*, s32); /* host: matches the definition */
+#else
 s32 func_80024198(s32, s32, s32);
+#endif
+#ifdef TARGET_PC
+s16 func_8002451C(u32, void (*)(Gfx**, Mtx*, camera*), u8); /* host: matches the definition */
+#else
 s16 func_8002451C(s32, void (*)(s32, u8*), s32);
+#endif
+#ifdef TARGET_PC
+s16 func_80038D5C(unk2C0C0StructC0*, u16, s16, char*); /* host: matches the definition */
+#else
 s16 func_80038D5C(unk2C0C0StructC0*, u16, s32, char*);
+#endif
 void func_800399F0(s16);
+#ifdef TARGET_PC
+s32 func_8009B850(const void*, const void*); /* host: one host prototype for the SDK-region unit 9C440 (unverified) */
+#else
 s32 func_8009B850(u8*, u8**);
+#endif
 void func_800A0B90(Matrix4f, void*);
 void DataCloseTemp(void*);
 void guMtxCatF(float m[4][4], float n[4][4], float r[4][4]);

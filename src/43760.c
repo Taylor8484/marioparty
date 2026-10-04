@@ -34,7 +34,11 @@ extern s8 D_800D6462[5];
 extern s8 D_800D6467;
 
 s32 func_80054730(s32);
+#ifdef TARGET_PC
+s16 func_8005949C(s16); /* host: matches the definition */
+#else
 s16 func_8005949C(s32);
+#endif
 void func_80047D48(void);
 void func_80043544(void);
 void func_8004367C(void);

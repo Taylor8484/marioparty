@@ -8,8 +8,16 @@ extern f32 D_800B898C;
 extern f32 D_800B8990;
 
 void func_8000A534(void*, f32);
+#ifdef TARGET_PC
+void func_8001E268(s16, u8, u8); /* host: matches the definition */
+#else
 void func_8001E268(u8, s32, s32);
+#endif
+#ifdef TARGET_PC
+void func_8001E3B4(s16); /* host: matches the definition */
+#else
 void func_8001E3B4(u8);
+#endif
 f32 func_80025D18(s16);
 f32 func_80025E70(s16);
 
@@ -146,20 +154,40 @@ void func_80007A50(omObjData*);
 void func_800093FC(omObjData*, f32, f32, f32);
 s32 func_80009C90(omObjData*, s16, s16);
 void func_80009D48(s16*, s16*);
+#ifdef TARGET_PC
+s16 func_80009E4C(s16, s16, s8, s8); /* host: returns s16 */
+#else
 s32 func_80009E4C(s8, s32, s8, s8);
+#endif
 void func_8000A6F4(omObjData*);
 s32 func_80017A60(omObjData*);
 void func_8001802C(omObjData*);
 
 int abs(int);
+#ifdef TARGET_PC
+void func_800090D8(omObjData*, u8, u8); /* host: matches the definition */
+#else
 void func_800090D8(omObjData*, s32, s32);
+#endif
 void func_800096B0(PlayerWork*, s32);
 void func_8000A988(omObjData*, f32, f32);
 void func_8000ACE4(omObjData*, omObjData*);
+#ifdef TARGET_PC
+void func_80017C0C(omObjData*, u8, f32, f32, f32, f32, f32); /* host: matches the definition */
+#else
 void func_80017C0C(omObjData*, s32, f32, f32, f32, f32, f32);
+#endif
+#ifdef TARGET_PC
+void func_80018450(omObjData*, u8); /* host: matches the definition */
+#else
 void func_80018450(omObjData*, s32);
+#endif
 void func_8001E2A8(s16, u16);
+#ifdef TARGET_PC
+void func_80060F04(s16, s16, s16, s16); /* host: matches the definition */
+#else
 void func_80060F04(s16, s32, s32, s32);
+#endif
 void func_800295FC(ColVtx*, ColVtx*, ColVtx*, Vec3f*);
 void func_8002956C(Vec3f*);
 void func_8000A464(void*, Vec3f*);

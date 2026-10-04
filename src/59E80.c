@@ -96,7 +96,11 @@ extern s8 D_800C572F;
 s32 func_800141FC(s16 arg0);
 s32 InitEeprom(char*);
 s32 func_8005AFEC(void);
+#ifdef TARGET_PC
+s32 ReadEeprom(s32, u8*, s16); /* host: eeprom.c host definition */
+#else
 s32 ReadEeprom(s32, u8*, s32);
+#endif
 void func_8005B060(void);
 void func_8000B364(s32);
 

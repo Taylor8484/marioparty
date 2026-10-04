@@ -53,12 +53,20 @@ void func_800363C8(unk2C0C0StructC0*);
 void func_800368AC(unk2C0C0StructC0*, f32);
 f32 func_800369FC(unk24740Struct18*, s16, f32, f32, f32);
 void func_80037FA0(unk2C0C0StructC0*);
+#ifdef TARGET_PC
+unk2C0C0Struct70* func_80038178(unk2C0C0StructC0*, u8*); /* host: 388E0.c host definition */
+#else
 unk2C0C0Struct70* func_80038178(unk2C0C0StructC0*);
+#endif
 void func_800397AC(u16);
 void func_80039AEC(void);
 void func_80039BAC(void);
 void func_800721D8(Gfx**);
+#ifdef TARGET_PC
+s32 func_8009B850(const void*, const void*); /* host: one host prototype for the SDK-region unit 9C440 (unverified) */
+#else
 s32 func_8009B850(unk2C0C0Struct70*, u8*);
+#endif
 void func_800A0B90(Matrix4f, void*);
 Gfx* pfDrawFonts(Gfx*);
 void guMtxCatF(float m[4][4], float n[4][4], float r[4][4]);
@@ -463,7 +471,7 @@ void func_800247FC(OSMesgQueue* arg0, s32 arg1) {
             gfx = func_800253EC(var_s4, 1, mask);
             gDPFullSync(D_800F37DC++);
             gSPEndDisplayList(D_800F37DC++);
-            func_8001AAC4(gfx, D_800EE754, 0, NULL, 0);
+            func_8001AAC4(PB_HOSTCAST(PB_PTR32, gfx), D_800EE754, 0, NULL, 0);
         }
         func_8002B808();
         D_800F32A0 = (camera*)&D_800C3110[layer];
@@ -615,7 +623,7 @@ void func_800247FC(OSMesgQueue* arg0, s32 arg1) {
     D_800F37DC = pfDrawFonts(D_800F37DC);
     gDPFullSync(D_800F37DC++);
     gSPEndDisplayList(D_800F37DC++);
-    func_8001AAC4(var_s4, D_800EE754, 1, arg0, 0x309);
+    func_8001AAC4(PB_HOSTCAST(PB_PTR32, var_s4), D_800EE754, 1, arg0, 0x309);
     D_800C32B0++;
 }
 #else
@@ -634,7 +642,7 @@ Gfx* func_800253EC(Gfx* arg0, s16 arg1, u16 arg2) {
         if (p->unk_6C->unk_28 != D_800EE754) {
             gDPFullSync(D_800F37DC++);
             gSPEndDisplayList(D_800F37DC++);
-            func_8001AAC4(arg0, D_800EE754, 0, NULL, 0);
+            func_8001AAC4(PB_HOSTCAST(PB_PTR32, arg0), D_800EE754, 0, NULL, 0);
             D_800EE754 = p->unk_6C->unk_28;
             arg0 = D_800F37DC;
         }
@@ -1447,7 +1455,12 @@ void func_8002859C(s16 arg0, s16 arg1, char* arg2) {
 void func_8002861C(s16 arg0) {
     unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
 
+#ifdef TARGET_PC
+    /* Retail passes one argument; the callee's name argument is whatever a1 held. */
+    model->unk_BC = func_80038178(model, NULL);
+#else
     model->unk_BC = func_80038178(model);
+#endif
 }
 void func_80028668(unk_ovl_2D_struct* arg0, u16 arg1) {
     arg0->unk_48 = func_800369FC(&D_800ED554[arg0->unk_08], arg0->unk_0A, arg0->unk_48, arg0->unk_50, (f32)arg1 * arg0->unk_4C);

@@ -1,6 +1,10 @@
 #include "common.h"
 
+#ifdef TARGET_PC
+void func_80052CCC(s32, u8); /* host: matches the definition */
+#else
 void func_80052CCC(s32, s32);
+#endif
 extern s32 D_800C537C[];
 extern s32 D_800C5394[];
 extern s16 D_800C53BC[][4];
@@ -265,8 +269,16 @@ Process* func_80050E10(s16 arg0, s32* arg1) {
 
 void func_800484C4(Object*, s16);
 Process* func_80050E10(s16, s32*);
+#ifdef TARGET_PC
+void func_80071788(s32, s16); /* host: matches the definition */
+#else
 void func_80071788(s16, s32);
+#endif
+#ifdef TARGET_PC
+void func_80072108(s16, s16); /* host: matches the definition */
+#else
 void func_80072108(s16, s32);
+#endif
 extern s16 D_800C5328;
 extern s32 D_800C5330[6];
 extern s32 D_800C5348[6];

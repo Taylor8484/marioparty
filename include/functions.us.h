@@ -468,7 +468,11 @@ void func_8005B838(void* arg0);
 s16 func_8006D99C(u8* arg0, s16 arg1);
 void* func_8005B7E8(s32 stringIndex);
 void func_800230D0(s32);
+#ifdef TARGET_PC
+u8 func_8001AAC4(PB_PTR32, u16, s32, OSMesgQueue*, s32); /* host: the definition takes the display list as s32 */
+#else
 void func_8001AAC4(Gfx*, u16, s32, OSMesgQueue*, s32);
+#endif
 s16 func_8001CD00(u8*);
 void func_8001D40C();
 void func_8001D7DC(s16, Gfx**);

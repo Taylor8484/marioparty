@@ -128,7 +128,7 @@ s16 func_800178E8(void) {
     s16 temp_s0;
 
     temp_s0 = D_800C3001;
-    func_8001D8A0(D_800C3001, &func_8002A0E4, &D_800EE738);
+    func_8001D8A0(D_800C3001, PB_HOSTCAST(PB_PTR32, &func_8002A0E4), PB_HOSTCAST(PB_PTR32, &D_800EE738));
     D_800C3001 += 1;
     return temp_s0;
 }
@@ -150,7 +150,7 @@ u8 func_800179C0(s32 arg0) {
 
     for (i = 0; i < arg0; i++) {
         var_a0 = i << 0x10;
-        func_8001D8A0(var_a0 >> 0x10, &func_8002A0E4, (i * 0x6) + &D_800F2C28);
+        func_8001D8A0(var_a0 >> 0x10, PB_HOSTCAST(PB_PTR32, &func_8002A0E4), PB_HOSTCAST(PB_PTR32, (i * 0x6) + &D_800F2C28));
         D_800C3001 += 1;
     }
 

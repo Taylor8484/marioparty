@@ -2,15 +2,27 @@
 #include "engine/process.h"
 
 void func_8001DFC0(void);
+#ifdef TARGET_PC
+void func_80025658(void*, void*); /* host: matches the definition */
+#else
 void func_80025658(s32, s32);
+#endif
 void func_8002B6C8(void);
 void pfClsScr(void);
 void omMain(void);
 void func_80018B2C(void);
 void func_8001E5A0(s32);
 void func_800247FC(void*, s32);
+#ifdef TARGET_PC
+void func_80052CCC(s32, u8); /* host: matches the definition */
+#else
 void func_80052CCC(s32, s32);
+#endif
+#ifdef TARGET_PC
+void func_800594E4(s16, u16); /* host: matches the definition */
+#else
 void func_800594E4(s32, s32);
+#endif
 extern s8 D_800ED558[];
 extern s16 D_800F3778;
 extern s32 D_800ED538;
@@ -23,7 +35,11 @@ void func_80010C30(Addr*, s32, s32, s32);
 void func_8001A3DC(void);
 void func_8001A428(void);
 void func_8001A454(void);
+#ifdef TARGET_PC
+void func_80023B40(void* (*)(s32), void (*)(void*), u16, u16, u16, u8); /* host: matches the definition */
+#else
 void func_80023B40(void* (*)(s32), void (*)(void*), u16, u16, s32, s32);
+#endif
 void func_8003B710(void);
 s32 func_8005B0C4(void);
 void func_8005B6D0(Addr*);
@@ -117,7 +133,7 @@ void func_8001A3DC(void) {
         HuPrcVSleep();
         func_8002B6C8();
         func_8001DFC0();
-        func_80025658(0x02000000, 0x3D0800);
+        func_80025658(PB_HOSTCAST(void*, 0x02000000), PB_HOSTCAST(void*, 0x3D0800));
         pfClsScr();        
     }
 }
