@@ -33,6 +33,11 @@ void bzero(void *dst, size_t len);
 int bcmp(const void *a, const void *b, size_t len);
 typedef intptr_t PB_PTR32;
 typedef uintptr_t PB_UPTR32;
+#if defined(_MSC_VER) && !defined(__clang__)
+/* MSVC has no GNU attributes; the decomp uses aligned(4) on GW_PLAYER only, which x86-64 does
+ * not need for correctness. */
+#define __attribute__(x)
+#endif
 #define PB_HOSTCAST(T, x) ((T)(x))
 /* A ROM offset the N64 links as a symbol address (an Addr label in undefined_syms.txt or
    ld_addrs.h): an lvalue of type Addr at that numeric address, so &sym and its decay give the
