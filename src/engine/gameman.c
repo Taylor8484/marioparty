@@ -124,7 +124,16 @@ void func_8001A0F0(void) {
     temp_s1->unk_24 = &D_1CECC60;
     temp_s1->unk_28 = &D_1CED490;
     temp_s1->unk_40 = 0x14;
+#ifdef TARGET_PC
+    {
+        /* Host: the N64 gives the sound engine a fixed 512 KiB at 0x802E0000. The host al
+           structures are larger, so it gets a static buffer of twice that. */
+        static u64 pbAudioHeap[0x100000 / 8];
+        func_8000B00C(0x6E, 0, pbAudioHeap, (s32)sizeof(pbAudioHeap));
+    }
+#else
     func_8000B00C(0x6E, 0, (void*)0x802E0000, 0x80000);
+#endif
     
     if (_CheckFlag(0x10) != 0) {
         func_8000B364(0);
