@@ -360,37 +360,18 @@ void func_800728F4(Gfx** arg0, u8 arg1, s32* arg2) {
     gDPFillRectangle((*arg0)++, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
-#if NON_MATCHING
-s32 func_800729C8(Gfx** arg0) {
-    if (D_800C6104 == NULL) {
-        return 0;
-    }
-
-    if (D_800F3288 != 0.0f) {
-        u8 var_a1 = 255.0f - D_800F5024 / D_800F3288 * 255.0f;
-
-        gSPDisplayList((*arg0)++, D_800C6108);
-        gDPSetCombineMode((*arg0)++, G_CC_MODULATEI_PRIM, G_CC_MODULATEI_PRIM);
-        gDPSetRenderMode((*arg0)++, G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2);
-        gDPSetPrimColor((*arg0)++, 0, 0, 255, 255, 255, var_a1);
-
-        func_80072E5C(arg0, D_800F545C);
-
-        if (!(D_800F5024 >= D_800F3288)) {
-            return 1;
-        }
-    }
-
-    if (D_800F50B8 == 0) {
-        HuMemDirectFree(D_800C6104);
-    }
-
-    D_800C6104 = NULL;
+// decomp-permuter
+s32 func_800729C8(Gfx **arg0)
+{
+  f32 new_var;
+  if (D_800C6104 == 0)
+  {
     return 0;
+  }
+ do { if ((new_var = D_800F3288) != 0.0f) { u8 var_a1 = 255.0f - ((D_800F5024 / D_800F3288) * 255.0f); gSPDisplayList((*arg0)++, D_800C6108); gDPSetCombineMode((*arg0)++, G_CC_MODULATEI_PRIM, G_CC_MODULATEI_PRIM); gDPSetRenderMode((*arg0)++, G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2); gDPSetPrimColor((*arg0)++, 0, 0, 255, 255, 255, var_a1); func_80072E5C(arg0, D_800F545C); if (!(D_800F5024 >= D_800F3288)) { return 1; } } if (D_800F50B8 == 0) { HuMemDirectFree(D_800C6104); } } while (0);
+  D_800C6104 = 0;
+  return 0;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/72D90", func_800729C8);
-#endif
 
 s32 func_80072B5C(Gfx** arg0) {
     gSPDisplayList((*arg0)++, D_800C6108);

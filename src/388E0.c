@@ -232,94 +232,123 @@ unk2C0C0Struct70* func_80038194(unk2C0C0StructC0* arg0, u8* arg1) {
     return &D_800F37AC[i];
 }
 
-// register allocation only (masked 0)
-#ifdef NON_MATCHING
-void func_80038254(u8* arg0, unk2C0C0StructC0* arg1, unk2C0C0Struct70* arg2) {
-    u16 bpp;
-    u16 size;
-    u16 i;
-    u16 c;
-    u8* dst;
-
-    arg0 += 0xB;
-    arg2->unk_1A = arg0[3];
-    arg2->unk_1B = arg0[5];
-    if (arg0[0] == 0x28) {
-        arg2->unk_18 = 2;
-        arg2->unk_2C = (unk2C0C0Struct60*) func_80038720(arg1, (arg0[6] << 8) + arg0[7]);
-        arg2->unk_1E = (arg0[8] << 8) + arg0[9];
-        arg2->unk_19 = 1;
+// decomp-permuter
+void func_80038254(u8 *arg0, unk2C0C0StructC0 *arg1, unk2C0C0Struct70 *arg2)
+{
+  u16 bpp;
+  u16 size;
+  u16 i;
+  u16 c;
+  u8 *dst;
+  arg0 += 0xB;
+  arg2->unk_1A = arg0[3];
+  arg2->unk_1B = arg0[5];
+  if (arg0[0] == 0x28)
+  {
+    arg2->unk_18 = 2;
+    arg2->unk_2C = (unk2C0C0Struct60 *) func_80038720(arg1, (arg0[6] << 8) + arg0[7]);
+    arg2->unk_1E = (arg0[8] << 8) + arg0[9];
+    arg2->unk_19 = 1;
+    bpp = 2;
+    if (arg2->unk_2C->unk_1A < 0x11)
+    {
+      bpp = 1;
+    }
+    arg0 += 4;
+  }
+  else
+  {
+    switch (arg0[1])
+    {
+      case 8:
+        arg2->unk_19 = (short) 1;
         bpp = 2;
-        if (arg2->unk_2C->unk_1A < 0x11) {
-            bpp = 1;
-        }
-        arg0 += 4;
-    } else {
-        switch (arg0[1]) {
-            case 8:
-                arg2->unk_19 = 1;
-                bpp = 2;
-                break;
-            case 16:
-                arg2->unk_19 = 2;
-                bpp = 4;
-                break;
-            case 4:
-                arg2->unk_19 = 0;
-                bpp = 1;
-                break;
-            case 32:
-                arg2->unk_19 = 3;
-                bpp = 8;
-                break;
-            default:
-                arg2->unk_19 = 2;
-                bpp = 6;
-                break;
-        }
-        switch (arg0[0]) {
-            case 0x26:
-                arg2->unk_18 = 0;
-                break;
-            case 0x27:
-                arg2->unk_18 = 0;
-                break;
-            case 0x25:
-                arg2->unk_18 = 3;
-                break;
-            default:
-                arg2->unk_18 = 4;
-                break;
-        }
+        break;
+
+      case 16:
+        arg2->unk_19 = 2;
+        bpp = 4;
+        break;
+
+      case 4:
+        arg2->unk_19 = 0;
+        bpp = 1;
+        break;
+
+      case 32:
+        arg2->unk_19 = 3;
+        bpp = 8;
+        break;
+
+      default:
+        arg2->unk_19 = 2;
+        bpp = 6;
+        break;
+
     }
 
-    size = (arg0[8] << 8) + arg0[9];
-    if (bpp != 6) {
-        if ((arg2->unk_18 == 2 && size > 0x800) || size > 0x1000) {
-            arg2->unk_1B = 0x10;
-            arg2->unk_1A = 0x10;
-        }
-        arg2->unk_24 = func_80023684(size, 15000);
-        func_80023A38(arg0 + 0xA, arg2->unk_24, size);
-    } else {
-        size = size / 3 * 2;
-        if (size > 0x1000) {
-            arg2->unk_1B = 0x10;
-            arg2->unk_1A = 0x10;
-        }
-        dst = arg2->unk_24 = func_80023684(size, 15000);
-        arg0 += 0xA;
-        for (i = 0; i < size; i += 2) {
-            c = ((*arg0 & 0xF8) << 8) + ((*arg0 & 0xF8) << 3) + ((*arg0 & 0xF8) >> 2) + 1;
-            arg0 += 3;
-            *dst++ = c >> 8;
-            *dst++ = c;
-        }
+    switch (arg0[0])
+    {
+      case 0x26:
+        arg2->unk_18 = 0;
+        break;
+
+      case 0x27:
+        arg2->unk_18 = 0;
+        break;
+
+      case 0x25:
+        arg2->unk_18 = 3;
+        break;
+
+      default:
+        arg2->unk_18 = 4;
+        break;
+
     }
+
+  }
+  size = (arg0[8] << 8) + arg0[9];
+  if (bpp != 6)
+  {
+    if (((arg2->unk_18 == 2) && (size > 0x800)) || (size > 0x1000))
+    {
+      arg2->unk_1B = 0x10;
+      arg2->unk_1A = 0x10;
+    }
+    arg2->unk_24 = func_80023684(size, 15000);
+    func_80023A38(arg0 + 0xA, arg2->unk_24, size);
+  }
+  else
+  {
+    size = (size / 3) * 2;
+    if (size > 0x1000)
+    {
+      arg2->unk_1B = 0x10;
+      arg2->unk_1A = 0x10;
+    }
+    dst = (arg2->unk_24 = func_80023684(size, 15000));
+    arg0 += 0xA;
+    for (i = 0; i < size; i += 2)
+    {
+      if (arg0)
+      {
+        c = (((((*arg0) & 0xF8) << 8) + (((*arg0) & 0xF8) << 3)) + (((*arg0) & 0xF8) >> 2)) + 1;
+        arg0 += 3;
+        *(dst++) = c >> 8;
+        *(dst++) = c;
+      }
+      else
+      {
+        c = (((((*arg0) & 0xF8) << 8) + (((*arg0) & 0xF8) << 3)) + (((*arg0) & 0xF8) >> 2)) + 1;
+        arg0 += 3;
+        *(dst++) = c >> 8;
+        *(dst++) = c;
+      }
+    }
+
+  }
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/388E0", func_80038254);
-#endif
 void func_800384FC(unk2C0C0StructC0* arg0) {
     unk388E0Struct80* var_s0;
     s16 temp_s4;
@@ -704,31 +733,30 @@ void func_8003967C(s16 arg0, u8 arg1) {
     p->unk_02 = 0;
     p->unk_06 = 0;
 }
-// bank index scheduled after its lw; arg masked once (masked 4)
-#ifdef NON_MATCHING
-void func_800396B0(s16 arg0, s32 arg1) {
-    unk388E0Struct40* p = &D_800F3708[arg0];
-
-    p->unk_02 = (u8) arg1;
-    if ((u8) arg1 >= (p->unk_04 + D_800F3F40[p->unk_00].unk_10)->unk_00) {
-        p->unk_02 = (u8) arg1 % (p->unk_04 + D_800F3F40[p->unk_00].unk_10)->unk_00;
-    }
-    p->unk_06 = 0;
-    p->unk_0B = 0x10;
+// decomp-permuter
+void func_800396B0(s16 arg0, s32 arg1)
+{
+  unk388E0Struct40 *new_var2;
+  unk388E0StructC8 *new_var;
+  unk388E0Struct40 *p = &D_800F3708[arg0];
+  new_var2 = p;
+  new_var2->unk_02 = (u8) arg1;
+  new_var = p->unk_04 + D_800F3F40[new_var2->unk_00].unk_10;
+  if (new_var->unk_00 <= ((u8) arg1))
+  {
+    p->unk_02 = ((u8) arg1) % new_var->unk_00;
+  }
+  p->unk_06 = 0;
+  p->unk_0B = 0x10;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/388E0", func_800396B0);
-#endif
-// bank index sll scheduled after the lw (masked 2)
-#ifdef NON_MATCHING
-u8 func_80039758(s16 arg0) {
-    unk388E0Struct40* p = &D_800F3708[arg0];
-
-    return D_800F3F40[p->unk_00].unk_10[p->unk_04].unk_00;
+// decomp-permuter
+u8 func_80039758(s16 arg0)
+{
+  unk388E0StructC8 *new_var;
+  unk388E0Struct40 *p = &D_800F3708[arg0];
+  new_var = &D_800F3F40[p->unk_00].unk_10[p->unk_04];
+  return (*new_var).unk_00;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/388E0", func_80039758);
-#endif
 void func_800397AC(u16 arg0) {
     unk388E0Struct40* p;
     unk388E0StructC8* bank;

@@ -804,22 +804,23 @@ f32 func_80025D40(s16 arg0) {
     return D_800ED554[D_800F2B7C[arg0].unk_08].unk_02;
 }
 
-// 0.0f materialized once instead of twice (masked 2)
-#ifdef NON_MATCHING
-f32 func_80025D90(s16 arg0) {
-    f32 x = D_800F2B7C[arg0].unk_60;
-    f32 r;
-
-    if (!(x < 0.0f)) {
-        r = x;
-    } else {
-        r = 0.0f;
-    }
-    return r;
+// decomp-permuter
+f32 func_80025D90(s16 arg0)
+{
+  f32 new_var;
+  f32 x = D_800F2B7C[arg0].unk_60;
+  f32 r;
+  if (!(x < 0.0f))
+  {
+    new_var = x;
+    r = new_var;
+  }
+  else
+  {
+    r = 0.0f;
+  }
+  return r;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/24740", func_80025D90);
-#endif
 f32 func_80025DD8(s16 arg0) {
     if (D_800F2B7C[arg0].unk_60 < 0.0f) {
         return 0.0f;
@@ -995,37 +996,44 @@ void func_800265EC(unk2C0C0StructC0* arg0, unk2C0C0StructC0* arg1, f32 arg2, s16
 void func_80026A00(s16 arg0) {
     D_800C34A0 = arg0;
 }
-// loop index re-extension CSE'd after the search loops (masked 5)
-#ifdef NON_MATCHING
-unk2C0C0Struct50* func_80026A0C(s16 arg0, char* arg1) {
-    unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
-    s16 idx = func_80033718(model, arg1);
-    s16 n;
-    s16 j;
-    s16 i;
+// decomp-permuter
+unk2C0C0Struct50 *func_80026A0C(s16 arg0, char *arg1)
+{
+  unk2C0C0StructC0 *model = D_800F2B7C[arg0].unk_6C;
+  s16 new_var;
+  s16 idx = func_80033718(model, arg1);
+  s16 n;
+  s16 j;
+  s16 i;
+  if (model->unk_A0 == ((unk2C0C0Struct50 *) (-1)))
+  {
+    return (unk2C0C0Struct50 *) (-1);
+  }
+  for (i = 0; i < model->unk_70; i++)
+  {
+    n = model->unk_A0[i].unk_00;
+    for (j = 0; j < n; j++)
+    {
+      if (model->unk_A0[i].unk_04[j] == idx)
+      {
+        break;
+      }
+    }
 
-    if (model->unk_A0 == (unk2C0C0Struct50*)-1) {
-        return (unk2C0C0Struct50*)-1;
+    new_var = j;
+    if (new_var != n)
+    {
+      break;
     }
-    for (i = 0; i < model->unk_70; i++) {
-        n = model->unk_A0[i].unk_00;
-        for (j = 0; j < n; j++) {
-            if (model->unk_A0[i].unk_04[j] == idx) {
-                break;
-            }
-        }
-        if (j != n) {
-            break;
-        }
-    }
-    if (i == model->unk_70) {
-        return (unk2C0C0Struct50*)-1;
-    }
-    return &model->unk_A0[i];
+  }
+
+  if (i == model->unk_70)
+  {
+ do { } while (0);
+    return (unk2C0C0Struct50 *) (-1);
+  }
+  return &model->unk_A0[i];
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/24740", func_80026A0C);
-#endif
 void func_80026B8C(s16 arg0, f32 arg1, f32 arg2, s32 arg3) {
     unk2C0C0StructC0* model = D_800F2B7C[arg0].unk_6C;
 

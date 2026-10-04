@@ -75,240 +75,322 @@ void func_80069394(Gfx** arg0, unk69010Sprite* arg1);
 void func_8006B014(Gfx** arg0, unk69010Sprite* arg1, u16 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, u16 arg7, u16 arg8, u16 arg9, u16 arg10);
 void func_8006B464(Gfx** arg0, unk69010Sprite* arg1, u16 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, u16 arg7, u16 arg8, u16 arg9, u16 arg10);
 
-// register allocation: cycScale gets v1, retail t0 (masked 0)
-#ifdef NON_MATCHING
-void func_80068410(Gfx** arg0, unk69010Sprite* arg1) {
-    f32 corners[4][2];
-    Gfx* gfx;
-    unk69010Frame* frame;
-    f32 scaleX;
-    f32 scaleY;
-    f32 sinR;
-    f32 cosR;
-    f32 maxX = -1.0f;
-    f32 maxY = -1.0f;
-    f32 minX = 321.0f;
-    f32 minY = 241.0f;
-    s32 i;
-    s32 alignW;
-    u16 format;
-    s32 cycScale;
+// decomp-permuter
+void func_80068410(Gfx **arg0, unk69010Sprite *arg1)
+{
+  f32 corners[4][2];
+  Gfx *gfx;
+  unk69010Frame *frame;
+  f32 scaleX;
+  f32 scaleY;
+  f32 sinR;
+  f32 cosR;
+  f32 maxX = -1.0f;
+  int new_var;
+  f32 maxY = -1.0f;
+  f32 minX = 321.0f;
+  f32 minY = 241.0f;
+  s32 i;
+  s32 alignW;
+  u16 format;
+  s32 cycScale;
+  if (arg1->sheet == 0)
+  {
+    return;
+  }
+  scaleX = arg1->scaleX;
+  scaleY = arg1->scaleY;
+  if ((!(scaleX > 0.0f)) || (!(scaleY > 0.0f)))
+  {
+    return;
+  }
+  frame = &arg1->sheet->frames[arg1->frame];
+  sinR = func_800AEAC0(arg1->rot);
+  cosR = func_800AEFD0(arg1->rot);
+  corners[0][0] = arg1->x - (((frame->centerX * scaleX) * cosR) + ((frame->centerY * scaleY) * (-sinR)));
+  corners[0][1] = arg1->y - (((frame->centerX * scaleX) * sinR) + ((frame->centerY * scaleY) * cosR));
+  corners[1][0] = arg1->x + ((((frame->width - frame->centerX) * scaleX) * cosR) + ((frame->centerY * scaleY) * (-sinR)));
+  corners[1][1] = arg1->y - ((((frame->width - frame->centerX) * scaleX) * sinR) + ((frame->centerY * scaleY) * cosR));
+  corners[2][0] = arg1->x - (((frame->centerX * scaleX) * cosR) + (((frame->height - frame->centerY) * scaleY) * (-sinR)));
+  corners[2][1] = arg1->y + (((frame->centerX * scaleX) * func_800AEAC0(arg1->rot)) + (((frame->height - frame->centerY) * scaleY) * cosR));
+  corners[3][0] = arg1->x - ((((frame->width - frame->centerX) * scaleX) * cosR) + (((frame->height - frame->centerY) * scaleY) * (-sinR)));
+  corners[3][1] = arg1->y + ((((frame->width - frame->centerX) * scaleX) * sinR) + (((frame->height - frame->centerY) * scaleY) * cosR));
+  for (i = 0; i < 4; i++)
+  {
+    if (maxX <= corners[i][0])
+    {
+      maxX = corners[i][0];
+    }
+    if (corners[i][0] <= minX)
+    {
+      minX = corners[i][0];
+    }
+    if (maxY <= corners[i][1])
+    {
+      maxY = corners[i][1];
+    }
+    if (corners[i][1] <= minY)
+    {
+      minY = corners[i][1];
+    }
+  }
 
-    if (arg1->sheet == NULL) {
-        return;
+  if (maxX < 0.0f)
+  {
+    return;
+  }
+  if (minX > 320.0)
+  {
+    return;
+  }
+  if (maxY < 0.0f)
+  {
+    return;
+  }
+  if (minY > 240.0)
+  {
+    return;
+  }
+  gfx = *arg0;
+  switch (arg1->sheet->format)
+  {
+    case 0x4:
+      D_800F5444 = 0;
+      if (arg1->sheet->unk_1A == 1)
+    {
+      D_800F3B84 = 3;
+      gDPSetTextureLUT(gfx++, G_TT_NONE);
     }
-    scaleX = arg1->scaleX;
-    scaleY = arg1->scaleY;
-    if (!(scaleX > 0.0f) || !(scaleY > 0.0f)) {
-        return;
+    else
+    {
+      D_800F3B84 = 2;
+      gDPLoadTLUT_pal16(gfx++, 0, arg1->sheet->palette);
+      gDPSetTextureLUT(gfx++, G_TT_RGBA16);
+      D_800C5B50 = 0x80;
     }
-    frame = &arg1->sheet->frames[arg1->frame];
-    sinR = func_800AEAC0(arg1->rot);
-    cosR = func_800AEFD0(arg1->rot);
+      D_800F2A74 = 0;
+      break;
 
-    corners[0][0] = arg1->x - ((frame->centerX * scaleX * cosR) + (frame->centerY * scaleY * (-sinR)));
-    corners[0][1] = arg1->y - ((frame->centerX * scaleX * sinR) + (frame->centerY * scaleY * cosR));
-    corners[1][0] = arg1->x + (((frame->width - frame->centerX) * scaleX * cosR) + (frame->centerY * scaleY * (-sinR)));
-    corners[1][1] = arg1->y - (((frame->width - frame->centerX) * scaleX * sinR) + (frame->centerY * scaleY * cosR));
-    corners[2][0] = arg1->x - ((frame->centerX * scaleX * cosR) + ((frame->height - frame->centerY) * scaleY * (-sinR)));
-    corners[2][1] = arg1->y + ((frame->centerX * scaleX * func_800AEAC0(arg1->rot)) + ((frame->height - frame->centerY) * scaleY * cosR));
-    corners[3][0] = arg1->x - (((frame->width - frame->centerX) * scaleX * cosR) + ((frame->height - frame->centerY) * scaleY * (-sinR)));
-    corners[3][1] = arg1->y + (((frame->width - frame->centerX) * scaleX * sinR) + ((frame->height - frame->centerY) * scaleY * cosR));
-    for (i = 0; i < 4; i++) {
-        if (maxX <= corners[i][0]) {
-            maxX = corners[i][0];
+    case 0x8:
+      D_800F5444 = 1;
+      if (arg1->sheet->unk_1A == 1)
+    {
+      D_800F3B84 = 3;
+      gDPSetTextureLUT(gfx++, G_TT_NONE);
+    }
+    else
+    {
+      D_800F3B84 = 2;
+      gDPLoadTLUT_pal256(gfx++, arg1->sheet->palette);
+      gDPSetTextureLUT(gfx++, G_TT_RGBA16);
+      D_800C5B50 = 0x80;
+    }
+      D_800F2A74 = 2;
+      break;
+
+    case 0x10:
+      D_800F5444 = 2;
+      if (arg1->sheet->unk_1A == 1)
+    {
+      D_800F3B84 = 3;
+    }
+    else
+    {
+      D_800F3B84 = 0;
+    }
+      gDPSetTextureLUT(gfx++, G_TT_NONE);
+      D_800C5B50 = 0x100;
+      D_800F2A74 = 2;
+      break;
+
+    case 0x20:
+      D_800F5444 = 3;
+      D_800F3B84 = 0;
+      gDPSetTextureLUT(gfx++, G_TT_NONE);
+      D_800C5B50 = 0x100;
+      D_800F2A74 = 2;
+      break;
+
+    case 0x8004:
+      D_800F5444 = 0;
+      D_800F3B84 = 4;
+      gDPSetTextureLUT(gfx++, G_TT_NONE);
+      D_800C5B50 = 0x100;
+      D_800F2A74 = 0;
+      break;
+
+    case 0x8008:
+      D_800F5444 = 1;
+      D_800F3B84 = 4;
+      gDPSetTextureLUT(gfx++, G_TT_NONE);
+      D_800C5B50 = 0x100;
+      D_800F2A74 = 2;
+      break;
+
+  }
+
+  alignW = (((frame->width << D_800F5444) >> 4) << 4) >> D_800F5444;
+  if (alignW < frame->width)
+  {
+    alignW += 16 >> D_800F5444;
+  }
+  switch (D_800F3B84)
+  {
+    case 2:
+      if ((0x1000 >> D_800F5444) >= (frame->height * alignW))
+    {
+      D_800EE314 = frame->height;
+    }
+    else
+    {
+      D_800EE314 = (0x1000 >> D_800F5444) / alignW;
+    }
+      break;
+
+    case 4:
+      if ((frame->height * alignW) < 0x1001)
+    {
+      D_800EE314 = frame->height;
+    }
+    else
+    {
+      D_800EE314 = 0x1000 / alignW;
+    }
+      break;
+
+    default:
+      if ((0x2000 >> D_800F5444) >= (frame->height * alignW))
+    {
+      D_800EE314 = frame->height;
+    }
+    else
+    {
+      D_800EE314 = (0x2000 >> D_800F5444) / alignW;
+    }
+      break;
+
+  }
+
+  D_800F5448 = frame->height / D_800EE314;
+  D_800ED0F8 = frame->height - (D_800F5448 * D_800EE314);
+  if ((((frame->width % (16 >> D_800F5444)) == 0) && (((frame->width * D_800EE314) << D_800F5444) <= 0x1000)) && ((D_800C5B80[frame->width >> D_800C5B70[D_800F5444]] >= D_800EE314) || (D_800EE314 == D_800C5CB8[frame->width >> D_800C5B70[D_800F5444]])))
+  {
+    D_800F2A74++;
+  }
+  new_var = 4;
+  gDPPipeSync(gfx++);
+  gSPSetOtherMode(gfx++, G_SETOTHERMODE_H, D_800C5B54[0], 2, ((arg1->flags >> 2) & 3) << D_800C5B54[0]);
+  gSPSetOtherMode(gfx++, G_SETOTHERMODE_H, D_800C5B54[1], 2, (((arg1->flags >> new_var) ^ 3) & 3) << D_800C5B54[1]);
+  gSPSetOtherMode(gfx++, G_SETOTHERMODE_H, D_800C5B54[2], 2, ((arg1->flags >> 6) & 3) << D_800C5B54[2]);
+  gSPSetOtherMode(gfx++, G_SETOTHERMODE_L, D_800C5B54[3], 2, D_800C5B64[(arg1->flags >> 22) & 3]);
+  if ((arg1->flags >> 6) & 2)
+  {
+    cycScale = 4;
+    gDPSetRenderMode(gfx++, 0, 0);
+    gDPSetCombine(gfx++, 0xFFFFFF, 0xFFFCF279);
+    D_800F5454 = cycScale;
+    func_80069394(&gfx, arg1);
+    *arg0 = gfx;
+  }
+  else
+  {
+    format = arg1->sheet->format;
+    switch ((arg1->flags >> 10) & 3)
+    {
+      case 0:
+        if (arg1->flags & 0x1000)
+      {
+        if ((arg1->alpha == 0x100) && (!(format & 0x8000)))
+        {
+          gDPSetRenderMode(gfx++, 0x0C087008, 0);
         }
-        if (corners[i][0] <= minX) {
-            minX = corners[i][0];
+        else
+        {
+          gDPSetRenderMode(gfx++, 0x404240, 0);
         }
-        if (maxY <= corners[i][1]) {
-            maxY = corners[i][1];
+      }
+      else
+      {
+        gDPSetRenderMode(gfx++, 0x0C084000, 0);
+      }
+        break;
+
+      case 1:
+        if (arg1->flags & 0x1000)
+      {
+        if ((arg1->alpha == 0x100) && (!(format & 0x8000)))
+        {
+          gDPSetRenderMode(gfx++, 0x443048, 0);
         }
-        if (corners[i][1] <= minY) {
-            minY = corners[i][1];
+        else
+        {
+          gDPSetRenderMode(gfx++, 0x4041C8, 0);
         }
+      }
+      else
+      {
+        gDPSetRenderMode(gfx++, 0x552008, 0);
+      }
+        break;
+
+      case 2:
+        if (arg1->flags & 0x1000)
+      {
+        if ((arg1->alpha == 0x100) && (!(format & 0x8000)))
+        {
+          gDPSetRenderMode(gfx++, 0x443048, 0);
+        }
+        else
+        {
+          gDPSetRenderMode(gfx++, 0x4041C8, 0);
+        }
+      }
+      else
+      {
+        gDPSetRenderMode(gfx++, 0x442048, 0);
+      }
+        break;
+
     }
-    if (maxX < 0.0f) {
-        return;
+
+    if (format & 0x8000)
+    {
+      if (arg1->alpha == 0x100)
+      {
+        gDPSetCombine(gfx++, 0xFFFFFF, 0xFFFDF2F9);
+      }
+      else
+      {
+        gDPSetCombine(gfx++, 0xFF97FF, 0xFF2DFEFF);
+      }
     }
-    if (minX > 320.0) {
-        return;
-    }
-    if (maxY < 0.0f) {
-        return;
-    }
-    if (minY > 240.0) {
-        return;
-    }
-    gfx = *arg0;
-    switch (arg1->sheet->format) {
-        case 0x4:
-            D_800F5444 = 0;
-            if (arg1->sheet->unk_1A == 1) {
-                D_800F3B84 = 3;
-                gDPSetTextureLUT(gfx++, G_TT_NONE);
-            } else {
-                D_800F3B84 = 2;
-                gDPLoadTLUT_pal16(gfx++, 0, arg1->sheet->palette);
-                gDPSetTextureLUT(gfx++, G_TT_RGBA16);
-                D_800C5B50 = 0x80;
-            }
-            D_800F2A74 = 0;
-            break;
-        case 0x8:
-            D_800F5444 = 1;
-            if (arg1->sheet->unk_1A == 1) {
-                D_800F3B84 = 3;
-                gDPSetTextureLUT(gfx++, G_TT_NONE);
-            } else {
-                D_800F3B84 = 2;
-                gDPLoadTLUT_pal256(gfx++, arg1->sheet->palette);
-                gDPSetTextureLUT(gfx++, G_TT_RGBA16);
-                D_800C5B50 = 0x80;
-            }
-            D_800F2A74 = 2;
-            break;
-        case 0x10:
-            D_800F5444 = 2;
-            if (arg1->sheet->unk_1A == 1) {
-                D_800F3B84 = 3;
-            } else {
-                D_800F3B84 = 0;
-            }
-            gDPSetTextureLUT(gfx++, G_TT_NONE);
-            D_800C5B50 = 0x100;
-            D_800F2A74 = 2;
-            break;
-        case 0x20:
-            D_800F5444 = 3;
-            D_800F3B84 = 0;
-            gDPSetTextureLUT(gfx++, G_TT_NONE);
-            D_800C5B50 = 0x100;
-            D_800F2A74 = 2;
-            break;
-        case 0x8004:
-            D_800F5444 = 0;
-            D_800F3B84 = 4;
-            gDPSetTextureLUT(gfx++, G_TT_NONE);
-            D_800C5B50 = 0x100;
-            D_800F2A74 = 0;
-            break;
-        case 0x8008:
-            D_800F5444 = 1;
-            D_800F3B84 = 4;
-            gDPSetTextureLUT(gfx++, G_TT_NONE);
-            D_800C5B50 = 0x100;
-            D_800F2A74 = 2;
-            break;
-    }
-    alignW = (((frame->width << D_800F5444) >> 4) << 4) >> D_800F5444;
-    if (alignW < frame->width) {
-        alignW += 16 >> D_800F5444;
-    }
-    switch (D_800F3B84) {
-        case 2:
-            if ((0x1000 >> D_800F5444) >= frame->height * alignW) {
-                D_800EE314 = frame->height;
-            } else {
-                D_800EE314 = (0x1000 >> D_800F5444) / alignW;
-            }
-            break;
-        case 4:
-            if (frame->height * alignW < 0x1001) {
-                D_800EE314 = frame->height;
-            } else {
-                D_800EE314 = 0x1000 / alignW;
-            }
-            break;
-        default:
-            if ((0x2000 >> D_800F5444) >= frame->height * alignW) {
-                D_800EE314 = frame->height;
-            } else {
-                D_800EE314 = (0x2000 >> D_800F5444) / alignW;
-            }
-            break;
-    }
-    D_800F5448 = frame->height / D_800EE314;
-    D_800ED0F8 = frame->height - D_800F5448 * D_800EE314;
-    if (frame->width % (16 >> D_800F5444) == 0 && ((frame->width * D_800EE314) << D_800F5444) <= 0x1000 &&
-        (D_800C5B80[frame->width >> D_800C5B70[D_800F5444]] >= D_800EE314 || D_800EE314 == D_800C5CB8[frame->width >> D_800C5B70[D_800F5444]])) {
-        D_800F2A74++;
-    }
-    gDPPipeSync(gfx++);
-    gSPSetOtherMode(gfx++, G_SETOTHERMODE_H, D_800C5B54[0], 2, ((arg1->flags >> 2) & 3) << D_800C5B54[0]);
-    gSPSetOtherMode(gfx++, G_SETOTHERMODE_H, D_800C5B54[1], 2, (((arg1->flags >> 4) ^ 3) & 3) << D_800C5B54[1]);
-    gSPSetOtherMode(gfx++, G_SETOTHERMODE_H, D_800C5B54[2], 2, ((arg1->flags >> 6) & 3) << D_800C5B54[2]);
-    gSPSetOtherMode(gfx++, G_SETOTHERMODE_L, D_800C5B54[3], 2, D_800C5B64[(arg1->flags >> 22) & 3]);
-    if ((arg1->flags >> 6) & 2) {
-        cycScale = 4; // through a variable: a literal store cross-jumps with the else branch
-        gDPSetRenderMode(gfx++, 0, 0);
+    else
+      if (arg1->alpha == 0x100)
+    {
+      if (arg1->flags & 0x02000000)
+      {
+        gDPSetCombine(gfx++, 0x60FEC1, 0x33FDF2F9);
+      }
+      else
+      {
         gDPSetCombine(gfx++, 0xFFFFFF, 0xFFFCF279);
-        D_800F5454 = cycScale;
-        func_80069394(&gfx, arg1);
-        *arg0 = gfx;
-    } else {
-        format = arg1->sheet->format;
-        switch ((arg1->flags >> 10) & 3) {
-            case 0:
-                if (arg1->flags & 0x1000) {
-                    if (arg1->alpha == 0x100 && !(format & 0x8000)) {
-                        gDPSetRenderMode(gfx++, 0x0C087008, 0);
-                    } else {
-                        gDPSetRenderMode(gfx++, 0x404240, 0);
-                    }
-                } else {
-                    gDPSetRenderMode(gfx++, 0x0C084000, 0);
-                }
-                break;
-            case 1:
-                if (arg1->flags & 0x1000) {
-                    if (arg1->alpha == 0x100 && !(format & 0x8000)) {
-                        gDPSetRenderMode(gfx++, 0x443048, 0);
-                    } else {
-                        gDPSetRenderMode(gfx++, 0x4041C8, 0);
-                    }
-                } else {
-                    gDPSetRenderMode(gfx++, 0x552008, 0);
-                }
-                break;
-            case 2:
-                if (arg1->flags & 0x1000) {
-                    if (arg1->alpha == 0x100 && !(format & 0x8000)) {
-                        gDPSetRenderMode(gfx++, 0x443048, 0);
-                    } else {
-                        gDPSetRenderMode(gfx++, 0x4041C8, 0);
-                    }
-                } else {
-                    gDPSetRenderMode(gfx++, 0x442048, 0);
-                }
-                break;
-        }
-        if (format & 0x8000) {
-            if (arg1->alpha == 0x100) {
-                gDPSetCombine(gfx++, 0xFFFFFF, 0xFFFDF2F9);
-            } else {
-                gDPSetCombine(gfx++, 0xFF97FF, 0xFF2DFEFF);
-            }
-        } else if (arg1->alpha == 0x100) {
-            if (arg1->flags & 0x02000000) {
-                gDPSetCombine(gfx++, 0x60FEC1, 0x33FDF2F9);
-            } else {
-                gDPSetCombine(gfx++, 0xFFFFFF, 0xFFFCF279);
-            }
-        } else if (arg1->flags & 0x02000000) {
-            gDPSetCombine(gfx++, 0x6096C1, 0x332DFEFF);
-        } else {
-            gDPSetCombine(gfx++, 0xFF97FF, 0xFF2CFE7F);
-        }
-        gDPSetPrimColor(gfx++, 0, 0, arg1->r, arg1->g, arg1->b, arg1->alpha);
-        D_800F5454 = 1;
-        func_80069394(&gfx, arg1);
-        *arg0 = gfx;
+      }
     }
+    else
+      if (arg1->flags & 0x02000000)
+    {
+      gDPSetCombine(gfx++, 0x6096C1, 0x332DFEFF);
+    }
+    else
+    {
+      gDPSetCombine(gfx++, 0xFF97FF, 0xFF2CFE7F);
+    }
+    gDPSetPrimColor(gfx++, 0, 0, arg1->r, arg1->g, arg1->b, arg1->alpha);
+    D_800F5454 = 1;
+    func_80069394(&gfx, arg1);
+    *arg0 = gfx;
+  }
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/69010", func_80068410);
-#endif
 
 // register allocation: flip/dt get t1/t2/t3 swapped with hoisted temporaries; the masked residue (6) is
 // only the u16 read of D_800EE314/D_800ED0F8, which retail's object relocates against the split bss labels

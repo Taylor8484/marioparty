@@ -257,88 +257,115 @@ void func_80017DB0(omObjData* obj) {
     }
 }
 
-// one load scheduled before the blink-flag test (masked 2)
-#ifdef NON_MATCHING
-void func_8001802C(omObjData* obj) {
-    ActorWork* w = obj->unk_50;
-    u16 lim1;
-    u16 lim2;
-    f32 sy;
-    f32 sxz;
-    f32 t;
-    s32 off;
-    u16 prev;
-
-    if (w->flags & 7) {
-        w->unk_9C += 2;
-        lim1 = 60;
-        if (w->flags & 2) {
-            lim2 = 106;
-            sy = 0.6f;
-            sxz = w->unk_A0 * 1.4f;
-        } else {
-            lim1 = 120;
-            lim2 = 166;
-            sy = 0.1f;
-            sxz = w->unk_A0 * 1.6f;
-            if (w->unk_9C >= 120) {
-                if (w->flags & 1) {
-                    w->flags = (w->flags & ~1) | 4;
-                }
-            }
-        }
-        if (w->unk_9C < lim2) {
-            if (w->unk_9C <= lim1) {
-                obj->scale.x = obj->scale.z = sxz;
-                obj->scale.y = sy;
-            } else if (w->unk_9C <= lim1 + 10) {
-                t = w->unk_9C - lim1;
-                obj->scale.y = t * 0.05f + 0.2;
-                obj->scale.z = obj->scale.x = 1.8 - t * 0.08f;
-            } else if (w->unk_9C <= lim1 + 20) {
-                t = w->unk_9C - (lim1 + 10);
-                obj->scale.y = 0.9 - t * 0.05f;
-                obj->scale.z = obj->scale.x = t * 0.05f + 1.0;
-            } else if (w->unk_9C <= lim1 + 30) {
-                t = w->unk_9C - (lim1 + 20);
-                obj->scale.y = t * 0.05f + 0.7;
-                obj->scale.z = obj->scale.x = 1.4 - t * 0.04f;
-            } else if (w->unk_9C <= lim1 + 38) {
-                t = w->unk_9C - (lim1 + 30);
-                obj->scale.y = 1.3 - t * 0.1f;
-                obj->scale.z = obj->scale.x = t * 0.02f + 1.0;
-            } else {
-                t = w->unk_9C - (lim1 + 38);
-                obj->scale.y = t * 0.1f + 0.3;
-                obj->scale.z = obj->scale.x = 1.1 - t * 0.01f;
-            }
-        } else {
-            obj->scale.x = obj->scale.y = obj->scale.z = 1.0f;
-            w->flags &= ~7;
-            w->unk_9C = 0;
-        }
+// decomp-permuter
+void func_8001802C(omObjData *obj)
+{
+  ActorWork *w = obj->unk_50;
+  u16 lim1;
+  u16 lim2;
+  f32 sy;
+  f32 sxz;
+  f32 t;
+  s32 off;
+  u16 prev;
+  if (w->flags & 7)
+  {
+    w->unk_9C += 2;
+    lim1 = 60;
+    if (w->flags & 2)
+    {
+      lim2 = 106;
+      sy = 0.6f;
+      sxz = w->unk_A0 * 1.4f;
     }
-    if (w->unk_AE != 0) {
-        prev = w->unk_AE;
-        w->unk_AE--;
-        if (w->unk_AE == 0) {
-            if (D_800F370C != 0) {
-                w->unk_AE = prev;
-            } else {
-                w->unk_B0 = 1;
-            }
+    else
+    {
+      lim1 = 120;
+      lim2 = 166;
+      sy = 0.1f;
+      sxz = w->unk_A0 * 1.6f;
+      if (w->unk_9C >= 120)
+      {
+        if (w->flags & 1)
+        {
+          w->flags = (w->flags & (~1)) | 4;
         }
-        func_800258EC(obj->model[0], 4, off = ((w->unk_B0 & 1) == 0) * 4);
-        if (off != 0) {
-            func_80028668(&D_800F2B7C[obj->model[0]], 2);
-        }
-        w->unk_B0 = (w->unk_B0 + 1) & 3;
+      }
     }
-    func_80017BB0(obj);
+    if (w->unk_9C < lim2)
+    {
+      if (w->unk_9C <= lim1)
+      {
+        obj->scale.x = (obj->scale.z = sxz);
+        obj->scale.y = sy;
+      }
+      else
+        if (w->unk_9C <= (lim1 + 10))
+      {
+        t = w->unk_9C - lim1;
+        obj->scale.y = (t * 0.05f) + 0.2;
+        obj->scale.z = (obj->scale.x = 1.8 - (t * 0.08f));
+      }
+      else
+        if (w->unk_9C <= (lim1 + 20))
+      {
+        t = w->unk_9C - (lim1 + 10);
+        obj->scale.y = 0.9 - (t * 0.05f);
+        obj->scale.z = (obj->scale.x = (t * 0.05f) + 1.0);
+      }
+      else
+        if (w->unk_9C <= (lim1 + 30))
+      {
+        t = w->unk_9C - (lim1 + 20);
+        obj->scale.y = (t * 0.05f) + 0.7;
+        obj->scale.z = (obj->scale.x = 1.4 - (t * 0.04f));
+      }
+      else
+        if (w->unk_9C <= (lim1 + 38))
+      {
+        t = w->unk_9C - (lim1 + 30);
+        obj->scale.y = 1.3 - (t * 0.1f);
+        obj->scale.z = (obj->scale.x = (t * 0.02f) + 1.0);
+      }
+      else
+      {
+        t = w->unk_9C - (lim1 + 38);
+        obj->scale.y = (t * 0.1f) + 0.3;
+        obj->scale.z = (obj->scale.x = 1.1 - (t * 0.01f));
+      }
+    }
+    else
+    {
+      obj->scale.x = (obj->scale.y = (obj->scale.z = 1.0f));
+      w->flags &= ~7;
+      w->unk_9C = 0;
+    }
+  }
+  if (w->unk_AE != 0)
+  {
+    prev = w->unk_AE;
+    w->unk_AE--;
+    if (w->unk_AE == 0)
+    {
+      if (D_800F370C != 0)
+      {
+        w->unk_AE = prev;
+      }
+      else
+      {
+        w->unk_B0 = 1;
+      }
+    }
+    prev = ((w->unk_B0 & 1) == 0) * 4;
+    func_800258EC(obj->model[0], 4, off = prev);
+    if (off != 0)
+    {
+      func_80028668(&D_800F2B7C[obj->model[0]], 2);
+    }
+    w->unk_B0 = (w->unk_B0 + 1) & 3;
+  }
+  func_80017BB0(obj);
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/18650", func_8001802C);
-#endif
 
 void func_80018450(omObjData* obj, u8 flags) {
     ActorWork* w = obj->unk_50;
@@ -362,34 +389,40 @@ s32 func_800184A8(ActorWork* w, u16 motion) {
     return w->req.motion == motion;
 }
 
-// retail reloads a0 from s0 before func_80017A50 (masked 1)
-#ifdef NON_MATCHING
-s32 func_800184BC(omObjData* obj, u16 motion) {
-    ActorWork* w = obj->unk_50;
-    MotionEntry* e;
-    s32 flags;
-    s32 speed;
-
-    if (w->unk_52 == 0) {
-        e = &w->table[func_80017A50(obj)];
-        if (w->cur == 0xFFFF || (!(e->flags & 2) && !func_800184A8(w, motion))) {
-            e = &w->table[motion];
-            if ((u16)obj->motion[motion] != 0xFFFF) {
-                flags = e->flags;
-                speed = e->speed;
-                w->cur = 0;
-                w->count = 1;
-                func_8001846C(&w->req, flags, motion, speed);
-                w->pending = 1;
-                return 1;
-            }
-        }
+// decomp-permuter
+s32 func_800184BC(omObjData *obj, u16 motion)
+{
+  ActorWork *w = obj->unk_50;
+  MotionEntry *e;
+  s32 flags;
+  s32 speed;
+  if (w->unk_52 == 0)
+  {
+    if (obj || obj->unk_50)
+    {
+      e = &w->table[func_80017A50(obj)];
     }
-    return 0;
+    else
+    {
+      e = &w->table[func_80017A50(obj)];
+    }
+    if ((w->cur == 0xFFFF) || ((!(e->flags & 2)) && (!func_800184A8(w, motion))))
+    {
+      e = &w->table[motion];
+      if (((u16) obj->motion[motion]) != 0xFFFF)
+      {
+        flags = e->flags;
+        speed = e->speed;
+        w->cur = 0;
+        w->count = 1;
+        func_8001846C(&w->req, flags, motion, speed);
+        w->pending = 1;
+        return 1;
+      }
+    }
+  }
+  return 0;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/18650", func_800184BC);
-#endif
 
 s32 func_800185A4(omObjData* obj, u16 motion) {
     ActorWork* w = obj->unk_50;
