@@ -94,103 +94,114 @@ void func_80058E38(void) {
     func_800559F8();
 }
 
-// register allocation: retail shares one s-register for port and the hoisted step 16 (masked 3)
-#ifdef NON_MATCHING
-void func_80058E64(omObjData* arg0) {
-    s32 step;
-    Vec2f saved;
-    Vec2f cam;
-    f32 zoom;
-    f32 scale;
-    s32 port;
-    s32 label2;
-    unk_Struct02* icons;
-    s32 label1;
-    s16 moved;
-
-    label2 = 0;
-    port = (s32)HuPrcCurrentGet()->user_data;
-    moved = 0;
-    zoom = func_8004B844();
-    if (func_80056990() == 0) {
-        func_800726AC(6, 8);
-        HuPrcSleep(8);
-        func_800405DC(GwSystem.curPlayerIndex);
-        func_800406E4(GwSystem.curPlayerIndex);
-        func_80060214(0x60);
-    }
-    func_80058E14();
-    SetFadeInTypeAndTime(6, 8);
-    HuPrcSleep(7);
-    icons = func_80058B10();
-    label1 = func_80045D84(4, 0xA0, 0);
-    if (D_800F3FF0 != 0) {
-        label2 = func_80045D84(6, 0x3C, 0);
-    }
-    func_8004B6D8(&saved);
-    func_8004B838(4.0f);
-    do {
-        HuPrcVSleep();
-        func_8004B6D8(&cam);
-        func_80058C44(icons, func_8004B61C(&cam));
-        step = 16;
-        if (ContDStk[port] & 0x200) {
-            cam.x -= 16.0f;
-            moved = 15;
-        }
-        if (ContDStk[port] & 0x100) {
-            cam.x += step;
-            moved = 15;
-        }
-        if (ContDStk[port] & 0x800) {
-            cam.y -= step;
-            moved = 15;
-        }
-        if (ContDStk[port] & 0x400) {
-            cam.y += step;
-            moved = 15;
-        }
-        func_8004B61C(&cam);
-        if (moved != 0) {
-            moved--;
-            func_800559BC();
-        } else {
-            func_800559F8();
-        }
-    } while (D_800EE320 != 0 && !(ContDStkTrg[port] & 0xE010));
-    func_80045E6C(label1);
-    if (label2 != 0) {
-        func_80045E6C(label2);
-    }
-    func_80058C28(icons);
+// decomp-permuter
+void func_80058E64(omObjData *arg0)
+{
+  unsigned short step;
+  Vec2f saved;
+  Vec2f cam;
+  f32 zoom;
+  f32 scale;
+  s32 port;
+  s32 label2;
+  unk_Struct02 *icons;
+  s32 label1;
+  s16 moved;
+  label2 = 0;
+  port = (s32) HuPrcCurrentGet()->user_data;
+  moved = 0;
+  zoom = func_8004B844();
+  if (func_80056990() == 0)
+  {
     func_800726AC(6, 8);
     HuPrcSleep(8);
-    if (func_80056990() == 0) {
-        func_8004A7DC();
-        func_8004A7A4();
-        func_8004B838(-1.0f);
-        scale = func_8004B5D0();
-        func_8004B5C4(1.0f);
-        func_8004A510();
-        func_8004B61C(&saved);
-        HuPrcVSleep();
-        func_8004A520();
-        func_8004B5C4(scale);
-        func_8003FEFC(GwSystem.curPlayerIndex);
-        func_80040724(GwSystem.curPlayerIndex);
-        func_80058E38();
-        func_80060214(0x7F);
-        SetFadeInTypeAndTime(6, 8);
-        HuPrcSleep(7);
-    } else {
-        func_80058E38();
+    func_800405DC(GwSystem.curPlayerIndex);
+    func_800406E4(GwSystem.curPlayerIndex);
+    func_80060214(0x60);
+  }
+  func_80058E14();
+  SetFadeInTypeAndTime(6, 8);
+  HuPrcSleep(7);
+  icons = func_80058B10();
+  label1 = func_80045D84(4, 0xA0, 0);
+  if (D_800F3FF0 != 0)
+  {
+    label2 = func_80045D84(6, 0x3C, 0);
+  }
+  func_8004B6D8(&saved);
+  func_8004B838(4.0f);
+  do
+  {
+    HuPrcVSleep();
+    func_8004B6D8(&cam);
+    func_80058C44(icons, func_8004B61C(&cam));
+    step = 16;
+    if (ContDStk[port] & 0x200)
+    {
+      cam.x -= 16.0f;
+      moved = 15;
     }
-    func_8004B838(zoom);
-    EndProcess(NULL);
+    if (ContDStk[port] & 0x100)
+    {
+      cam.x += step;
+      moved = 15;
+    }
+    if (ContDStk[port] & 0x800)
+    {
+      cam.y -= step;
+      moved = 15;
+    }
+    if (ContDStk[port] & 0x400)
+    {
+      cam.y += step;
+      moved = 15;
+    }
+    func_8004B61C(&cam);
+    if (moved != 0)
+    {
+      moved--;
+      func_800559BC();
+    }
+    else
+    {
+      func_800559F8();
+    }
+  }
+  while ((D_800EE320 != 0) && (!(ContDStkTrg[port] & 0xE010)));
+  func_80045E6C(label1);
+  if (label2 != 0)
+  {
+    func_80045E6C(label2);
+  }
+  func_80058C28(icons);
+  func_800726AC(6, 8);
+  HuPrcSleep(8);
+  if (func_80056990() == 0)
+  {
+    func_8004A7DC();
+    func_8004A7A4();
+    func_8004B838(-1.0f);
+    scale = func_8004B5D0();
+    func_8004B5C4(1.0f);
+    func_8004A510();
+    func_8004B61C(&saved);
+    HuPrcVSleep();
+    func_8004A520();
+    func_8004B5C4(scale);
+    func_8003FEFC(GwSystem.curPlayerIndex);
+    func_80040724(GwSystem.curPlayerIndex);
+    func_80058E38();
+    func_80060214(0x7F);
+    SetFadeInTypeAndTime(6, 8);
+    HuPrcSleep(7);
+  }
+  else
+  {
+    func_80058E38();
+  }
+  func_8004B838(zoom);
+  EndProcess(0);
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/59710", func_80058E64);
-#endif
 
 //TODO: typing of arg is strange
 void func_800591E0(void* arg0) { 
