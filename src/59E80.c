@@ -86,8 +86,10 @@ typedef struct SaveFile {
 } SaveFile; //
 
 //used to allow offsets from structs for the eep file offsets
+#ifndef TARGET_PC /* host: <stddef.h> offsetof (pb_host.h) */
 #define offsetof(st, m) \
     ((u32)&(((st *)0)->m))
+#endif
 
 extern u8 D_800D8720;
 extern s8 D_800C572F;
@@ -103,7 +105,7 @@ void func_8000B364(s32);
 #define MIN_HEAP_NODE_SIZE sizeof(struct HeapNode) + MIN_ALLOC_SIZE
 
 typedef struct StrData {
-/* 0x00 */ s32 string;
+/* 0x00 */ PB_PTR32 string; /* ROM address */
 /* 0x04 */ u16 size;
 } StrData;
 
@@ -364,7 +366,7 @@ void HuMemMemoryFree(void *ptr)
 
     heap_other = given_heap->prev;
 
-    if (((u32)heap_other < (u32)given_heap) && !heap_other->used) {
+    if (((PB_UPTR32)heap_other < (PB_UPTR32)given_heap) && !heap_other->used) {
         given_heap->next->prev = heap_other;
         given_heap->prev->next = given_heap->next;
         given_heap->prev->size += given_heap->size;
@@ -373,7 +375,7 @@ void HuMemMemoryFree(void *ptr)
 
     heap_other = given_heap->next;
 
-    if (((u32)given_heap < (u32)heap_other) && !heap_other->used) {
+    if (((PB_UPTR32)given_heap < (PB_UPTR32)heap_other) && !heap_other->used) {
         heap_other->next->prev = given_heap;
         given_heap->size += given_heap->next->size;
         given_heap->next = given_heap->next->next;
@@ -615,7 +617,7 @@ void func_8005A2B8(s16 win, s32 start) {
     for (i = start; i < start + 8; i++) {
         if (func_80059B48(D_800C5750[i].shownFlag) != 0) {
             str = func_8005B7E8(D_800C5750[i].nameStr);
-            sprintf(D_800D87D8[i], " %s", str);
+            sprintf(D_800D87D8[i], " %s", PB_HOSTCAST(char*, str));
             func_8005B838(str);
             if (func_80059B10(D_800C5750[i].ownedFlag) != 0 || D_800C5750[i].ownedFlag == -4) {
                 D_800D87D8[i][0] = 8;
@@ -1049,7 +1051,7 @@ void func_8005B6D0(u8* rom) {
 void func_8005B75C(s32 index, StrData* out) {
     u16* buf = HuMemDirectMalloc(0x10);
 
-    out->string = (s32)(D_800D8910 + D_800D8918[index]);
+    out->string = (PB_PTR32)(D_800D8910 + D_800D8918[index]);
     dmaRead((u8*)out->string, buf, 0x10);
     out->string += 2;
     out->size = *buf;

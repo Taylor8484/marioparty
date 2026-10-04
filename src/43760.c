@@ -145,7 +145,7 @@ void func_80042BAC(omObjData* obj) {
                         obj->work[3] = 60;
                         func_8006EB80();
                         func_8006DA1C(D_800D6400[obj->work[1]].unk_00, 0, 4);
-                        LoadStringIntoWindow(D_800D6400[obj->work[1]].unk_00, (void*)(D_800D6454[obj->work[1]] + 0x324), -2, 4);
+                        LoadStringIntoWindow(D_800D6400[obj->work[1]].unk_00, (void*)PB_HOSTCAST(PB_PTR32, (D_800D6454[obj->work[1]] + 0x324)), -2, 4);
                         func_8006E288(D_800D6400[obj->work[1]].unk_00, 1);
                         func_8006E2B8(D_800D6400[obj->work[1]].unk_00, 0xA0, 0xA0, 0xA0);
                         func_800714F0(D_800D6400[obj->work[1]].unk_00, 0xFE, 0xFF, 0xD0);
@@ -374,7 +374,7 @@ void func_8004388C(s32 arg0) {
             break;
         }
         func_8006EB80();
-        LoadStringIntoWindow(p->unk_00, (void*)(D_800D6454[i] + 0x324), -2, 4);
+        LoadStringIntoWindow(p->unk_00, (void*)PB_HOSTCAST(PB_PTR32, (D_800D6454[i] + 0x324)), -2, 4);
         func_8006E288(p->unk_00, D_800C4DCF[D_800D6454[i]]);
         func_8006E070(p->unk_00, 0);
     }
@@ -821,7 +821,7 @@ void func_800448F4(omObjData* obj) {
                         obj->work[3] = 60;
                         func_8006EB80();
                         func_8006DA1C(D_800D6400[obj->work[1]].unk_00, 0, 4);
-                        LoadStringIntoWindow(D_800D6400[obj->work[1]].unk_00, (void*)(D_800D6454[obj->work[1]] + 0x324), -2, 4);
+                        LoadStringIntoWindow(D_800D6400[obj->work[1]].unk_00, (void*)PB_HOSTCAST(PB_PTR32, (D_800D6454[obj->work[1]] + 0x324)), -2, 4);
                         func_8006E288(D_800D6400[obj->work[1]].unk_00, 1);
                         func_8006E2B8(D_800D6400[obj->work[1]].unk_00, 0xA0, 0xA0, 0xA0);
                         func_800714F0(D_800D6400[obj->work[1]].unk_00, 0xFE, 0xFF, 0xD0);
@@ -911,7 +911,7 @@ void func_8004501C(s32 arg0) {
             }
         } while (j != i);
         func_8006EB80();
-        LoadStringIntoWindow(p->unk_00, (void*)(D_800D6454[i] + 0x324), -2, 4);
+        LoadStringIntoWindow(p->unk_00, (void*)PB_HOSTCAST(PB_PTR32, (D_800D6454[i] + 0x324)), -2, 4);
         func_8006E288(p->unk_00, D_800C4DCF[D_800D6454[i]]);
         func_8006E070(p->unk_00, 0);
     }

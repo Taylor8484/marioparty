@@ -221,7 +221,7 @@ void func_8003CAB4(void) {
     s16 dir;
     u16 pad;
 
-    port = (s32)HuPrcCurrentGet()->user_data;
+    port = (s32)PB_HOSTCAST(PB_PTR32, HuPrcCurrentGet()->user_data);
     bg = D_800F6598;
     sel = 0;
     for (i = 0; i < 4; i++) {

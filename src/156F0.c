@@ -1,6 +1,8 @@
 #include "common.h"
 #include "stdarg.h"
+#ifndef TARGET_PC /* host: the C library's strlen (pb_host.h) */
 u32 strlen(const char*);
+#endif
 
 /* Text window manager: an 18-entry window list sorted by priority, 4-bit window textures,
    a printf-style text renderer and a choice cursor. */

@@ -498,12 +498,17 @@ void LoadStringIntoWindow(s16 win_id, void* string_id, s16 a, s16 b) {
     
     textWindow->unk_34 = 1;
     
+#ifdef TARGET_PC
+    /* N64: pointers are KSEG0 (> 0x80000000). Host: string ids are small table indices. */
+    if ((uintptr_t) string_id >= 0x100000) {
+#else
     if ((u32) string_id > 0x80000000U) { //is a pointer
+#endif
         textWindow->usingStringIDBool = 0;
         textWindow->stringPtr = string_id;
     } else {
         textWindow->usingStringIDBool = 1;
-        text = func_8005B7E8((u32)string_id); //get string from index
+        text = func_8005B7E8((u32)PB_HOSTCAST(PB_UPTR32, string_id)); //get string from index
         textWindow->string = text;
         textWindow->stringPtr = text;
     }
@@ -570,14 +575,18 @@ void func_8006DA5C(s16 arg0, void* arg1, s8 arg2) {
         }
     }
     
+#ifdef TARGET_PC
+    if ((uintptr_t) arg1 >= 0x100000) { /* a pointer, see above */
+#else
     if (0x80000000U < (u32) arg1) { //if arg1 is stringID
+#endif
         textWindow->unk_7B[arg2] = 0;
         textWindow->unk_88[arg2] = arg1;
         return;
     }
     
     textWindow->unk_7B[arg2] = 1;
-    textWindow->unk_88[arg2] = func_8005B7E8((s32)arg1);
+    textWindow->unk_88[arg2] = func_8005B7E8((s32)PB_HOSTCAST(PB_PTR32, arg1));
 }
 
 s16 func_8006DB3C(s16 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {

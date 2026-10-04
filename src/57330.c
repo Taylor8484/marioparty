@@ -963,7 +963,7 @@ void func_800582E4(void) {
     HuPrcVSleep();
     func_8004A520();
     func_8004B5C4(3.0f);
-    func_800591E0(GwPlayer[GwSystem.curPlayerIndex].port); //TODO: what arg type should this take?
+    func_800591E0(PB_HOSTCAST(void*, PB_HOSTCAST(PB_PTR32, GwPlayer[GwSystem.curPlayerIndex].port))); //TODO: what arg type should this take?
     func_80056AF4();
     omOvlReturnEx(1);
     omOvlKill();
@@ -1005,7 +1005,7 @@ void func_8005835C(void) {
         goto done;
     start:
         func_80041F84(i);
-        func_800591E0((void*)port);
+        func_800591E0((void*)PB_HOSTCAST(PB_PTR32, port));
         func_80041FE0(i);
         continue;
     stick:

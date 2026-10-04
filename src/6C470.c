@@ -55,7 +55,7 @@ void func_8006B870(void) {
     }
 }
 
-s32 func_8006B8A4(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u16 arg4) {
+PB_PTR32 func_8006B8A4(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u16 arg4) {
     omObjData* obj;
     Unk6C470Work* w;
     s16* mdl;
@@ -80,7 +80,7 @@ s32 func_8006B8A4(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u16 arg4) {
     w->func4 = NULL;
     w->func8 = func_8006C5A8;
     w->funcC = func_8006C7A4;
-    return (s32)obj;
+    return (PB_PTR32)obj;
 }
 
 void func_8006B9B0(omObjData* obj, f32 x, f32 y, f32 z) {

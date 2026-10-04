@@ -270,10 +270,10 @@ typedef struct unk_Struct00 {
     /* 0x064 */ s16 unk64;
     /* 0x066 */ char pad66[0x72];
     /* 0x0D8 */ Vec4f unkD8;
-    /* 0x0E8 */ s32 unkE8;
-    /* 0x0EC */ s32 unkEC;
-    /* 0x0F0 */ s32 unkF0;
-    /* 0x0F4 */ s32 unkF4;
+    /* 0x0E8 */ PB_PTR32 unkE8; /* PartyBoard: E8/F0/F4 hold callbacks, EC their argument */
+    /* 0x0EC */ PB_PTR32 unkEC;
+    /* 0x0F0 */ PB_PTR32 unkF0;
+    /* 0x0F4 */ PB_PTR32 unkF4;
     /* 0x0F8 */ Mtx unkF8;
     /* 0x138 */ Mtx unk_138;
     /* 0x178 */ char unk_178[0x380]; // more matrices?
@@ -371,7 +371,7 @@ typedef struct unk_800ECDE0 {
 /* 0x1C */ u8 unk_1C;
 /* 0x1D */ u8 unk_1D;
 /* 0x1E */ s16 unk_1E;
-/* 0x20 */ s32 unk_20;
+/* 0x20 */ PB_PTR32 unk_20; /* PartyBoard: holds a key-frame list pointer */
 } unk_800ECDE0;
 
 // typedef struct viewAngle {
@@ -731,9 +731,9 @@ typedef struct unk2C0C0StructC0 {
     /* 0xA0 */ unk2C0C0Struct50* unk_A0;
     /* 0xA4 */ unk2C0C0Struct80* unk_A4;
     /* 0xA8 */ unk2C0C0Struct90* unk_A8;
-    /* 0xAC */ s32 unk_AC;
-    /* 0xB0 */ s32 unk_B0;
-    /* 0xB4 */ s32 unk_B4;
+    /* 0xAC */ PB_PTR32 unk_AC; /* PartyBoard: AC/B0/B4 hold unk34D80Struct80 pointers */
+    /* 0xB0 */ PB_PTR32 unk_B0;
+    /* 0xB4 */ PB_PTR32 unk_B4;
     /* 0xB8 */ unk2C0C0StructB8* unk_B8;
     /* 0xBC */ unk2C0C0Struct70* unk_BC;
     /* 0xC0 */ f32 unk_C0;
@@ -899,10 +899,10 @@ typedef struct DecisionTreeNonLeafNode {
     u32 type;
     union {
         void (*func) ();
-        u32 data;
+        PB_UPTR32 data; /* PartyBoard: also holds a function pointer */
     } node_data1;
     union {
-        u32 data;
+        PB_UPTR32 data; /* PartyBoard: also holds a node pointer */
         s32 *node_data;
     } node_data2;
 } DecisionTreeNonLeafNode;

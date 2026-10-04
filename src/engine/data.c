@@ -363,6 +363,37 @@ s32 FileReadBuf(s8 *arg0, s32 arg1, s32 arg2, HuFileInfoD *arg3) {
     return i;
 }
 
+#ifdef TARGET_PC
+/* Host edition: the N64 code keeps the target address in the s32 parameter arg2; here it is a
+   pointer-width local. Same logic. */
+void FileSeek(HuFileInfoD *info, s32 arg1, s32 arg2) {
+    uintptr_t pos;
+
+    switch (arg2) {
+        case 0:
+            pos = (uintptr_t)(info->bytes + arg1);
+            break;
+        case 1:
+            pos = (uintptr_t)(info->bytesCopy + info->unkE + arg1);
+            break;
+        case 2:
+            pos = (uintptr_t)(info->bytes + info->size + arg1);
+            break;
+        default:
+            return;
+    }
+    pos = (pos < (uintptr_t)info->bytes) ? (uintptr_t)info->bytes : pos;
+    pos = (pos >= (uintptr_t)(info->bytes + info->size)) ? (uintptr_t)(info->bytes + info->size - 1) : pos;
+
+    if ((pos < (uintptr_t)info->bytesCopy) || (pos >= (uintptr_t)(info->bytesCopy + 0x400))) {
+        info->unkC = 1;
+        info->unkE = pos & 1;
+        info->bytesCopy = (u8 *)(pos - info->unkE);
+    } else {
+        info->unkE = pos - (uintptr_t)info->bytesCopy;
+    }
+}
+#else
 void FileSeek(HuFileInfoD *info, s32 arg1, s32 arg2) {
     switch (arg2) {
         case 0:
@@ -388,3 +419,4 @@ void FileSeek(HuFileInfoD *info, s32 arg1, s32 arg2) {
         info->unkE = arg2 - (u32)info->bytesCopy;
     }
 }
+#endif

@@ -88,7 +88,7 @@ void func_8004B7F8(s32);
 void func_8004ACEC(Gfx**, s32, u8);
 extern Gfx D_800C4F80[];
 void func_8004A19C(s16, s16);
-void func_8003A4EC(Gfx**, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+void func_8003A4EC(Gfx**, PB_PTR32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_8007F54C(void*, void*, s32, Unk800D673C*);
 extern void func_8007FAC0(void);
 
@@ -374,7 +374,7 @@ void func_8004858C(omObjData* obj) {
                         obj->work[0] = 2;
                         obj->work[3] = 60;
                         func_8006DA1C(D_800D66B8[obj->work[1]].win, 0, 4);
-                        LoadStringIntoWindow(D_800D66B8[obj->work[1]].win, (void*) (D_800D66EA[obj->work[1]] + 0xBC), -2, 4);
+                        LoadStringIntoWindow(D_800D66B8[obj->work[1]].win, (void*) PB_HOSTCAST(PB_PTR32, (D_800D66EA[obj->work[1]] + 0xBC)), -2, 4);
                         func_8006E288(D_800D66B8[obj->work[1]].win, 1);
                         func_8006E2B8(D_800D66B8[obj->work[1]].win, 0xA0, 0xA0, 0xA0);
                         func_800714F0(D_800D66B8[obj->work[1]].win, 0xFE, 0xFF, 0xD0);
@@ -665,7 +665,7 @@ void func_800499CC(s32 arg0) {
 
     for (i = 0; i < 5; i++) {
         box = &D_800D66B8[i];
-        LoadStringIntoWindow(box->win, (void*) (D_800D66EA[i] + 0xBC), -2, 4);
+        LoadStringIntoWindow(box->win, (void*) PB_HOSTCAST(PB_PTR32, (D_800D66EA[i] + 0xBC)), -2, 4);
         func_8006E070(box->win, 0);
     }
 
@@ -1022,7 +1022,7 @@ void func_8004AAA8(Gfx** gfx, void* tex, s32 x, s16 y) {
     s32 i;
 
     for (i = 0; i < 2; i++) {
-        func_8003A4EC(gfx, (s32) tex + i * (64 * 24 * 2), G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 24, 0, 0, 64, 24, 0,
+        func_8003A4EC(gfx, (PB_PTR32) tex + i * (64 * 24 * 2), G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 24, 0, 0, 64, 24, 0,
                       G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
         gSPScisTextureRectangle((*gfx)++, x * 4, (y + i * 24) * 4, (x + 64) * 4, (y + (i + 1) * 24) * 4,
                                 G_TX_RENDERTILE, 0, 0, 1 << 10, 1 << 10);

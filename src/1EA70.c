@@ -1,4 +1,7 @@
 #include "common.h"
+#ifdef TARGET_PC
+void func_800238F0(s16); /* engine/mallocblock.c; unprototyped here on the N64 */
+#endif
 
 typedef struct unk1EA70Struct18 {
     /* 0x00 */ u8 unk_00;
@@ -243,7 +246,7 @@ void func_8001E40C(s16 index, s8 arg1, s8 arg2, s8 arg3, u8 arg4, u8 arg5, u8 ar
     }
 }
 
-void func_8001E534(s16 index, s32 arg1) {
+void func_8001E534(s16 index, PB_PTR32 arg1) {
     if (index != -1) {
         func_8001E268(index, 0x40, 0x40);
         D_800ECDE0[index].unk_20 = arg1;
@@ -519,7 +522,7 @@ void func_80020544(s16 arg0, s16 arg1, unk1EA70StructC* arg2, s16 arg3) {
     D_800F2C20 = arg2->unk_04;
     D_800ED5E6 = 0;
     for (i = 0; i < anim->unk_02; i += arg1) {
-        func_80034ED8(model, i, (s32) anim, 1);
+        func_80034ED8(model, i, (PB_PTR32) anim, 1);
         D_800F33D4 = 0;
         func_80020654(model, 0, arg3);
     }
@@ -970,14 +973,14 @@ void func_80021EC0(s16 arg0, f32 arg1, f32 arg2, f32 arg3) {
         idx = D_800ED4A8->unk_00[func_80021794(D_800ED4A8, 0, arg1, arg2, arg3, 4)].unk_1C;
         func_80025930(D_800ECDE0[idx].unk_00, 0x70000000, 0x70000000);
         func_80025F60(D_800ECDE0[idx].unk_00, 0x1400);
-        func_8001E534(idx, (s32) D_800C323C);
+        func_8001E534(idx, (PB_PTR32) D_800C323C);
         D_800ECDE0[idx].unk_10 |= 0x100;
     } else if (arg0 == 1) {
         func_80021AF4(D_800ED4A8, 12.0f, 12.0f, 12.0f);
         idx = D_800ED4A8->unk_00[func_80021794(D_800ED4A8, 0, arg1, arg2, arg3, 4)].unk_1C;
         func_80025930(D_800ECDE0[idx].unk_00, 0x70000000, 0x70000000);
         func_80025F60(D_800ECDE0[idx].unk_00, 0x1400);
-        func_8001E534(idx, (s32) D_800C3278);
+        func_8001E534(idx, (PB_PTR32) D_800C3278);
         D_800ECDE0[idx].unk_10 |= 0x100;
     } else {
         for (i = 0; i < 4; i++) {
@@ -1002,16 +1005,16 @@ void func_80021EC0(s16 arg0, f32 arg1, f32 arg2, f32 arg3) {
             func_80025F60(D_800ECDE0[idx].unk_00, 0x1400);
             switch (i) {
                 case 0:
-                    func_8001E534(spr, (s32) D_800C3228);
+                    func_8001E534(spr, (PB_PTR32) D_800C3228);
                     break;
                 case 1:
-                    func_8001E534(spr, (s32) D_800C323C);
+                    func_8001E534(spr, (PB_PTR32) D_800C323C);
                     break;
                 case 2:
-                    func_8001E534(spr, (s32) D_800C3250);
+                    func_8001E534(spr, (PB_PTR32) D_800C3250);
                     break;
                 case 3:
-                    func_8001E534(spr, (s32) D_800C3264);
+                    func_8001E534(spr, (PB_PTR32) D_800C3264);
                     break;
             }
             func_80021A00(D_800ED4A8, slot, i * 4);

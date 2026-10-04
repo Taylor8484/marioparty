@@ -402,8 +402,14 @@ omObjData* func_8004EA8C(Object* arg0, Vec3f* arg1, s32 arg2, Vec3f* arg3) {
     s32 i;
 
     obj = omAddObj(0x1000, 0, 0, -1, func_8004E564);
+#ifdef TARGET_PC
+    /* N64: a player index is >= 0 as s32, a KSEG0 object pointer negative. */
+    if ((uintptr_t)arg0 < 0x100000) {
+        player = (s32)(intptr_t)arg0;
+#else
     if ((s32)arg0 >= 0) {
         player = (s32)arg0;
+#endif
         arg0 = NULL;
         obj->work[0] = player;
     }

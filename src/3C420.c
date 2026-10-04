@@ -154,7 +154,7 @@ void func_8003BB48(void) {
         if (fade < 0) {
             if (repeat == 0) {
                 if ((ret = osRecvMesg(&w->unk10, &msg, OS_MESG_NOBLOCK)) == -1) {
-                    msg = (OSMesg)ret;
+                    msg = (OSMesg)PB_HOSTCAST(PB_PTR32, ret);
                 }
                 if (w->unk00 & 1) {
                     repeat = 8;
@@ -163,7 +163,7 @@ void func_8003BB48(void) {
                 msg = (OSMesg)-1;
                 repeat--;
             }
-            switch ((s32)msg) {
+            switch ((s32)PB_HOSTCAST(PB_PTR32, msg)) {
                 case -2:
                     w->unk0C++;
                     if (w->unk0C >= w->unk02) {
@@ -194,8 +194,8 @@ void func_8003BB48(void) {
                 case -1:
                     break;
                 default:
-                    if ((s32)msg < w->unk02) {
-                        w->unk0C = (s32)msg;
+                    if ((s32)PB_HOSTCAST(PB_PTR32, msg) < w->unk02) {
+                        w->unk0C = (s32)PB_HOSTCAST(PB_PTR32, msg);
                     }
                     break;
             }
@@ -238,7 +238,7 @@ INCLUDE_ASM("asm/nonmatchings/3C420", func_8003BB48);
 #endif
 s32 func_8003BE84(unk_8003B8D4Struct* arg0, s32 arg1) {
     if (arg0->unk08 != NULL) {
-        return osSendMesg(&arg0->unk10, (OSMesg)arg1, OS_MESG_NOBLOCK);
+        return osSendMesg(&arg0->unk10, (OSMesg)PB_HOSTCAST(PB_PTR32, arg1), OS_MESG_NOBLOCK);
     }
     return -1;
 }

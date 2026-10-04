@@ -1133,7 +1133,7 @@ void func_8002E488(unk2C0C0StructC0* arg0, u32* arg1) {
             D_800F328C = temp_a3->unk_24;
 
             if (temp_s4->unk_03 != -1) {
-                var_t0 = (u8*) (temp_s4->unk_03 << 24);
+                var_t0 = (u8*) PB_HOSTCAST(PB_PTR32, (temp_s4->unk_03 << 24)); /* a segmented address */
                 *arg1 |= 0x40000;
             } else {
                 var_t0 = temp_a3->unk_24;

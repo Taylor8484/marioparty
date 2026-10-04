@@ -386,7 +386,7 @@ s32 func_80034E04(unk34D80Struct80* arg0, unk34D80Struct40* arg1) {
     return 1;
 }
 
-void func_80034ED8(unk2C0C0StructC0* arg0, f32 arg1, s32 arg2_, s32 arg3) {
+void func_80034ED8(unk2C0C0StructC0* arg0, f32 arg1, PB_PTR32 arg2_, s32 arg3) {
     unk34D80Struct80* arg2 = (unk34D80Struct80*) arg2_;
     unk2C0C0Struct40* p40;
     unk2C0C0Struct40* q;

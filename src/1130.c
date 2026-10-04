@@ -2530,9 +2530,9 @@ void func_800081C0(omObjData* obj, s32 port) {
     }
     fontcolor = 15;
     sprintf(pfStrBuf, "*");
-    print8(16, (D_800B89A0 + 2) * 8, (s32)pfStrBuf);
+    print8(16, (D_800B89A0 + 2) * 8, PB_HOSTCAST(char*, (PB_PTR32)pfStrBuf));
     sprintf(pfStrBuf, "CAMERA :[%s]", D_800B895B ? "HOMING" : "LOCK");
-    print8(24, 16, (s32)pfStrBuf);
+    print8(24, 16, PB_HOSTCAST(char*, (PB_PTR32)pfStrBuf));
     if (D_800B895B != 0) {
         Center.x = obj->trans.x;
         Center.y = obj->trans.y;

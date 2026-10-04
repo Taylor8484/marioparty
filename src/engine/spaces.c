@@ -347,7 +347,7 @@ void BoardSpaceStepAnim(void) {
    f32 fval;
 
    process = HuPrcCurrentGet();
-   space = BoardSpaceGet((s32)process->user_data);
+   space = BoardSpaceGet((s32)PB_HOSTCAST(PB_PTR32, process->user_data));
 
    fval = 1.4f;
    if (D_800C4FD0 != NULL) {
@@ -371,7 +371,7 @@ void BoardSpaceStepAnim(void) {
 void SetSpaceStepAnim(s16 spaceIndex) {
    Process *process;
    process = omAddPrcObj(BoardSpaceStepAnim, 0xEF00, 0, 0);
-   process->user_data = (void *)(s32)spaceIndex;
+   process->user_data = (void *)PB_HOSTCAST(PB_PTR32, (s32)spaceIndex);
 }
 
 /* Space process */
@@ -381,7 +381,7 @@ void SpaceDisappearAnim(void) {
    f32 fval;
 
    process = HuPrcCurrentGet();
-   space = BoardSpaceGet((s32)process->user_data);
+   space = BoardSpaceGet((s32)PB_HOSTCAST(PB_PTR32, process->user_data));
 
    fval = 1.0f;
    if (D_800C4FD0 != NULL) {
@@ -405,7 +405,7 @@ void SpaceDisappearAnim(void) {
 void SetSpaceDisappearAnim(s16 spaceIndex) {
    Process *process;
    process = omAddPrcObj(SpaceDisappearAnim, 0xEF00, 0, 0);
-   process->user_data = (void *)(s32)spaceIndex;
+   process->user_data = (void *)PB_HOSTCAST(PB_PTR32, (s32)spaceIndex);
 }
 
 /* Space process */
@@ -415,7 +415,7 @@ void SpaceSpawnAnim(void) {
    f32 fval;
 
    process = HuPrcCurrentGet();
-   space = BoardSpaceGet((s32)process->user_data);
+   space = BoardSpaceGet((s32)PB_HOSTCAST(PB_PTR32, process->user_data));
 
    fval = 0.0f;
    if (D_800C4FD0 != NULL) {
@@ -439,7 +439,7 @@ void SpaceSpawnAnim(void) {
 void SetSpaceSpawnAnim(s16 spaceIndex) {
    Process *process;
    process = omAddPrcObj(SpaceSpawnAnim, 0xEF00, 0, 0);
-   process->user_data = (void *)(s32)spaceIndex;
+   process->user_data = (void *)PB_HOSTCAST(PB_PTR32, (s32)spaceIndex);
 }
 
 void SetSpaceEventList(s16 index, EventListEntry *eventList) {

@@ -28,7 +28,7 @@ void func_8003A28C(Gfx** arg0, s32 timg, s32 fmt, s32 siz, s32 width, s32 arg5, 
     *arg0 = gfx;
 }
 
-void func_8003A4EC(Gfx** arg0, s32 arg1, s32 fmt, s32 siz, s32 width, s32 height, s32 uls, s32 ult, s32 lrs, s32 lrt, s32 pal, s32 cms, s32 cmt, s32 masks, s32 maskt, s32 shifts, s32 shiftt) {
+void func_8003A4EC(Gfx** arg0, PB_PTR32 arg1, s32 fmt, s32 siz, s32 width, s32 height, s32 uls, s32 ult, s32 lrs, s32 lrt, s32 pal, s32 cms, s32 cmt, s32 masks, s32 maskt, s32 shifts, s32 shiftt) {
     Gfx* gfx = *arg0;
     s32 timg = arg1 + ((width * ult) << (siz - 1));
 

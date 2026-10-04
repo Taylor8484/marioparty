@@ -1,4 +1,7 @@
 #include "common.h"
+#ifdef TARGET_PC
+void func_800A2B40(Mtx*); /* SDK-region asm unit A3650 (unprototyped on the N64) */
+#endif
 
 void InitCameras(s16 count) {
     s16 j;
@@ -109,7 +112,7 @@ void func_8001D7DC(s16 index, Gfx** gfx) {
     gDPSetScissor((*gfx)++, G_SC_NON_INTERLACE, temp_a2->unkD8.x, temp_a2->unkD8.y, temp_a2->unkD8.z, temp_a2->unkD8.w);
 }
 
-void func_8001D8A0(s16 index, s32 arg1, s32 arg2) {
+void func_8001D8A0(s16 index, PB_PTR32 arg1, PB_PTR32 arg2) {
     unk_Struct00* temp_v0;
 
     temp_v0 = &D_800C3110[index];
@@ -117,11 +120,11 @@ void func_8001D8A0(s16 index, s32 arg1, s32 arg2) {
     temp_v0->unkEC = arg2;
 }
 
-void func_8001D8D4(s16 index, s32 arg1) {
+void func_8001D8D4(s16 index, PB_PTR32 arg1) {
     D_800C3110[index].unkF0 = arg1;
 }
 
-void func_8001D904(s16 index, s32 arg1) {
+void func_8001D904(s16 index, PB_PTR32 arg1) {
     D_800C3110[index].unkF4 = arg1;
 }
 

@@ -24,8 +24,12 @@ typedef struct unk72D90Struct2 {
 extern void guLookAt(Mtx*, f32, f32, f32, f32, f32, f32, f32, f32, f32);
 extern void guPerspective(Mtx*, u16*, f32, f32, f32, f32, f32);
 void* func_80023668(s32);
+#ifdef TARGET_PC
+#include <string.h> /* host: the C library's strlen; PR/os.h declares osVirtualToPhysical */
+#else
 u32 osVirtualToPhysical(void*);
 u32 strlen(const char*);
+#endif
 void* func_80014614(s32);
 void DataCloseTemp(void*);
 void func_800238F0(s32);
@@ -121,7 +125,7 @@ extern char D_800CBAD0[];
 extern char D_800CBAD8[];
 extern char D_800CBAE4[];
 extern Gfx* D_800E4340;
-extern s32 D_800E4344;
+extern PB_PTR32 D_800E4344;
 extern s8 D_800E4348;
 extern Gfx* D_800E434C;
 extern s16 D_800E4350;
@@ -153,7 +157,7 @@ extern s8 D_800F3FFC;
 extern f32 D_800F5024;
 extern u8 D_800F50B8;
 extern Mtx D_800F5340[];
-extern s32 D_800F545C;
+extern PB_PTR32 D_800F545C;
 extern s8 omSysPauseEnableFlag;
 extern s16 D_800F64F4;
 extern s16 D_800F6548;
@@ -378,7 +382,7 @@ s32 func_80072B5C(Gfx** arg0) {
 
     if (D_800F5024 == 0.0f) {
         D_800C6104 = HuMemDirectMalloc(153664);
-        D_800F545C = (s32) (D_800C6104 + 63) & ~63;
+        D_800F545C = (PB_PTR32) (D_800C6104 + 63) & ~63;
         func_80072C34(arg0, D_800F545C);
         return 1;
     }
@@ -1204,7 +1208,11 @@ s32 GMesCreate(s16 arg0, ...) {
             break;
         case 6:
         case 7:
+#ifdef TARGET_PC
+            temp_a2->unk_10 = va_arg(args, void*); /* a pointer argument: 8 bytes on the host */
+#else
             temp_a2->unk_10 = va_arg(args, s32);
+#endif
             temp_a2->unk_54 = va_arg(args, s32);
             temp_a2->unk_58 = va_arg(args, s32);
             temp_a2->unk_5C = va_arg(args, f64);
@@ -2631,7 +2639,7 @@ void func_8007B210(void) {
     D_800E4340 = func_80023668(153664);
     sp10 = D_800E434C = func_80023668(6400);
 
-    D_800E4344 = ((s32) D_800E4340 + 63) & ~63;
+    D_800E4344 = ((PB_PTR32) D_800E4340 + 63) & ~63;
     D_800E4350 = func_8002451C(0, &func_8007B420, 6);
 
     gSPDisplayList(sp10++, D_800C6108);
@@ -2735,17 +2743,17 @@ void func_8007B52C(void) {
                 var_s2 = 2;
                 for (i = 0; i < MAX_PLAYERS; i++) {
                     if (GwPlayer[i].group == 0) {
-                        func_8006DA5C(temp_v0, (void*) (s32) GwPlayer[i].character + 44, var_s3);
-                        func_8006DA5C(var_s6, (void*) (s32) GwPlayer[i].character + 44, var_s3++);
+                        func_8006DA5C(temp_v0, (void*) (PB_PTR32) GwPlayer[i].character + 44, var_s3);
+                        func_8006DA5C(var_s6, (void*) (PB_PTR32) GwPlayer[i].character + 44, var_s3++);
                     } else {
-                        func_8006DA5C(temp_v0, (void*) (s32) GwPlayer[i].character + 44, var_s2);
-                        func_8006DA5C(var_s6, (void*) (s32) GwPlayer[i].character + 44, var_s2++);
+                        func_8006DA5C(temp_v0, (void*) (PB_PTR32) GwPlayer[i].character + 44, var_s2);
+                        func_8006DA5C(var_s6, (void*) (PB_PTR32) GwPlayer[i].character + 44, var_s2++);
                     }
                 }
             } else {
                 for (i = 0; i < MAX_PLAYERS; i++) {
-                    func_8006DA5C(temp_v0, (void*) (s32) GwPlayer[i].character + 44, GwPlayer[i].group);
-                    func_8006DA5C(var_s6, (void*) (s32) GwPlayer[i].character + 44, GwPlayer[i].group);
+                    func_8006DA5C(temp_v0, (void*) (PB_PTR32) GwPlayer[i].character + 44, GwPlayer[i].group);
+                    func_8006DA5C(var_s6, (void*) (PB_PTR32) GwPlayer[i].character + 44, GwPlayer[i].group);
                 }
             }
         } else {
@@ -2754,25 +2762,25 @@ void func_8007B52C(void) {
                 var_s2 = 1;
                 for (i = 0; i < MAX_PLAYERS; i++) {
                     if (GwPlayer[i].group == 0) {
-                        func_8006DA5C(temp_v0, (void*) (s32) GwPlayer[i].character + 44, var_s3++);
+                        func_8006DA5C(temp_v0, (void*) (PB_PTR32) GwPlayer[i].character + 44, var_s3++);
                     } else {
-                        func_8006DA5C(var_s6, (void*) (s32) GwPlayer[i].character + 44, var_s2++);
+                        func_8006DA5C(var_s6, (void*) (PB_PTR32) GwPlayer[i].character + 44, var_s2++);
                     }
                 }
             } else {
                 for (i = 0; i < MAX_PLAYERS; i++) {
-                    func_8006DA5C(temp_v0, (void*) (s32) GwPlayer[i].character + 44, i);
+                    func_8006DA5C(temp_v0, (void*) (PB_PTR32) GwPlayer[i].character + 44, i);
                 }
             }
         }
 
-        LoadStringIntoWindow(var_s6, (void*) (s32) D_800C6268[temp_fp].unk_04, -1, -1);
+        LoadStringIntoWindow(var_s6, (void*) (PB_PTR32) D_800C6268[temp_fp].unk_04, -1, -1);
     } else {
         D_800F64F4 = -1;
         var_s6 = -1;
     }
 
-    LoadStringIntoWindow(temp_v0, (void*) (s32) D_800C6268[temp_fp].unk_02, -1, -1);
+    LoadStringIntoWindow(temp_v0, (void*) (PB_PTR32) D_800C6268[temp_fp].unk_02, -1, -1);
 
     temp_v0_12 = DataRead(0xB001B);
     D_800F3182 = func_800678A4(temp_v0_12);

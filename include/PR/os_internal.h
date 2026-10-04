@@ -1,3 +1,8 @@
+#ifdef TARGET_PC
+/* PartyBoard host build: the unified 64-bit host edition (games/mp1/src/port/include) replaces
+ * this header. N64 builds never define TARGET_PC and compile the original below unchanged. */
+#include <PR/os_internal.h>
+#else /* !TARGET_PC */
 /**************************************************************************
  *									  *
  *		 Copyright (C) 1995, Silicon Graphics, Inc.		  *
@@ -116,3 +121,4 @@ extern u32             __osRdbSend(u8 *buf, u32 size, u32 type);
 #endif
 
 #endif /* !_OS_INTERNAL_H */
+#endif /* !TARGET_PC */

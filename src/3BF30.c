@@ -80,7 +80,7 @@ void func_8003B330(void) {
     HuPrcCreate(func_8001A0F0, 1, 0, 0);
     while (done == 0) {
         osRecvMesg(&D_800ED538, &sp528, OS_MESG_BLOCK);
-        switch ((s32)sp528) {
+        switch ((s32)PB_HOSTCAST(PB_PTR32, sp528)) {
             case 1:
                 func_80061354();
                 temp_s1 = func_80061228(0xC8, 0, 0);

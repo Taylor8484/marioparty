@@ -546,16 +546,16 @@ void func_800247FC(OSMesgQueue* arg0, s32 arg1) {
                 }
             }
             if (p->unk_08 != -1) {
-                p->unk_6C->unk_AC = (s32)&D_800ED554[p->unk_08];
+                p->unk_6C->unk_AC = (PB_PTR32)&D_800ED554[p->unk_08];
                 p->unk_6C->unk_C0 = p->unk_48;
                 if (p->unk_14 != -1) {
-                    p->unk_6C->unk_B4 = (s32)&D_800ED554[p->unk_14];
+                    p->unk_6C->unk_B4 = (PB_PTR32)&D_800ED554[p->unk_14];
                     p->unk_6C->unk_CC = p->unk_60;
                 } else {
                     p->unk_6C->unk_B4 = 0;
                 }
                 if (p->unk_0C != -1 && p->unk_10 != 0) {
-                    p->unk_6C->unk_B0 = (s32)&D_800ED554[p->unk_0C];
+                    p->unk_6C->unk_B0 = (PB_PTR32)&D_800ED554[p->unk_0C];
                     *(f32*)&p->unk_6C->unk_C4 = p->unk_54;
                     *(f32*)&p->unk_6C->unk_C8 = (f32)p->unk_12 / (f32)p->unk_10;
                     if (D_800F384E == 0) {

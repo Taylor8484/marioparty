@@ -402,7 +402,7 @@ s32 dmaRead(u8* src, void* dest, s32 size) {
 
     osCreateMesgQueue(&queue, msg, 1);
     osInvalDCache(dest, ((u32)(size + 15) >> 4) << 4);
-    ret = func_80061FA0(&ioMsg, OS_MESG_PRI_NORMAL, OS_READ, (u32)src, dest, size, &queue);
+    ret = func_80061FA0(&ioMsg, OS_MESG_PRI_NORMAL, OS_READ, (u32)PB_HOSTCAST(PB_UPTR32, src), dest, size, &queue);
     if (ret == 0) {
         osRecvMesg(&queue, NULL, OS_MESG_BLOCK);
     }
@@ -419,7 +419,7 @@ s32 HuRomDmaCodeRead(void* src, void* dest, s32 size) {
     alignedSize = ((u32)(size + 15) >> 4) << 4;
     osInvalICache(dest, alignedSize);
     osInvalDCache(dest, alignedSize);
-    ret = func_80061FA0(&ioMsg, OS_MESG_PRI_NORMAL, OS_READ, (u32)src, dest, size, &queue);
+    ret = func_80061FA0(&ioMsg, OS_MESG_PRI_NORMAL, OS_READ, (u32)PB_HOSTCAST(PB_UPTR32, src), dest, size, &queue);
     if (ret == 0) {
         osRecvMesg(&queue, NULL, OS_MESG_BLOCK);
     }

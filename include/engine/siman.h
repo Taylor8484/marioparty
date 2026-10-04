@@ -41,5 +41,9 @@ extern OSMesgQueue D_800F3370;
 
 // TODO: Put this in correct header
 void func_800639F8(unkMesgWrapper*, OSMesgQueue*, s32); // nnsched func
+#ifdef TARGET_PC
+/* Host: eeprom.c and pad.c call it unprototyped on the N64. */
+s32 RequestSIFunction(unkMesg *siMessg, HuSiFunc func, void *arg, s32 type);
+#endif
 
 #endif

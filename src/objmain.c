@@ -781,9 +781,17 @@ void omMain(void) {
 
     if (D_800C5972 != 0) {
         fontcolor = 14;
+#ifdef TARGET_PC /* host: long is 64-bit; the values are s32 */
+        sprintf(pfStrBuf, "%8X(%d)", func_8003B710(), func_8003B730());
+#else
         sprintf(pfStrBuf, "%8lX(%ld)", func_8003B710(), func_8003B730());
+#endif
         print8(16, 24, pfStrBuf);
+#ifdef TARGET_PC
+        sprintf(pfStrBuf, "OVL:%d(%d<%d)", omovlhisidx, D_800F09F4, D_800C5968);
+#else
         sprintf(pfStrBuf, "OVL:%d(%ld<%ld)", omovlhisidx, D_800F09F4, D_800C5968);
+#endif
         print8(24, 32, pfStrBuf);
         sprintf(pfStrBuf, "OBJ:%d/%d", D_800ED56C, D_800ED550);
         print8(24, 40, pfStrBuf);

@@ -1,3 +1,8 @@
+#ifdef TARGET_PC
+/* PartyBoard host build: the unified 64-bit host edition (games/mp1/src/port/include) replaces
+ * this header. N64 builds never define TARGET_PC and compile the original below unchanged. */
+#include <PR/ultratypes.h>
+#else /* !TARGET_PC */
 #ifndef _ULTRATYPES_H_
 #define _ULTRATYPES_H_
 
@@ -87,3 +92,4 @@ typedef unsigned long   size_t;
 #endif
 
 #endif  /* _ULTRATYPES_H_ */
+#endif /* !TARGET_PC */

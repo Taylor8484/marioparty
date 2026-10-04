@@ -108,7 +108,7 @@ void func_80058E64(omObjData *arg0)
   s32 label1;
   s16 moved;
   label2 = 0;
-  port = (s32) HuPrcCurrentGet()->user_data;
+  port = (s32) PB_HOSTCAST(PB_PTR32, HuPrcCurrentGet()->user_data);
   moved = 0;
   zoom = func_8004B844();
   if (func_80056990() == 0)

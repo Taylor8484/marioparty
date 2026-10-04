@@ -204,7 +204,7 @@ void func_800130E8(void* arg) {
 
     do {
         osRecvMesg(&D_800D0B18.audioFrameMsgQ, &msg, OS_MESG_BLOCK);
-        switch ((u32)msg) {
+        switch ((u32)PB_HOSTCAST(PB_UPTR32, msg)) {
             case 1:
                 if (func_80013234(D_800D0B18.audioInfo[D_800D0DA8 % 3], lastInfo)) {
                     osRecvMesg(&D_800D0B18.audioReplyMsgQ, (OSMesg*)&reply, OS_MESG_BLOCK);
@@ -367,7 +367,7 @@ void func_800136C4(AMTask* t, AMAudioMsg* msg, Acmd* cmdp) {
     t->list.t.data_size = (cmdp - D_800D0B18.ACMDList[D_800D0DB8]) * sizeof(Acmd);
     t->list.t.type = 2; /* M_AUDTASK */
     t->list.t.ucode_boot = D_800B1760;
-    t->list.t.ucode_boot_size = (s32)D_800B1830 - (s32)D_800B1760;
+    t->list.t.ucode_boot_size = (PB_PTR32)D_800B1830 - (PB_PTR32)D_800B1760;
     t->list.t.flags = 0;
     t->list.t.ucode = D_800B7B30;
     t->list.t.ucode_data = D_800C9BB0;
