@@ -369,39 +369,44 @@ extern s32 D_800C5368[2];
 
 
 
-// retail sign-extends the result fully (sll+sra) before the bgez; this gives sll only (masked 2)
-#ifdef NON_MATCHING
-s32 func_80051198(s32 arg0) {
-    Process* proc;
-    s16 v;
-    s32 win;
-    GW_SYSTEM* system = &GwSystem;
+// decomp-permuter
+s32 func_80051198(s32 arg0)
+{
+  Process *proc;
+  s16 v;
+  s32 win;
+  GW_SYSTEM *system = &GwSystem;
+  win = ((s32 (*)(s16, s16, s16, s16, s32, s16)) func_8006D010)(0x5A, 0x50, 0xA2, 0x22, 0, 0);
+  func_8006E0A4(win, 5);
+  func_8006E154(win, 0);
+  LoadStringIntoWindow(win, (void *) 0x160, -1, -1);
+  func_8006E070(win, 0);
+  while (func_8006FCC0(win) != 0)
+  {
+    HuPrcVSleep();
+  }
 
-    win = CreateMenuWindow(0x5A, 0x50, 0xA2, 0x22, 0, 0);
-    func_8006E0A4(win, 5);
-    func_8006E154(win, 0);
-    LoadStringIntoWindow(win, (void*)0x160, -1, -1);
-    func_8006E070(win, 0);
-    while (func_8006FCC0(win) != 0) {
-        HuPrcVSleep();
+  if (_CheckFlag(0x2C) == 0)
+  {
+    proc = func_80050E10(win, D_800C5360);
+  }
+  else
+  {
+    proc = func_80050E10(win, D_800C5368);
+  }
+  func_8007155C(win, (s16) (1 << arg0));
+  v = func_8006FCF0(win, system->minigameExplanation, 0);
+  if (v >= 0)
+  {
+    if ((v && v) && v)
+    {
     }
-    if (_CheckFlag(0x2C) == 0) {
-        proc = func_80050E10(win, D_800C5360);
-    } else {
-        proc = func_80050E10(win, D_800C5368);
-    }
-    func_8007155C(win, (s16)(1 << arg0));
-    v = func_8006FCF0(win, system->minigameExplanation, 0);
-    if (v >= 0) {
-        system->minigameExplanation = v;
-    }
-    EndProcess(proc);
-    func_80070D90(win);
-    return 4;
+    system->minigameExplanation = v;
+  }
+  EndProcess(proc);
+  func_80070D90(win);
+  return 4;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/51200", func_80051198);
-#endif
 
 s32 func_800512F4(s32 arg0) {
     Process* proc;
@@ -427,33 +432,34 @@ s32 func_800512F4(s32 arg0) {
     func_80070D90(win);
     return 4;
 }
-// register choice: the bit-15 test reads a0 instead of v0 (raw 1, masked 0)
-#ifdef NON_MATCHING
-s32 func_80051428(s32 arg0) {
-    s32 v;
-    s32 win;
-    GW_SYSTEM* system = &GwSystem;
+// decomp-permuter
+s32 func_80051428(s32 arg0)
+{
+  short v;
+  s32 win;
+  s8 new_var;
+  GW_SYSTEM *system = &GwSystem;
+  win = ((s32 (*)(s16, s16, s16, s16, s32, s16)) func_8006D010)(0x87, 0x46, 0x34, 0x30, 0, 0);
+  func_8006E0A4(win, 5);
+  func_8006E154(win, 0);
+  LoadStringIntoWindow(win, (void *) 0x169, -1, -1);
+  func_8006E070(win, 0);
+  while (func_8006FCC0(win) != 0)
+  {
+    HuPrcVSleep();
+  }
 
-    win = CreateMenuWindow(0x87, 0x46, 0x34, 0x30, 0, 0);
-    func_8006E0A4(win, 5);
-    func_8006E154(win, 0);
-    LoadStringIntoWindow(win, (void*)0x169, -1, -1);
-    func_8006E070(win, 0);
-    while (func_8006FCC0(win) != 0) {
-        HuPrcVSleep();
-    }
-    func_8007155C(win, (s16)(1 << arg0));
-    v = func_8006FCF0(win, (s8)system->messageSpeed, 0);
-    if ((s16)v >= 0) {
-        system->messageSpeed = v;
-        func_8004D0B0((s8)v);
-    }
-    func_80070D90(win);
-    return 4;
+  func_8007155C(win, (s16) (1 << arg0));
+  v = func_8006FCF0(win, (s8) system->messageSpeed, 0);
+  if (((s16) v) >= 0)
+  {
+    new_var = (s8) v;
+    system->messageSpeed = v;
+    func_8004D0B0(new_var);
+  }
+  func_80070D90(win);
+  return 4;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/51200", func_80051428);
-#endif
 s32 func_80051548(s32 arg0) {
     s32 win;
 
@@ -503,40 +509,45 @@ void func_800516C8(GW_PLAYER* arg0, s16 arg1) {
         arg0->flags |= 1;
     }
 }
-// register allocation of the step copies and the port counters (masked 0)
-#ifdef NON_MATCHING
-s32 func_80051778(GW_PLAYER* arg0, s16 arg1) {
-    s16 step = arg1;
-    s32 tries;
-    s32 cpuPort;
-    u32 port;
+// decomp-permuter
+s32 func_80051778(GW_PLAYER *arg0, s16 arg1)
+{
+  s16 step = arg1;
+  s32 tries;
+  u32 port;
+  if (PlayerIsCPU(arg0->player_index) != 0)
+  {
+    tries = 4;
+    port = (step > 0) ? (0) : (3);
+    do
+    {
+      if ((func_8005165C(port) == 0) && (func_800141FC(port) != 0))
+      {
+        return port;
+      }
+      port += arg1;
+    }
+    while ((--tries) != 0);
+    return -1;
+  }
+  if (arg1 > 0)
+  {
+    port = arg0->port + 1;
+  }
+  else
+  {
+    port = arg0->port - 1;
+  }
+  for (; port < 4; port += arg1)
+  {
+    if ((func_8005165C(port) == 0) && (func_800141FC(port) != 0))
+    {
+      return port;
+    }
+  }
 
-    if (PlayerIsCPU(arg0->player_index) != 0) {
-        tries = 4;
-        cpuPort = (step > 0) ? 0 : 3;
-        do {
-            if (func_8005165C(cpuPort) == 0 && func_800141FC(cpuPort) != 0) {
-                return cpuPort;
-            }
-            cpuPort += arg1;
-        } while (--tries != 0);
-        return -1;
-    }
-    if (arg1 > 0) {
-        port = arg0->port + 1;
-    } else {
-        port = arg0->port - 1;
-    }
-    for (; port < 4; port += arg1) {
-        if (func_8005165C(port) == 0 && func_800141FC(port) != 0) {
-            return port;
-        }
-    }
-    return 4;
+  return 4;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/51200", func_80051778);
-#endif
 void func_8005188C(s16 arg0) {
     D_800D8378 = arg0;
 }
