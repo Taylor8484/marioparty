@@ -1182,7 +1182,7 @@ s16 func_8006FCC0(s16 arg0) {
 
 // parameter copies of arg1/arg2 land in s3/s2 swapped; retail arg1 is probably s8 but callers pass it unextended (masked 0)
 #ifdef NON_MATCHING
-s32 func_8006FCF0(s16 arg0, s32 arg1, s32 arg2) {
+s32 func_8006FCF0(s16 arg0, s8 arg1, s32 arg2) {
     TextWindow* tw = &D_800ED4B0[arg0];
     void* file;
 
@@ -1755,7 +1755,7 @@ void func_800718DC(s16 arg0, void* arg1, s8 arg2) {
 }
 // register allocation: the return value comes from the s16 copy of id instead of id itself (masked 0)
 #ifdef NON_MATCHING
-s16 func_8007194C(s32 arg0, s32 arg1, s32 arg2) {
+s32 func_8007194C(s32 arg0, s32 arg1, s32 arg2) {
     TWStyle* style = &D_800C6050[arg2];
     TextWindow* tw;
     TWSprite* spr;

@@ -319,7 +319,8 @@ s32 func_80050E7C(s32 arg0) {
         if (_CheckFlag(0x2C) != 0) {
             func_80071788(var_s1, 2);
         }
-        temp_v0_2 = func_8006FCF0(var_s1, D_800D8374, 0);
+        /* retail passes the full s16 here (lh): this caller saw an s32 parameter, the callee takes s8 */
+        temp_v0_2 = ((s32 (*)(s16, s32, s32)) func_8006FCF0)(var_s1, D_800D8374, 0);
         if (temp_v0_2 >= 0) {
             D_800D8374 = temp_v0_2;
         }
