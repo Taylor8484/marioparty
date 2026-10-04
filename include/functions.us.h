@@ -318,7 +318,7 @@ void func_80009058(omObjData*, f32, f32, f32, f32, f32, f32);
 void SetBasicSpritePos(s32, s16, s16);
 void func_80018D84(u16, s32);
 s16 func_80060540(s16, s16);
-void func_8009ECB0(void*, f32, f32, f32);
+void func_8009ECB0(Matrix4f, f32, f32, f32);
 void func_800258EC(s16, s32, s32);
 u16 func_8001E00C(void*, s32, u8);
 void func_80064D38(s16);
@@ -327,7 +327,7 @@ void Convert3DTo2D(s16 index, Vec3f* arg1, Vec2f* arg2);
 void func_80079078(s16);
 void omDelObj(omObjData*);
 s32 func_8005021C(f32); //getRandInRange
-void func_800A0D00(void*, f32, f32, f32);
+void func_800A0D00(Vec3f*, f32, f32, f32);
 void func_80025CA8(s16, f32);
 void func_80025B34(s16);
 void func_80026040(s16);
