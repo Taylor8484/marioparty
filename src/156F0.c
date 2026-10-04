@@ -1,5 +1,5 @@
 #include "common.h"
-#include "stdarg.h"
+#include "libc/stdarg.h"
 #ifndef TARGET_PC /* host: the C library's strlen (pb_host.h) */
 u32 strlen(const char*);
 #endif

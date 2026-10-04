@@ -1,3 +1,7 @@
+#ifdef TARGET_PC
+/* PartyBoard host: the C library's <assert.h>; this N64 edition is for the matching build. */
+#include <assert.h>
+#else
 #ifndef __ASSERT_H__
 #define __ASSERT_H__
 #ifdef __cplusplus
@@ -52,3 +56,4 @@ extern void __assert(const char *, const char *, int);
 #endif
 
 #endif /* !__ASSERT_H__ */
+#endif /* TARGET_PC */

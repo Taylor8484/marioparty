@@ -1,7 +1,7 @@
 #include "common.h"
 #include "engine/mallocblock.h"
 #include "engine/process.h"
-#include "stdarg.h"
+#include "libc/stdarg.h"
 
 typedef struct unk72D90Struct0 {
     /* 0x00 */ Vtx* unk_00;
