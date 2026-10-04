@@ -176,6 +176,13 @@ build/src/99E0.c.o:  CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # -O3 static inlines
 build/src/7CD60.c.o: OPTFLAGS = -O3
 
+build/src/9CE40.c.o: OPTFLAGS = -O0
+build/src/9F750.c.o: OPTFLAGS = -O0
+build/src/A1620.c.o: OPTFLAGS = -O0
+build/src/A19A0.c.o: OPTFLAGS = -O0
+build/src/A1A80.c.o: OPTFLAGS = -O0
+build/src/A1B00.c.o: OPTFLAGS = -O0
+build/src/A1E50.c.o: OPTFLAGS = -O0
 build/src/ABCD0.c.o: OPTFLAGS = -O0
 build/src/ACA90.c.o: OPTFLAGS = -O0
 build/src/ACCB0.c.o: OPTFLAGS = -O0
