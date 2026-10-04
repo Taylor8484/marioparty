@@ -242,50 +242,58 @@ s32 func_8003BE84(unk_8003B8D4Struct* arg0, s32 arg1) {
     }
     return -1;
 }
-// delay-slot fill of the confirm-test branch (masked 2)
-#ifdef NON_MATCHING
-void func_8003BEB4(void) {
-    Vec3f stick;
-    Vec3f diff;
-    unk_8003B8D4Struct* w;
-    GW_PLAYER* player;
-    s32 sel;
-    s32 i;
-    s16 loop;
+// decomp-permuter
+void func_8003BEB4(void)
+{
+  Vec3f stick;
+  Vec3f diff;
+  unk_8003B8D4Struct *w;
+  int new_var2;
+  GW_PLAYER *player;
+  s32 sel;
+  s32 i;
+  int new_var;
+  s16 loop;
+  loop = 1;
+  w = HuPrcCurrentGet()->user_data;
+  player = w->unk68;
+  sel = w->unk0C;
+  do
+  {
+    HuPrcVSleep();
+    stick.x = ContStkX[w->unk0E];
+    stick.z = -((f32) ContStkY[w->unk0E]);
+    stick.y = 0.0f;
+    if (((s16) func_8004D02C(w->unk0E, 40.0f)) != 0)
+    {
+      for (i = 0; i < w->unk02; i++)
+      {
+        func_800A0E80(&diff, &func_8003BB30(w, i)->unk04->coords, &player->player_obj->coords);
+        diff.y = 0.0f;
+        if (func_8003D8CC(&stick, &diff) <= 38.0f)
+        {
+          if (sel != i)
+          {
+            sel = i;
+            func_8003BE84(w, sel);
+          }
+          break;
+        }
+      }
 
-    loop = 1;
-    w = HuPrcCurrentGet()->user_data;
-    player = w->unk68;
-    sel = w->unk0C;
-    do {
-        HuPrcVSleep();
-        stick.x = ContStkX[w->unk0E];
-        stick.z = -(f32)ContStkY[w->unk0E];
-        stick.y = 0.0f;
-        if ((s16)func_8004D02C(w->unk0E, 40.0f) != 0) {
-            for (i = 0; i < w->unk02; i++) {
-                func_800A0E80(&diff, &func_8003BB30(w, i)->unk04->coords, &player->player_obj->coords);
-                diff.y = 0.0f;
-                if (func_8003D8CC(&stick, &diff) <= 38.0f) {
-                    if (sel != i) {
-                        sel = i;
-                        func_8003BE84(w, sel);
-                    }
-                    break;
-                }
-            }
-        }
-        if (((ContDStkTrg[w->unk0E] & 0x8000) != 0) & (sel >= 0)) {
-            sel = -4;
-            func_8003BE84(w, -4);
-            loop = 0;
-        }
-    } while (loop);
-    EndProcess(NULL);
+    }
+    new_var2 = ((ContDStkTrg[w->unk0E] & 0x8000) != 0) & (sel >= 0);
+    if (new_var2)
+    {
+      sel = -4;
+      func_8003BE84(w, new_var = -4);
+      loop = 0;
+ do { } while (0);
+    }
+  }
+  while (loop);
+  EndProcess(0);
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/3C420", func_8003BEB4);
-#endif
 s32 func_8003C060(unk_8003B8D4Struct* arg0, s16 arg1, s16 arg2) {
     GW_PLAYER* player;
 
