@@ -232,6 +232,9 @@ typedef struct Process {
 /* 0x2C */ jmp_buf prc_jump;
 /* 0x88 */ process_func destructor;
 /* 0x8C */ void *user_data;
+#ifdef TARGET_PC
+           void *host; /* host: the process's fiber (engine/process.c); prc_jump is unused */
+#endif
 } Process; //sizeof 0x90
 
 typedef struct ProcessHeader { //?
