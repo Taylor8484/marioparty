@@ -293,7 +293,12 @@ s32 func_80034974(unk34D80Struct80* arg0, s16 arg1, u8* arg2) {
         p->unk_0C = D_800D6022;
         for (i = 0; i < p->unk_0E; i++) {
             arg0->unk_0C[D_800D6020++] = (arg2[0] << 8) + arg2[1];
+#ifdef TARGET_PC
+            /* host: unsigned, so a byte >= 0x80 shifted into bit 31 is defined */
+            u.i = (s32)(((u32)arg2[2] << 24) + (arg2[3] << 16) + (arg2[4] << 8) + arg2[5]);
+#else
             u.i = (arg2[2] << 24) + (arg2[3] << 16) + (arg2[4] << 8) + arg2[5];
+#endif
             arg0->unk_10[D_800D6022++] = scale * u.f;
             arg2 += 6;
         }
@@ -305,6 +310,17 @@ s32 func_80034974(unk34D80Struct80* arg0, s16 arg1, u8* arg2) {
         var_a3 = &arg0->unk_10[D_800D6022];
         for (i = 0; i < p->unk_0E; i++) {
             arg0->unk_0C[D_800D6020++] = (arg2[0] << 8) + arg2[1];
+#ifdef TARGET_PC
+            /* host: three big-endian floats; the N64 copies the bytes into native floats */
+            {
+                s32 k;
+                for (k = 0; k < 3; k++) {
+                    const u8* b = &arg2[2 + k * 4];
+                    u.i = (s32)(((u32)b[0] << 24) | ((u32)b[1] << 16) | ((u32)b[2] << 8) | b[3]);
+                    var_a3[k] = u.f;
+                }
+            }
+#else
             ((u8*) var_a3)[0] = arg2[2];
             ((u8*) var_a3)[1] = arg2[3];
             ((u8*) var_a3)[2] = arg2[4];
@@ -317,6 +333,7 @@ s32 func_80034974(unk34D80Struct80* arg0, s16 arg1, u8* arg2) {
             ((u8*) var_a3)[9] = arg2[11];
             ((u8*) var_a3)[10] = arg2[12];
             ((u8*) var_a3)[11] = arg2[13];
+#endif
             var_a3[0] = scale * var_a3[0];
             var_a3 += 3;
             D_800D6022 += 3;
@@ -348,10 +365,15 @@ s32 func_80034C28(unk2C0C0StructC0* arg0, s16 arg1, u8* arg2) {
     arg2 += 8;
 
     for (var_a3 = i = 0; i < temp_s0; i++) {
+#ifdef TARGET_PC
+        /* host: the big-endian word as the N64 reads it back through s32 */
+        temp_s3->unk_0C[i] = (s32)(((u32)arg2[0] << 24) | ((u32)arg2[1] << 16) | ((u32)arg2[2] << 8) | arg2[3]);
+#else
         ((u8*) &temp_s3->unk_0C[i])[0] = arg2[0];
         ((u8*) &temp_s3->unk_0C[i])[1] = arg2[1];
         ((u8*) &temp_s3->unk_0C[i])[2] = arg2[2];
         ((u8*) &temp_s3->unk_0C[i])[3] = arg2[3];
+#endif
 
         temp_s3->unk_08[i] = (arg2[4] << 8) + arg2[5];
         var_a3 += temp_s3->unk_08[i];
