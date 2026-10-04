@@ -9,7 +9,9 @@
 
 typedef s32 func_ptr(void);
 void HuPrcSleep(s32);
+#ifndef TARGET_PC /* host: from <math.h>, which pb_host.h includes */
 f32 sinf(f32);
+#endif
 void func_8006EEB8(s16, u8, u8, s16, s16);
 void func_8006F3BC(s16, s16, s16, s16, s16);
 s32 func_8006E93C(TextWindow*);
@@ -37,7 +39,9 @@ void func_80028510(s16, s16, u8, u8, u8);
 void func_80028BE0(s32);
 u16 func_800594FC(s16);
 void func_800603F0(s32);
+#ifndef TARGET_PC /* host: from <math.h>, which pb_host.h includes */
 f32 fabsf(f32);
+#endif
 void func_80026174(s16, s16, f32);
 u16 func_8005FD5C(void);
 void func_8000960C(s32);
@@ -98,7 +102,9 @@ void func_80021CDC(s16, s16, s32);
 void func_800500A4(void);
 void func_80050160(void);
 s16 func_80060618(s16, s16);
+#ifndef TARGET_PC /* host: from <math.h>, which pb_host.h includes */
 f32 cosf(f32);
+#endif
 omObjData* func_8004EA8C(Object*, Vec3f*, s32, Vec3f*);
 s32 func_8004F018(Object*);
 s32 func_8004F40C(Object*, s32, s32);
@@ -299,7 +305,9 @@ void func_8006E070(s16, s32);
 u16 func_800174F4(s32, s32);
 void func_8001775C(omObjData*, u16, s32);
 void func_800264F8(s16 arg0, s16 arg1, f32 arg2, char* arg3, char* arg4, s32 arg5);
+#ifndef TARGET_PC /* host: from <math.h>, which pb_host.h includes */
 f32 sinf(f32);
+#endif
 void func_8001D420(s16, Vec3f*, Vec3f*, Vec3f*);
 void func_8001D57C(s16);
 void func_8001DFC0();
@@ -429,7 +437,9 @@ void* func_8009B770(void*, u8, u32);
 void func_80009500(void);
 s32 func_800642FC(unkMesg * siMessg, HuSiFunc func, void * arg, s32 type);
 void func_800090B8(u16);
+#ifndef TARGET_PC /* host: from <math.h>, which pb_host.h includes */
 f32 sqrtf(f32);
+#endif
 void* HuMemDirectMalloc(s32 size);
 s16 func_80060288(void);
 void func_80018C90(u16);
