@@ -2262,7 +2262,7 @@ segments:
       - [0x2BB5C0, c]
       - [0x2BB5F0, c]
       - [0x2BE910, .data, 2BB5C0]
-      - [0x2BE920, data, 2BB5F0]
+      - [0x2BE920, .data, 2BB5F0]
       - [0x2BF150, .rodata, 2BB5F0]
       - {0x2BF1A0, type: bss, vram: 0x800FA1C0, name: ovl_69_bss}
   - type: code
