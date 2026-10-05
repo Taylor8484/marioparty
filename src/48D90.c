@@ -715,12 +715,18 @@ void LoadBackgroundData(Addr arg0) {
     D_800D6720 = arg0;
     temp_v0 = MallocTemp(0x10);
     dmaRead((u8*) arg0, temp_v0, 0x10);
+#ifdef TARGET_PC
+    *temp_v0 = pb_bswap32(*temp_v0); /* the ROM's background table is big-endian */
+#endif
     D_800D6724 = *temp_v0;
     FreeTemp(temp_v0);
     temp_s0 = D_800D6724 * 4;
     temp_v0_2 = MallocTemp(temp_s0);
     D_800C4F70 = temp_v0_2;
     dmaRead((u8*)arg0 + 4, temp_v0_2, temp_s0);
+#ifdef TARGET_PC
+    pb_swap32_array(temp_v0_2, D_800D6724);
+#endif
     D_800D673C = MallocTemp(sizeof(Unk800D673C));
 }
 
@@ -740,13 +746,22 @@ void LoadBackgroundIndex(s32 arg0) {
     D_800D6728 = (u8*)((u8*)D_800D6720 + D_800C4F70[arg0]);
     temp_v0 = MallocTemp(sizeof(unkStruct17));
     dmaRead(&D_800D6728[0], temp_v0, 0x10);
+#ifdef TARGET_PC
+    temp_v0->unk_00 = pb_bswap32(temp_v0->unk_00); /* big-endian ROM data */
+#endif
     arg0 = temp_v0->unk_00;
     FreeTemp(temp_v0);
     temp_s0 = arg0 * 4;
     D_800C4F74 = MallocTemp(temp_s0);
     dmaRead(&D_800D6728[4], D_800C4F74, temp_s0);
+#ifdef TARGET_PC
+    pb_swap32_array(D_800C4F74, arg0);
+#endif
     D_800C4F78 = MallocTemp(sizeof(unkStruct19));
     dmaRead(&D_800D6728[*D_800C4F74], D_800C4F78, 0x3C);
+#ifdef TARGET_PC
+    pb_swap32_array(D_800C4F78, 0x30 / 4); /* s32 and f32 fields; the last 12 bytes are unused */
+#endif
     D_800C4F78->unk_18 = (f32) (D_800C4F78->unk_18 * 5.0f);
     D_800C4F78->unk_1C = (f32) (D_800C4F78->unk_1C * 5.0f);
     D_800C4F78->unk_20 = (f32) (D_800C4F78->unk_20 * 5.0f);

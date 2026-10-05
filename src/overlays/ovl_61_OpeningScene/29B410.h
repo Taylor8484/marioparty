@@ -12,7 +12,6 @@ extern Process* D_800FD730_OpeningScene[];
 void func_800FB86C_OpeningScene(void);
 void func_800FBD48_OpeningScene(Object* arg0, Vec3f* arg1, f32 arg2);
 extern Object* D_80110448_OpeningScene[];
-extern unkGlobalStruct_00* D_80110450_OpeningScene;
 void func_800F6788_OpeningScene(omObjData*);
 void func_800FC394_OpeningScene(s32);
 void func_8004B1B8(void);
@@ -61,9 +60,17 @@ typedef struct OpeningSprite {
 } OpeningSprite;
 
 extern s32 D_801102B8[16];
+/* Fixed scratch RAM above the overlay (0x801102B8...0x80110464); retail also names
+   D_80110300[15] D_8011033C and D_80110448[2] D_80110450. */
 extern omObjData* D_80110300[16];
 extern void* D_80110400[16];
+#ifdef TARGET_PC
+/* On the N64 an address alias (undefined_syms.txt) of the {1, 1, 1} constant that GCC merged out
+   of func_800F7E50; the host needs the object. */
+extern const Vec3f D_800FD520_OpeningScene;
+#else
 extern Vec3f D_800FD520_OpeningScene;
+#endif
 extern const Vec3f D_800FD4DC_OpeningScene;
 void func_800FBD7C_OpeningScene(void);
 void func_8004FB14(void);
