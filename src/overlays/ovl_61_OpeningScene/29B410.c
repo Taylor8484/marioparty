@@ -1153,7 +1153,14 @@ void func_800F98F0_OpeningScene(void) {
     func_800A0D00(&vec, to.x - from.x, to.y - from.y, to.z - from.z);
     vec.y = 0.0f;
     guNormalize(&vec.x, &vec.y, &vec.z);
+#ifdef TARGET_PC
+    /* Retail's spelling assigns dist inside one argument and reads it in another: the order is
+       unspecified in C, and the host compiler may read dist first. */
+    dist = 840.0f;
+    func_800A0D00(&dest, dist * vec.x + from.x, 0.0f, vec.z * dist + from.z);
+#else
     func_800A0D00(&dest, (dist = 840.0f) * vec.x + from.x, 0.0f, vec.z * dist + from.z);
+#endif
     func_800A0D50(&D_80110448_OpeningScene[1]->coords, &dest);
     func_800A0D00(&D_80110448_OpeningScene[0]->coords, dest.x - vec.x * 200.0f, 0.0f, dest.z - vec.z * 200.0f);
     func_800A0D50(&from, &D_80110448_OpeningScene[2]->coords);
