@@ -167,7 +167,7 @@ void func_80023B40(void* (*arg0)(s32), void (*arg1)(void*), u16 arg2, u16 arg3, 
 
     func_8002B4C0(arg0, arg1, arg2, arg3, arg4, arg5);
     func_80034180();
-    D_800F2B7C = func_80023668(0x6000);
+    D_800F2B7C = func_80023668(128 * sizeof(*D_800F2B7C));
     for (i = 0; i < 128; i++) {
         D_800F2B7C[i].unk_6C = NULL;
     }

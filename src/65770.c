@@ -281,7 +281,7 @@ s16 func_80064EF4(s32 num, s32 attr) {
     grp->count = 0;
     p = grp->obj;
     for (i = 0; i < (u16)num; i++) {
-        if ((*p++ = func_80023668(0x6C)) == NULL) {
+        if ((*p++ = func_80023668(sizeof(**p))) == NULL) {
             func_80064D38(idx);
             return -1;
         }
@@ -343,7 +343,7 @@ s32 func_800651E0(s16 idx, s16 pos, u16 num) {
     grp->count = 0;
     p = grp->obj;
     for (i = 0; i < num; i++) {
-        if ((*p++ = func_80023668(0x6C)) == NULL) {
+        if ((*p++ = func_80023668(sizeof(**p))) == NULL) {
             func_80064D38(newIdx);
             return -1;
         }
@@ -1076,7 +1076,7 @@ s16 func_800678A4(void* arg0) {
         return -1;
     }
     idx = i;
-    anim = func_80023668(0x1C);
+    anim = func_80023668(sizeof(*anim));
     if (anim == NULL) {
         return -1;
     }

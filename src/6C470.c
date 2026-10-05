@@ -66,9 +66,9 @@ PB_PTR32 func_8006B8A4(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u16 arg4) {
     for (i = 0; i < 0x17; i++) {
         *mdl++ = -1;
     }
-    w = func_80023684(0x290, 0x7918);
+    w = func_80023684(sizeof(*w), 0x7918);
     obj->unk_50 = w;
-    func_8009B770(w, 0, 0x290);
+    func_8009B770(w, 0, sizeof(*w));
     w->unk282 = arg1;
     w->unk284 = arg2;
     w->unk286 = arg3;

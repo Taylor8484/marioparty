@@ -18,7 +18,7 @@ void InitCameras(s16 count) {
     if (D_800C3110 != NULL) {
         func_80023728(D_800C3110);
     }
-    D_800C3110 = func_80023668(0x1DD0);
+    D_800C3110 = func_80023668(6 * sizeof(*D_800C3110));
     for (i = 0; i < 6; i++) {
         D_800C3110[i].unk_40 = 45.0f;
         D_800C3110[i].unk_44 = 80.0f;
