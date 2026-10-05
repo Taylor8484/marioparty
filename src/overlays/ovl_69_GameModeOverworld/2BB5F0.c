@@ -413,7 +413,7 @@ void func_800F731C_GameModeOverworld(void) {
     } else {
         msg = 0x9F;
     }
-    LoadStringIntoWindow(win, (void*)msg, -1, -1);
+    LoadStringIntoWindow(win, (void*)(PB_PTR32)msg, -1, -1);
     func_80071FF4(win, 0xC0);
     func_80071FF4(win2, 0xC0);
     while (func_80072718() != 0) {
@@ -593,7 +593,7 @@ void func_800F731C_GameModeOverworld(void) {
             } else {
                 msg = 0xA1;
             }
-            LoadStringIntoWindow(win, (void*)msg, -1, -1);
+            LoadStringIntoWindow(win, (void*)(PB_PTR32)msg, -1, -1);
             while (func_8006FCC0(win) != 0) {
                 HuPrcVSleep();
             }

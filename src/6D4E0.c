@@ -19,7 +19,8 @@ typedef struct TWImage {
 
 typedef struct TWSprData {
     /* 0x00 */ TWImage* frames;
-    /* 0x04 */ char unk_04[8];
+    /* 0x04 */ void* unk_04; /* unk65770Anim.unk4/unk8: pointers, so the host layout matches */
+    /* 0x08 */ void* unk_08;
     /* 0x0C */ void* unkC; /* palette */
     /* 0x10 */ char unk_10[2];
     /* 0x12 */ u16 count;
