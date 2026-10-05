@@ -107,7 +107,13 @@ void func_8001D658(s16 index, Gfx** gfx) {
     gSPViewport((*gfx)++, &temp_v1->unk58 + (D_800F3FA8 * 8));
     gSPPerspNormalize((*gfx)++, temp_v1->unk4C);
     gSPMatrix((*gfx)++, osVirtualToPhysical(temp_s1), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+#ifdef TARGET_PC
+    /* Retail adds 0x80000040: KSEG0 + 0x80000000 wraps to the physical address on the N64, and
+       0x40 is the next Mtx. A host pointer does not wrap. */
+    gSPMatrix((*gfx)++, osVirtualToPhysical(temp_s1 + 1), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+#else
     gSPMatrix((*gfx)++, (void*) temp_s1 + 0x80000040, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+#endif
 }
 
 
