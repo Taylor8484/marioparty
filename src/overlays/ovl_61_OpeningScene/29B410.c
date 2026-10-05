@@ -3,6 +3,11 @@
 #include "engine/process.h"
 #include "PR/gu.h"
 
+void func_800FB79C_OpeningScene(Vec3f*, Vec3f*, Vec3f*);
+void func_800FC2B8_OpeningScene(Vec3f*, Vec3f*, f32, Vec3f*);
+extern s32 D_800FD050_OpeningScene;
+
+
 extern const Vec3f D_800FD4DC_OpeningScene;
 extern const Vec3f D_800FD4E8_OpeningScene;
 
@@ -14,7 +19,7 @@ void func_800FC4F4_OpeningScene(f32, f32, f32);
 void func_800FC5CC_OpeningScene(void* arg0, s32 arg1);
 
 
-extern Vec3f D_800FD6D0_OpeningScene;
+extern Vec3f D_800FD6D0_OpeningScene[2];
 extern omObjData* D_800FD740_OpeningScene[];
 extern s16 D_800FD780_OpeningScene;
 extern const Vec3f D_800FD4D0_OpeningScene;
@@ -116,7 +121,7 @@ omObjData* func_800F69F0_OpeningScene(void) {
     omObjData* obj;
 
     obj = omAddObj(0x1000, 0, 0, -1, func_800F68D4_OpeningScene);
-    func_800A0E80(&D_80110448_OpeningScene[6]->unk_18, &D_800FD6D0_OpeningScene, &D_80110448_OpeningScene[6]->coords);
+    func_800A0E80(&D_80110448_OpeningScene[6]->unk_18, &D_800FD6D0_OpeningScene[0], &D_80110448_OpeningScene[6]->coords);
     omSetRot(obj, 0, 0, 0);
     omSetSca(obj, D_80110448_OpeningScene[6]->coords.x, D_80110448_OpeningScene[6]->coords.y, D_80110448_OpeningScene[6]->coords.z);
     omSetTra(obj, D_80110448_OpeningScene[6]->unk_18.x, D_80110448_OpeningScene[6]->unk_18.y, D_80110448_OpeningScene[6]->unk_18.z);
@@ -165,12 +170,12 @@ void func_800F86D0_OpeningScene(void) {
     func_800FC4F4_OpeningScene(0.0f, 1.0f, 0.0f);
     func_800FB7F8_OpeningScene(45.0f, 10.0f, 8000.0f);
     func_800A0D50(&D_80110448_OpeningScene[6]->coords, &sp80);
-    func_800A0D00(&sp40, -D_800FD6D0_OpeningScene.x, D_800FD6D0_OpeningScene.y, -D_800FD6D0_OpeningScene.z);
+    func_800A0D00(&sp40, -D_800FD6D0_OpeningScene[0].x, D_800FD6D0_OpeningScene[0].y, -D_800FD6D0_OpeningScene[0].z);
     func_800A0E80(&D_80110448_OpeningScene[6]->unk_18, &sp40, &D_80110448_OpeningScene[6]->coords);
     for (i = 0; i < 6; i++) {
         func_800A0D50(&sp20, &sp80);
         sp20.y = 0.0f;
-        func_800A0D50(&sp30, &D_800FD6D0_OpeningScene);
+        func_800A0D50(&sp30, &D_800FD6D0_OpeningScene[0]);
         sp30.y = 0.0f;
         func_800A0D00(&sp70, sp30.x - sp20.x, 0.0f, sp30.z - sp20.z);
         guNormalize(&sp70.x, &sp70.y, &sp70.z);
@@ -243,15 +248,15 @@ void func_800F8D3C_OpeningScene(void) {
         MBModelDispOff(D_80110448_OpeningScene[i]);
     }
     func_800A0D50(&D_80110448_OpeningScene[6]->coords, &sp48);
-    func_800A0E80(&D_80110448_OpeningScene[6]->unk_18, &D_800FD6D0_OpeningScene, &D_80110448_OpeningScene[6]->coords);
+    func_800A0E80(&D_80110448_OpeningScene[6]->unk_18, &D_800FD6D0_OpeningScene[0], &D_80110448_OpeningScene[6]->coords);
     func_800A0D50(&sp78, &D_80110448_OpeningScene[6]->coords);
-    func_800A0D00(&sp58, D_80110448_OpeningScene[6]->coords.x - D_800FD6D0_OpeningScene.x, 0.0f,
-                  D_80110448_OpeningScene[6]->coords.z - D_800FD6D0_OpeningScene.z);
+    func_800A0D00(&sp58, D_80110448_OpeningScene[6]->coords.x - D_800FD6D0_OpeningScene[0].x, 0.0f,
+                  D_80110448_OpeningScene[6]->coords.z - D_800FD6D0_OpeningScene[0].z);
     func_800A14F0(&sp68, &sp58, &sp38);
     guNormalize(&sp68.x, &sp68.y, &sp68.z);
     MBMotionShiftSet(D_80110448_OpeningScene[6], -1, 0, 8, 2);
     HuPrcSleep(8);
-    func_800A0D50(&sp58, &D_800FD6D0_OpeningScene);
+    func_800A0D50(&sp58, &D_800FD6D0_OpeningScene[0]);
     func_800FBD48_OpeningScene(D_80110448_OpeningScene[6], &sp58, 20.0f);
     HuPrcSleep(30);
     k = 50.0f;
@@ -282,8 +287,117 @@ void func_800F8D3C_OpeningScene(void) {
     HuPrcSleep(50);
     MBMotionSet(D_80110448_OpeningScene[6], -1, 2);
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F916C_OpeningScene);
+void func_800F916C_OpeningScene(void) {
+    s32 i;
 
+    func_800A0D00(&D_80110448_OpeningScene[2]->coords, 75.0f, 0.0f, 0.0f);
+    func_800A0D00(&D_80110448_OpeningScene[4]->coords, -375.0f, 0.0f, 0.0f);
+    func_800A0D00(&D_80110448_OpeningScene[0]->coords, 225.0f, 0.0f, 0.0f);
+    func_800A0D00(&D_80110448_OpeningScene[1]->coords, 375.0f, 0.0f, 0.0f);
+    func_800A0D00(&D_80110448_OpeningScene[5]->coords, -225.0f, 0.0f, 0.0f);
+    func_800A0D00(&D_80110448_OpeningScene[3]->coords, -75.0f, 0.0f, 0.0f);
+    func_800A0D00(&D_80110448_OpeningScene[6]->coords, 0.0f, 0.0f, -600.0f);
+    MBModelDispOff(D_80110448_OpeningScene[6]);
+    for (i = 0; i < 6; i++) {
+        MBModelDispOn(D_80110448_OpeningScene[i]);
+    }
+    {
+        Vec3f sp18[2] = { { -300.0f, 131.73f, 1200.0f }, { 450.0f, 131.73f, 1200.0f } };
+        Vec3f sp30[2] = { { -300.0f, 131.73f, 0.0f }, { 450.0f, 131.73f, 0.0f } };
+        Vec3f sp48 = D_800FD4D0_OpeningScene;
+        Vec3f sp58;
+        f32 t;
+        s32 start;
+        s32 end;
+
+        func_800FB79C_OpeningScene(sp18, sp30, &sp48);
+        D_800FD050_OpeningScene = 1;
+        for (i = 0; i < 6; i++) {
+            func_800A0D00(&sp58, 0.0f, 0.0f, 0.0f);
+            func_800A0D00(&D_80110448_OpeningScene[i]->unk_18, 0.0f, 0.0f, 1.0f);
+        }
+        MBMotionSet(D_80110448_OpeningScene[4], 4, 2);
+        MBMotionSet(D_80110448_OpeningScene[5], 5, 2);
+        MBMotionSet(D_80110448_OpeningScene[3], 3, 2);
+        MBMotionSet(D_80110448_OpeningScene[1], -1, 2);
+
+        start = 0;
+        end = 120;
+        for (i = start; i < end; i++) {
+            t = i * (1.0f / 720.0f);
+            HuPrcSleep(0);
+            func_800FC2B8_OpeningScene(&sp18[0], &sp18[1], t, &D_800FD6D0_OpeningScene[0]);
+            func_800FC2B8_OpeningScene(&sp30[0], &sp30[1], t, &D_800FD6D0_OpeningScene[1]);
+            if (i == 100) {
+                MBMotionShiftSet(D_80110448_OpeningScene[4], -1, 0, 20, 2);
+            }
+        }
+        start = end;
+        end = 240;
+        for (i = start; i < end; i++) {
+            t = i * (1.0f / 720.0f);
+            HuPrcSleep(0);
+            func_800FC2B8_OpeningScene(&sp18[0], &sp18[1], t, &D_800FD6D0_OpeningScene[0]);
+            func_800FC2B8_OpeningScene(&sp30[0], &sp30[1], t, &D_800FD6D0_OpeningScene[1]);
+            if (i == end - 4) {
+                func_800FC724_OpeningScene();
+            }
+        }
+        func_800FC5CC_OpeningScene((void*)0x440, 0);
+        start = end;
+        end = 360;
+        for (i = start; i < end; i++) {
+            t = i * (1.0f / 720.0f);
+            HuPrcSleep(0);
+            func_800FC2B8_OpeningScene(&sp18[0], &sp18[1], t, &D_800FD6D0_OpeningScene[0]);
+            func_800FC2B8_OpeningScene(&sp30[0], &sp30[1], t, &D_800FD6D0_OpeningScene[1]);
+            if (i == start + 70) {
+                MBMotionShiftSet(D_80110448_OpeningScene[2], 5, 0, 8, 2);
+                MBMotionShiftSet(D_80110448_OpeningScene[1], 6, 0, 8, 2);
+            }
+            if (i == end - 4) {
+                func_800FC724_OpeningScene();
+            }
+        }
+        func_800FC5CC_OpeningScene((void*)0x441, 0);
+        MBMotionShiftSet(D_80110448_OpeningScene[2], -1, 0, 20, 2);
+        MBMotionShiftSet(D_80110448_OpeningScene[1], -1, 0, 16, 2);
+        start = end;
+        end = 600;
+        for (i = start; i < end; i++) {
+            t = i * (1.0f / 720.0f);
+            HuPrcSleep(0);
+            func_800FC2B8_OpeningScene(&sp18[0], &sp18[1], t, &D_800FD6D0_OpeningScene[0]);
+            func_800FC2B8_OpeningScene(&sp30[0], &sp30[1], t, &D_800FD6D0_OpeningScene[1]);
+            if (i == start + 40) {
+                func_800FC724_OpeningScene();
+                MBMotionShiftSet(D_80110448_OpeningScene[0], 5, 0, 8, 2);
+                MBMotionShiftSet(D_80110448_OpeningScene[1], 6, 0, 20, 2);
+            }
+            if (i == start + 110) {
+                MBMotionShiftSet(D_80110448_OpeningScene[0], -1, 0, 40, 2);
+                MBMotionShiftSet(D_80110448_OpeningScene[1], -1, 0, 16, 2);
+            }
+            if (i == start + 170) {
+                MBMotionShiftSet(D_80110448_OpeningScene[1], 8, 0, 20, 2);
+            }
+            if (i == end - 16) {
+                MBMotionShiftSet(D_80110448_OpeningScene[1], -1, 0, 16, 2);
+            }
+        }
+        HuPrcSleep(25);
+        HuPrcSleep(15);
+        func_800FC5CC_OpeningScene((void*)0x443, 0);
+        HuPrcSleep(40);
+        func_800FC724_OpeningScene();
+        MBMotionShiftSet(D_80110448_OpeningScene[1], 4, 0, 8, 2);
+        HuPrcSleep(60);
+        D_800FD740_OpeningScene[0] = func_800FCD20_OpeningScene(40);
+        HuPrcSleep(40);
+        omDelObj(D_800FD740_OpeningScene[0]);
+        func_8002456C(D_800FD780_OpeningScene);
+    }
+}
 void func_800F983C_OpeningScene(void) {
     func_800FB40C_OpeningScene();
     D_800FD740_OpeningScene[0] = func_800FCB9C_OpeningScene(0x10);
@@ -308,10 +422,6 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FA99
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FAEFC_OpeningScene);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FB358_OpeningScene);
-
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD574_OpeningScene);
-
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD58C_OpeningScene);
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD5A4_OpeningScene);
 
