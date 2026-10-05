@@ -1,6 +1,42 @@
 #include "engine/process.h"
 #include "spaces.h"
 
+u8* D_800C4FD0 = NULL; // Space data bytestream
+u32 D_800C4FD4[SPACE_TYPE_TOTAL] = { 0x0, 0xA003D, 0xA003E, 0xA003F, 0xA0040, 0xA0042, 0xA0041, 0x0, 0xA0043, 0xA0044 }; // Space Texture Files Set 0
+u32 D_800C4FFC[SPACE_TYPE_TOTAL] = { 0x0, 0xA0054, 0xA0055, 0xA0056, 0xA0057, 0xA0059, 0xA0058, 0x0, 0xA005A, 0xA005B }; // Space Texture Files Set 1
+u32 D_800C5024[SPACE_TYPE_TOTAL] = { 0x0, 0xA005D, 0xA005C, 0xA005E, 0xA005F, 0xA0060, 0x0, 0x0, 0x0, 0x0 }; // Space Texture Files Set Default
+f32 D_800C504C[SPACE_TYPE_TOTAL] = { 0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f }; // space scale per type
+f32 D_800C5074[SPACE_TYPE_TOTAL] = { 0.5f, 1.0f, 1.0f, 1.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
+/* The space quads: large (64x64 texture), small (14x14). */
+Vtx D_800C50A0[8] = {
+    { { { 50, 0, -50 }, 0, { 1024, 1024 }, { 0x00, 0x00, 0x7F, 0xFF } } },
+    { { { -50, 0, -50 }, 0, { 0, 1024 }, { 0x00, 0x00, 0x7F, 0xFF } } },
+    { { { -50, 0, 50 }, 0, { 0, 0 }, { 0x00, 0x00, 0x7F, 0xFF } } },
+    { { { 50, 0, 50 }, 0, { 1024, 0 }, { 0x00, 0x00, 0x7F, 0xFF } } },
+    { { { 50, 0, -50 }, 0, { 224, 224 }, { 0x00, 0x00, 0x7F, 0xFF } } },
+    { { { -50, 0, -50 }, 0, { 0, 224 }, { 0x00, 0x00, 0x7F, 0xFF } } },
+    { { { -50, 0, 50 }, 0, { 0, 0 }, { 0x00, 0x00, 0x7F, 0xFF } } },
+    { { { 50, 0, 50 }, 0, { 224, 0 }, { 0x00, 0x00, 0x7F, 0xFF } } },
+};
+Gfx D_800C5120[] = {
+    gsSPSegment(0x00, 0x00000000),
+    gsSPClipRatio(FRUSTRATIO_2),
+    gsSPClearGeometryMode(0xFFFFFFFF),
+    gsSPSetGeometryMode(G_SHADE | G_CULL_BACK | G_SHADING_SMOOTH),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
+    gsDPPipeSync(),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsDPSetCombineMode(G_CC_DECALRGBA, G_CC_DECALRGBA),
+    gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
+    gsDPSetTexturePersp(G_TP_PERSP),
+    gsDPSetTextureFilter(G_TF_AVERAGE),
+    gsDPSetTextureLUT(G_TT_NONE),
+    gsDPSetAlphaCompare(G_AC_NONE),
+    gsDPSetAlphaDither(G_AD_DISABLE),
+    gsSPEndDisplayList(),
+};
+u8 D_800C51B0[SPACE_TYPE_TOTAL] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x01, 0x01, 0x01, 0x01, 0x01 }; // Space type mapping?
+
 
 void LoadSpaceTextures(s16 type) {
    int i;
@@ -57,15 +93,11 @@ void ChangeSpaceTextures(s16 type) {
 }
 
 /* Rendering */
-extern Gfx D_800C5120[];
-extern f32 D_800C504C[SPACE_TYPE_TOTAL]; // space scale per type
-extern f32 D_800C5074[SPACE_TYPE_TOTAL]; // followed by a pad word and the two Vtx quads
 void func_8001D658(s16 index, Gfx** gfx);
 void func_800A0B90(Matrix4f, void*);
 
-// The space quads (Vtx[4] each) sit inside 48D90's data right after D_800C5074.
-#define SPACE_VTX_LARGE ((Vtx*)&D_800C5074[SPACE_TYPE_TOTAL + 1])
-#define SPACE_VTX_SMALL (SPACE_VTX_LARGE + 4)
+#define SPACE_VTX_LARGE (&D_800C50A0[0])
+#define SPACE_VTX_SMALL (&D_800C50A0[4])
 
 // loop-invariant hoisting and register allocation: retail hoists the tile size and w*w out of
 // the type loop and spills `camera`; this hoists the second SetTile word instead (masked 58)
