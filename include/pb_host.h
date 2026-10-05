@@ -52,6 +52,11 @@ typedef uintptr_t PB_UPTR32;
 void *pb_n64_ram(u32 addr, u32 size); /* host runtime (games/mp1/host/src/host_data.c) */
 void pb_ovl_load(s32 index);          /* host overlay loader (games/mp1/host/src/host_ovl.c) */
 #define PB_N64_RAM(a, s) pb_n64_ram((u32)(a), (u32)(s))
+/* Graphics-bridge memory provenance (games/mp1/host/src/host_gfxmem.c): a decoded file is raw
+   N64-format data, a CPU-built image holds native u16 texels; a freed heap block forgets both. */
+void pb_gfx_raw(const void *p, size_t n);
+void pb_gfx_native16(const void *p, size_t n);
+void pb_gfx_forget(const void *p);
 #define PB_N64_RAM_SIZE(s) ((s) * 2)
 /* Big-endian ROM data read into host memory: swap in place after the DMA. Host only; the N64
    code paths never call these. */

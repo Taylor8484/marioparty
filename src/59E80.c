@@ -390,6 +390,9 @@ void HuMemMemoryFree(void *ptr)
     if (given_heap->heap_constant != HEAP_CONSTANT) {
         return;
     }
+#ifdef TARGET_PC
+    pb_gfx_forget(ptr);
+#endif
 
     heap_other = given_heap->prev;
 

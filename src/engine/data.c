@@ -231,6 +231,9 @@ void *DataDecode(s32 type, s32 index) {
     ret = HuMemDirectMalloc((info.size + 1) & -2);
     if (ret != NULL) {
         DecodeFile(info.bytes, ret, info.size, info.compType);
+#ifdef TARGET_PC
+        pb_gfx_raw(ret, info.size); /* the bridge copies its contents as N64 bytes */
+#endif
     }
     return ret;
 }
@@ -246,6 +249,9 @@ void* DataDecodeTemp(s32 type, s32 index) {
     ret = MallocTemp((info.size + 1) & -2);
     if (ret != NULL) {
         DecodeFile(info.bytes, ret, info.size, info.compType);
+#ifdef TARGET_PC
+        pb_gfx_raw(ret, info.size); /* the bridge copies its contents as N64 bytes */
+#endif
     }
     return ret;
 }
