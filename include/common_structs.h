@@ -282,13 +282,17 @@ typedef struct unk_Struct00 {
     /* 0x178 */ char unk_178[0x380]; // more matrices?
 } unk_Struct00;
 
+/* A view of omObjData (rot is unk_24..unk_2C, the model list unk_40). Its pointer at 0x14 keeps the
+   host layout equal to omObjData's, whose pointers widen there. */
 typedef struct unk_Struct04 {
-    /* 0x00 */ Vec3f pos;
-    /* 0x0C */ char padC[0x18];
+    /* 0x00 */ char pad0[0x14];
+    /* 0x14 */ void* func_ptr;
+    /* 0x18 */ Vec3f pos;
     /* 0x24 */ f32 unk_24;
     /* 0x28 */ f32 unk28;
     /* 0x2C */ f32 unk_2C;
-    /* 0x30 */ char pad30[0x10];
+    /* 0x30 */ Vec3f scale;
+    /* 0x3C */ u16 mdlcnt;
     /* 0x40 */ s16* unk_40;
 } unk_Struct04; /* size = 0x44 */
 
@@ -600,12 +604,18 @@ typedef struct unk2C0C0Struct50 {
     /* 0x64 */ Matrix4f unk_64;
 } unk2C0C0Struct50; //sizeof 0xA4
 
+/* A palette record: a view of 388E0.c's unk388E0Struct80, whose pointers at 0x20/0x24 it must keep
+   pointer-wide for the host layout. */
 typedef struct unk2C0C0Struct60 {
-    /* 0x00 */ char unk_00[0x1A];
+    /* 0x00 */ char unk_00[0x18];
+    /* 0x18 */ u8 unk_18;
+    /* 0x19 */ char unk_19;
     /* 0x1A */ s16 unk_1A;
-    /* 0x1C */ char unk_1C[8];
-    /* 0x2C */ s32 unk_24;
-} unk2C0C0Struct60; //sizeof unknown
+    /* 0x1C */ s16 unk_1C;
+    /* 0x1E */ char unk_1E[2];
+    /* 0x20 */ void* unk_20;
+    /* 0x24 */ PB_PTR32 unk_24; /* the palette (u16*) */
+} unk2C0C0Struct60; //sizeof 0x28
 
 typedef struct unk2C0C0Struct70 {
     /* 0x00 */ char unk_00[0x18];
@@ -953,6 +963,32 @@ typedef struct unk2C0C0Struct10 {
     /* 0x10 */ char unk_10[0x30];
     /* 0x40 */ LookAt unk_40;
 } unk2C0C0Struct10; //sizeof 0x60
+
+/* Motion keyframe record and motion (34D80.c). D_800ED554 is an array of unk34D80Struct80, which
+   24740.c, 1EA70.c and ovl_23 index too: they must use this type for the host stride. */
+typedef struct unk34D80Struct60 {
+    /* 0x00 */ u8 unk_00;
+    /* 0x01 */ u8 unk_01;
+    /* 0x02 */ u8 unk_02;
+    /* 0x03 */ u8 unk_03;
+    /* 0x04 */ s16 unk_04;
+    /* 0x06 */ s16 unk_06;
+    /* 0x08 */ s16 unk_08;
+    /* 0x0A */ s16 unk_0A;
+    /* 0x0C */ s16 unk_0C;
+    /* 0x0E */ s16 unk_0E;
+} unk34D80Struct60; //sizeof 0x10
+
+typedef struct unk34D80Struct80 {
+    /* 0x00 */ u8 unk_00;
+    /* 0x01 */ char unk_01;
+    /* 0x02 */ s16 unk_02;
+    /* 0x04 */ unk34D80Struct60** unk_04;
+    /* 0x08 */ u8* unk_08;
+    /* 0x0C */ s16* unk_0C;
+    /* 0x10 */ f32* unk_10;
+    /* 0x14 */ char unk_14[4];
+} unk34D80Struct80; //sizeof 0x18
 
 typedef struct unk2C0C0StructD0 {
     /* 0x00 */ s16 unk_00;

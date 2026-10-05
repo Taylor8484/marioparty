@@ -592,7 +592,7 @@ Gfx* func_80073100(Gfx* arg0, Vtx* arg1) {
 s32 func_80073560(Gfx** arg0) {
     f32 temp_f22;
     f32 temp_f24;
-    s32 var_s8;
+    PB_PTR32 var_s8; /* s32 on the N64: a framebuffer address */
     s16 i;
     s16 j;
 
@@ -610,9 +610,19 @@ s32 func_80073560(Gfx** arg0) {
     gDPSetTextureFilter((*arg0)++, G_TF_BILERP);
     gDPSetScissor((*arg0)++, G_SC_NON_INTERLACE, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
+#ifdef TARGET_PC
+    /* D_800ECB1C is currFrameBuffer under a second name, and the copy goes through the depth
+       buffer at 0x803D0800 (pb_host.h PB_N64_ZBUFFER). */
+    {
+        extern void* currFrameBuffer;
+        var_s8 = (PB_PTR32)currFrameBuffer;
+    }
+    gDPSetColorImage((*arg0)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH, PB_N64_ZBUFFER);
+#else
     var_s8 = D_800ECB1C;
 
     gDPSetColorImage((*arg0)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH, 0x003D0800);
+#endif
     gSPDisplayList((*arg0)++, D_800C6178);
     gDPSetCombineMode((*arg0)++, G_CC_DECALRGB, G_CC_DECALRGB);
     gDPSetRenderMode((*arg0)++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
@@ -628,7 +638,11 @@ s32 func_80073560(Gfx** arg0) {
 
     gDPSetColorImage((*arg0)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH, 0x02000000);
 
+#ifdef TARGET_PC
+    var_s8 = (PB_PTR32)PB_N64_ZBUFFER;
+#else
     var_s8 = 0x803D0800;
+#endif
     for (i = 0; i < temp_f22 * (f32)SCREEN_HEIGHT + 15.0f; i += 16) {
         for (j = 0; j < temp_f22 * (f32)SCREEN_WIDTH + 31.0f; j += 32) {
             func_8003A060(arg0, var_s8 + (j + i * SCREEN_WIDTH) * 2, 0, 2, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 32, 16, 0, 2, 2, 0, 0, 0, 0);

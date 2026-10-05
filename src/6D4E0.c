@@ -407,6 +407,11 @@ void func_8006CEA0(void)
     {
       D_800F37D4 = func_80014614(0x7A);
       D_800F3294 = func_80014614(0x86);
+#ifdef TARGET_PC
+      /* the font files' header words are big-endian; the glyph and palette bytes stay raw */
+      pb_swap32_array(D_800F37D4, 3);
+      pb_swap32_array(D_800F3294, 3);
+#endif
     }
     D_800F2BC4 = omAddPrcObj(func_8006F9B0, 0x1001, 0x800, 0);
     omPrcSetStatBit(D_800F2BC4, 0xA0);

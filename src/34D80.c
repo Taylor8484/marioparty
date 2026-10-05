@@ -25,29 +25,7 @@ typedef struct unk34D80Struct40 {
     /* 0x18 */ s32 unk_18[1]; // unknown array size
 } unk34D80Struct40; //sizeof unknown
 
-typedef struct unk34D80Struct60 {
-    /* 0x00 */ u8 unk_00;
-    /* 0x01 */ u8 unk_01;
-    /* 0x02 */ u8 unk_02;
-    /* 0x03 */ u8 unk_03;
-    /* 0x04 */ s16 unk_04;
-    /* 0x06 */ s16 unk_06;
-    /* 0x08 */ s16 unk_08;
-    /* 0x0A */ s16 unk_0A;
-    /* 0x0C */ s16 unk_0C;
-    /* 0x0E */ s16 unk_0E;
-} unk34D80Struct60; //sizeof 0x10
 
-typedef struct unk34D80Struct80 {
-    /* 0x00 */ u8 unk_00;
-    /* 0x01 */ char unk_01;
-    /* 0x02 */ s16 unk_02;
-    /* 0x04 */ unk34D80Struct60** unk_04;
-    /* 0x08 */ u8* unk_08;
-    /* 0x0C */ s16* unk_0C;
-    /* 0x10 */ f32* unk_10;
-    /* 0x14 */ char unk_14[4];
-} unk34D80Struct80; //sizeof 0x18
 
 typedef struct unk34D80Bezier {
     /* 0x00 */ f32 v;
@@ -106,6 +84,43 @@ s16 func_800341E8(u8* arg0, unk2C0C0StructC0* arg1) {
 s16 func_800342BC(u8* arg0) {
     return func_800341E8(arg0, NULL);
 }
+#ifdef TARGET_PC
+/* Host: an MTNX motion file is used in place and is big-endian. Swap its header (s16 at 0x0A,
+   section offsets at 0x0C/0x10/0x14, the record-offset table at 0x18), its s16 and f32 sections
+   and each unk34D80Struct60 record (4 bytes, six s16) once, after the copy. The u8 section stays. */
+static s32 pb_mtnx_end(unk34D80Struct40* m, s32 size, s32 start) {
+    s32 end = size;
+    s32 i;
+    if (m->unk_0C > start && m->unk_0C < end) end = m->unk_0C;
+    if (m->unk_10 > start && m->unk_10 < end) end = m->unk_10;
+    if (m->unk_14 > start && m->unk_14 < end) end = m->unk_14;
+    for (i = 0; i < m->unk_09; i++) {
+        if (m->unk_18[i] > start && m->unk_18[i] < end) end = m->unk_18[i];
+    }
+    return end;
+}
+
+static void pb_mtnx_swap(unk34D80Struct40* m, s32 size) {
+    u8* base = (u8*)m;
+    s32 i, j;
+    m->unk_0A = (s16)pb_bswap16((u16)m->unk_0A);
+    m->unk_0C = (s32)pb_bswap32((u32)m->unk_0C);
+    m->unk_10 = (s32)pb_bswap32((u32)m->unk_10);
+    m->unk_14 = (s32)pb_bswap32((u32)m->unk_14);
+    pb_swap32_array(m->unk_18, m->unk_09);
+    pb_swap16_array(base + m->unk_10, (size_t)(pb_mtnx_end(m, size, m->unk_10) - m->unk_10) / 2);
+    pb_swap32_array(base + m->unk_14, (size_t)(pb_mtnx_end(m, size, m->unk_14) - m->unk_14) / 4);
+    for (i = 0; i < m->unk_09; i++) {
+        for (j = 0; j < i; j++) {
+            if (m->unk_18[j] == m->unk_18[i]) break; /* a record shared by two entries: once */
+        }
+        if (j == i) {
+            pb_swap16_array(base + m->unk_18[i] + 4, 6);
+        }
+    }
+}
+#endif
+
 s16 func_800342E0(unk2C0C0StructC0* arg0, u8* arg1, s16 arg2) {
     unk34D80Struct40* temp_v0;
     s32 temp_s0;
@@ -120,10 +135,17 @@ s16 func_800342E0(unk2C0C0StructC0* arg0, u8* arg1, s16 arg2) {
         return func_800344BC(&D_800ED554[arg2], arg0) != 0;
     }
 
+#ifdef TARGET_PC
+    temp_s0 = (s32)pb_bswap32((u32)var_a1[1]) + 4;
+#else
     temp_s0 = var_a1[1] + 4;
+#endif
     temp_v0 = func_80023684(temp_s0, D_800F0A28);
 
     func_80023A38(arg1, temp_v0, temp_s0);
+#ifdef TARGET_PC
+    pb_mtnx_swap(temp_v0, temp_s0);
+#endif
     func_80034E04(&D_800ED554[arg2], temp_v0);
 
     return 1;
