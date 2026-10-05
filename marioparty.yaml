@@ -527,7 +527,7 @@ segments:
       - [0xC6740, data, 65770]
       - [0xC6750, data, 69010]
       - [0xC69F0, .data, 6D4E0]
-      - [0xC6D00, data, 72D90]
+      - [0xC6D00, .data, 72D90]
       - [0xC6FC0, data, 80770]
       - [0xC6FD0, data, 828C0]
       - [0xC6FE0, data, 83260]

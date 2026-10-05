@@ -21,6 +21,71 @@ typedef struct unk72D90Struct2 {
     /* 0x04 */ u16 unk_04;
 } unk72D90Struct2; //sizeof 6
 
+u8 D_800C6100 = 0;
+void* D_800C6104 = NULL;
+Gfx D_800C6108[] = {
+    gsDPPipeSync(),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsDPSetCombineMode(G_CC_DECALRGBA, G_CC_DECALRGBA),
+    gsDPSetRenderMode(G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2),
+    gsDPSetPrimColor(0, 0, 0x00, 0x00, 0x00, 0xC0),
+    gsDPSetTexturePersp(G_TP_NONE),
+    gsDPSetTextureFilter(G_TF_POINT),
+    gsDPSetTextureLUT(G_TT_NONE),
+    gsDPSetAlphaDither(G_AD_DISABLE),
+    gsSPEndDisplayList(),
+};
+s32 D_800C6158[4] = { -1, -1, -1, -1 };
+Vp D_800C6168 = { { { 640, 480, 511, 0 }, { 640, 480, 511, 0 } } };
+Gfx D_800C6178[] = {
+    gsDPPipeSync(),
+    gsDPSetCycleType(G_CYC_FILL),
+    gsDPSetRenderMode(G_RM_NOOP, G_RM_NOOP2),
+    gsDPSetFillColor(0x00000000),
+    gsDPFillRectangle(0, 0, 319, 239),
+    gsDPPipeSync(),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsSPEndDisplayList(),
+};
+s16 D_800C61B8[] = { 0x102, 0x106, 0x107, 0x101 };
+u8 D_800C61C0[] = {
+    0x03, 0x03, 0x03, 0x00, 0x02, 0x03, 0x03, 0x01, 0x03, 0x01, 0x03, 0x01, 0x03, 0x01, 0x01, 0x03,
+    0x01, 0x01, 0x03, 0x00, 0x01, 0x01, 0x00, 0x01, 0x00, 0x03, 0x02, 0x03, 0x01, 0x00, 0x02, 0x02,
+    0x03, 0x01, 0x02, 0x03, 0x03, 0x03, 0x03, 0x00, 0x02, 0x03, 0x01, 0x02, 0x01, 0x01, 0x01, 0x03,
+    0x03, 0x02, 0x00, 0x00, 0x02, 0x03, 0x02, 0x03
+};
+u8 D_800C61F8[] = {
+    0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9A, 0x9B, 0x9C, 0x9D, 0x9E, 0x9F, 0xA0,
+    0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xAB, 0xAC, 0xAD, 0xAE, 0xAF, 0xB0,
+    0xB1, 0xB2, 0xB3, 0xB4, 0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xBA, 0xBB, 0xBC, 0x86, 0xBD, 0x87, 0x88,
+    0x89, 0x8A, 0x8B, 0x8F, 0x8C, 0x8D, 0x8E, 0x00
+};
+u8 D_800C6230[] = {
+    0x96, 0x97, 0x98, 0x99, 0x9A, 0x9B, 0x9C, 0x9D, 0x9E, 0x9F, 0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xAA,
+    0xAB, 0xAC, 0xAD, 0xAE, 0xAA, 0xAB, 0xAC, 0xAD, 0xAE, 0x00, 0x00, 0x00
+};
+extern const char D_800CBA68[], D_800CBA60[], D_800CBA58[], D_800CBA50[], D_800CBA48[], D_800CBA44[], D_800CBA40[];
+char* D_800C624C[] = {
+    (char*)D_800CBA68, (char*)D_800CBA60, (char*)D_800CBA58, (char*)D_800CBA50, (char*)D_800CBA48, (char*)D_800CBA44, (char*)D_800CBA40,
+};
+unk72D90Struct2 D_800C6268[57] = {
+    { 0, 0, 0x39A, 0x0 }, { 0, 0, 0x39B, 0x0 }, { 0, 0, 0x39C, 0x0 }, { 1, 0, 0x39D, 0x0 },
+    { 1, 0, 0x39E, 0x0 }, { 0, 0, 0x39F, 0x0 }, { 0, 0, 0x3A0, 0x0 }, { 1, 0, 0x3A1, 0x0 },
+    { 1, 0, 0x3A2, 0x0 }, { 3, 0, 0x3A3, 0x0 }, { 0, 0, 0x3A4, 0x0 }, { 1, 0, 0x3A5, 0x0 },
+    { 0, 0, 0x3A6, 0x0 }, { 1, 0, 0x3A7, 0x0 }, { 1, 0, 0x3A8, 0x0 }, { 0, 0, 0x3A9, 0x0 },
+    { 3, 0, 0x3AA, 0x3AB }, { 3, 0, 0x3AC, 0x3AD }, { 0, 0, 0x3AE, 0x0 }, { 1, 0, 0x3AF, 0x0 },
+    { 1, 0, 0x3B0, 0x0 }, { 3, 0, 0x3B1, 0x3B2 }, { 1, 0, 0x3B3, 0x0 }, { 1, 0, 0x3B4, 0x0 },
+    { 1, 0, 0x3B5, 0x0 }, { 0, 0, 0x3B6, 0x0 }, { 1, 0, 0x3B7, 0x0 }, { 0, 0, 0x3B8, 0x0 },
+    { 1, 0, 0x3B9, 0x0 }, { 2, 0, 0x3BA, 0x0 }, { 1, 0, 0x3BB, 0x0 }, { 3, 0, 0x3BC, 0x3BD },
+    { 0, 0, 0x3BE, 0x0 }, { 1, 0, 0x3BF, 0x0 }, { 1, 0, 0x3C0, 0x0 }, { 3, 0, 0x3C1, 0x3C2 },
+    { 1, 0, 0x3C3, 0x0 }, { 1, 0, 0x3C4, 0x0 }, { 1, 0, 0x3C5, 0x0 }, { 2, 0, 0x3C6, 0x0 },
+    { 1, 0, 0x3C7, 0x0 }, { 0, 0, 0x3C8, 0x0 }, { 2, 0, 0x3C9, 0x3CA }, { 1, 0, 0x3CB, 0x0 },
+    { 1, 0, 0x3CC, 0x0 }, { 1, 0, 0x3CD, 0x3CE }, { 1, 0, 0x3CF, 0x0 }, { 2, 0, 0x3D0, 0x0 },
+    { 1, 0, 0x3D1, 0x0 }, { 2, 0, 0x3D2, 0x3D3 }, { 3, 0, 0x3D4, 0x3D5 }, { 3, 0, 0x3D6, 0x0 },
+    { 3, 0, 0x3D7, 0x0 }, { 0, 0, 0x3D8, 0x0 }, { 3, 0, 0x3D9, 0x3DA }, { 1, 0, 0x3DB, 0x0 },
+    { 0, 0, 0x0, 0x0 }
+};
+
 extern void guLookAt(Mtx*, f32, f32, f32, f32, f32, f32, f32, f32, f32);
 extern void guPerspective(Mtx*, u16*, f32, f32, f32, f32, f32);
 void* func_80023668(s32);
@@ -110,25 +175,12 @@ void func_8007B52C();
 s32 func_8007BCA8(s32, s16);
 
 extern u8 fadeStatus;
-extern u8 D_800C6100;
-extern void* D_800C6104;
-extern Gfx D_800C6108[];
-extern s32 D_800C6158;
-extern Vp D_800C6168;
-extern Gfx D_800C6178;
-extern s16 D_800C61B8[];
-extern u8 D_800C61C0[];
-extern u8 D_800C61F8[];
-extern u8 D_800C6230[];
-extern char* D_800C624C[];
-extern unk72D90Struct2 D_800C6268[];
 extern f64 D_800CBA78;
 extern f64 D_800CBA80;
 extern f64 D_800CBA88;
 extern f64 D_800CBA90;
 extern f64 D_800CBAA0;
 extern f64 D_800CBAA8;
-extern char D_800CBAB0[];
 extern char D_800CBAD0[];
 extern char D_800CBAD8[];
 extern char D_800CBAE4[];
@@ -186,7 +238,7 @@ void func_800721D8(Gfx** arg0) {
         if (D_800C6100 == 254) {
             func_80072E1C(arg0);
         } else {
-            func_800728F4(arg0, 255, &D_800C6158);
+            func_800728F4(arg0, 255, D_800C6158);
         }
         return;
     }
@@ -341,7 +393,7 @@ s32 func_80072740(Gfx** arg0) {
         return 0;
     }
 
-    func_800728F4(arg0, 255.0f - D_800F5024 / D_800F3288 * 255.0f, &D_800C6158);
+    func_800728F4(arg0, 255.0f - D_800F5024 / D_800F3288 * 255.0f, D_800C6158);
 
     if (D_800F5024 >= D_800F3288) {
         return 0;
@@ -355,7 +407,7 @@ s32 func_8007281C(Gfx** arg0) {
         return 0;
     }
 
-    func_800728F4(arg0, D_800F5024 / D_800F3288 * 255.0f, &D_800C6158);
+    func_800728F4(arg0, D_800F5024 / D_800F3288 * 255.0f, D_800C6158);
 
     if (D_800F5024 >= D_800F3288) {
         return 0;
@@ -545,7 +597,7 @@ s32 func_80073560(Gfx** arg0) {
     s16 j;
 
     if (D_800F3288 - 1.0f <= D_800F5024) {
-        func_800728F4(arg0, 255, &D_800C6158);
+        func_800728F4(arg0, 255, D_800C6158);
         return 0;
     }
 
@@ -561,7 +613,7 @@ s32 func_80073560(Gfx** arg0) {
     var_s8 = D_800ECB1C;
 
     gDPSetColorImage((*arg0)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH, 0x003D0800);
-    gSPDisplayList((*arg0)++, &D_800C6178);
+    gSPDisplayList((*arg0)++, D_800C6178);
     gDPSetCombineMode((*arg0)++, G_CC_DECALRGB, G_CC_DECALRGB);
     gDPSetRenderMode((*arg0)++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
 
@@ -660,7 +712,7 @@ void func_8007420C(Gfx** arg0, f32 arg1, f32 arg2) {
     f32 temp_f4;
 
     if (arg1 == 0) {
-        func_800728F4(arg0, 255, &D_800C6158);
+        func_800728F4(arg0, 255, D_800C6158);
         return;
     }
 
@@ -1801,19 +1853,19 @@ void func_8007767C(unkCommonStruct0* arg0, s32 arg1) {
     func_80067598(temp_v0_5, 1, 0);
 }
 
-INCLUDE_RODATA("asm/nonmatchings/72D90", D_800CBA40);
+const char D_800CBA40[] = "ALL";
 
-INCLUDE_RODATA("asm/nonmatchings/72D90", D_800CBA44);
+const char D_800CBA44[] = "DK";
 
-INCLUDE_RODATA("asm/nonmatchings/72D90", D_800CBA48);
+const char D_800CBA48[] = "WARIO";
 
-INCLUDE_RODATA("asm/nonmatchings/72D90", D_800CBA50);
+const char D_800CBA50[] = "YOSHI";
 
-INCLUDE_RODATA("asm/nonmatchings/72D90", D_800CBA58);
+const char D_800CBA58[] = "PEACH";
 
-INCLUDE_RODATA("asm/nonmatchings/72D90", D_800CBA60);
+const char D_800CBA60[] = "LUIGI";
 
-INCLUDE_RODATA("asm/nonmatchings/72D90", D_800CBA68);
+const char D_800CBA68[] = "MARIO";
 
 s32 func_80077838(unkCommonStruct0* arg0, Gfx** arg1) {
     char sp18[] = "WINS\xC4"; // D_800CBA70
@@ -2065,7 +2117,7 @@ s32 func_80078B6C(unkCommonStruct0* arg0, Gfx** arg1) {
     u8 temp_s2;
 
     if (arg0->unk_04 == 0) {
-        GMesFontCreate(arg0, D_800CBAB0, 0, -1, -1);
+        GMesFontCreate(arg0, "99", 0, -1, -1);
         func_80066DC4(arg0->unk_14[0], 0, arg0->unk_54, arg0->unk_58);
         func_8006752C(arg0->unk_14[0], 1, 230);
         func_8006752C(arg0->unk_14[0], 2, 230);
