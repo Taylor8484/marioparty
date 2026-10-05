@@ -17,7 +17,7 @@ u8 D_800C5722 = 0;
 u8 D_800C5723 = 0;
 u8 D_800C5724[4] = { 1, 1, 1, 1 };
 u8 D_800C5728[7] = { 0, 0, 0, 0, 0, 0, 0 };
-s8 D_800C572F = 0;
+u8 D_800C572F = 0;
 extern u8 D_800C4E14[], D_800C4E24[], D_800C4E2C[], D_800C4E38[];
 MgUnlockGroup D_800C5730[4] = { { D_800C4E14, 10 }, { D_800C4E24, 5 }, { D_800C4E2C, 10 }, { D_800C4E38, 25 } };
 ItemListEntry D_800C5750[16] = {
@@ -806,7 +806,7 @@ void func_8005AC50(void) {
 void func_8005AD18(void) {
     void* data;
 
-    if ((u8)D_800C572F == 1) {
+    if (D_800C572F == 1) {
         D_800D8902 = func_8006D010(0x45, 0x94, 0xB6, 0x18, 0, 0);
         func_8006E0A4(D_800D8902, 1);
         data = DataRead(0x90070);
@@ -823,7 +823,7 @@ void func_8005AD18(void) {
 }
 
 void func_8005AE44(void) {
-    if ((u8)D_800C572F == 1) {
+    if (D_800C572F == 1) {
         func_800674BC(D_800D8904, 0, 0x8000);
         func_80071598(D_800D8902);
     }
