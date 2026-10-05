@@ -191,6 +191,13 @@ void OvlLoad(s32 overlayIndex) {
     u8 *bss_end;
     u8* curBssAddr;
 
+#ifdef TARGET_PC
+    /* Host: overlays are host modules, not code DMA'd to 0x800F65E0; the loader also provides
+       their bss. func_800F65E0 (the overlay entry the N64 jumps to) is the host's dispatcher. */
+    pb_ovl_load(overlayIndex);
+    D_800C1C70 = 0;
+    return;
+#endif
     rom_start = overlay_table[overlayIndex].rom_start;
     rom_end = overlay_table[overlayIndex].rom_end;
     bss_start = overlay_table[overlayIndex].bss_start;

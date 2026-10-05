@@ -578,7 +578,7 @@ B980SfxEnt* func_8000DF98(s16, B980SndParam*);
 B980Sound* func_8000E2D0(B980BankFile*, u8, u8, u8);
 B980Sound* func_8000E340(B980BankFile*, s16);
 
-void func_800643D0(s32, ALSndpConfig*);
+void func_800643D0(PB_PTR32, ALSndpConfig*); /* the sound player handle; s32 on the N64 */
 s32 func_8000DA04(s32);
 s32 func_8000DA7C(void);
 s32 func_8000DB24(B980SndHdr*);
@@ -774,6 +774,10 @@ s32 func_8000AE50(void) {
                 return 1;
             }
             func_8000AD80(idx, (void*)B980_RECORD, 0x208);
+#ifdef TARGET_PC
+            /* the record is libaudio's effect parameter list (ALSynConfig.params): s32 words */
+            pb_swap32_array((void*)B980_RECORD, 0x208 / 4);
+#endif
             return 0;
         }
     } else if (D_800C18B4[0] < 6) {

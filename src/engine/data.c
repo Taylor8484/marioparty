@@ -138,10 +138,16 @@ void DataInit(void* fs_rom_loc) {
     D_800D12F0 = fs_rom_loc;
     archiveHeader = &D_800D1310;
     dmaRead(fs_rom_loc, archiveHeader, 16); // ExecRomCopy
+#ifdef TARGET_PC
+    pb_swap32_array(archiveHeader, 4);
+#endif
     D_800D12F4 = archiveHeader->dir;
     dir_table_size = archiveHeader->dir * 4;
     D_800D12F8 = (s32 *)HuMemDirectMalloc(dir_table_size);
     dmaRead(fs_rom_loc + 4, D_800D12F8, dir_table_size);
+#ifdef TARGET_PC
+    pb_swap32_array(D_800D12F8, dir_table_size / 4);
+#endif
     D_800D12FC = D_800D12F0;
     D_800D1300 = D_800D12F4;
     D_800D1304 = D_800D12F8;
@@ -162,6 +168,9 @@ void DataInfoRead(s32 type, s32 index, HuFileInfo* info) {
     }
 
     dmaRead(info->bytes, archiveHeader, 16); // ExecRomCopy
+#ifdef TARGET_PC
+    pb_swap32_array(archiveHeader, 4);
+#endif
     info->bytes += 8;
     info->size = archiveHeader->dir;
     info->compType = archiveHeader->offsets[0];
@@ -276,12 +285,18 @@ void DataDirInit(u32 arg0, u32 arg1) {
         test = &D_800D1310;
         
         dmaRead(sp10.bytes, test, 0x10);
+#ifdef TARGET_PC
+        pb_swap32_array(test, 4);
+#endif
         dir = test->dir;
         
         D_800D1300 = dir;
         tableSize = dir * 4;
         D_800D1304 = HuMemDirectMalloc(tableSize);
         dmaRead(sp10.bytes + 4, D_800D1304, tableSize);
+#ifdef TARGET_PC
+        pb_swap32_array(D_800D1304, tableSize / 4);
+#endif
     }
 }
 

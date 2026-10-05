@@ -84,8 +84,8 @@ void func_8003B330(void) {
     lastFrame = 0;
     done = 0;
     func_8003B5EC(3);
-    MakePermHeap((void*)0x80140000, 0x1A0000);
-    MakeTempHeap((void*)0x80120000, 0x20000);
+    MakePermHeap(PB_N64_RAM(0x80140000, 0x1A0000), PB_N64_RAM_SIZE(0x1A0000));
+    MakeTempHeap(PB_N64_RAM(0x80120000, 0x20000), PB_N64_RAM_SIZE(0x20000));
     if (osTvType == OS_TV_NTSC) {
         func_800637C0(2, 1);
     } else {

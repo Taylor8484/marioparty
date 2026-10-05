@@ -122,7 +122,11 @@ void *func_8001A750(void) {
 void func_8001A7DC(void* arg0) {
     unkSchedStruct sp10;
     OSMesgQueue mesgQueue;
+#ifdef TARGET_PC
+    OSMesg sp38[8]; /* host: 0x20 bytes held 8 N64 messages; host messages are 8 bytes each */
+#else
     unkGraphicsMessage2 sp38;
+#endif
     graphicsMessage* recvdMesg;
     void* pAvailableFrameBuffer; // available frameBuffer
     s32 var_s4;

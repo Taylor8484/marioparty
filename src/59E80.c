@@ -1057,11 +1057,17 @@ void func_8005B6D0(u8* rom) {
     D_800D8910 = rom;
     buf = HuMemDirectMalloc(0x10);
     dmaRead(rom, buf, 0x10);
+#ifdef TARGET_PC
+    *buf = pb_bswap32(*buf); /* ROM message archive: big-endian */
+#endif
     D_800D8914 = *buf;
     HuMemDirectFree(buf);
     size = D_800D8914 * 4;
     D_800D8918 = HuMemDirectMalloc(size);
     dmaRead(rom + 4, D_800D8918, size);
+#ifdef TARGET_PC
+    pb_swap32_array(D_800D8918, size / 4);
+#endif
 }
 
 void func_8005B75C(s32 index, StrData* out) {
@@ -1070,6 +1076,9 @@ void func_8005B75C(s32 index, StrData* out) {
     out->string = (PB_PTR32)(D_800D8910 + D_800D8918[index]);
     dmaRead((u8*)out->string, buf, 0x10);
     out->string += 2;
+#ifdef TARGET_PC
+    *buf = pb_bswap16(*buf);
+#endif
     out->size = *buf;
     HuMemDirectFree(buf);
 }
