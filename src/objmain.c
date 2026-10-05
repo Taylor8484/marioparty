@@ -898,7 +898,11 @@ void omMain(void) {
                 func_8001AB84(D_800C4250, D_800F3705, 2);
                 func_80023B40(HuMemDirectMalloc, HuMemDirectFree, D_800F3F30, D_800ED726, D_800F64EC, D_800F3705);
                 func_8002B6C8();
+#ifdef TARGET_PC
+                func_80025658(PB_HOSTCAST(void*, 0x02000000), PB_N64_ZBUFFER);
+#else
                 func_80025658(PB_HOSTCAST(void*, 0x02000000), PB_HOSTCAST(void*, 0x3D0800));
+#endif
                 InitCameras(1);
             }
             D_800C5994 = 0;
