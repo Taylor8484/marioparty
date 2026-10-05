@@ -39,26 +39,21 @@ extern OpeningUnk1BC D_800FD1BC_OpeningScene;
 extern Vec3f D_800FD4B8_OpeningScene;
 extern Vec3f D_800FD4C4_OpeningScene;
 
-
 extern omObjData* D_8011033C_OpeningScene[];
 omObjData* func_800F69F0_OpeningScene(void);
-
 
 void func_800FB79C_OpeningScene(Vec3f*, Vec3f*, Vec3f*);
 void func_800FC2B8_OpeningScene(Vec3f*, Vec3f*, f32, Vec3f*);
 extern s32 D_800FD050_OpeningScene;
 
-
 extern const Vec3f D_800FD4DC_OpeningScene;
 extern const Vec3f D_800FD4E8_OpeningScene;
-
 
 void func_800FBD14_OpeningScene(Object*, Vec3f*, f32);
 void func_800FC48C_OpeningScene(f32, f32, f32);
 void func_800FC4C0_OpeningScene(f32, f32, f32);
 void func_800FC4F4_OpeningScene(f32, f32, f32);
 void func_800FC5CC_OpeningScene(void* arg0, s32 arg1);
-
 
 extern Vec3f D_800FD6D0_OpeningScene[3];
 extern omObjData* D_800FD740_OpeningScene[];
@@ -69,7 +64,6 @@ void func_800FB608_OpeningScene(void);
 void func_800FC6BC_OpeningScene(s32, s32);
 omObjData* func_800FCB9C_OpeningScene(s32);
 omObjData* func_800FCD20_OpeningScene(s32);
-
 
 void func_800F65E0_OpeningScene(void) {
     Vec3s sp18;
