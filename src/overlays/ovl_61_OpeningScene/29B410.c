@@ -2,6 +2,22 @@
 #include "29B410.h"
 #include "engine/process.h"
 
+typedef struct OpeningModelDef {
+    /* 0x00 */ s32 file;
+    /* 0x04 */ f32 x;
+    /* 0x08 */ f32 y;
+    /* 0x0C */ f32 z;
+    /* 0x10 */ f32 rotY;
+    /* 0x14 */ s32 unk_14;
+} OpeningModelDef; /* size 0x18 */
+
+extern OpeningModelDef D_800FD054_OpeningScene[];
+
+
+extern s16 D_800FD708_OpeningScene;
+extern s16 D_800FD710_OpeningScene[];
+
+
 void func_800F65E0_OpeningScene(void) {
     Vec3s sp18;
     Vec3s sp28;
@@ -94,8 +110,20 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FA99
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FAEFC_OpeningScene);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FB358_OpeningScene);
+void func_800FB358_OpeningScene(void) {
+    f32 f;
+    f32 g;
 
+    D_800FD708_OpeningScene = LoadFormFile(0x9001A, 0x299);
+    func_80026040(D_800FD708_OpeningScene);
+    func_80025F10(D_800FD708_OpeningScene, 1);
+    g = f = 0.0f;
+    while (TRUE) {
+        HuPrcSleep(0);
+        func_80027C1C(D_800FD708_OpeningScene, g, f, 0x20, 0x20);
+        f += 0.5f;
+    }
+}
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD508_OpeningScene);
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD514_OpeningScene);
@@ -144,14 +172,39 @@ INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD63
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD684_OpeningScene);
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD69C_OpeningScene);
+void func_800FB40C_OpeningScene(void) {
+    Vec3f sp10 = { 349.0f, 29.25f, 0.0f };
+    Vec3f sp20 = { 519.83f, 269.23f, 685.19f };
+    s32 i;
+    void* data;
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD6A8_OpeningScene);
+    func_800FB670_OpeningScene((Vec3s*)&sp10, (Vec3s*)&sp20, 6407.0f);
+    func_800FB7F8_OpeningScene(20.0f, 80.0f, 13000.0f);
+    for (i = 0; i < 6; i++) {
+        D_800FD710_OpeningScene[i] = LoadFormFile(D_800FD054_OpeningScene[i].file, 0x289);
+        func_80025EB4(D_800FD710_OpeningScene[i], 0, 1);
+        func_80025F10(D_800FD710_OpeningScene[i], 1);
+        func_80025798(D_800FD710_OpeningScene[i], D_800FD054_OpeningScene[i].x, D_800FD054_OpeningScene[i].y,
+                      D_800FD054_OpeningScene[i].z);
+        func_800257E4(D_800FD710_OpeningScene[i], 0.0f, D_800FD054_OpeningScene[i].rotY, 0.0f);
+        func_80025830(D_800FD710_OpeningScene[i], 1.0f, 1.0f, 1.0f);
+    }
+    data = DataRead(0x90021);
+    func_80038A9C(D_800F2B7C[D_800FD710_OpeningScene[3]].unk_6C, data, 0, "02tt004a_DEF");
+    DataClose(data);
+    func_80025AD4(D_800FD710_OpeningScene[3]);
+    func_80025B34(D_800FD710_OpeningScene[3]);
+    D_800FD730_OpeningScene[0] = omAddPrcObj(func_800FB358_OpeningScene, 0x3F00, 0x800, 0);
+}
+void func_800FB608_OpeningScene(void) {
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FB40C_OpeningScene);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FB608_OpeningScene);
-
+    EndProcess(D_800FD730_OpeningScene[0]);
+    func_8002456C(D_800FD708_OpeningScene);
+    for (i = 0; i < 6; i++) {
+        func_8002456C(D_800FD710_OpeningScene[i]);
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FB670_OpeningScene);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FB79C_OpeningScene);
