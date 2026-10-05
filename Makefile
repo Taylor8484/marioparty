@@ -241,7 +241,8 @@ $(BUILD_DIR)/src/%.c.o: src/%.c
 # 34D80.c needs the same (func_80036B00: mul.s right after a call's return).
 # 3DEB0.c too (func_8003D8CC: mul.s right after a call's return).
 # 59E80.c too (func_80059EBC: mul.s right after a call's return).
-$(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o $(BUILD_DIR)/src/1B800.c.o $(BUILD_DIR)/src/3DEB0.c.o $(BUILD_DIR)/src/59E80.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
+# ovl_61 29B410.c too (func_800F7E50: mul.s right after a call's return).
+$(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o $(BUILD_DIR)/src/1B800.c.o $(BUILD_DIR)/src/3DEB0.c.o $(BUILD_DIR)/src/59E80.c.o $(BUILD_DIR)/src/overlays/ovl_61_OpeningScene/29B410.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
 	@$(PRINT)$(GREEN)Compiling C file: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
 	@mkdir -p $(shell dirname $@)
 	@$(CC_HOST) $(CFLAGS_CHECK) $(CPPFLAGS) -MMD -MP -MT $@ -MF $@.d $<

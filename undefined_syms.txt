@@ -222,3 +222,5 @@ D_800C4DCF = D_800C4DD0 - 0x1;
 /* 3E560.c MBModelData D_800C4350[]: entry 0 scale and shadow scale */
 D_800C4358 = D_800C4350 + 0x8;
 D_800C435C = D_800C4350 + 0xC;
+/* ovl_61 29B410.c: {1,1,1} Vec3f initialiser of func_800F7E50 (C, unnamed constant), shared by asm func_800FBD98; drop once it is C */
+D_800FD520_OpeningScene = 0x800FD520;
