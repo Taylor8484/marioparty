@@ -5,9 +5,24 @@ void func_80052CCC(s32, u8); /* host: matches the definition */
 #else
 void func_80052CCC(s32, s32);
 #endif
-extern s32 D_800C537C[];
-extern s32 D_800C5394[];
-extern s16 D_800C53BC[][4];
+s32 D_800C52D0[] = { 0xA0114, 0xA0115, 0xA0116, 0xA0117, 0xA0118, 0xA0119, 0xA011A, 0xA011B, 0, 0xA0100 };
+s16 D_800C52F8 = 0;
+/* Button sequence for func_8003EDDC: up up down down left right left right B A. */
+u16 D_800C52FC[] = { 0x0800, 0x0800, 0x0400, 0x0400, 0x0200, 0x0100, 0x0200, 0x0100, 0x4000, 0x8000, 0, 0 };
+s32 D_800C5314[] = { 0xA011D, 0xA011E, 0xA011F };
+s16 D_800C5320[] = { 0x73, 0x73 };
+s16 D_800C5324[] = { 0x8C, 0x8C };
+s16 D_800C5328[] = { 0, 1, 7, 3 };
+s32 D_800C5330[6] = { 0x157, 0x158, 0x159, 0x15A, 0x15B, 0x15C };
+s32 D_800C5348[6] = { 0x16B, 0x16C, 0x16D, 0x16E, 0x16F, 0x170 };
+s32 D_800C5360[2] = { 0x161, 0x162 };
+s32 D_800C5368[2] = { 0x175, 0x176 };
+s32 D_800C5370[] = { 0x166, 0x165, 0x164 };
+s32 D_800C537C[] = { 0xA010C, 0xA010D, 0xA010E, 0xA010F, 0xA0110, 0xA0111 };
+s32 D_800C5394[] = { 0x6E, 0x6F, 0x70, 0x71, 0x72, 0x73 };
+s16 D_800C53AC[] = { 0x64, 0xDC, 0x64, 0xDC };
+s16 D_800C53B4[] = { 0x28, 0x28, 0x68, 0x68 };
+s16 D_800C53BC[][4] = { { 0, 2, 0, 1 }, { 0, 2, -1, 0 }, { -2, 0, 0, 1 }, { -2, 0, -1, 0 } };
 
 /* Show message `a` (normal) or `b` (when flag 0x2C is set) in the menu's text window, once. */
 #define SET_MENU_MESSAGE(msg, a, b)                                  \
@@ -44,11 +59,8 @@ extern s16 D_800F329E;
 
 s32 func_800141FC(s16);
 extern s16 D_800D8378;
-extern s16 D_800C53AC[];
-extern s16 D_800C53B4[];
 
 
-extern s32 D_800C5370[];
 void func_8004D0B0(s16);
 
 /* The menu windows below called func_8006D010 unprototyped (int return: no sign extension after
@@ -74,13 +86,7 @@ typedef struct unkMallocStruct {
 /* 0x04 */ s16 unk4;
 } unkMallocStruct;
 
-extern s16 D_800C52F8;
-extern s32 D_800C52FC;
 extern unk51200* D_800D8370;
-extern s32 D_800C52D0[];
-extern s32 D_800C5314[];
-extern s16 D_800C5320[];
-extern s16 D_800C5324[];
 
 void func_80050600(unk_Struct02* arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4) {
     u8 asciiChar;
@@ -159,7 +165,7 @@ s32 func_80050A98(s32 arg0) {
     PB_PTR32 temp_s5;
     u16* temp_s0;
 
-    temp_s1 = func_8003EDDC(&D_800C52FC);
+    temp_s1 = func_8003EDDC((s32*)D_800C52FC);
     temp_s5 = func_80045D84(9, 0xAE, 0);
     temp_s4 = func_80045D84(5, 0xBC, 0);
     temp_s3 = func_8005077C(0);
@@ -279,9 +285,6 @@ void func_80072108(s16, s16); /* host: matches the definition */
 #else
 void func_80072108(s16, s32);
 #endif
-extern s16 D_800C5328;
-extern s32 D_800C5330[6];
-extern s32 D_800C5348[6];
 extern s16 D_800D8374;
 extern s16 D_800D8376;
 
@@ -316,7 +319,7 @@ s32 func_80050E7C(s32 arg0) {
         }
         if (D_800D8370 == NULL) {
             HuPrcVSleep();
-            temp_v0 = func_80048224(&D_800C5328);
+            temp_v0 = func_80048224(D_800C5328);
             D_800D8370 = temp_v0;
             func_8003E174(temp_v0->obj);
             func_800258EC(D_800D8370->obj->unk_3C->unk_40[0], 0x8000, 0x8000);
@@ -386,8 +389,6 @@ s32 func_80050E7C(s32 arg0) {
 }
 
 Process* func_80050E10(s16, s32*);
-extern s32 D_800C5360[2];
-extern s32 D_800C5368[2];
 
 
 

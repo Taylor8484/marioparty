@@ -27,13 +27,7 @@ extern s8 D_800D6510;
 extern s16 D_800D64A4[];
 extern s32 D_800D64FC;
 extern s32 D_800F383C;
-extern s8 D_800C4EF6;
-extern s8 D_800C4EF0[];
-extern char* D_800C4ED0[];
-extern s8 D_800C4EEC[];
 extern s32 D_800D64FC;
-extern char* D_800C4EE0[];
-extern Vec2s D_800C4EF8[];
 extern char D_800D665C[];
 
 int sprintf(char* dst, const char* fmt, ...);
@@ -78,6 +72,12 @@ const char D_800CAFC8[] = "4PLAYER  GAME";
 const char D_800CAFD8[] = "TURN";
 const char D_800CAFE0[] = "TURNS";
 const char D_800CAFE8[] = "LAST";
+char* D_800C4ED0[] = { (char*)D_800CAFC8, (char*)D_800CAFB4, (char*)D_800CAFA0, (char*)D_800CAF90 };
+char* D_800C4EE0[] = { (char*)D_800CAFE8, (char*)D_800CAFE0, (char*)D_800CAFD8 };
+s8 D_800C4EEC[] = { 0, -8, -8, 0 };
+s8 D_800C4EF0[] = { 0x54, 0x54, 0x50, 0x50, 0x54, 0x54 };
+s8 D_800C4EF6 = 0x54;
+Vec2s D_800C4EF8[] = { { 0x50, 0x58 }, { 0xF0, 0x58 }, { 0x9B, 0x58 }, { 0x68, 0x58 }, { 0xD8, 0x58 }, { 0x280, 0x1E0 } };
 
 void func_80046828(omObjData* arg0) {
     Vec2s* temp;

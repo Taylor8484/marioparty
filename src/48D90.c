@@ -41,13 +41,8 @@ extern Unk800D673C* D_800D673C;
 
 extern s32 D_800D6724;
 
-extern s32 *D_800C4F74; // offsets
 extern u8* D_800D6728; // bytestream
 
-extern unkStruct19* D_800C4F78;
-extern s8 D_800C4F7C;
-extern s32* D_800C4F70;
-extern s32* D_800C4F74;
 extern Addr* D_800D6720;
 extern s16 D_800D6730;
 extern s16 D_800D6732;
@@ -90,7 +85,6 @@ void func_8004A7A4(void);
 void func_8004AFFC(void);
 void func_8004B7F8(s32);
 void func_8004ACEC(Gfx**, s32, u8);
-extern Gfx D_800C4F80[];
 void func_8004A19C(s16, s16);
 void func_8003A4EC(Gfx**, PB_PTR32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void func_8007F54C(void*, void*, s32, Unk800D673C*);
@@ -137,7 +131,6 @@ extern s16 D_800D6704;
 extern s32 D_800D6708;
 extern s32 D_800D670C;
 extern s32 D_800D6710;
-extern s8 D_800C4F10;
 typedef struct unk48D90Rect {
     /* 0x00 */ s16 x;
     /* 0x02 */ s16 y;
@@ -145,17 +138,38 @@ typedef struct unk48D90Rect {
     /* 0x06 */ s16 h;
 } unk48D90Rect; //sizeof 8
 
-extern unk48D90Rect D_800C4F14[5];
-extern u8 D_800C4F3C;
 typedef struct unk48D90Step {
     /* 0x00 */ s8 limit;
     /* 0x01 */ s8 x;
 } unk48D90Step; //sizeof 2
 
-extern unk48D90Step D_800C4F40[];
-extern u8 D_800C4F48[26];
-extern u8 D_800C4F64[3];
-extern u32 D_800C4F68;
+s8 D_800C4F10 = -1;
+unk48D90Rect D_800C4F14[5] = {
+    { 0x160, 0x50, 0xC8, 0x14 }, { 0x160, 0x64, 0xC8, 0x14 }, { 0x160, 0x78, 0xC8, 0x14 },
+    { 0x160, 0x8C, 0xC8, 0x14 }, { 0x160, 0xA0, 0xC8, 0x14 },
+};
+u8 D_800C4F3C = 0x5E;
+unk48D90Step D_800C4F40[] = { { 1, 0 }, { 9, 15 }, { 11, 8 }, { 13, 0 } };
+u8 D_800C4F48[26] = { 0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 3, 4, 5, 6, 0, 1, 3, 4, 5, 6, 0, 1, 3, 4, 5, 6 };
+u8 D_800C4F64[3] = { 7, 8, 9 };
+u32 D_800C4F68 = 0;
+u32 D_800C4F6C = 0; /* unreferenced */
+s32* D_800C4F70 = NULL;
+s32* D_800C4F74 = NULL; // offsets
+unkStruct19* D_800C4F78 = NULL;
+s8 D_800C4F7C = -1;
+Gfx D_800C4F80[] = {
+    gsDPPipeSync(),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsDPSetCombineMode(G_CC_DECALRGBA, G_CC_DECALRGBA),
+    gsDPSetPrimColor(0, 0, 0xFF, 0xFF, 0xFF, 0xFF),
+    gsDPSetTexturePersp(G_TP_NONE),
+    gsDPSetTextureFilter(G_TF_POINT),
+    gsDPSetTextureLUT(G_TT_NONE),
+    gsDPSetAlphaDither(G_AD_DISABLE),
+    gsSPEndDisplayList(),
+};
+
 extern u32 D_800F383C;
 void func_8004A7DC(void);
 void func_8004B1EC(void);

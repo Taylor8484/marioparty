@@ -1,7 +1,10 @@
 #include "common.h"
 #include "engine/mallocblock.h"
+extern u16 D_800C41B0[]; /* 34D80.c */
+unk2C0C0Struct70 D_800C41D0 = {
+    "0123456789ABCDE", 0x00, 0x02, 0x04, 0x04, { 0xFF, 0 }, 0, 0, { 0, 0 }, (u8*)D_800C41B0, (struct unk2C0C0StructC0*)-1, NULL,
+};
 
-extern unk2C0C0Struct70 D_800C41D0;
 
 
 typedef struct unk388E0Struct40 {

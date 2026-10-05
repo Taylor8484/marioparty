@@ -53,6 +53,7 @@ typedef struct BoardPlayerObj {
     /* 0x44 */ s16 unk_44;
     /* 0x46 */ s16 unk_46;
 } BoardPlayerObj;
+s32 D_800C56D0[] = { 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x7F };
 
 
 void func_8005727C(void);
@@ -95,7 +96,6 @@ extern s32 D_800F3FF0;
 extern s16 D_800F64C6;
 extern s16 D_800F65B8;
 extern s16 D_800F65D8;
-extern s32 D_800C56D0[];
 extern s16 omovlhisidx;
 extern s16 D_800D86B2;
 extern omOvlHisData D_800D86B8[];

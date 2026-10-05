@@ -2,6 +2,18 @@
 #include "engine/mallocblock.h"
 #include "engine/pad.h"
 
+s16 D_800C4190 = 0;
+s16 D_800C4192 = 0; /* unreferenced */
+s32 D_800C4194[3] = { 0, 0, 0 }; /* unreferenced */
+s16 D_800C41A0 = 1;
+s16 D_800C41A2 = 0;
+s16 D_800C41A4 = 0;
+s16 D_800C41A6 = 0; /* unreferenced */
+s32 D_800C41A8[2] = { 0, 0 }; /* unreferenced */
+u16 D_800C41B0[16] = { /* unreferenced */
+    0x3C1, 0x3C1, 0x3C1, 0x3C1, 0x3C1, 0x3C1, 0x3C1, 0x3C1, 0x3C1, 0x3C1, 0x3C1, 0x3C1, 0x3C1, 0x3C1, 0x3C1, 0x3C1,
+};
+
 
 typedef struct unk34D80Struct40 {
     /* 0x00 */ char unk_00[9];
@@ -882,7 +894,6 @@ void func_8003589C(unk2C0C0StructC0* arg0, s32 arg1, s32 arg2) {
     }
 }
 extern s16 D_800C34A0;
-extern s16 D_800C4190;
 
 #define B4_DUR(p, k) (((s16*)(p)->unk_08)[k])
 #define B4_COL(p, k) ((u8*)&(p)->unk_0C[k])
@@ -1156,9 +1167,6 @@ typedef struct unk34D80Menu {
     /* 0x2A */ char unk_2A[0xA];
 } unk34D80Menu; // sizeof 0x34
 
-extern s16 D_800C41A0;
-extern s16 D_800C41A2;
-extern s16 D_800C41A4;
 extern unk34D80Light D_800EE9A2[];
 extern s16 D_800F33E8;
 extern unk34D80Menu D_800F3B88[];

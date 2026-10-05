@@ -4,9 +4,9 @@ typedef struct {
     /* 0x00 */ s16 x;
     /* 0x02 */ s16 y;
 } MapIconPos;
+MapIconPos D_800C5700[4] = { { 34, 128 }, { 286, 128 }, { 160, 24 }, { 160, 216 } };
+f32 D_800C5710[4] = { 90.0f, -90.0f, 0.0f, 180.0f };
 
-extern MapIconPos D_800C5700[4];
-extern f32 D_800C5710[4];
 extern Object* D_800D8710[4];
 extern s16 D_800EE320;
 extern u16 ContDStk[];

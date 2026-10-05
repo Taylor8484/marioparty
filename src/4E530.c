@@ -94,6 +94,18 @@ typedef struct {
 
 const PortMasks D_800CB0EC = { { 1, 2, 4, 8 } };
 
+/* func_8004DBD4 (asm) reads the low byte through D_800C5213 (undefined_syms.txt). */
+s32 D_800C5210 = 0x19;
+s32 D_800C5214 = 0x19;
+char* D_800C5218[] = { (char*)D_800CB0B4, (char*)D_800CB0AC, (char*)D_800CB0A4, (char*)D_800CB09C, (char*)D_800CB094, (char*)D_800CB090 };
+char* D_800C5230[] = { (char*)D_800CB0E4, (char*)D_800CB0DC, (char*)D_800CB0D4, (char*)D_800CB0CC, (char*)D_800CB0C4, (char*)D_800CB0BC };
+omObjData* D_800C5248 = NULL;
+s32 D_800C524C = -1;
+s32 D_800C5250[7] = { 0xA017C, 0xA017D, 0xA017E, 0xA017F, 0xA0180, 0xA0181, 0xA0182 };
+s32 D_800C526C = -1;
+s32 D_800C5270[] = { 2, 9, 0x14, 0x1D, 0x29, 0x31, 0x3A, 0x47, 0x47, 0x68, 0x47 };
+s32 D_800C529C[] = { 0x5A, 0x5A, 0x5B, 0x5C, 0x5D, 0x5E, 0x5F, 0x60, 0x61, 0x62, 0x59 };
+
 s32 CreateTextWindow(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     s32 temp_s1;
 

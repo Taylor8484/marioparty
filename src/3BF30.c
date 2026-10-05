@@ -4,6 +4,31 @@
 #include "engine/process.h"
 #include "engine/pad.h"
 
+/* Frame buffers, RDP/RSP buffers and the microcode table (text, data pairs; the texts sit in the
+   main .data blob at 0x800B1760, which stays asm). The host has no fixed N64 RAM: it gets its own
+   buffers, and its graphics bridge does not use the microcode addresses. */
+#ifdef TARGET_PC
+static u16 pbFrameBuffers[3][320 * 240];
+static u64 pbRspBuf0[0x400 / sizeof(u64)];
+static u64 pbRspBuf1[0x6000 / sizeof(u64)];
+static u64 pbRspBuf2[0x3C00 / sizeof(u64)];
+void* D_800C4250[] = { pbFrameBuffers[0], pbFrameBuffers[1], pbFrameBuffers[2] };
+u64* D_800C425C[] = { pbRspBuf0, pbRspBuf1, pbRspBuf2, pbRspBuf2 };
+PB_PTR32 D_800C426C[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1000 };
+#else
+extern u8 D_800B1830[], D_800C87E0[], D_800C8C00[], D_800C9020[], D_800C9430[], D_800C97C0[];
+void* D_800C4250[] = { (void*)0x80360000, (void*)0x80385800, (void*)0x803AB000 };
+u64* D_800C425C[] = { (u64*)0x803F6000, (u64*)0x803F6400, (u64*)0x803FC400, (u64*)0x803FC400 };
+PB_PTR32 D_800C426C[] = {
+    (PB_PTR32)D_800B1830, (PB_PTR32)D_800C87E0, 0x800B2BC0, (PB_PTR32)D_800C8C00, 0x800B3F50, (PB_PTR32)D_800C9020,
+    0x800B50E0, (PB_PTR32)D_800C9430, 0x800B69A0, (PB_PTR32)D_800C97C0,
+    (PB_PTR32)D_800B1830, (PB_PTR32)D_800C87E0, 0x800B2BC0, (PB_PTR32)D_800C8C00, 0x800B3F50, (PB_PTR32)D_800C9020,
+    1000,
+};
+#endif
+s32 D_800C42B0 = 0;
+f32 D_800C42B4[3] = { 0.0f, 0.0f, 0.0f };
+
 // the scheduler client nnsched fills (next, queue, id); unkSchedStruct in engine/graphics.h
 typedef struct {
     void* unk00;
@@ -16,10 +41,6 @@ typedef struct {
 #else
 extern u8 D_31C7E0[];
 #endif
-extern void* D_800C4250[];
-extern u64* D_800C425C[];
-extern PB_PTR32 D_800C426C[];
-extern s32 D_800C42B0;
 extern s32 D_800C32B0;
 extern OSMesgQueue D_800ED538;
 extern u8 D_800ED552;

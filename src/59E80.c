@@ -11,11 +11,24 @@ typedef struct {
     /* 0x04 */ s32 nameStr;
     /* 0x08 */ s32 ownedFlag;
 } ItemListEntry;
+u8 D_800C5720 = 0;
+u8 D_800C5721 = 0;
+u8 D_800C5722 = 0;
+u8 D_800C5723 = 0;
+u8 D_800C5724[4] = { 1, 1, 1, 1 };
+u8 D_800C5728[7] = { 0, 0, 0, 0, 0, 0, 0 };
+s8 D_800C572F = 0;
+extern u8 D_800C4E14[], D_800C4E24[], D_800C4E2C[], D_800C4E38[];
+MgUnlockGroup D_800C5730[4] = { { D_800C4E14, 10 }, { D_800C4E24, 5 }, { D_800C4E2C, 10 }, { D_800C4E38, 25 } };
+ItemListEntry D_800C5750[16] = {
+    { 25, 0x85, 7 }, { 27, 0x87, 9 }, { 30, 0x8A, 12 }, { 32, 0x8C, 14 },
+    { -1, 0x95, -3 }, { 36, 0x90, -2 }, { 34, 0x8E, -4 }, { 39, 0x93, -4 },
+    { 26, 0x86, 8 }, { 28, 0x88, 10 }, { 29, 0x89, 11 }, { 33, 0x8D, 15 },
+    { 31, 0x8B, -4 }, { 37, 0x91, -1 }, { 35, 0x8F, -4 }, { 40, 0x94, -4 }
+};
+s32 D_800C5810 = 1;
+s32 D_800C5814 = 0x32;
 
-extern MgUnlockGroup D_800C5730[4];
-extern ItemListEntry D_800C5750[];
-extern s32 D_800C5810;
-extern s32 D_800C5814;
 extern char D_800D87D8[][18];
 extern s16 D_800D8722[4];
 extern s32 D_800D872C;
@@ -92,7 +105,6 @@ typedef struct SaveFile {
 #endif
 
 extern u8 D_800D8720;
-extern s8 D_800C572F;
 s32 func_800141FC(s16 arg0);
 s32 InitEeprom(char*);
 s32 func_8005AFEC(void);

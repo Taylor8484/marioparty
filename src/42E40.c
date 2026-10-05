@@ -34,10 +34,10 @@ typedef struct SpriteAnimEntry {
     /* 0x00 */ s32 file;
     /* 0x04 */ u16 count;
 } SpriteAnimEntry;
+SpriteAnimEntry D_800C4C70[] = { { 0x100000, 0x17 }, { 0x100034, 0x20 }, { 0x100082, 0x3A }, { 0x1001E5, 0x26 }, { 0x1000F3, 0x39 }, { 0x100169, 0x3F } };
+SpriteAnimEntry D_800C4CA0[] = { { 0x100017, 0x1D }, { 0x100054, 0x2E }, { 0x1000BC, 0x37 }, { 0x10020B, 0x37 }, { 0x10012C, 0x3D }, { 0x1001A8, 0x3D } };
 
 extern s16 D_800D63F0;
-extern SpriteAnimEntry D_800C4C70[];
-extern SpriteAnimEntry D_800C4CA0[];
 s16 func_80025F38(s16);
 void func_8004246C(void);
 

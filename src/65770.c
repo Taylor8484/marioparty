@@ -1,5 +1,6 @@
 #include "common.h"
 #include "PR/gu.h"
+Vp D_800C5B40 = { { { 640, 480, 511, 0 }, { 640, 480, 511, 0 } } };
 
 #define TREE_NEXT(obj, cur, sp, stack, grp)            \
     if ((obj)->unk60 >= 0) {                           \
@@ -146,7 +147,6 @@ extern Mtx D_800E40E0;
 extern s16 D_800F2BD8;
 extern s16 D_800F329E;
 
-extern Vp D_800C5B40;
 extern Gfx* D_800E4120;
 void func_80068410(Gfx** gfx, unk65770Obj* obj);
 void func_80023888(void*);
