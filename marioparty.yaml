@@ -552,9 +552,8 @@ segments:
       - [0xC8A90, data, B0BA0]
       - [0xC8AB0, data, B1DC0]
       - [0xC8AC0, data, B1FD0]
-      - [0xC8AD0, rodata] #is this rodata or data?
-      - [0xC8AE0, rodata]
-      - [0xC8DC0, rodata]
+      - [0xC8AD0, .rodata, C8AD0]
+      - [0xC93E0, rodata] # RSP microcode data (F3DEX2 family), kept as asm
       - [0xCA030, rodata]
       - [0xCA7B0, rodata]
       - [0xCAA70, .rodata, 1130]
@@ -585,7 +584,7 @@ segments:
       - [0xCBEB0, .rodata, 57330]
       - [0xCBFB0, .rodata, 59510]
       - [0xCBFC8, .rodata, 59E80]
-      - [0xCC130, .rodata, objmain]
+      - [0xCC138, .rodata, objmain]
       - [0xCC1D0, .rodata, 64FD0]
       - [0xCC220, .rodata, 65770]
       - [0xCC280, .rodata, 69010]

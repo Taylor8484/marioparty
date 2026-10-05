@@ -45,7 +45,7 @@ extern u8* D_800D8910;
 extern s32 D_800D8914;
 extern s32* D_800D8918;
 extern u16 D_800ED0CE;
-extern char D_800CB4C4[];
+extern const char D_800CB4C4[];
 extern u16 D_800F2CF0[];
 extern Vec3f* D_800ED610;
 extern Vec3f* D_800ED72C;
@@ -718,7 +718,7 @@ void func_8005A4C0(omObjData* obj) {
             }
             func_8006DA5C(D_800D8722[3], D_800D8738[i], i);
         }
-        LoadStringIntoWindow(D_800D8722[3], D_800CB4C4, 0xAC, 3);
+        LoadStringIntoWindow(D_800D8722[3], (char*)D_800CB4C4, 0xAC, 3);
     }
 }
 
@@ -1094,4 +1094,6 @@ void func_8005B838(void* arg0) {
     }
 }
 
-INCLUDE_RODATA("asm/nonmatchings/59E80", D_800CB4C4);
+/* Standings text: rows 0x11-0x17 (row number, then 0x0A and fourteen 0x0E), then 0x18. Splat cut it
+   at 0x800CB530; the string is one object and objmain's rodata starts after it. */
+const char D_800CB4C4[] = "\x11\x0A\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x12\x0A\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x13\x0A\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x14\x0A\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x15\x0A\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x16\x0A\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x17\x0A\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x0E\x18";

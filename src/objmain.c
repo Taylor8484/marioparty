@@ -843,8 +843,6 @@ void omOvlKill(void) {
     func_80020234();
     func_8002578C(1);
 }
-INCLUDE_RODATA("asm/nonmatchings/objmain", D_800CB530);
-
 void omMain(void) {
     omObjData* obj;
     s32 i;
