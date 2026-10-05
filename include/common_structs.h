@@ -958,6 +958,32 @@ typedef struct unk2C0C0Struct10 {
     /* 0x40 */ LookAt unk_40;
 } unk2C0C0Struct10; //sizeof 0x60
 
+/* Motion keyframe record and motion (34D80.c). D_800ED554 is an array of unk34D80Struct80, which
+   24740.c, 1EA70.c and ovl_23 index too: they must use this type for the host stride. */
+typedef struct unk34D80Struct60 {
+    /* 0x00 */ u8 unk_00;
+    /* 0x01 */ u8 unk_01;
+    /* 0x02 */ u8 unk_02;
+    /* 0x03 */ u8 unk_03;
+    /* 0x04 */ s16 unk_04;
+    /* 0x06 */ s16 unk_06;
+    /* 0x08 */ s16 unk_08;
+    /* 0x0A */ s16 unk_0A;
+    /* 0x0C */ s16 unk_0C;
+    /* 0x0E */ s16 unk_0E;
+} unk34D80Struct60; //sizeof 0x10
+
+typedef struct unk34D80Struct80 {
+    /* 0x00 */ u8 unk_00;
+    /* 0x01 */ char unk_01;
+    /* 0x02 */ s16 unk_02;
+    /* 0x04 */ unk34D80Struct60** unk_04;
+    /* 0x08 */ u8* unk_08;
+    /* 0x0C */ s16* unk_0C;
+    /* 0x10 */ f32* unk_10;
+    /* 0x14 */ char unk_14[4];
+} unk34D80Struct80; //sizeof 0x18
+
 typedef struct unk2C0C0StructD0 {
     /* 0x00 */ s16 unk_00;
     /* 0x02 */ s16 unk_02[4];

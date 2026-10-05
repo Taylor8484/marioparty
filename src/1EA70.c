@@ -3,12 +3,7 @@
 void func_800238F0(s16); /* engine/mallocblock.c; unprototyped here on the N64 */
 #endif
 
-typedef struct unk1EA70Struct18 {
-    /* 0x00 */ u8 unk_00;
-    /* 0x01 */ char unk_01;
-    /* 0x02 */ s16 unk_02;
-    /* 0x04 */ char unk_04[0x14];
-} unk1EA70Struct18; // sizeof 0x18
+typedef unk34D80Struct80 unk1EA70Struct18; /* D_800ED554 entries (common_structs.h) */
 
 typedef struct unk1EA70StructC {
     /* 0x00 */ s16 unk_00;

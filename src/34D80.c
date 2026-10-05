@@ -25,29 +25,7 @@ typedef struct unk34D80Struct40 {
     /* 0x18 */ s32 unk_18[1]; // unknown array size
 } unk34D80Struct40; //sizeof unknown
 
-typedef struct unk34D80Struct60 {
-    /* 0x00 */ u8 unk_00;
-    /* 0x01 */ u8 unk_01;
-    /* 0x02 */ u8 unk_02;
-    /* 0x03 */ u8 unk_03;
-    /* 0x04 */ s16 unk_04;
-    /* 0x06 */ s16 unk_06;
-    /* 0x08 */ s16 unk_08;
-    /* 0x0A */ s16 unk_0A;
-    /* 0x0C */ s16 unk_0C;
-    /* 0x0E */ s16 unk_0E;
-} unk34D80Struct60; //sizeof 0x10
 
-typedef struct unk34D80Struct80 {
-    /* 0x00 */ u8 unk_00;
-    /* 0x01 */ char unk_01;
-    /* 0x02 */ s16 unk_02;
-    /* 0x04 */ unk34D80Struct60** unk_04;
-    /* 0x08 */ u8* unk_08;
-    /* 0x0C */ s16* unk_0C;
-    /* 0x10 */ f32* unk_10;
-    /* 0x14 */ char unk_14[4];
-} unk34D80Struct80; //sizeof 0x18
 
 typedef struct unk34D80Bezier {
     /* 0x00 */ f32 v;

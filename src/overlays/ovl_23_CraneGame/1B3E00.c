@@ -57,11 +57,7 @@ typedef struct Temp2 {
     /* 0x5A */ s16 unk5A;                           /* inferred */
 } Temp2;                                            /* size = 0x5C */
 
-typedef struct Temp3 {
-/* 0x00 */ char unk_00[2];
-/* 0x00 */ s16 unk_02;
-/* 0x00 */ char unk_04[0x14];
-} Temp3; //sizeof 0x18
+typedef unk34D80Struct80 Temp3; /* D_800ED554 entries (common_structs.h) */
 
 extern Temp3* D_800ED554;
 extern u8 D_800F64F8;

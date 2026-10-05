@@ -5,12 +5,7 @@ typedef struct unk24740Floats8 {
     /* 0x00 */ f32 v[8];
 } unk24740Floats8;
 
-typedef struct unk24740Struct18 {
-    /* 0x00 */ u8 unk_00;
-    /* 0x01 */ char unk_01;
-    /* 0x02 */ s16 unk_02;
-    /* 0x04 */ char unk_04[0x14];
-} unk24740Struct18; //sizeof 0x18
+typedef unk34D80Struct80 unk24740Struct18; /* D_800ED554 entries (common_structs.h) */
 
 extern u8 D_800C30C0;
 extern u8 D_800C30C1;
