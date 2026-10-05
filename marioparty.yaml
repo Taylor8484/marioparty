@@ -479,7 +479,7 @@ segments:
       - [0xB9550, .data, 1130]
       - [0xB9670, data, font0]
       - [0xC1670, data, unk1]
-      - [0xC2470, data, B980]
+      - [0xC2470, .data, B980]
       - [0xC2500, .data, 99E0]
       - [0xC2510, .data, 156F0]
       - [0xC25A0, data] # unreferenced table of 178 main-code function pointers (sprintf, gu*, Hudson math...); stays asm
@@ -540,7 +540,7 @@ segments:
       - [0xC7110, .data, lib/2.0I/io/cartrominit]
       - [0xC7120, data, lib/2.0I/io/pimgr]
       - [0xC7150, data, lib/2.0I/io/vimgr]
-      - [0xC7170, data, engine/nnsched]
+      - [0xC7170, .data, engine/nnsched]
       - [0xC82F0, data]
       - [0xC83C0, data, 95E50]
       - [0xC83D0, data, 95CE0]

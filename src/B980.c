@@ -47,7 +47,6 @@ typedef ALHeap FXD0_Unk2;
 #endif
 
 s32 func_8000B13C(void);
-extern file_1ACF0_struct D_800C18A0;
 s32 func_8000B210(void);
 extern OSMesg D_800CD9C8;
 extern OSMesgQueue D_800CDA90;
@@ -57,8 +56,6 @@ void func_800130A4(Addr*);
 void alSeqpDelete(s32);
 void alSndpDelete(s32);
 #endif
-extern s32 D_800C1870;
-extern Addr D_800C1874;
 extern PB_PTR32 D_800CDAD4;
 extern s32 D_800CDAEC;
 extern PB_PTR32 D_800CEA8C;
@@ -144,7 +141,6 @@ extern FXDO_Unk* D_800CDAC8;
 extern unkB980Struct2* D_800CEA94;
 extern s32 D_800CEAA4;
 extern unkB980Struct1* D_800CEAC0;
-extern s32 D_800C1870;
 
 #ifndef TARGET_PC
 typedef struct FXD0_Unk2 {
@@ -184,8 +180,28 @@ typedef struct B980ArgCfg {
 typedef struct B980Cfg1898 {
     /* 0x00 */ s32 unk_00;
     /* 0x04 */ char unk_04[0x1C];
+#ifdef TARGET_PC
+    /* 0x20 */ s32 unk_20; /* host: pbB980Record */
+#else
     /* 0x20 */ PB_PTR32 unk_20;
+#endif
 } B980Cfg1898;
+
+/* The view at 0x800C18A0 (file_1ACF0_struct's layout with N64-width pointers). */
+typedef struct B980Cfg18A0 {
+#ifdef TARGET_PC
+    /* 0x00 */ s32 unk_00; /* host: pbB980HeapBase */
+    /* 0x04 */ s32 unk_04; /* host: pbB980HeapLen */
+#else
+    /* 0x00 */ Addr* unk_00;
+    /* 0x04 */ Addr* unk_04;
+#endif
+    /* 0x08 */ s32 unk_08[16];
+    /* 0x48 */ s32 unk_48;
+    /* 0x4C */ s32 unk_4C;
+    /* 0x50 */ s32 unk_50;
+    /* 0x54 */ s32 unk_54;
+} B980Cfg18A0;
 
 typedef struct B980Cnt {
     s32 unk_00;
@@ -203,10 +219,6 @@ void func_80013010(Addr*);
 s32 func_8000AE50(void);
 s32 func_8000B3E8(void);
 s32 func_8000D65C(void);
-extern B980Cfg1898 D_800C1898;
-extern s32 D_800C18AC[];
-extern s32 D_800C18B4[];
-extern PB_PTR32 D_800C18B8;
 extern B980Cnt D_800CDAB8;
 extern s32 D_800CDABC;
 extern s32 D_800CDAC0;
@@ -229,6 +241,75 @@ typedef struct B980Rom {
     /* 0x0C */ s32 ctlEnd;
     /* 0x10 */ s32 tbl;
 } B980Rom;
+
+/* 0x800C1870-0x800C1900: the sound engine's configuration block. Retail addresses it through
+   overlapping labels and negative indices (D_800C18D4[-0x18] is D_800C1874), so it is one object
+   in retail order on every build (after the flag word D_800C1870); the labels are views into it. On the host the three slots that
+   hold pointers (heap base and length, the 0x208-byte record) live in host-only variables. */
+s32 D_800C1870 = 0; /* state flags */
+struct {
+    s32 w[32];
+    u8 D_800C18F4;
+    u8 pad[3];
+    s32 tail[2];
+} B980Config = {
+    {
+        0, 0, 0, 0, 0,                      /* 1874 B980Rom: seq, seqEnd, ctl, ctlEnd, tbl */
+        0, 0, 0, 0, 0, 0, 0, 0,             /* 1888 */
+        32000, 0x18, 0x200, 1, 0, 0x1000, 0x20, 0x800, 1, 1, 0x3C, /* 18A8 */
+        0x18, 0x100, 2, 0xB, 0x180, 0, 0, 0, /* 18D4 */
+    },
+    1, { 0, 0, 0 }, { 0, 0 },
+};
+#ifdef TARGET_PC
+#define D_800C1874 (*(Addr*)&B980Config.w[0])
+#define D_800C1878 (&B980Config.w[1])
+#define D_800C1880 (&B980Config.w[3])
+#define D_800C1888 (&B980Config.w[5])
+#define D_800C188C (&B980Config.w[6])
+#define D_800C1890 (&B980Config.w[7])
+#define D_800C1898 (*(B980Cfg1898*)&B980Config.w[9])
+#define D_800C18A0 (*(B980Cfg18A0*)&B980Config.w[11])
+#define D_800C18A8 (B980Config.w[13])
+#define D_800C18AC (&B980Config.w[14])
+#define D_800C18B4 (&B980Config.w[16])
+/* D_800C18B8 (0x800C18B8) holds a pointer: B980_RECORD on the host */
+#define D_800C18D4 (&B980Config.w[24])
+#define D_800C18DC (&B980Config.w[26])
+#define D_800C18E0 (&B980Config.w[27])
+#define D_800C18F4 (B980Config.D_800C18F4)
+#else
+/* N64: distinct objects, as retail's code addresses them; undefined_syms.txt places each label
+   at its offset in D_800C1870. */
+extern Addr D_800C1874;
+extern s32 D_800C1878[];
+extern s32 D_800C1880[];
+extern s32 D_800C1888[];
+extern s32 D_800C188C[];
+extern s32 D_800C1890[];
+extern B980Cfg1898 D_800C1898;
+extern B980Cfg18A0 D_800C18A0;
+extern s32 D_800C18A8;
+extern s32 D_800C18AC[];
+extern s32 D_800C18B4[];
+extern PB_PTR32 D_800C18B8;
+extern s32 D_800C18D4[];
+extern s32 D_800C18DC[];
+extern s32 D_800C18E0[];
+extern u8 D_800C18F4;
+#endif
+#ifdef TARGET_PC
+Addr* pbB980HeapBase;
+Addr* pbB980HeapLen;
+PB_PTR32 pbB980Record;
+#define B980_HEAP_BASE pbB980HeapBase
+#define B980_HEAP_LEN pbB980HeapLen
+#define B980_RECORD pbB980Record
+#else
+#define B980_HEAP_BASE D_800C18A0.unk_00
+#define B980_HEAP_LEN D_800C18A0.unk_04
+#define B980_RECORD D_800C1898.unk_20
+#endif
 
 #ifndef TARGET_PC
 typedef struct ALSeqpConfig {
@@ -405,9 +486,6 @@ typedef struct B980BankFile {
 } B980BankFile;
 #endif
 
-extern s32 D_800C18A8;
-extern s32 D_800C18E0[];
-extern u8 D_800C18F4;
 extern s16 D_800CEAB6;
 #ifndef TARGET_PC
 void alSndpSetPitch(s32, f32);
@@ -509,10 +587,6 @@ s32 func_8000DCCC(B980SndHdr*);
 s16 func_8000E21C(B980BankFile*);
 s32 func_8000F078(void);
 s32 func_8000F118(void);
-extern s32 D_800C1888[];
-extern s32 D_800C188C[];
-extern s32 D_800C1890[];
-extern s32 D_800C18DC[];
 extern void* D_800CEA88;
 extern B980SeqHdr* D_800CEA90;
 extern PB_PTR32 D_800CEA98;
@@ -527,9 +601,6 @@ extern s8 D_800CEABA;
 extern s32* D_800CEABC;
 extern s8 D_800CEABB;
 s32 func_8000B7EC(s32);
-extern s32 D_800C1878[];
-extern s32 D_800C1880[];
-extern s32 D_800C18D4[];
 extern PB_PTR32 D_800CDAD0;
 extern PB_PTR32 D_800CDAD8;
 extern PB_PTR32 D_800CDADC;
@@ -698,11 +769,11 @@ s32 func_8000AE50(void) {
         idx = D_800C18B4[0] - 20;
         if (idx < D_800CDAC8->unk_04) {
             idx = D_800C1898.unk_00 + idx * 0x208 + 0x10;
-            D_800C1898.unk_20 = func_8000AFA0(0x208);
-            if (D_800C1898.unk_20 == 0) {
+            B980_RECORD = func_8000AFA0(0x208);
+            if (B980_RECORD == 0) {
                 return 1;
             }
-            func_8000AD80(idx, (void*)D_800C18B8, 0x208);
+            func_8000AD80(idx, (void*)B980_RECORD, 0x208);
             return 0;
         }
     } else if (D_800C18B4[0] < 6) {
@@ -735,8 +806,8 @@ s32 func_8000B00C(s32 arg0, s32 arg1, Addr* arg2, Addr* arg3) {
     D_800C18A0.unk_48 = arg0;
     D_800C18A0.unk_4C = arg1;
     D_800C18A0.unk_50 = 1;
-    D_800C18A0.unk_00 = arg2;
-    D_800C18A0.unk_04 = arg3;
+    B980_HEAP_BASE = arg2;
+    B980_HEAP_LEN = arg3;
     return func_8000B13C();
 }
 
@@ -775,8 +846,8 @@ void func_8000B0C0(B980ArgCfg* arg0) {
 s32 func_8000B13C() {
     osCreateMesgQueue(&D_800CDA90, &D_800CD9C8, 50);
     D_800ECB2C = 0;
-    if (D_800C18A0.unk_00 != 0) {
-        if (D_800C18A0.unk_04 != 0) {
+    if (B980_HEAP_BASE != 0) {
+        if (B980_HEAP_LEN != 0) {
             return func_8000B210();
         }
     }
@@ -804,7 +875,7 @@ s32 func_8000B198() {
 s32 func_8000B210(void) {
     s32 ret;
 
-    alHeapInit(&D_800CDAA8, D_800C18A0.unk_00, D_800C18A0.unk_04);
+    alHeapInit(&D_800CDAA8, B980_HEAP_BASE, B980_HEAP_LEN);
     D_800CDAB8.unk_00 = D_800CDAB8.unk_04 = D_800CDAB8.unk_08 = D_800CDAB8.unk_0C = 0;
     if ((ret = func_8000AE50()) != 0) {
         return ret;
