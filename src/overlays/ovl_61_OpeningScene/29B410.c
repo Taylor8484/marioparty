@@ -2,12 +2,67 @@
 #include "29B410.h"
 #include "engine/process.h"
 
+/* ovl_61 fork b: these mirror fork c's 29B410.h additions (OpeningModel, OpeningSprite and the
+   helper prototypes); drop this block when both are merged. */
+typedef struct OpeningModel {
+    /* 0x00 */ s16 model;
+    /* 0x04 */ struct OpeningModel* self;
+    /* 0x08 */ s16 model2;
+    /* 0x0C */ s16* self2; // &model2 when a second model is loaded, else NULL
+    /* 0x10 */ Vec3f posA;
+    /* 0x1C */ Vec3f posB;
+    /* 0x28 */ Vec3f posC;
+} OpeningModel; // retail size 0x34 (pointers are 4 bytes there)
+
+typedef struct OpeningSprite {
+    /* 0x00 */ s16 group;
+    /* 0x02 */ s16 sprite;
+    /* 0x04 */ f32 x;
+    /* 0x08 */ f32 y;
+} OpeningSprite;
+
+s16 func_800FBD98_OpeningScene(OpeningModel* arg0, s32 arg1, s32 unused, Vec3f* arg2, s32 arg3);
+s32 func_800FBEA8_OpeningScene(OpeningModel* arg0);
+void func_800FBEEC_OpeningScene(OpeningSprite* arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
+void func_800FC0BC_OpeningScene(OpeningSprite* arg0);
+void func_800FC110_OpeningScene(s16* arg0);
+void func_800FC134_OpeningScene(OpeningModel* arg0);
+void func_800FC264_OpeningScene(OpeningModel*, Vec3f*);
+/* end of fork c mirror */
+
+typedef struct OpeningModelDef2 {
+    /* 0x00 */ s32 file;
+    /* 0x04 */ Vec3f pos;
+    /* 0x10 */ f32 rotY;
+    /* 0x14 */ s16 unk_14;
+    /* 0x16 */ u16 flags;
+} OpeningModelDef2; /* size 0x18 */
+
+typedef struct OpeningObjDef {
+    /* 0x00 */ s32 id; /* -1 ends the table; the model id is its low byte */
+    /* 0x04 */ void* data;
+    /* 0x08 */ Vec3f pos;
+    /* 0x14 */ s32 unk_14;
+} OpeningObjDef; /* size 0x18 */
+
+extern OpeningModelDef2 D_800FD2DC_OpeningScene[];
+extern OpeningObjDef D_800FD33C_OpeningScene[];
+extern s32 D_800FD050_OpeningScene;
+extern omObjData* D_800FD740_OpeningScene;
+extern s16 D_800FD780_OpeningScene;
+extern Vec3f D_800FD6D0_OpeningScene;
+extern Vec3f D_800FD6DC_OpeningScene;
+void func_8005AE44(void);
+void func_800FC850_OpeningScene(s16, f32, f32, Vec3f*);
+omObjData* func_800FCB9C_OpeningScene(s32);
+
+
 extern Vec3f D_800FD4D0_OpeningScene;
 extern Vec3f D_800FD4DC_OpeningScene;
 extern void* D_800FD434_OpeningScene[];
 extern s32 D_800FD738_OpeningScene;
 void func_800FB79C_OpeningScene(Vec3f*, Vec3f*, Vec3f*);
-void func_800FBAFC_OpeningScene(void);
+s32 func_800FBAFC_OpeningScene(void);
 void func_800FBB94_OpeningScene(void);
 Object* func_800FBCC0_OpeningScene(s32 arg0, void* arg1);
 
@@ -138,8 +193,6 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F983
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F98F0_OpeningScene);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FA990_OpeningScene);
-
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD5A4_OpeningScene);
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD5B0_OpeningScene);
@@ -154,12 +207,101 @@ INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD5E
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD5EC_OpeningScene);
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD600_OpeningScene);
+void func_800FA990_OpeningScene(void) {
+    OpeningModel models[16];
+    OpeningSprite sprites[26];
+    s32 pad[2]; /* retail reserves 0x140 bytes for sprites[] */
+    Vec3f rot;
+    s32 i;
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD60C_OpeningScene);
+    for (i = 0; i < 3; i++) {
+        func_800FBD98_OpeningScene(&models[i], D_800FD2DC_OpeningScene[i].file, 0, &D_800FD2DC_OpeningScene[i].pos,
+                                   D_800FD2DC_OpeningScene[i].flags);
+        func_800A0D00(&rot, 0.0f, D_800FD2DC_OpeningScene[i].rotY, 0.0f);
+        func_800FC264_OpeningScene(&models[i], &rot);
+    }
+    func_800FC134_OpeningScene(&models[1]);
+    func_800FC134_OpeningScene(&models[2]);
+    for (i = 0; i < 5; i++) {
+        if (D_800FD33C_OpeningScene[i].id == -1) {
+            break;
+        }
+        D_80110448_OpeningScene[i] =
+            func_800FBCC0_OpeningScene((u8)D_800FD33C_OpeningScene[i].id, D_800FD33C_OpeningScene[i].data);
+        func_800A0D50(&D_80110448_OpeningScene[i]->coords, &D_800FD33C_OpeningScene[i].pos);
+        func_80025F10(*D_80110448_OpeningScene[i]->unk_3C->unk_40, 1);
+        func_80025EB4(*D_80110448_OpeningScene[i]->unk_3C->unk_40, 0, 2);
+    }
+    func_800FBEEC_OpeningScene(&sprites[0], 0xE0004, 0x47F4, 0, 50, 320, 120);
+    func_800FC110_OpeningScene(&sprites[0].group);
+    func_800FC394_OpeningScene(0);
+    {
+    Vec3f sp4B0 = { 0.0f, 100.0f, 1000.0f };
+    Vec3f sp4C0 = D_800FD4DC_OpeningScene;
+    Vec3f sp4D0 = D_800FD4D0_OpeningScene;
+    Vec3f sp4E0;
+    Vec3f sp4F0 = { 0.0f, 5.0f, 0.0f };
+    Vec3f sp500;
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD618_OpeningScene);
+    func_800FB7F8_OpeningScene(45.0f, 80.0f, 13800.0f);
+    func_800FC850_OpeningScene(models[1].model, 300.0f, 0.0f, &sp4B0);
+    func_800FC850_OpeningScene(models[2].model, 300.0f, 0.0f, &sp4C0);
+    func_800FB79C_OpeningScene(&sp4B0, &sp4C0, &sp4D0);
+    D_800FD050_OpeningScene = 1;
+    func_800A0D00(&sp4E0, 0.0f, 50.0f, 0.0f);
+    for (i = 0; i < 5; i++) {
+        if (D_800FD33C_OpeningScene[i].id == -1) {
+            break;
+        }
+        MBMotionShiftSet(D_80110448_OpeningScene[i], 0, 0, 8, 2);
+        func_8004CCD0(&D_80110448_OpeningScene[i]->coords, &sp4F0, &D_80110448_OpeningScene[i]->unk_18);
+    }
+    func_80023448(3);
+    func_800234B8(0, 0x78, 0x78, 0x78);
+    func_800234B8(1, 0x40, 0x40, 0x60);
+    func_80023504(1, -100.0f, 100.0f, 100.0f);
+    func_800234B8(2, 0, 0, 0);
+    func_800234B8(3, 0, 0, 0);
+    {
+    omObjData* o = func_800FCB9C_OpeningScene(2);
+    omObjData** obj = &D_800FD740_OpeningScene;
 
+    *obj = o;
+    HuPrcSleep(2);
+    omDelObj(*obj);
+    }
+    func_8002456C(D_800FD780_OpeningScene);
+    {
+    Vec3f sp510 = { 0.0f, 520.0f, -10.0f };
+
+    for (i = 0; i < 0x128; i++) {
+        if (i == 0x11C) {
+            func_800726AC(0, 0xF);
+            func_8005AE44();
+        }
+        func_800FC850_OpeningScene(models[1].model, 300.0f, i, &sp500);
+        func_800A0D50(&D_800FD6D0_OpeningScene, &sp500);
+        if (sp510.y + 200.0f <= sp500.y) {
+            sp510.y -= 5.0f;
+        }
+        func_800FC850_OpeningScene(models[2].model, 300.0f, i, &sp500);
+        func_800A0D50(&D_800FD6DC_OpeningScene, &sp510);
+        HuPrcSleep(0);
+    }
+    HuPrcSleep(20);
+    func_800FBEA8_OpeningScene(&models[0]);
+    func_800FBEA8_OpeningScene(&models[1]);
+    func_800FBEA8_OpeningScene(&models[2]);
+    func_800FC0BC_OpeningScene(&sprites[0]);
+    func_800FBB94_OpeningScene();
+    HuPrcSleep(3);
+    func_80072724(0xFF, 0xFF, 0xFF);
+    func_800726AC(0, 0x28);
+    HuPrcSleep(0x28);
+    func_8002890C(0xFF, 0xFF, 0xFF);
+    }
+    }
+}
 void func_800FAEFC_OpeningScene(void) {
     Vec3f sp10 = { 0.0f, 0.0f, 1000.0f };
     Vec3f sp20 = D_800FD4DC_OpeningScene;
