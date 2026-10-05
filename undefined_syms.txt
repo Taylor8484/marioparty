@@ -227,3 +227,8 @@ D_800FD520_OpeningScene = 0x800FD520;
 /* ovl_81 314950.c: splat labels inside D_800F7FE8 (Vec3f[10]) used by the NON_MATCHING asm */
 D_800F7FEC_PressStartScreen = D_800F7FE8_PressStartScreen + 0x4;
 D_800F7FF0_PressStartScreen = D_800F7FE8_PressStartScreen + 0x8;
+/* ovl_69 2BB5F0.c: splat labels inside C arrays, used by the NON_MATCHING asm */
+D_800F9A20_GameModeOverworld = D_800F9A1C_GameModeOverworld + 0x4;
+D_800F9A24_GameModeOverworld = D_800F9A1C_GameModeOverworld + 0x8;
+D_800F9A94_GameModeOverworld = D_800F9A1C_GameModeOverworld + 0x78;
+D_800FA15E_GameModeOverworld = D_800FA15C_GameModeOverworld + 0x2;
