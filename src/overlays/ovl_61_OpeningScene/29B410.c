@@ -2,6 +2,16 @@
 #include "29B410.h"
 #include "engine/process.h"
 
+extern Vec3f D_800FD6D0_OpeningScene;
+extern omObjData* D_800FD740_OpeningScene[];
+extern s16 D_800FD780_OpeningScene;
+void func_800FB40C_OpeningScene(void);
+void func_800FB608_OpeningScene(void);
+void func_800FC6BC_OpeningScene(s32, s32);
+omObjData* func_800FCB9C_OpeningScene(s32);
+omObjData* func_800FCD20_OpeningScene(s32);
+
+
 void func_800F65E0_OpeningScene(void) {
     Vec3s sp18;
     Vec3s sp28;
@@ -66,9 +76,41 @@ omObjData* func_800F6804_OpeningScene(unkGlobalStruct_00* arg0) {
     return temp_s0;
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F68D4_OpeningScene);
+void func_800F68D4_OpeningScene(omObjData* arg0) {
+    f32 t;
+    f32 v;
+    f32 a;
+    f32 c;
+    f32 c2;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F69F0_OpeningScene);
+    t = arg0->rot.x;
+    v = t;
+    if (t > 1.0f) {
+        v = t - 1.0f;
+    }
+    t = v;
+    a = func_800AEAC0(t * 360.0f) * 45.0f;
+    c = func_800AEFD0(a);
+    D_80110448_OpeningScene[6]->unk_18.x = c * arg0->trans.x + func_800AEAC0(a) * arg0->trans.z;
+    D_80110448_OpeningScene[6]->unk_18.y = D_80110448_OpeningScene[6]->coords.y;
+    c2 = func_800AEAC0(a);
+    D_80110448_OpeningScene[6]->unk_18.z = -arg0->trans.x * c2 + func_800AEFD0(a) * arg0->trans.z;
+    t += 0.05f;
+    arg0->rot.x = t;
+}
+
+omObjData* func_800F69F0_OpeningScene(void) {
+    omObjData* obj;
+
+    obj = omAddObj(0x1000, 0, 0, -1, func_800F68D4_OpeningScene);
+    func_800A0E80(&D_80110448_OpeningScene[6]->unk_18, &D_800FD6D0_OpeningScene, &D_80110448_OpeningScene[6]->coords);
+    omSetRot(obj, 0, 0, 0);
+    omSetSca(obj, D_80110448_OpeningScene[6]->coords.x, D_80110448_OpeningScene[6]->coords.y, D_80110448_OpeningScene[6]->coords.z);
+    omSetTra(obj, D_80110448_OpeningScene[6]->unk_18.x, D_80110448_OpeningScene[6]->unk_18.y, D_80110448_OpeningScene[6]->unk_18.z);
+    obj->work[0] = 6;
+    obj->unk_50 = D_80110448_OpeningScene[6];
+    return obj;
+}
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD4D0_OpeningScene);
 
@@ -86,7 +128,22 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F8D3
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F916C_OpeningScene);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F983C_OpeningScene);
+void func_800F983C_OpeningScene(void) {
+    func_800FB40C_OpeningScene();
+    D_800FD740_OpeningScene[0] = func_800FCB9C_OpeningScene(0x10);
+    HuPrcSleep(0x10);
+    omDelObj(D_800FD740_OpeningScene[0]);
+    func_8002456C(D_800FD780_OpeningScene);
+    func_800FC6BC_OpeningScene(0x444, 0xBE);
+    func_800FC6BC_OpeningScene(0x445, 0xBE);
+    func_800FC6BC_OpeningScene(0x446, 0xBE);
+    D_800FD740_OpeningScene[0] = func_800FCD20_OpeningScene(0x28);
+    HuPrcSleep(0x28);
+    omDelObj(D_800FD740_OpeningScene[0]);
+    func_8002456C(D_800FD780_OpeningScene);
+    func_800FB608_OpeningScene();
+    HuPrcSleep(3);
+}
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F98F0_OpeningScene);
 
