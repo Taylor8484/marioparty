@@ -319,6 +319,13 @@ void ClearBoardFeatureFlag(s32 flag) {
     GwCommon.flag[flag / 8] &= ~(1 << flag % 8);
 }
 
+#ifdef TARGET_PC
+/* A heap block is its HeapNode header plus the request, rounded to 16 bytes. Retail adds 0x1F
+   (the N64's 16-byte header + 0xF); the host's header is 24 bytes (two pointers), and 0x1F would
+   let a block overrun the next node's header by up to 8 bytes. */
+#define PB_HEAP_BLOCK(n) (((n) + (s32)sizeof(HeapNode) + 0xF) & ~0xF)
+#endif
+
 void* HuMemHeapInit(void* ptr, u32 size) {
     HeapNode* heap = (HeapNode*)ptr;
     heap->size = size;
@@ -333,8 +340,12 @@ void* HuMemMemoryAlloc(HeapNode* heap, s32 size) {
     HeapNode* cur_heap;
     HeapNode* new_heap_temp;
 
+#ifdef TARGET_PC
+    size = PB_HEAP_BLOCK(size);
+#else
     size = size + 0x1F;
     size = size & -16;
+#endif
 
     cur_heap = heap;
     do {
@@ -408,8 +419,12 @@ void* Realloc(HeapNode* heap, void* mem, u32 new_size)
     s32 temp;
 
     given_heap = (HeapNode*)(mem - sizeof(HeapNode));
+#ifdef TARGET_PC
+    temp = PB_HEAP_BLOCK((s32)new_size);
+#else
     temp = new_size + 0x1F;
     temp = temp & -16;
+#endif
 
     if (given_heap->size >= temp) {
         if ((u32)(given_heap->size - temp) > MIN_HEAP_NODE_SIZE) {
@@ -474,6 +489,9 @@ u32 GetUsedMemoryBlockCount(HeapNode* heap) {
 }
 
 s32 HuMemMemoryAllocSizeGet(s32 arg0) {
+#ifdef TARGET_PC
+    return PB_HEAP_BLOCK(arg0);
+#endif
     return (arg0 + 0x1F) & ~0xF;
 }
 

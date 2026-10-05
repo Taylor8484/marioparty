@@ -29,7 +29,7 @@ void func_80018870(void) {
     unkSpriteStruct* sprite;
 
     func_80064B70();
-    D_800ED60C = func_80023668(0x2400);
+    D_800ED60C = func_80023668(0x100 * sizeof(*D_800ED60C));
     D_800EC6DC = 0x100;
     D_800ECB38 = 0;
     for (i = 0; i < 0x100; i++) {
