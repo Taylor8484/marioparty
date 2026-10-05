@@ -604,12 +604,18 @@ typedef struct unk2C0C0Struct50 {
     /* 0x64 */ Matrix4f unk_64;
 } unk2C0C0Struct50; //sizeof 0xA4
 
+/* A palette record: a view of 388E0.c's unk388E0Struct80, whose pointers at 0x20/0x24 it must keep
+   pointer-wide for the host layout. */
 typedef struct unk2C0C0Struct60 {
-    /* 0x00 */ char unk_00[0x1A];
+    /* 0x00 */ char unk_00[0x18];
+    /* 0x18 */ u8 unk_18;
+    /* 0x19 */ char unk_19;
     /* 0x1A */ s16 unk_1A;
-    /* 0x1C */ char unk_1C[8];
-    /* 0x2C */ s32 unk_24;
-} unk2C0C0Struct60; //sizeof unknown
+    /* 0x1C */ s16 unk_1C;
+    /* 0x1E */ char unk_1E[2];
+    /* 0x20 */ void* unk_20;
+    /* 0x24 */ PB_PTR32 unk_24; /* the palette (u16*) */
+} unk2C0C0Struct60; //sizeof 0x28
 
 typedef struct unk2C0C0Struct70 {
     /* 0x00 */ char unk_00[0x18];

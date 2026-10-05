@@ -1224,7 +1224,7 @@ void func_8002E488(unk2C0C0StructC0* arg0, u32* arg1) {
     u16 var_s1;
     u16 var_s2;
     u8* var_t0;
-    s32 var_a0;
+    PB_PTR32 var_a0; /* a palette address (s32 on the N64) */
     s16 i;
 
     if (D_800F3292 == 0) {
