@@ -1231,8 +1231,9 @@ void func_8002E488(unk2C0C0StructC0* arg0, u32* arg1) {
         return;
     }
 
-    temp_s3 = D_800EDA94[0];
-    temp_s4 = D_800EDA94[1];
+    /* D_800EDA94 is D_800EDA88[0].unk_0C/unk_10 under a second name */
+    temp_s3 = D_800EDA88[0].unk_0C;
+    temp_s4 = D_800EDA88[0].unk_10;
 
     func_80031054(temp_s3, temp_s4, *arg1);
 
