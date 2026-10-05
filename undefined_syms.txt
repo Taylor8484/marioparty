@@ -210,3 +210,11 @@ D_800C18E0 = B980Config + 0x6C;
 D_800C18F4 = B980Config + 0x80;
 /* objmain.c objmainChr D_800C59A8[6]: a byte of entry 0, read by the DesertDash overlay */
 D_800C59A9 = D_800C59A8 + 0x1;
+/* 6D4E0.c: labels for fields of element 0 of TWColor/TWMask arrays */
+D_800C5DF5 = D_800C5DF4 + 0x1;
+D_800C5DF6 = D_800C5DF4 + 0x2;
+D_800C5E15 = D_800C5E14 + 0x1;
+D_800C5E16 = D_800C5E14 + 0x2;
+D_800C6035 = D_800C6034 + 0x1;
+D_800C603D = D_800C603C + 0x1;
+D_800C603E = D_800C603C + 0x2;
