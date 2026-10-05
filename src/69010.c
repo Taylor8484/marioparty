@@ -35,7 +35,7 @@ s16 D_800C5CB8[] = {
 };
 
 typedef struct unk69010Frame {
-    /* 0x00 */ u32 timg;
+    /* 0x00 */ PB_UPTR32 timg; /* unk65770AnimC.unk0, the pixels (a pointer: wide on the host) */
     /* 0x04 */ u16 width;
     /* 0x06 */ u16 height;
     /* 0x08 */ u16 centerX;
@@ -44,8 +44,9 @@ typedef struct unk69010Frame {
 
 typedef struct unk69010Sheet {
     /* 0x00 */ unk69010Frame* frames;
-    /* 0x04 */ char unk_04[8];
-    /* 0x0C */ u32 palette;
+    /* 0x04 */ void* unk_04; /* unk65770Anim.unk4 and unk8 (pointers) */
+    /* 0x08 */ void* unk_08;
+    /* 0x0C */ PB_UPTR32 palette; /* unk65770Anim.unkC */
     /* 0x10 */ char unk_10[8];
     /* 0x18 */ u16 format;
     /* 0x1A */ u8 unk_1A;
