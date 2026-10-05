@@ -282,13 +282,17 @@ typedef struct unk_Struct00 {
     /* 0x178 */ char unk_178[0x380]; // more matrices?
 } unk_Struct00;
 
+/* A view of omObjData (rot is unk_24..unk_2C, the model list unk_40). Its pointer at 0x14 keeps the
+   host layout equal to omObjData's, whose pointers widen there. */
 typedef struct unk_Struct04 {
-    /* 0x00 */ Vec3f pos;
-    /* 0x0C */ char padC[0x18];
+    /* 0x00 */ char pad0[0x14];
+    /* 0x14 */ void* func_ptr;
+    /* 0x18 */ Vec3f pos;
     /* 0x24 */ f32 unk_24;
     /* 0x28 */ f32 unk28;
     /* 0x2C */ f32 unk_2C;
-    /* 0x30 */ char pad30[0x10];
+    /* 0x30 */ Vec3f scale;
+    /* 0x3C */ u16 mdlcnt;
     /* 0x40 */ s16* unk_40;
 } unk_Struct04; /* size = 0x44 */
 
