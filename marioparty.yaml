@@ -496,7 +496,7 @@ segments:
       - [0xC4D90, .data, 34D80]
       - [0xC4DD0, data, 388E0]
       - [0xC4E00, .data, 3AC60]
-      - [0xC4E50, data, 3BF30]
+      - [0xC4E50, .data, 3BF30]
       - [0xC4EC0, .data, 3CED0]
       - [0xC4F50, data, 3E560]
       - [0xC5830, .data, 3F5B0]
