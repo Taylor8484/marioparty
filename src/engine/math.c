@@ -2,10 +2,14 @@
 #include "engine/math.h"
 #include "PR/gu.h"
 
+f32 D_800C3290 = 0.01745329238474369f;
+f32 D_800C3294 = 0.01745329238474369f;
+f32 D_800C3298 = 0.01745329238474369f;
 
-extern f32 D_800C3290;
-extern f32 D_800C3294;
-extern f32 D_800C3298;
+
+
+
+
 
 /* Translate Matrix. */
 void MtxTranslate(Mat4 mtx, f32 x, f32 y, f32 z) {

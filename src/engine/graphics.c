@@ -2,6 +2,20 @@
 #include "engine/graphics.h"
 #include "pb_host.h"
 
+u8 D_800C30C0 = 0;
+u8 D_800C30C1 = 0;
+u8 D_800C30C2 = 0;
+Gfx D_800C30C8[] = {
+    gsDPPipeSync(),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, TEXEL0, PRIMITIVE, TEXEL0, TEXEL0, 0, SHADE, 0, 0, TEXEL0, PRIMITIVE, TEXEL0),
+    gsDPSetRenderMode(G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2),
+    gsDPSetAlphaCompare(G_AC_THRESHOLD),
+    gsDPSetTexturePersp(G_TP_NONE),
+    gsDPSetTextureFilter(G_TF_POINT),
+    gsSPEndDisplayList(),
+};
+
 typedef struct {
     PB_PTR32 unk00; /* PartyBoard: a display list address */
     u16 unk04;

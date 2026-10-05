@@ -1,6 +1,8 @@
 #include "common.h"
 #include "engine/pad.h"
 
+s32 LeoDriveExistBool = 0; /* read by the logos overlay */
+
 /* omObjData::unk_50 work block, typed as this unit uses it (compare PlayerWork/GroundWork in
    1130.c, which views the same block for players and floors). */
 typedef struct MgWork {
@@ -680,17 +682,17 @@ void func_8000A534(omObjData* obj, f32 speed) {
         work->unk_A4 = 1.0f;
     }
 }
-INCLUDE_RODATA("asm/nonmatchings/99E0", D_800C9F20);
+const char D_800C9F20[] = "donky_kao_3_DEF";
 
-INCLUDE_RODATA("asm/nonmatchings/99E0", D_800C9F30);
+const char D_800C9F30[] = "wario_kao2_DEF";
 
-INCLUDE_RODATA("asm/nonmatchings/99E0", D_800C9F40);
+const char D_800C9F40[] = "c003_400b_DEF";
 
-INCLUDE_RODATA("asm/nonmatchings/99E0", D_800C9F50);
+const char D_800C9F50[] = "pe_lod1a_DEF";
 
-INCLUDE_RODATA("asm/nonmatchings/99E0", D_800C9F60);
+const char D_800C9F60[] = "luigi_lod_DEF";
 
-INCLUDE_RODATA("asm/nonmatchings/99E0", D_800C9F70);
+const char D_800C9F70[] = "ma_l_3_DEF";
 
 s32 func_8000A634(omObjData* obj, omObjData* item) {
     MgWork* work = MG_WORK(obj);

@@ -1,11 +1,48 @@
 #include "common.h"
 #include "engine/pad.h"
 
+s32 D_800B8950 = 0;
+u8 D_800B8954 = 0;
+u8 D_800B8955 = 1;
+s16 D_800B8956 = 0;
+u8 D_800B8958 = 0xFF;
+u8 D_800B8959 = 0;
+u8 D_800B895A = 0;
+u8 D_800B895B = 0;
+f32 D_800B895C = 15.0f;
+f32 D_800B8960 = 0.5f;
+f32 D_800B8964 = 1.47f;
+f32 D_800B8968 = 0.15f;
+f32 D_800B896C = 7.0f;
+f32 D_800B8970 = 30.0f;
+f32 D_800B8974 = 60.0f;
+f32 D_800B8978 = 20.0f;
+f32 D_800B897C = 3.3333333f;
+f32 D_800B8980 = 18.0f;
+f32 D_800B8984 = 13.5f;
+f32 D_800B8988 = 9.0f;
+f32 D_800B898C = 4.5f;
+f32 D_800B8990 = 0.0f;
+f32 D_800B8994 = 1.7f;
+f32 D_800B8998 = 0.5f;
+f32 D_800B899C = 0.147f;
+s8 D_800B89A0 = 0;
+/* Per-player model ids; overlay asm addresses row 0 through split labels (undefined_syms.txt). */
+u16 D_800B89A4[4][14] = {
+    { 0x0113, 0x011A, 0x0121, 0x0128, 0x012F, 0x0136, 0x013D, 0x0144, 0x0145, 0x0146, 0x0148, 0x014F, 0x0160, 0x0162 },
+    { 0x0114, 0x011B, 0x0122, 0x0129, 0x0130, 0x0137, 0x013E, 0x0144, 0x0145, 0x0146, 0x0149, 0x0150, 0x0160, 0x0162 },
+    { 0x0115, 0x011C, 0x0123, 0x012A, 0x0131, 0x0138, 0x013F, 0x0144, 0x0145, 0x0146, 0x014A, 0x0151, 0x0160, 0x0162 },
+    { 0x0116, 0x011D, 0x0124, 0x012B, 0x0132, 0x0139, 0x0140, 0x0144, 0x0145, 0x0146, 0x014B, 0x0152, 0x0160, 0x0162 },
+};
+s16 D_800B8A14[6] = { 0, 0, 0, 0, 0, 0 }; /* unreferenced */
+s32 D_800B8A20[] = { 0x0001009E, 0x0002009E, 0x0006009E, 0x0003009E, 0x0004009E, 0x0005009E };
+s32 D_800B8A38[] = { 0x000100A0, 0x000200A0, 0x000600A0, 0x000300A0, 0x000400A0, 0x000500A0 };
+extern const char D_800C9F70[], D_800C9F60[], D_800C9F50[], D_800C9F40[], D_800C9F30[], D_800C9F20[];
+char* D_800B8A50[] = {
+    (char*)D_800C9F70, (char*)D_800C9F60, (char*)D_800C9F50, (char*)D_800C9F40, (char*)D_800C9F30, (char*)D_800C9F20,
+};
+
 extern Vec3f D_800CD9B0;
-extern f32 D_800B8984;
-extern f32 D_800B8988;
-extern f32 D_800B898C;
-extern f32 D_800B8990;
 
 void func_8000A534(void*, f32);
 #ifdef TARGET_PC
@@ -136,9 +173,6 @@ extern u16 D_800EE984;
 extern u16 D_800F370C;
 extern f32 D_800ED6B8;
 extern f32 D_800F5254;
-extern u8 D_800B8955;
-extern f32 D_800B8964;
-extern f32 D_800B8980;
 
 f32 func_80000530(f32, f32, f32, ColVtx*, ColTri*, Vec3f*, Vec3f*);
 s32 func_80000828(Vec4f*, s16*, ColVtx*);
@@ -210,24 +244,7 @@ void func_8000A4F8(void*, ColSphere*);
 s32 func_80019964(f32[3][3], Vec3f*, f32, Vec3f*);
 s32 func_80019EDC(f32[4][3], Vec3f*, f32, Vec3f*);
 
-extern s16 D_800B8956;
-extern u8 D_800B8954;
 extern s8 D_800F3704;
-extern u8 D_800B8958;
-extern u8 D_800B8959;
-extern f32 D_800B899C;
-extern f32 D_800B8998;
-extern u8 D_800B895B;
-extern f32 D_800B895C;
-extern f32 D_800B8960;
-extern f32 D_800B8968;
-extern f32 D_800B896C;
-extern f32 D_800B8970;
-extern f32 D_800B8974;
-extern f32 D_800B8978;
-extern f32 D_800B897C;
-extern s8 D_800B89A0;
-extern f32 D_800B8994;
 extern omObjData* D_800F2AF8[];
 extern u8 D_800ED6E0[];
 extern u8 D_800F2B80[];

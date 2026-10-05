@@ -42,13 +42,25 @@ typedef struct ChoiceRect {
 extern u8 D_31BFE0[];
 extern u8 D_31C7E0[];
 #endif
-extern u8* D_800C1910; /* 8x8 1-bit font */
-extern u8* D_800C1914; /* window background texture */
-extern u8* D_800C1918; /* window palette */
-extern u16 D_800C191C[];
-extern Gfx D_800C1930[];
-extern u8 D_800C1988[];
-extern u8 D_800C198C[];
+u8* D_800C1910 = NULL; /* 8x8 1-bit font */
+u8* D_800C1914 = NULL; /* window background texture */
+u8* D_800C1918 = NULL; /* window palette */
+u16 D_800C191C[] = { 0x0000, 0x003F, 0xF801, 0xF83F, 0x07C1, 0x07FF, 0xFFC1, 0xFFFF, 0x0001, 0x0000 };
+Gfx D_800C1930[] = {
+    gsDPPipeSync(),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsDPSetCombineLERP(TEXEL0, PRIMITIVE, TEXEL0_ALPHA, PRIMITIVE, 0, TEXEL0, PRIMITIVE, TEXEL0, TEXEL0, PRIMITIVE, TEXEL0_ALPHA, PRIMITIVE, 0, TEXEL0, PRIMITIVE, TEXEL0),
+    gsDPSetRenderMode(G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2),
+    gsDPSetBlendColor(0x00, 0x00, 0x00, 0x00),
+    gsDPSetPrimColor(0, 0, 0x00, 0x00, 0x00, 0x40),
+    gsDPSetAlphaCompare(G_AC_THRESHOLD),
+    gsDPSetTexturePersp(G_TP_NONE),
+    gsDPSetTextureFilter(G_TF_POINT),
+    gsDPSetTextureLUT(G_TT_RGBA16),
+    gsSPEndDisplayList(),
+};
+u8 D_800C1988[] = { 0x22, 0x22 }; /* 2x2 CI4 texture */
+u8 D_800C198C[] = { 0x00, 0x01, 0x02, 0x04, 0x10, 0x20, 0x40, 0x80, 0x80, 0x40, 0x20, 0x10, 0x04, 0x02, 0x01, 0x00 };
 extern s16 D_800ED3E0; /* choice count */
 extern s16 D_800ED724;
 extern u16 D_800EDE50[];
