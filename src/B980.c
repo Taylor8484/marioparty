@@ -3778,33 +3778,35 @@ void func_80011B2C(void) {
     }
 }
 
-// s16 parameter extension timing and 0 store via FPU zero register (masked 14)
-#ifdef NON_MATCHING
-void func_80011C04(s16 frames) {
-    s32 i;
-    unkB980Struct2* voice;
-
-    if (D_800CEAA4 & 1) {
-        D_800CEAA4 |= 0x10;
-        for (i = 0; i < D_800CEA9C; i++) {
-            voice = &D_800CEA94[i];
-            if (voice->unk_0C == 1) {
-                voice->unk_08 |= 2;
-            }
-        }
-        D_800CEAA4 &= ~1;
-        if (frames != 0 && !(D_800CEAA8 > 0.0f)) {
-            D_800CEAAC = 0;
-            D_800CEAB2 = 0;
-            func_8000DDEC();
-            D_800CEAA8 = -((f32)D_800CEAB0 / frames);
-        }
-        D_800CEAA4 &= ~0x10;
+// decomp-permuter
+void func_80011C04(s16 frames)
+{
+  s32 i;
+  unkB980Struct2 *voice;
+  if (D_800CEAA4 & 1)
+  {
+    D_800CEAA4 |= 0x10;
+    for (i = 0; i < D_800CEA9C; i++)
+    {
+      voice = &D_800CEA94[i];
+      if (voice->unk_0C == 1)
+      {
+        voice->unk_08 |= 2;
+      }
     }
+
+    D_800CEAA4 &= ~1;
+    if ((frames != 0) && (!(D_800CEAA8 > 0.0f)))
+    {
+ do { } while (0);
+      D_800CEAAC = 0;
+      D_800CEAB2 = 0;
+      func_8000DDEC();
+      D_800CEAA8 = -(((f32) D_800CEAB0) / frames);
+    }
+    D_800CEAA4 &= ~0x10;
+  }
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/B980", func_80011C04);
-#endif
 
 void func_80011D48(s16 idx, s16 angle, f32 dist) {
     B980SfxState* st;
