@@ -438,65 +438,81 @@ s32 func_80056FA8(void) {
 INCLUDE_ASM("asm/nonmatchings/57330", func_80056FA8);
 #endif
 
-// GCC keeps &GwSystem.curBoardIndex in s0 across the calls; retail reloads it (masked 25)
-#ifdef NON_MATCHING
-void func_8005700C(void) {
-    s32 ovl;
-
-    do {
-        HuPrcVSleep();
-    } while (func_80072718() != 0);
-loop:
-    do {
-        HuPrcVSleep();
-    } while (D_800F5144 == 0 && D_800D86EC < 0);
-    while (func_80072718() != 0) {
-        HuPrcVSleep();
-    }
-    if (D_800D86F0 != 0) {
-        func_800601D4(0x5A);
-    }
-    func_800726AC(D_800D86EE, 0x10);
-    HuPrcSleep(0x11);
-    func_80056AF4();
-    if (D_800D86EC & 0x20) {
-        ovl = 0x80;
-        if (GwSystem.curBoardIndex != 9) {
-            if (GetSumOfPlayerStars() != 0) {
-                D_800D86E2 = 1;
-                if (GwSystem.curBoardIndex == 7 && _CheckFlag(0x2A) == 0) {
-                    func_80056730(0x63, 0, 0x94);
-                }
-                func_80056730(0x41, 0, 0x92);
-                ovl = 0x42;
-            } else {
-                ovl = 0x43;
-            }
-        }
-        func_80056730(ovl, 0, 0x92);
-        func_80056984();
-    }
-    if (D_800D86EC & 1) {
-        if (func_80056FA8() != 0) {
-            func_80056730(0x3F, 0, 0x92);
-        }
-        func_80056F40();
-    }
-    if (D_800D86EC & 2) {
-        func_80056730(0x6F, 0, 0x94);
-    }
-    if (D_800D86EC & 8) {
-        func_80056730(D_800D86F4, D_800D86F8, 0x92);
-    }
-    ClearBoardFeatureFlag(0x45);
-    omOvlReturnEx(1);
-    omOvlKill();
+// decomp-permuter
+void func_8005700C(void)
+{
+  s32 ovl;
+  s16 *new_var;
+  do
+  {
     HuPrcVSleep();
-    goto loop;
+  }
+  while (func_80072718() != 0);
+  loop:
+  do
+  {
+    HuPrcVSleep();
+  }
+  while ((D_800F5144 == 0) && (D_800D86EC < 0));
+
+  while (func_80072718() != 0)
+  {
+    HuPrcVSleep();
+  }
+
+  new_var = &GwSystem.curBoardIndex;
+  if (D_800D86F0 != 0)
+  {
+    func_800601D4(0x5A);
+  }
+  func_800726AC(D_800D86EE, 0x10);
+  HuPrcSleep(0x11);
+  func_80056AF4();
+  if (D_800D86EC & 0x20)
+  {
+    ovl = 0x80;
+    if (GwSystem.curBoardIndex != 9)
+    {
+      if (GetSumOfPlayerStars() != 0)
+      {
+        D_800D86E2 = 1;
+        if (((*new_var) == 7) && (_CheckFlag(0x2A) == 0))
+        {
+          func_80056730(0x63, 0, 0x94);
+        }
+        func_80056730(0x41, 0, 0x92);
+        ovl = 0x42;
+      }
+      else
+      {
+        ovl = 0x43;
+      }
+    }
+    func_80056730(ovl, 0, 0x92);
+    func_80056984();
+  }
+  if (D_800D86EC & 1)
+  {
+    if (func_80056FA8() != 0)
+    {
+      func_80056730(0x3F, 0, 0x92);
+    }
+    func_80056F40();
+  }
+  if (D_800D86EC & 2)
+  {
+    func_80056730(0x6F, 0, 0x94);
+  }
+  if (D_800D86EC & 8)
+  {
+    func_80056730(D_800D86F4, D_800D86F8, 0x92);
+  }
+  ClearBoardFeatureFlag(0x45);
+  omOvlReturnEx(1);
+  omOvlKill();
+  HuPrcVSleep();
+  goto loop;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/57330", func_8005700C);
-#endif
 
 void func_80057208(s16 arg0) {
     switch (--arg0) {

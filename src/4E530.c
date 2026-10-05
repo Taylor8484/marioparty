@@ -162,48 +162,59 @@ void func_8004DBC8(s32 arg0) {
     D_800C5210 = arg0;
 }
 
-// register allocation: arg0 and the held -1 swap s7/s8 (raw 10, masked 0)
-#ifdef NON_MATCHING
-void func_8004DBD4(s32 arg0, s32 arg1) {
-    s32 cpu = 0;
-    s16 colors[4];
-    PortMasks masks = D_800CB0EC;
-    s32 i;
+// decomp-permuter
+void func_8004DBD4(s32 arg0, s32 arg1)
+{
+  s32 cpu = 0;
+  u8 new_var;
+  s16 colors[4];
+  PortMasks masks = D_800CB0EC;
+  s32 i;
+  for (i = 0; i < 4; i++)
+  {
+    if (i == arg1)
+    {
+      if (GwPlayer[i].flags & 1)
+      {
+        cpu = 1;
+        colors[GwPlayer[i].port] = -0x8000;
+      }
+      else
+      {
+        new_var = GwPlayer[i].port;
+        func_8007155C(arg0, masks.bit[new_var]);
+        colors[GwPlayer[i].port] = -1;
+      }
+    }
+    else
+    {
+      colors[GwPlayer[i].port] = 0;
+    }
+  }
 
-    for (i = 0; i < 4; i++) {
-        if (i == arg1) {
-            if (GwPlayer[i].flags & 1) {
-                cpu = 1;
-                colors[GwPlayer[i].port] = -0x8000;
-            } else {
-                func_8007155C(arg0, masks.bit[GwPlayer[i].port]);
-                colors[GwPlayer[i].port] = -1;
-            }
-        } else {
-            colors[GwPlayer[i].port] = 0;
-        }
-    }
-    if (cpu != 0) {
-        func_8006DA1C(arg0, 2, 2);
-        func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8)D_800C5210);
-        func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8)D_800C5210);
-        func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8)D_800C5210);
-        func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8)D_800C5210);
-        func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8)D_800C5210);
-        func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8)D_800C5210);
-        func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8)D_800C5210);
-        D_800C5210 = D_800C5214;
-    } else {
-        func_800710A4(colors[0], colors[1], colors[2], colors[3]);
-    }
-    while (func_8006FCC0(arg0) != 0) {
-        HuPrcVSleep();
-    }
-    func_80071264();
+  if (cpu != 0)
+  {
+    func_8006DA1C(arg0, 2, 2);
+    func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8) D_800C5210);
+    func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8) D_800C5210);
+    func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8) D_800C5210);
+    func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8) D_800C5210);
+    func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8) D_800C5210);
+    func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8) D_800C5210);
+    func_80070FF8(colors[0], colors[1], colors[2], colors[3], (u8) D_800C5210);
+    D_800C5210 = D_800C5214;
+  }
+  else
+  {
+    func_800710A4(colors[0], colors[1], colors[2], colors[3]);
+  }
+  while (func_8006FCC0(arg0) != 0)
+  {
+    HuPrcVSleep();
+  }
+
+  func_80071264();
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/4E530", func_8004DBD4);
-#endif
 void WaitForTextConfirmation(s16 arg0) {
     s16 colors[4];
     PortMasks masks = D_800CB0EC;
