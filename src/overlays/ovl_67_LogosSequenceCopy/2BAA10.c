@@ -15,7 +15,7 @@ s32 D_800F6F70_LogosSequenceCopy = 0;
 s32 D_800F6F74_LogosSequenceCopy[] = {0x00110000, 0x00110001, 0x00110002};
 
 typedef struct UnkStruct {
-    char unk_00[0x10];
+    PB_PTR32 unk_00[4]; /* an nnsched client: pointer-wide, as it is 24 bytes on the host */
 } UnkStruct; //sizeof 0x10
 
 void func_800F6610_LogosSequenceCopy(unkLogoStruct* arg0, s16 arg1, s16 arg2, s16 arg3, u16 arg4) {
