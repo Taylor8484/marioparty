@@ -1,5 +1,11 @@
 #include "common.h"
 #include "spaces.h"
+s32 D_800C42C0[] = { 0xA010C, 0xA010D, 0xA010E, 0xA010F, 0xA0110, 0xA0111, 0xA0109, 0xA0105, 0xA0108, 0xA0107, 0xA0106 };
+s16 D_800C42EC[][4] = { { 0, 2, 0, 1 }, { 0, 2, -1, 0 }, { -2, 0, 0, 1 }, { -2, 0, -1, 0 } };
+s16 D_800C430C[4] = { 0x42, 0xFC, 0x42, 0xFC };
+s16 D_800C4314[4] = { 0x1E, 0x1E, 0xD2, 0xD2 };
+s32 D_800C431C[] = { 0xA010C, 0xA010D, 0xA010E, 0xA010F, 0xA0110, 0xA0111 };
+s32 D_800C4334[] = { 0x6E, 0x6F, 0x70, 0x71, 0x72, 0x73 };
 
 typedef struct {
     /* 0x00 */ s8 type;
@@ -21,12 +27,6 @@ extern s16 D_800D6198[4];
 extern s16 D_800D61A0[4];
 extern unk_Struct02* D_800D61A8[4];
 extern s16 D_800D61B8;
-extern s32 D_800C42C0[];
-extern s16 D_800C42EC[][4];
-extern s16 D_800C430C[4];
-extern s16 D_800C4314[4];
-extern s32 D_800C431C[];
-extern s32 D_800C4334[];
 extern s8 D_800F384E;
 extern u16 D_800F5278;
 extern s32 D_800F6598;
