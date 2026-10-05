@@ -8,7 +8,7 @@ typedef struct {
     /* 0x06 */ u16 stat;
 } OvlCallEntry;
 
-extern s32 D_800C58C0[];
+s32 D_800C58C0[] = { 0x72, 0x73, 0x74, 0x75, 0x76 }; /* board overlays by map number */
 extern s16 D_800D8950;
 extern s16 D_800D8952;
 extern s16 D_800D8954;

@@ -208,3 +208,5 @@ D_800C18D4 = B980Config + 0x60;
 D_800C18DC = B980Config + 0x68;
 D_800C18E0 = B980Config + 0x6C;
 D_800C18F4 = B980Config + 0x80;
+/* objmain.c objmainChr D_800C59A8[6]: a byte of entry 0, read by the DesertDash overlay */
+D_800C59A9 = D_800C59A8 + 0x1;

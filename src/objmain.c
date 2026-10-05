@@ -84,18 +84,87 @@ typedef struct omDBGMenuItem {
     /* 0x08 */ char* str;
 } omDBGMenuItem; // sizeof 0xC
 
+extern const char D_800CB574[], D_800CB57C[], D_800CB584[], D_800CB58C[], D_800CB594[], D_800CB59C[];
+/* Board/minigame pairs read by omMain (meaning not traced). */
+u8 D_800C58E0[56][2] = {
+    { 0x00, 0x14 }, { 0x02, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x01, 0x14 }, { 0x01, 0x14 },
+    { 0x00, 0x14 }, { 0x01, 0x14 }, { 0x01, 0x14 }, { 0x00, 0x14 }, { 0x01, 0x14 }, { 0x00, 0x14 }, { 0x02, 0x14 }, { 0x01, 0x14 },
+    { 0x01, 0x14 }, { 0x02, 0x14 }, { 0x00, 0x14 }, { 0x01, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x01, 0x14 },
+    { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x01, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 },
+    { 0x00, 0x14 }, { 0x02, 0x14 }, { 0x00, 0x14 }, { 0x02, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x02, 0x14 }, { 0x00, 0x14 },
+    { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x01, 0x14 }, { 0x00, 0x14 }, { 0x01, 0x14 }, { 0x01, 0x14 }, { 0x01, 0x14 }, { 0x00, 0x14 },
+    { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }
+};
+u8 D_800C5950[11][2] = {
+    { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x01, 0x14 }, { 0x00, 0x14 }, { 0x01, 0x14 }, { 0x01, 0x14 },
+    { 0x00, 0x14 }, { 0x00, 0x14 }, { 0x00, 0x14 }
+};
+u8 D_800C5966 = 0;
+s32 D_800C5968 = 999; // previous overlay
+u16 D_800C596C = 0xFFFF;
+s16 D_800C596E = 0;
+s16 D_800C5970 = 0; /* unreferenced */
+u16 D_800C5972 = 0;
+u16 D_800C5974 = 1;
+u16 D_800C5976 = 1;
+u8 D_800C5978 = 0;
+s16 D_800C597A = -1;
+u16 D_800C597C = 0;
+s16 omovlhisidx = -1;
+s16 D_800C5980 = 0; /* unreferenced */
+u8 D_800C5982 = 1;
+omObjData* D_800C5984 = NULL;
+s16 D_800C5988 = 0;
+s16 D_800C598A = 0;
+s16 D_800C598C = 0; //dtor index
+s16 D_800C598E = 0; /* unreferenced */
+unkProcessStruct* D_800C5990 = NULL;
+s16 D_800C5994 = 0;
+s16 D_800C5996 = -1;
+u16 D_800C5998 = 1;
+s16 D_800C599A = 0;
+s16 D_800C599C = 0;
+s16 D_800C599E = 1;
+s16 D_800C59A0 = 1;
+u8 D_800C59A2 = 0;
+s8 D_800C59A3 = 0;
+u8 D_800C59A4 = 1;
+s16 D_800C59A6 = -1;
+/* Per-character entries (index, character, two file ids, scale); the DesertDash overlay reads the
+   low byte of entry 0's index through D_800C59A9 (undefined_syms.txt). */
+typedef struct objmainChr {
+    s16 index;
+    s16 unk02;
+    s16 chr;
+    s16 unk06;
+    s32 file0;
+    s32 file1;
+    f32 scale;
+} objmainChr;
+objmainChr D_800C59A8[6] = {
+    { 0, 0, 1, 0, 0x9F, 0x9E, 1.0f }, { 1, 0, 2, 0, 0x9F, 0x9E, 1.0f }, { 2, 0, 6, 0, 0x9F, 0x9E, 1.0f },
+    { 3, 0, 3, 0, 0x9F, 0x9E, 0.9f }, { 4, 0, 4, 0, 0x9F, 0x9E, 0.8f }, { 5, 0, 5, 0, 0x9F, 0x9E, 0.7f },
+};
+u8 D_800C5A20 = 0;
+u8 D_800C5A21 = 0;
+omDBGMenuItem D_800C5A24[6] = {
+    { 0, 0x84, 0x70, 0x06, 0x0E, (char*)D_800CB59C },
+    { 0, 0x84, 0x78, 0x06, 0x0E, (char*)D_800CB594 },
+    { 0, 0x84, 0x80, 0x06, 0x0E, (char*)D_800CB58C },
+    { 0, 0x84, 0x88, 0x06, 0x0E, (char*)D_800CB584 },
+    { 0, 0x84, 0x90, 0x06, 0x0E, (char*)D_800CB57C },
+    { 0, 0x84, 0x98, 0x06, 0x0E, (char*)D_800CB574 },
+};
+
 typedef struct omSaftyFrameColor {
     u8 r;
     u8 g;
     u8 b;
 } omSaftyFrameColor;
 
-extern omDBGMenuItem D_800C5A24[6];
 extern u16 D_800EE324[];
 extern u16 D_800ED55C[];
 extern u8 D_800F384E;
-extern u8 D_800C5966;
-extern u16 D_800C5974;
 extern s16 D_800D89BE;
 extern s16 D_800D89C0;
 extern omSaftyFrameColor saftyFrameColor;
@@ -141,17 +210,7 @@ extern Vec3f CenterM[];
 void omSystemKeyCheck(omObjData*);
 
 
-extern u16 D_800C5972;
-extern s16 D_800C59A6;
-extern s16 D_800C5994;
-extern u8 D_800C59A2;
-extern u8 D_800C59A4;
-extern u8 D_800C5A20;
-extern u8 D_800C5A21;
 extern u8 D_800D89B0;
-extern s16 D_800C599C;
-extern s16 D_800C59A0;
-extern u16 D_800C596C;
 extern u8 D_800F3705;
 extern u8 D_800C4250[];
 extern u8 omSysPauseEnableFlag;
@@ -194,20 +253,11 @@ void func_80060234(s8);
 
 
 extern s32 D_800F09F4; // current overlay
-extern s32 D_800C5968; // previous overlay
-extern u8 D_800C5982;
-extern u16 D_800C597C;
 extern u16 D_800F3184;
 extern u8 D_800ED552;
 extern u16 D_800F3F30;
 extern u16 D_800ED726;
 extern u16 D_800F64EC;
-extern u8 D_800C58E0[][2];
-extern u8 D_800C5950[][2];
-extern s8 D_800C59A3;
-extern s16 D_800C599A;
-extern s16 D_800C599E;
-extern u8 D_800C5978;
 
 void func_80060DFC(s8);
 void func_80060E20(s16, s16, s16);
@@ -236,20 +286,11 @@ extern omGrpData D_800ED618[10];
 void func_8005DAD4(omObjData*);
 
 
-extern s16 omovlhisidx;
 extern s16 D_800D89B2[];
 extern s16 D_800ED56C;
 extern s16 D_800ED550;
-extern omObjData* D_800C5984;
 extern s16 D_800F65BA;
 extern s16 D_800ED56C;
-extern s16 D_800C598A;
-extern s16 D_800C5988;
-extern s16 D_800C598C; //dtor index
-extern u16 D_800C5976;
-extern unkProcessStruct* D_800C5990;
-extern s16 D_800C5996;
-extern u16 D_800C5998;
 
 s16 func_80010ED4(s16, s16);
 s32 func_80012C7C(s16);
@@ -1027,17 +1068,17 @@ void omSystemKeyCheckSetup(void) {
     obj->work[1] = 0;
     obj->work[2] = 0;
 }
-INCLUDE_RODATA("asm/nonmatchings/objmain", D_800CB574);
+const char D_800CB574[] = " SE STP";
 
-INCLUDE_RODATA("asm/nonmatchings/objmain", D_800CB57C);
+const char D_800CB57C[] = " MUSSTP";
 
-INCLUDE_RODATA("asm/nonmatchings/objmain", D_800CB584);
+const char D_800CB584[] = " INFO  ";
 
-INCLUDE_RODATA("asm/nonmatchings/objmain", D_800CB58C);
+const char D_800CB58C[] = " LIGHT ";
 
-INCLUDE_RODATA("asm/nonmatchings/objmain", D_800CB594);
+const char D_800CB594[] = " RESET ";
 
-INCLUDE_RODATA("asm/nonmatchings/objmain", D_800CB59C);
+const char D_800CB59C[] = " CANCEL";
 
 void omDBGSystemKeyCheck(omObjData* obj) {
     s32 i;
