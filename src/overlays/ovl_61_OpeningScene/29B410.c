@@ -2,6 +2,16 @@
 #include "29B410.h"
 #include "engine/process.h"
 
+extern Vec3f D_800FD4D0_OpeningScene;
+extern Vec3f D_800FD4DC_OpeningScene;
+extern void* D_800FD434_OpeningScene[];
+extern s32 D_800FD738_OpeningScene;
+void func_800FB79C_OpeningScene(Vec3f*, Vec3f*, Vec3f*);
+void func_800FBAFC_OpeningScene(void);
+void func_800FBB94_OpeningScene(void);
+Object* func_800FBCC0_OpeningScene(s32 arg0, void* arg1);
+
+
 typedef struct OpeningModelDef {
     /* 0x00 */ s32 file;
     /* 0x04 */ f32 x;
@@ -102,28 +112,6 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F8D3
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F916C_OpeningScene);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F983C_OpeningScene);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F98F0_OpeningScene);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FA990_OpeningScene);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FAEFC_OpeningScene);
-
-void func_800FB358_OpeningScene(void) {
-    f32 f;
-    f32 g;
-
-    D_800FD708_OpeningScene = LoadFormFile(0x9001A, 0x299);
-    func_80026040(D_800FD708_OpeningScene);
-    func_80025F10(D_800FD708_OpeningScene, 1);
-    g = f = 0.0f;
-    while (TRUE) {
-        HuPrcSleep(0);
-        func_80027C1C(D_800FD708_OpeningScene, g, f, 0x20, 0x20);
-        f += 0.5f;
-    }
-}
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD508_OpeningScene);
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD514_OpeningScene);
@@ -146,6 +134,12 @@ INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD57
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD58C_OpeningScene);
 
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F983C_OpeningScene);
+
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F98F0_OpeningScene);
+
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FA990_OpeningScene);
+
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD5A4_OpeningScene);
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD5B0_OpeningScene);
@@ -166,12 +160,84 @@ INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD60
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD618_OpeningScene);
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD624_OpeningScene);
+void func_800FAEFC_OpeningScene(void) {
+    Vec3f sp10 = { 0.0f, 0.0f, 1000.0f };
+    Vec3f sp20 = D_800FD4DC_OpeningScene;
+    Vec3f sp30 = D_800FD4D0_OpeningScene;
+    Vec3f sp40[7] = {
+        { 175.0f, 125.0f, 400.0f },
+        { 250.0f, 0.0f, 500.0f },
+        { 175.0f, -175.0f, 600.0f },
+        { -175.0f, 125.0f, 400.0f },
+        { -250.0f, 0.0f, 500.0f },
+        { -175.0f, -175.0f, 600.0f },
+        { 0.0f, -250.0f, 600.0f },
+    };
+    s32 sp98[6] = { 0x17, 0x18, 0x1A, 0x19, 0x1B, 0x1C };
+    Vec3f spB0;
+    Vec3f spC0;
+    s32 i;
+    s32 m;
+    f32 t;
+    f32 s;
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD630_OpeningScene);
+    func_800FC394_OpeningScene(1);
+    func_800FBAFC_OpeningScene();
+    func_800FB79C_OpeningScene(&sp10, &sp20, &sp30);
+    func_800FB7F8_OpeningScene(60.0f, 80.0f, 8000.0f);
+    for (i = 0; i < sizeof(sp98) / sizeof(sp98[0]); i++) {
+        D_80110448_OpeningScene[i] = func_800FBCC0_OpeningScene((u8)sp98[i], D_800FD434_OpeningScene[i]);
+        func_800A0D00(&D_80110448_OpeningScene[i]->coords, sp40[i].x, sp40[i].y, sp40[i].z);
+        func_800A0D00(&D_80110448_OpeningScene[i]->unk_18, 0.0f, 0.0f, 1.0f);
+        MBModelDispOff(D_80110448_OpeningScene[i]);
+        MBMotionSet(D_80110448_OpeningScene[i], 0, 0);
+    }
+    D_80110448_OpeningScene[i] = func_800FBCC0_OpeningScene(7, D_800FD434_OpeningScene[i]);
+    func_80025EB4(*D_80110448_OpeningScene[i]->unk_3C->unk_40, 0, 0);
+    func_800A0D00(&D_80110448_OpeningScene[i]->coords, sp40[i].x, sp40[i].y, sp40[i].z);
+    func_800A0D00((Vec3f*)&D_80110448_OpeningScene[i]->xScale, 1.0f, 1.0f, 1.0f);
+    func_800A0D00(&D_80110448_OpeningScene[i]->unk_18, 0.0f, 0.0f, 1.0f);
+    MBModelDispOff(D_80110448_OpeningScene[i]);
+    MBMotionSet(D_80110448_OpeningScene[i], 0, 0);
+    func_8002890C(0xFF, 0xFF, 0xFF);
+    for (i = 0; i < 7; i++) {
+        MBModelDispOn(D_80110448_OpeningScene[i]);
+        D_80110448_OpeningScene[i]->unk_0A |= 1;
+    }
+    func_80072724(0xFF, 0xFF, 0xFF);
+    func_800726AC(0, 0x18);
+    for (i = 50; i < 100; i += 2) {
+        t = i * 0.01f;
+        for (m = 0; m < 7; m++) {
+            s = (t + t) * t;
+            func_800A0D00(&spB0, 0.0f, 0.0f, 0.0f);
+            func_800A0D50(&spC0, &sp40[m]);
+            func_800A0D00(&D_80110448_OpeningScene[m]->unk_18, spC0.x - spB0.x, spC0.y - spB0.y, spC0.z - spB0.z);
+            func_800A0D00(&D_80110448_OpeningScene[m]->coords, s * D_80110448_OpeningScene[m]->unk_18.x,
+                          s * D_80110448_OpeningScene[m]->unk_18.y, s * D_80110448_OpeningScene[m]->unk_18.z);
+        }
+        HuPrcSleep(0);
+    }
+    func_800FBB94_OpeningScene();
+    D_800FD738_OpeningScene = 1;
+    while (TRUE) {
+        HuPrcSleep(0);
+    }
+}
+void func_800FB358_OpeningScene(void) {
+    f32 f;
+    f32 g;
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD684_OpeningScene);
-
+    D_800FD708_OpeningScene = LoadFormFile(0x9001A, 0x299);
+    func_80026040(D_800FD708_OpeningScene);
+    func_80025F10(D_800FD708_OpeningScene, 1);
+    g = f = 0.0f;
+    while (TRUE) {
+        HuPrcSleep(0);
+        func_80027C1C(D_800FD708_OpeningScene, g, f, 0x20, 0x20);
+        f += 0.5f;
+    }
+}
 void func_800FB40C_OpeningScene(void) {
     Vec3f sp10 = { 349.0f, 29.25f, 0.0f };
     Vec3f sp20 = { 519.83f, 269.23f, 685.19f };
