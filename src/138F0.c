@@ -263,9 +263,19 @@ u32 func_80013234(AudioInfo* info, AudioInfo* lastInfo) {
     }
     cmdp = alAudioFrame(D_800D0B18.ACMDList[D_800D0DB8], &cmdLen, audioPtr, info->frameSamples);
     t = &info->task;
+#ifdef TARGET_PC
+    /* Host: the mixer runs each audio command as al emits it (games/mp1/src/port/audio), so the
+       PCM is already in audioPtr and the Acmd list stays empty: cmdLen is always 0. Skip only when
+       the synthesizer had nothing to do (retail's cmdLen 0), and send the task otherwise so the
+       reply, and with it the osAiSetNextBuffer chain above, still runs. */
+    if (D_800D0B18.g.drvr.head == NULL) {
+        return 0;
+    }
+#else
     if (cmdLen == 0) {
         return 0;
     }
+#endif
     func_800136C4(t, &info->msg, cmdp);
     osSendMesg(D_800D0B10, t, OS_MESG_BLOCK);
     D_800D0DB8 ^= 1;
