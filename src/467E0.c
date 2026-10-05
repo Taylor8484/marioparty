@@ -15,10 +15,41 @@ typedef struct {
     /* 0x04 */ s16 len;
 } LabelDef;
 
-extern LabelDef D_800C4E60[];
+/* Label strings (Shift-JIS) and the format string D_800CAF7C (rodata moved here from 43760 and
+   three unnamed subsegments). */
+const char D_800CAE60[] = "\x89\x45\x81\x63\x83P\x81J\x81[\x83\x80\x82\xC9\x82\xE0\x82\xC6\x81J\x82\xE9";
+const char D_800CAE78[] = "\x89\x45\x81@\x82n\x82\x96\x82\x85\x82\x92\x82\x96\x82\x89\x82\x85\x82\x97";
+const char D_800CAE90[] = "\x83\xBF\x81\x63\x82\xBB\x82\xA4\x82\xB3\x82\xCC\x82\xAB\x82\xE8\x82\xA9\x82\xA6";
+const char D_800CAEA8[] = "\x83\xBF\x81@\x82r\x82\x85\x82\x94\x82\x94\x82\x89\x82\x8E\x82\x87\x82\x93";
+const char D_800CAEC0[] = "\x83\xC0\x81\x63\x82\xDC\x82\xA6\x82\xCC\x82\xA9\x81J\x82\xDF\x82\xF1\x82\xC9\x82\xE0\x82\xC6\x81J\x82\xE9";
+const char D_800CAEE0[] = "\x83\xC0\x81\x63\x83P\x81J\x81[\x83\x80\x82\xF0\x82\xE2\x82\xDF\x82\xE9";
+const char D_800CAEF8[] = "\x87@\x81@\x82l\x82\x8F\x82\x96\x82\x85\x82\x93";
+const char D_800CAF08[] = "\x8En\x81@\x82\x61\x82\x81\x82\x83\x82\x8B\x81@\x82\x94\x82\x8F\x81@\x82\x66\x82\x81\x82\x8D\x82\x85";
+const char D_800CAF28[] = "\x83\xC0\x81@\x82\x61\x82\x81\x82\x83\x82\x8B";
+const char D_800CAF38[] = "\x83\xC0\x81@\x82l\x82\x81\x82\x90";
+const char D_800CAF44[] = "\x83\xBF\x81@\x82\x61\x82\x8C\x82\x8F\x82\x83\x82\x8B";
+const char D_800CAF54[] = "\x83\xBF\x81@\x82\x63\x82\x85\x82\x83\x82\x89\x82\x84\x82\x85";
+const char D_800CAF68[] = "\x81\xA7\x81@\x82\x62\x82\x88\x82\x8F\x82\x8F\x82\x93\x82\x85";
+const char D_800CAF7C[] = "\x09%2d\x08";
+const u32 D_800CAF84[3] = { 0, 0, 0 }; /* unreferenced zero tail up to 47320's rodata */
+LabelDef D_800C4E60[] = {
+    { (u8*)D_800CAF68, 4 },
+    { (u8*)D_800CAF54, 4 },
+    { (u8*)D_800CAF44, 3 },
+    { (u8*)D_800CAF38, 3 },
+    { (u8*)D_800CAF28, 3 },
+    { (u8*)D_800CAF08, 7 },
+    { (u8*)D_800CAEF8, 4 },
+    { (u8*)D_800CAEE0, 9 },
+    { (u8*)D_800CAEC0, 12 },
+    { (u8*)D_800CAEA8, 5 },
+    { (u8*)D_800CAE90, 10 },
+    { (u8*)D_800CAE78, 5 },
+    { (u8*)D_800CAE60, 9 },
+};
+
 extern u8 D_800F64F8;
 extern s16 D_800F3FF2;
-extern char D_800CAF7C[];
 
 
 void func_80045BE0(LabelWin* w) {

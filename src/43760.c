@@ -956,6 +956,3 @@ void func_8004501C(s32 arg0) {
     func_80042B60();
 }
 
-INCLUDE_RODATA("asm/nonmatchings/43760", D_800CAE60);
-
-INCLUDE_RODATA("asm/nonmatchings/43760", D_800CAE78);
