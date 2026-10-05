@@ -2,9 +2,17 @@
 #include "29B410.h"
 #include "engine/process.h"
 
+void func_800FBD14_OpeningScene(Object*, Vec3f*, f32);
+void func_800FC48C_OpeningScene(f32, f32, f32);
+void func_800FC4C0_OpeningScene(f32, f32, f32);
+void func_800FC4F4_OpeningScene(f32, f32, f32);
+void func_800FC5CC_OpeningScene(void* arg0, s32 arg1);
+
+
 extern Vec3f D_800FD6D0_OpeningScene;
 extern omObjData* D_800FD740_OpeningScene[];
 extern s16 D_800FD780_OpeningScene;
+extern const Vec3f D_800FD4D0_OpeningScene;
 void func_800FB40C_OpeningScene(void);
 void func_800FB608_OpeningScene(void);
 void func_800FC6BC_OpeningScene(s32, s32);
@@ -124,8 +132,76 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F7E5
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F86D0_OpeningScene);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F8D3C_OpeningScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD508_OpeningScene);
 
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD514_OpeningScene);
+
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD520_OpeningScene);
+
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD52C_OpeningScene);
+
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD538_OpeningScene);
+
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD544_OpeningScene);
+
+void func_800F8D3C_OpeningScene(void) {
+    Vec3f sp18 = { 680.75f, 60.31f, 655.42f };
+    Vec3f sp28 = { -13.46f, 51.22f, 920.31f };
+    Vec3f sp38 = D_800FD4D0_OpeningScene;
+    Vec3f sp48 = { -13.46f, 0.0f, 920.31f };
+    Vec3f sp58;
+    Vec3f sp68;
+    Vec3f sp78;
+    f32 k;
+    s32 i;
+
+    func_800FC48C_OpeningScene(sp18.x, sp18.y, sp18.z);
+    func_800FC4C0_OpeningScene(sp28.x, sp28.y, sp28.z);
+    func_800FC4F4_OpeningScene(0.0f, 1.0f, 0.0f);
+    func_800FB7F8_OpeningScene(30.0f, 10.0f, 8000.0f);
+    for (i = 0; i < 6; i++) {
+        MBModelDispOff(D_80110448_OpeningScene[i]);
+    }
+    func_800A0D50(&D_80110448_OpeningScene[6]->coords, &sp48);
+    func_800A0E80(&D_80110448_OpeningScene[6]->unk_18, &D_800FD6D0_OpeningScene, &D_80110448_OpeningScene[6]->coords);
+    func_800A0D50(&sp78, &D_80110448_OpeningScene[6]->coords);
+    func_800A0D00(&sp58, D_80110448_OpeningScene[6]->coords.x - D_800FD6D0_OpeningScene.x, 0.0f,
+                  D_80110448_OpeningScene[6]->coords.z - D_800FD6D0_OpeningScene.z);
+    func_800A14F0(&sp68, &sp58, &sp38);
+    guNormalize(&sp68.x, &sp68.y, &sp68.z);
+    MBMotionShiftSet(D_80110448_OpeningScene[6], -1, 0, 8, 2);
+    HuPrcSleep(8);
+    func_800A0D50(&sp58, &D_800FD6D0_OpeningScene);
+    func_800FBD48_OpeningScene(D_80110448_OpeningScene[6], &sp58, 20.0f);
+    HuPrcSleep(30);
+    k = 50.0f;
+    func_800A0D00(&sp58, sp68.x * k + sp78.x, sp68.y * k + sp78.y, sp68.z * k + sp78.z);
+    func_800FBD48_OpeningScene(D_80110448_OpeningScene[6], &sp58, 20.0f);
+    HuPrcSleep(20);
+    MBMotionShiftSet(D_80110448_OpeningScene[6], 2, 0, 8, 2);
+    func_800FBD14_OpeningScene(D_80110448_OpeningScene[6], &sp58, 50.0f);
+    HuPrcSleep(10);
+    func_800FC5CC_OpeningScene((void*)0x43E, 0);
+    HuPrcSleep(40);
+    k = -50.0f;
+    func_800A0D00(&sp58, sp68.x * k + sp78.x, sp68.y * k + sp78.y, sp68.z * k + sp78.z);
+    func_800FBD48_OpeningScene(D_80110448_OpeningScene[6], &sp58, 20.0f);
+    HuPrcSleep(20);
+    MBMotionShiftSet(D_80110448_OpeningScene[6], 2, 0, 8, 2);
+    func_800FBD14_OpeningScene(D_80110448_OpeningScene[6], &sp58, 100.0f);
+    HuPrcSleep(40);
+    func_800FC724_OpeningScene();
+    HuPrcSleep(60);
+    func_800FC5CC_OpeningScene((void*)0x43F, 0);
+    k = 0.0f;
+    func_800A0D00(&sp58, sp68.x * k + sp78.x, sp68.y * k + sp78.y, sp68.z * k + sp78.z);
+    func_800FBD48_OpeningScene(D_80110448_OpeningScene[6], &sp58, 20.0f);
+    HuPrcSleep(20);
+    MBMotionShiftSet(D_80110448_OpeningScene[6], 2, 0, 8, 2);
+    func_800FBD14_OpeningScene(D_80110448_OpeningScene[6], &sp58, 50.0f);
+    HuPrcSleep(50);
+    MBMotionSet(D_80110448_OpeningScene[6], -1, 2);
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800F916C_OpeningScene);
 
 void func_800F983C_OpeningScene(void) {
@@ -152,24 +228,6 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FA99
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FAEFC_OpeningScene);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FB358_OpeningScene);
-
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD508_OpeningScene);
-
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD514_OpeningScene);
-
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD520_OpeningScene);
-
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD52C_OpeningScene);
-
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD538_OpeningScene);
-
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD544_OpeningScene);
-
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD550_OpeningScene);
-
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD55C_OpeningScene);
-
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD568_OpeningScene);
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD574_OpeningScene);
 
