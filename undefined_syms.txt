@@ -225,3 +225,5 @@ D_800C54E4 = D_800C54D8 + 0xC;
 D_800C54E8 = D_800C54D8 + 0x10;
 D_800C54EC = D_800C54D8 + 0x14;
 D_800C54F4 = D_800C54D8 + 0x1C;
+/* 2C0C0.c: retail indexes D_800C4178 from one entry earlier (entry 0 = the last word of D_800C4140) */
+D_800C4174 = D_800C4178 - 0x4;
