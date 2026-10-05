@@ -121,9 +121,17 @@ void func_8001A0F0(void) {
     func_8000BE98(&D_1778BC0, &D_1832AE0, 0, 0, 0);
     D_800C59A0 = 1;
     D_800C599E = 1;
+#ifdef TARGET_PC
+    /* Host: temp_s1 views B980's 32-bit config block (B980Config); file_1ACF0_struct's pointer
+       fields are 8 bytes here, so write the words at their N64 offsets. The values are ROM offsets. */
+    ((s32*)temp_s1)[0x24 / 4] = (s32)(intptr_t)&D_1CECC60;
+    ((s32*)temp_s1)[0x28 / 4] = (s32)(intptr_t)&D_1CED490;
+    ((s32*)temp_s1)[0x40 / 4] = 0x14;
+#else
     temp_s1->unk_24 = &D_1CECC60;
     temp_s1->unk_28 = &D_1CED490;
     temp_s1->unk_40 = 0x14;
+#endif
 #ifdef TARGET_PC
     {
         /* Host: the N64 gives the sound engine a fixed 512 KiB at 0x802E0000. The host al

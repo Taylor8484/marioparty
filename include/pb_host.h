@@ -13,6 +13,9 @@
  *   PB_ROM_ADDR(a)  host only: a ROM offset that the N64 links as a symbol (see below).
  *   PB_N64_ADDR(T, a)  an N64 address kept as data that the host never dereferences (the
  *              overlay segment table): ((T)(a)) on N64, through uintptr_t on the host.
+ *   PB_N64_RAM(a, s)  a fixed N64 RAM region the game uses as a buffer (heaps at 0x80120000...):
+ *              (void *)(a) on N64; on the host a zeroed block of PB_N64_RAM_SIZE(s) = 2 * s bytes
+ *              (host structures are wider), the same block for the same address every time.
  *   PB_HOSTCAST(T, x)  ((T)(x)) on the host, (x) on N64: a conversion the N64 code performs
  *              implicitly (an int passed where a pointer is expected, or back), made explicit
  *              for the host only.
@@ -46,11 +49,23 @@ typedef uintptr_t PB_UPTR32;
    offset, as on the N64. Never dereferenced: ROM reads go through PI DMA. */
 #define PB_ROM_ADDR(a) (*(u8 (*)[])(uintptr_t)(a))
 #define PB_N64_ADDR(T, a) ((T)(uintptr_t)(a))
+void *pb_n64_ram(u32 addr, u32 size); /* host runtime (games/mp1/host/src/host_data.c) */
+void pb_ovl_load(s32 index);          /* host overlay loader (games/mp1/host/src/host_ovl.c) */
+#define PB_N64_RAM(a, s) pb_n64_ram((u32)(a), (u32)(s))
+#define PB_N64_RAM_SIZE(s) ((s) * 2)
+/* Big-endian ROM data read into host memory: swap in place after the DMA. Host only; the N64
+   code paths never call these. */
+static inline u32 pb_bswap32(u32 x) { return (x >> 24) | ((x >> 8) & 0xFF00) | ((x << 8) & 0xFF0000) | (x << 24); }
+static inline u16 pb_bswap16(u16 x) { return (u16)((x >> 8) | (x << 8)); }
+static inline void pb_swap32_array(void *p, size_t n) { u32 *w = (u32 *)p; while (n--) { *w = pb_bswap32(*w); w++; } }
+static inline void pb_swap16_array(void *p, size_t n) { u16 *h = (u16 *)p; while (n--) { *h = pb_bswap16(*h); h++; } }
 #else
 typedef s32 PB_PTR32;
 typedef u32 PB_UPTR32;
 #define PB_HOSTCAST(T, x) (x)
 #define PB_N64_ADDR(T, a) ((T)(a))
+#define PB_N64_RAM(a, s) ((void *)(a))
+#define PB_N64_RAM_SIZE(s) (s)
 #endif
 
 #endif /* PB_HOST_H */

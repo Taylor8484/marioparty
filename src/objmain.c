@@ -933,7 +933,7 @@ void omMain(void) {
                 D_800C59A2 = 0;
                 D_800C5A21 = 0;
             }
-            MakeTempHeap((void*)0x80120000, 0x20000);
+            MakeTempHeap(PB_N64_RAM(0x80120000, 0x20000), PB_N64_RAM_SIZE(0x20000));
             for (i = 0; i < 4; i++) {
                 func_8006CD0C(i);
             }
@@ -1626,13 +1626,28 @@ u16 func_80060AB4(void) {
 void func_80060AF0(void) {
     file_1ACF0_struct* data = func_8000B2BC();
 
+#ifdef TARGET_PC
+    /* host: data views B980's 32-bit block; file_1ACF0_struct's pointers are wider here */
+#define PB_B980W(off) (((s32*)data)[(off) / 4])
+    PB_B980W(0x40) = D_800C599A + 20;
+#else
     data->unk_40 = D_800C599A + 20;
+#endif
     if (D_800C599E == 0) {
+#ifdef TARGET_PC
+        PB_B980W(0x4C) = 32;
+#else
         data->unk_4C = 32;
+#endif
         func_80010C30(&D_1832AE0, 0, 0, 0);
         func_8000BE98(&D_15396A0, &D_1778BC0, 0, 0, 0);
     } else {
+#ifdef TARGET_PC
+        PB_B980W(0x4C) = 45;
+#undef PB_B980W
+#else
         data->unk_4C = 45;
+#endif
         func_80010C30(&D_1BB8460, 0, 0, 0);
         func_8000BE98(&D_1778BC0, &D_1832AE0, 0, 0, 0);
     }
