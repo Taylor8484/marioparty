@@ -18,17 +18,9 @@ typedef struct OpeningModelEntry {
     /* 0x14 */ s32 unk14;
 } OpeningModelEntry; /* size = 0x18 */
 
-typedef struct OpeningUnk1BC {
-    /* 0x00 */ s32 unk0;
-    /* 0x04 */ Vec3f unk4;
-    /* 0x10 */ f32 unk10;
-    /* 0x14 */ s16 unk14;
-    /* 0x16 */ u16 unk16;
-} OpeningUnk1BC;
 
 extern s32 D_800FD704_OpeningScene;
 extern OpeningModelEntry D_800FD0FC_OpeningScene[];
-extern OpeningUnk1BC D_800FD1BC_OpeningScene;
 extern Vec3f D_800FD4B8_OpeningScene;
 extern Vec3f D_800FD4C4_OpeningScene;
 
@@ -78,8 +70,8 @@ void func_800FC850_OpeningScene(s16, f32, f32, Vec3f*);
 omObjData* func_800FCB9C_OpeningScene(s32);
 
 
-extern Vec3f D_800FD4D0_OpeningScene;
-extern Vec3f D_800FD4DC_OpeningScene;
+extern const Vec3f D_800FD4D0_OpeningScene;
+extern const Vec3f D_800FD4DC_OpeningScene;
 extern void* D_800FD434_OpeningScene[];
 extern s32 D_800FD738_OpeningScene;
 void func_800FB79C_OpeningScene(Vec3f*, Vec3f*, Vec3f*);
@@ -110,6 +102,99 @@ void func_800FBD14_OpeningScene(Object* arg0, Vec3f* arg1, f32 arg2);
 void func_800FBD7C_OpeningScene(void);
 void func_800FC6BC_OpeningScene(void* arg0, s32 arg1);
 omObjData* func_800FCD20_OpeningScene(s32 arg0);
+
+/* .data (in address order) */
+s32 D_800FCF00_OpeningScene[] = { 0x9, 0x10001, 0xe0008, 0xe0009, 0xe000a, 0xe000b, 0xe000c, 0xe000f, 0xe0010, 0xe0011 };
+s32 D_800FCF28_OpeningScene[] = { 0x3, 0x10003, 0xe000d, 0xe000e };
+s32 D_800FCF38_OpeningScene[] = { 0x9, 0x20001, 0xe0013, 0xe001b, 0xe0015, 0xe0017, 0xe0018, 0xe0019, 0xe0014, 0xe001a };
+s32 D_800FCF60_OpeningScene[] = { 0x5, 0x20003, 0xe0013, 0xe0016, 0x20001, 0xe001a };
+s32 D_800FCF78_OpeningScene[] = { 0x6, 0x60001, 0x60097, 0xe001d, 0xe001e, 0xe0020, 0xe0021 };
+s32 D_800FCF94_OpeningScene[] = { 0x2, 0x60003, 0xe001f };
+s32 D_800FCFA0_OpeningScene[] = { 0x9, 0x30001, 0xe0024, 0xe0025, 0xe0026, 0xe0027, 0xe0029, 0xe002a, 0xe002b, 0xe002c };
+s32 D_800FCFC8_OpeningScene[] = { 0x2, 0x30003, 0xe0028 };
+s32 D_800FCFD4_OpeningScene[] = { 0x8, 0xe002d, 0xe002e, 0xe002f, 0xe0030, 0xe0031, 0xe0032, 0xe0033, 0x40001 };
+s32 D_800FCFF8_OpeningScene[] = { 0x3, 0x40003, 0xe0034, 0xe0035 };
+s32 D_800FD008_OpeningScene[] = { 0x7, 0xe0038, 0xe0039, 0xe003a, 0xe003d, 0xe003b, 0x50001, 0xe003e };
+s32 D_800FD028_OpeningScene[] = { 0x2, 0x50003, 0xe003c };
+s32 D_800FD034_OpeningScene[] = { 0x6, 0xe0040, 0xe0041, 0xe0042, 0xe0043, 0xe003f, 0xe0044 };
+s32 D_800FD050_OpeningScene = 0;
+OpeningModelDef D_800FD054_OpeningScene[] = {
+    { 0x90019, 0.0f, 0.0f, 0.0f, 0.0f, 0x1 },
+    { 0x90000, 0.0f, 378.0f, 0.0f, 0.0f, 0x1 },
+    { 0x9001b, -900.0f, 95.0f, 50.0f, 45.0f, 0x1 },
+    { 0x9001c, 1325.0f, 67.5f, 450.0f, 0.0f, 0x0 },
+    { 0x9001e, 190.0f, 315.0f, -1350.0f, 0.0f, 0x1 },
+    { 0x9001d, -400.0f, 35.0f, 985.0f, 75.0f, 0x1 },
+    { -1, 0.0f, 0.0f, 0.0f, 0.0f, 0x0 },
+};
+OpeningModelEntry D_800FD0FC_OpeningScene[] = {
+    { 0x19, D_800FCF78_OpeningScene, { 0.0f, 0.0f, 0.0f }, 0x1 },
+    { 0x1a, D_800FCFA0_OpeningScene, { 0.0f, 0.0f, 0.0f }, 0x1 },
+    { 0x17, D_800FCF00_OpeningScene, { 0.0f, 0.0f, 0.0f }, 0x1 },
+    { 0x1c, D_800FD008_OpeningScene, { 0.0f, 0.0f, 0.0f }, 0x1 },
+    { 0x18, D_800FCF38_OpeningScene, { 0.0f, 0.0f, 0.0f }, 0x1 },
+    { 0x1b, D_800FCFD4_OpeningScene, { 0.0f, 0.0f, 0.0f }, 0x1 },
+    { 0x7, D_800FD034_OpeningScene, { 50.0f, 0.0f, 900.0f }, 0x1 },
+    { -1, NULL, { 0.0f, 0.0f, 0.0f }, 0x0 },
+};
+OpeningModelDef2 D_800FD1BC_OpeningScene[] = {
+    { 0xe0000, { 0.0f, 0.0f, 0.0f }, 0.0f, 0, 1 },
+    { -1, { 0.0f, 0.0f, 0.0f }, 0.0f, 0, 0 },
+};
+OpeningModelDef2 D_800FD1EC_OpeningScene[] = {
+    { 0xe0000, { 0.0f, 0.0f, 0.0f }, 0.0f, 0, 1 },
+    { -1, { 0.0f, 0.0f, 0.0f }, 0.0f, 0, 0 },
+};
+OpeningObjDef D_800FD21C_OpeningScene[] = {
+    { 0x18, D_800FCF60_OpeningScene, { 0.0f, 0.0f, 180.0f }, 0x1 },
+    { 0x1b, D_800FCFF8_OpeningScene, { -150.0f, 0.0f, 180.0f }, 0x1 },
+    { 0x1c, D_800FD028_OpeningScene, { -300.0f, 0.0f, 180.0f }, 0x1 },
+    { 0x17, D_800FCF28_OpeningScene, { -450.0f, 0.0f, 180.0f }, 0x1 },
+    { 0x19, D_800FCF94_OpeningScene, { -600.0f, 0.0f, 180.0f }, 0x1 },
+    { 0x1a, D_800FCFC8_OpeningScene, { -750.0f, 0.0f, 180.0f }, 0x1 },
+    { 0x7, D_800FD034_OpeningScene, { -375.0f, 0.0f, -600.0f }, 0x1 },
+    { -1, NULL, { 0.0f, 0.0f, 0.0f }, 0x0 },
+};
+OpeningModelDef2 D_800FD2DC_OpeningScene[] = {
+    { 0xe0001, { 0.0f, 0.0f, 0.0f }, 0.0f, 0, 1 },
+    { 0xe0002, { 0.0f, 0.0f, 0.0f }, 0.0f, 0, 0 },
+    { 0xe0003, { 0.0f, 0.0f, 0.0f }, 0.0f, 0, 0 },
+    { -1, { 0.0f, 0.0f, 0.0f }, 0.0f, 0, 0 },
+};
+OpeningObjDef D_800FD33C_OpeningScene[] = {
+    { 0x18, D_800FCF60_OpeningScene, { -30.0f, 0.0f, 5014.5f }, 0x1 },
+    { 0x1b, D_800FCFF8_OpeningScene, { -0.7f, 0.0f, 3539.0f }, 0x1 },
+    { 0x1c, D_800FD028_OpeningScene, { 72.15f, 0.0f, 6164.0f }, 0x1 },
+    { 0x19, D_800FCF94_OpeningScene, { -23.85f, 0.0f, 8162.5f }, 0x1 },
+    { 0x1a, D_800FCFC8_OpeningScene, { -93.25f, 0.0f, 7336.5f }, 0x1 },
+    { -1, NULL, { 0.0f, 0.0f, 0.0f }, 0x0 },
+    { 0x17, D_800FCF28_OpeningScene, { -0.0f, 0.0f, 0.0f }, 0x1 },
+    { 0x7, D_800FD034_OpeningScene, { 0.0f, 0.0f, 20600.0f }, 0x1 },
+};
+s32 D_800FD3FC_OpeningScene[] = { 0x1, 0x10005 };
+s32 D_800FD404_OpeningScene[] = { 0x1, 0x2000d };
+s32 D_800FD40C_OpeningScene[] = { 0x1, 0x60005 };
+s32 D_800FD414_OpeningScene[] = { 0x1, 0x3000d };
+s32 D_800FD41C_OpeningScene[] = { 0x1, 0x4000d };
+s32 D_800FD424_OpeningScene[] = { 0x1, 0x5000d };
+s32 D_800FD42C_OpeningScene[] = { 0x1, 0x70001 };
+void* D_800FD434_OpeningScene[] = { D_800FD3FC_OpeningScene, D_800FD404_OpeningScene, D_800FD414_OpeningScene, D_800FD40C_OpeningScene, D_800FD41C_OpeningScene, D_800FD424_OpeningScene, D_800FD42C_OpeningScene };
+Gfx D_800FD450_OpeningScene[] = {
+    gsDPPipeSync(),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsDPSetCombineMode(G_CC_DECALRGBA, G_CC_DECALRGBA),
+    gsDPSetRenderMode(G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2),
+    gsDPSetPrimColor(0, 0, 0x00, 0x00, 0x00, 0xC0),
+    gsDPSetTexturePersp(G_TP_NONE),
+    gsDPSetTextureFilter(G_TF_POINT),
+    gsDPSetTextureLUT(G_TT_NONE),
+    gsDPSetAlphaDither(G_AD_DISABLE),
+    gsSPEndDisplayList(),
+};
+Vec3f D_800FD4A0_OpeningScene = { 341.0f, 28.0f, 0.0f };
+Vec3f D_800FD4AC_OpeningScene = { 50.0f, 0.0f, 900.0f };
+Vec3f D_800FD4B8_OpeningScene = { 541.27f, 2040.06f, 2711.59f };
+Vec3f D_800FD4C4_OpeningScene = { 945.37f, 463.56f, 33.24f };
 
 void func_800F65E0_OpeningScene(void) {
     Vec3f sp18;
@@ -211,9 +296,9 @@ omObjData* func_800F69F0_OpeningScene(void) {
     return obj;
 }
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD4D0_OpeningScene);
+const Vec3f D_800FD4D0_OpeningScene = { 0.0f, 1.0f, 0.0f };
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", D_800FD4DC_OpeningScene);
+const Vec3f D_800FD4DC_OpeningScene = { 0.0f, 0.0f, 0.0f };
 
 const Vec3f D_800FD4E8_OpeningScene = { 0.0f, 100.0f, 0.0f };
 
@@ -263,8 +348,8 @@ void func_800F6AB8_OpeningScene(void) {
         func_800A0D50(&D_80110448_OpeningScene[i]->coords, &D_800FD0FC_OpeningScene[i].pos);
         func_80025EB4(*D_80110448_OpeningScene[i]->unk_3C->unk_40, -1, 2);
     }
-    func_800FBD98_OpeningScene((OpeningModel*)sp30, D_800FD1BC_OpeningScene.unk0, 0, &D_800FD1BC_OpeningScene.unk4, D_800FD1BC_OpeningScene.unk16);
-    func_800A0D00(&sp20, 0.0f, D_800FD1BC_OpeningScene.unk10, 0.0f);
+    func_800FBD98_OpeningScene((OpeningModel*)sp30, D_800FD1BC_OpeningScene[0].file, 0, &D_800FD1BC_OpeningScene[0].pos, D_800FD1BC_OpeningScene[0].flags);
+    func_800A0D00(&sp20, 0.0f, D_800FD1BC_OpeningScene[0].rotY, 0.0f);
     func_800FC264_OpeningScene((OpeningModel*)sp30, &sp20);
     func_800FBEEC_OpeningScene((OpeningSprite*)sp370, 0xE0004, 0x47F4, 0, 50, 320, 120);
     sp4B0 = D_800FD4B8_OpeningScene;

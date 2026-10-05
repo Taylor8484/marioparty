@@ -64,7 +64,7 @@ extern s32 D_801102B8[16];
 extern omObjData* D_80110300[16];
 extern void* D_80110400[16];
 extern Vec3f D_800FD520_OpeningScene;
-extern Vec3f D_800FD4DC_OpeningScene;
+extern const Vec3f D_800FD4DC_OpeningScene;
 void func_800FBD7C_OpeningScene(void);
 void func_8004FB14(void);
 void func_8004E154(void);

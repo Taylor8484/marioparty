@@ -2128,7 +2128,7 @@ segments:
     bss_size: 0xD0
     subsegments:
     - [0x29B410, c]
-    - [0x2A1D30, data, 29B410]
+    - [0x2A1D30, .data, 29B410]
     - [0x2A2300, .rodata, 29B410]
     - {0x2A2500, type: bss, vram: 0x800FD6D0, name: ovl_61_bss}
   - type: code
