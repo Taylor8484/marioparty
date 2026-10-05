@@ -191,7 +191,7 @@ void func_80064B70(void) {
     func_800676BC();
 }
 unk65770Grp* func_80064C94(s16 num, u16 attr) {
-    unk65770Grp* grp = func_80023668(num * 4 + 0xC);
+    unk65770Grp* grp = func_80023668(num * sizeof(unk65770Obj*) + sizeof(unk65770Grp) - sizeof(unk65770Obj*));
 
     if (grp == NULL) {
         return NULL;
@@ -1096,7 +1096,7 @@ s16 func_800678A4(void* arg0) {
     anim->unkC = NULL;
     D_800EC700[idx] = anim;
     D_800ED3EC++;
-    frame = func_80023668(anim->unk10 * 0xC);
+    frame = func_80023668(anim->unk10 * sizeof(*frame));
     if (frame == NULL) {
         func_80067704(idx);
         return -1;
@@ -1132,12 +1132,12 @@ s16 func_800678A4(void* arg0) {
         }
     }
     if (anim->unk12 != 0) {
-        tbl = func_80023668(anim->unk12 * 4);
+        tbl = func_80023668(anim->unk12 * sizeof(*tbl));
         if (tbl == NULL) {
             goto fail;
         }
         anim->unk4 = tbl;
-        banks = func_80023668(anim->unk12 * 8);
+        banks = func_80023668(anim->unk12 * sizeof(*banks));
         if (banks != NULL) {
             goto ok;
         }

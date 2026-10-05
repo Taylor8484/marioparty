@@ -162,7 +162,11 @@ void func_8001A3DC(void) {
         HuPrcVSleep();
         func_8002B6C8();
         func_8001DFC0();
+#ifdef TARGET_PC
+        func_80025658(PB_HOSTCAST(void*, 0x02000000), PB_N64_ZBUFFER);
+#else
         func_80025658(PB_HOSTCAST(void*, 0x02000000), PB_HOSTCAST(void*, 0x3D0800));
+#endif
         pfClsScr();        
     }
 }
