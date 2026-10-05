@@ -507,7 +507,7 @@ segments:
       - [0xC5B10, .data, 48D90]
       - [0xC5BD0, .data, engine/spaces]
       - [0xC5DC0, data, 4D770]
-      - [0xC5E10, data, 4E530]
+      - [0xC5E10, .data, 4E530]
       - [0xC5ED0, .data, 51200]
       - [0xC5FE0, data, 53680]
       - [0xC60C0, data, 53C80]
