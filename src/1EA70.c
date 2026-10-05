@@ -173,7 +173,7 @@ void func_8001DE70(s16 arg0) {
         *(&D_800ED0A0 + i) = func_80023684(arg0 << 7, 0x7530);
         *(&D_800F33A8 + i) = func_80023684(arg0 << 8, 0x7530);
     }
-    D_800ECDE0 = func_80023684(arg0 * 0x24, 0x7530);
+    D_800ECDE0 = func_80023684(arg0 * sizeof(*D_800ECDE0), 0x7530);
     for (i = 0; i < arg0; i++) {
         temp_v1 = &D_800ECDE0[i];
         temp_v1->unk_00 = -1;

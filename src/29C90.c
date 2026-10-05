@@ -527,7 +527,7 @@ void func_8002AD30(s16 idx) {
     }
 }
 void func_8002ADF0(s32* arg0, s32 n) {
-    ((HitList*)arg0)->list = func_80023684((u16)n * 4, 0x55F0);
+    ((HitList*)arg0)->list = func_80023684((u16)n * sizeof(u16*), 0x55F0);
 }
 // scheduling: the list-pointer copy lands after the cb/probe spills (masked 2)
 #ifdef NON_MATCHING
