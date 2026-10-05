@@ -219,3 +219,6 @@ D_800C4174 = D_800C4178 - 0x4;
 D_800C5213 = D_800C5210 + 0x3;
 /* 43760.c: retail indexes D_800C4DD0 by minigame id from 1 */
 D_800C4DCF = D_800C4DD0 - 0x1;
+/* 3E560.c MBModelData D_800C4350[]: entry 0 scale and shadow scale */
+D_800C4358 = D_800C4350 + 0x8;
+D_800C435C = D_800C4350 + 0xC;
