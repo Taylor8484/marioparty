@@ -1,6 +1,9 @@
 #include "common.h"
 #include "PR/os.h"
 
+extern u8 D_800C0A70[];       /* unk1.c */
+extern u16 D_800C1670[16][16]; /* unk1.c */
+
 /* Character code -> font index: ASCII 0x20-0x5B and half-width katakana 0xA1-0xE0. Retail
    indexes them through address-only labels (D_800C5A50[c], D_800C5A0B[c]). */
 u8 D_800C5A70[60] = {
@@ -594,8 +597,6 @@ void func_80062524(s16 arg0, u8* arg1) {
 #define RGBA32_A(color) ((color) & 0xFF)
 #define FILL_COLOR_RGBA5551(r, g, b, a) ((GPACK_RGBA5551(r, g, b, a) << 16) | GPACK_RGBA5551(r, g, b, a))
 
-extern u8 D_800C0A70[];
-extern u16 D_800C1670[16][16];
 
 Gfx *pfDrawFonts(Gfx *gfx) {
     u16 count;
