@@ -481,7 +481,7 @@ segments:
       - [0xC1670, data, unk1]
       - [0xC2470, data, B980]
       - [0xC2500, data, 99E0]
-      - [0xC2870, data, engine/ovlman]
+      - [0xC2870, .data, engine/ovlman]
       - [0xC3CB0, data, 19E70]
       - [0xC3CC0, data, engine/graphics]
       - [0xC3D10, data, 1DE40]
