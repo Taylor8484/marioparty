@@ -1,6 +1,8 @@
 #include "common.h"
 #include "engine/pad.h"
 
+s32 LeoDriveExistBool = 0; /* read by the logos overlay */
+
 /* omObjData::unk_50 work block, typed as this unit uses it (compare PlayerWork/GroundWork in
    1130.c, which views the same block for players and floors). */
 typedef struct MgWork {

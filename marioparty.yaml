@@ -480,7 +480,9 @@ segments:
       - [0xB9670, data, font0]
       - [0xC1670, data, unk1]
       - [0xC2470, data, B980]
-      - [0xC2500, data, 99E0]
+      - [0xC2500, .data, 99E0]
+      - [0xC2510, .data, 156F0]
+      - [0xC25A0, data] # unreferenced table of 178 main-code function pointers (sprintf, gu*, Hudson math...); stays asm
       - [0xC2870, .data, engine/ovlman]
       - [0xC3CB0, .data, eeprom]
       - [0xC3CC0, .data, engine/graphics]
