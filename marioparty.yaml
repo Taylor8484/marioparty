@@ -584,7 +584,7 @@ segments:
       - [0xCBEB0, .rodata, 57330]
       - [0xCBFB0, .rodata, 59510]
       - [0xCBFC8, .rodata, 59E80]
-      - [0xCC130, .rodata, objmain]
+      - [0xCC138, .rodata, objmain]
       - [0xCC1D0, .rodata, 64FD0]
       - [0xCC220, .rodata, 65770]
       - [0xCC280, .rodata, 69010]
