@@ -21,12 +21,8 @@ void func_800FC724_OpeningScene(void);
 s32 func_800FC528_OpeningScene(s32, s32, s32, s32);
 extern s32 D_800FD700_OpeningScene;
 
-extern Vec3f D_800FD6F4_OpeningScene;
 extern f32 D_800FD794_OpeningScene;
 /* ovl_61 fork c: prototypes and data used by func_800FB670..func_800FCECC */
-extern Vec3f D_800FD6D0_OpeningScene;
-extern Vec3f D_800FD6DC_OpeningScene;
-extern Vec3f D_800FD6E8_OpeningScene;
 extern s32 D_800FD738_OpeningScene;
 extern u8 D_800C572F;
 s32 func_800141FC(s16);
@@ -80,6 +76,7 @@ s16 func_800FBD98_OpeningScene(OpeningModel* arg0, s32 arg1, s32 unused, Vec3f* 
 s32 func_800FBEA8_OpeningScene(OpeningModel* arg0);
 void func_800FBEEC_OpeningScene(OpeningSprite* arg0, s32 arg1, u16 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
 void func_800FC0BC_OpeningScene(OpeningSprite* arg0);
+void func_800FC0EC_OpeningScene(s16* arg0);
 void func_800FC110_OpeningScene(s16* arg0);
 void func_800FC134_OpeningScene(OpeningModel* arg0);
 typedef struct OpeningSpriteInfo {
@@ -106,3 +103,7 @@ void func_800FC77C_OpeningScene(Vec3f*, f32*, f32, Vec3f*);
 extern s16 D_800FD780_OpeningScene;
 extern u8 D_800FD782_OpeningScene[4];
 extern Gfx D_800FD450_OpeningScene[];
+
+/* Camera vectors, contiguous in bss (0x800FD6D0, 6DC, 6E8, 6F4): eye, at, up, and the
+   perspective parameters func_800FB7F8 sets. */
+extern Vec3f D_800FD6D0_OpeningScene[4];
