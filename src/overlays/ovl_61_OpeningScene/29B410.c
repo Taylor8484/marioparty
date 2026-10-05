@@ -328,6 +328,8 @@ void func_800FBD7C_OpeningScene(void) {
     func_8004E184();
 }
 
+// retail copies the flags stack argument into a second callee-saved register (frame 72 vs 64; masked 11)
+#ifdef NON_MATCHING
 s16 func_800FBD98_OpeningScene(OpeningModel* arg0, s32 arg1, s32 unused, Vec3f* arg2, s32 arg3) {
     Vec3f sp10;
     Vec3f sp20;
@@ -355,6 +357,9 @@ s16 func_800FBD98_OpeningScene(OpeningModel* arg0, s32 arg1, s32 unused, Vec3f* 
     }
     return arg0->model;
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FBD98_OpeningScene);
+#endif
 s32 func_800FBEA8_OpeningScene(OpeningModel* arg0) {
     func_8002456C(arg0->model);
     if (arg0->self2 != NULL) {
@@ -362,6 +367,8 @@ s32 func_800FBEA8_OpeningScene(OpeningModel* arg0) {
     }
     return 0;
 }
+// FPR numbering of the final two divisions (masked 0, raw 20)
+#ifdef NON_MATCHING
 void func_800FBEEC_OpeningScene(OpeningSprite* arg0, s32 arg1, u16 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6) {
     void* temp_v0;
     OpeningSpriteObj* temp_v1;
@@ -383,6 +390,9 @@ void func_800FBEEC_OpeningScene(OpeningSprite* arg0, s32 arg1, u16 arg2, s32 arg
     temp_v1 = func_800675F4(arg0->group, 0);
     func_80067354(arg0->group, 0, (f32)arg5 / (f32)temp_v1->info->width, (f32)arg6 / (f32)temp_v1->info->height);
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FBEEC_OpeningScene);
+#endif
 void func_800FC0BC_OpeningScene(OpeningSprite* arg0) {
     func_80064D38(arg0->group);
     func_80067704(arg0->sprite);
@@ -525,6 +535,8 @@ void func_800FC77C_OpeningScene(Vec3f* arg0, f32* arg1, f32 arg2, Vec3f* arg3) {
     arg3->y = func_80022D9C(ys, ts, arg2);
     arg3->z = func_80022D9C(zs, ts, arg2);
 }
+// one addu operand order (masked 0, raw 1)
+#ifdef NON_MATCHING
 void func_800FC850_OpeningScene(s16 arg0, f32 arg1, f32 arg2, Vec3f* arg3) {
     Vec3f pts[4];
     f32 ts[4];
@@ -558,6 +570,9 @@ void func_800FC850_OpeningScene(s16 arg0, f32 arg1, f32 arg2, Vec3f* arg3) {
     ts[3] = step * (f32)(idx + 2);
     func_800FC77C_OpeningScene(pts, ts, arg2, arg3);
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_61_OpeningScene/29B410", func_800FC850_OpeningScene);
+#endif
 
 void func_800FCAB0_OpeningScene(omObjData* arg0) {
     f32 temp_f20;
