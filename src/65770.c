@@ -433,83 +433,108 @@ void func_800656E4(unk65770Obj* obj, unk65770Obj* a, unk65770Obj* b) {
     obj->unk64 = a;
     obj->unk68 = b;
 }
-// register allocation: pri computed via a temp (masked 27)
-#ifdef NON_MATCHING
-unk65770Obj* func_80065700(void) {
-    unk65770Bucket bucket[256];
-    unk65770Grp* grp;
-    unk65770Obj* obj;
-    unk65770Obj* s2;
-    s16 min = -1;
-    s16 max = 0;
-    s16 pri;
-    s16 i;
-    s16 j;
+// decomp-permuter
+unk65770Obj *func_80065700(void)
+{
+  unk65770Bucket bucket[256];
+  unk65770Grp *grp;
+  unk65770Obj *obj;
+  unk65770Obj *s2;
+  s16 min = -1;
+  s16 max = 0;
+  s16 pri;
+  s16 i;
+  s16 j;
+  s2 = 0;
+  D_800ECB20 = 0;
+  grp = D_800ECB04;
+  for (pri = 0; pri < 256; pri++)
+  {
+    bucket[pri].head = (bucket[pri].tail = 0);
+  }
 
-    s2 = NULL;
-    D_800ECB20 = 0;
-    grp = D_800ECB04;
-    for (pri = 0; pri < 256; pri++) {
-        bucket[pri].head = bucket[pri].tail = NULL;
-    }
-    for (; grp != NULL; grp = grp->next) {
-        for (i = 0; i < grp->count; i++) {
-            obj = grp->obj[i];
-            if (obj->unk20 & 0x8000) {
-                continue;
+  for (; grp != 0; grp = grp->next)
+  {
+    for (i = 0; i < grp->count; i++)
+    {
+      obj = grp->obj[i];
+      if (obj->unk20 & 0x8000)
+      {
+        continue;
+      }
+      pri = obj->unk10 >> 8;
+ do { } while (0);
+      if (min < 0)
+      {
+        min = (max = pri);
+        bucket[max].head = (bucket[max].tail = obj);
+      }
+      else
+      {
+        if (pri <= max)
+        {
+          for (j = pri; j < (max + 1); j++)
+          {
+            s2 = bucket[j].tail;
+            if ((s2 != 0) && (obj->unk10 <= s2->unk10))
+            {
+              if ((bucket[j].head != 0) && (bucket[j].head->unk10 >= obj->unk10))
+              {
+                s2 = bucket[j].head;
+              }
+              break;
             }
-            pri = obj->unk10 >> 8;
-            if (min < 0) {
-                min = max = pri;
-                bucket[max].head = bucket[max].tail = obj;
-            } else {
-                if (pri <= max) {
-                    for (j = pri; j < max + 1; j++) {
-                        s2 = bucket[j].tail;
-                        if (s2 != NULL && obj->unk10 <= s2->unk10) {
-                            if (bucket[j].head != NULL && bucket[j].head->unk10 >= obj->unk10) {
-                                s2 = bucket[j].head;
-                            }
-                            break;
-                        }
-                    }
-                    if (j == max + 1) {
-                        s2 = bucket[max].tail;
-                    }
-                } else {
-                    s2 = bucket[max].tail;
-                }
-                for (; s2 != NULL; s2 = s2->unk64) {
-                    if (s2->unk10 < obj->unk10) {
-                        break;
-                    }
-                }
-                if (s2 != NULL) {
-                    func_800656E4(obj, s2, s2->unk68);
-                } else {
-                    func_800656E4(obj, NULL, bucket[min].head);
-                }
-                if (bucket[pri].head == NULL || obj->unk10 <= bucket[pri].head->unk10) {
-                    bucket[pri].head = obj;
-                }
-                if (bucket[pri].tail == NULL || obj->unk10 > bucket[pri].tail->unk10) {
-                    bucket[pri].tail = obj;
-                }
-                if (pri < min) {
-                    min = pri;
-                }
-                if (pri > max) {
-                    max = pri;
-                }
-            }
-            D_800ECB20++;
+          }
+
+          if (j == (max + 1))
+          {
+            s2 = bucket[max].tail;
+          }
         }
+        else
+        {
+          s2 = bucket[max].tail;
+        }
+        for (; s2 != 0; s2 = s2->unk64)
+        {
+          if (s2->unk10 < obj->unk10)
+          {
+            break;
+          }
+        }
+
+        if (s2 != 0)
+        {
+          func_800656E4(obj, s2, s2->unk68);
+        }
+        else
+        {
+          func_800656E4(obj, 0, bucket[min].head);
+        }
+        if ((bucket[pri].head == 0) || (obj->unk10 <= bucket[pri].head->unk10))
+        {
+          bucket[pri].head = obj;
+        }
+        if ((bucket[pri].tail == 0) || (obj->unk10 > bucket[pri].tail->unk10))
+        {
+          bucket[pri].tail = obj;
+        }
+        if (pri < min)
+        {
+          min = pri;
+        }
+        if (pri > max)
+        {
+          max = pri;
+        }
+      }
+      D_800ECB20++;
     }
-    return bucket[max].tail;
+
+  }
+
+  return bucket[max].tail;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/65770", func_80065700);
-#endif
 
 s16 func_80065A2C(unk65770Grp* grp) {
     unk65770Obj* obj;
