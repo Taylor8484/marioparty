@@ -1,6 +1,9 @@
 #include "common.h"
 #include "engine/process.h"
 #include "spaces.h"
+Vec2f D_800C51C0[] = { { -60.0f, -60.0f }, { 60.0f, -60.0f }, { -60.0f, 60.0f }, { 60.0f, 60.0f } };
+Vec2f D_800C51E0[] = { { -40.0f, -40.0f }, { 40.0f, -40.0f }, { -40.0f, 40.0f }, { 40.0f, 40.0f } };
+s32 D_800C5200[] = { 60, 25, 10 };
 
 typedef struct unkProcessUserDataStruct {
     Vec3f unk_00;

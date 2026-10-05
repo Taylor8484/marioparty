@@ -1,4 +1,7 @@
 #include "common.h"
+s16 D_800C4C30[7] = { 0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C };
+s32 D_800C4C40[] = { 0xA0000, 0xA0000, 0xA0000, 0xA0000, 0xA0000, 0xA0001 };
+s32 D_800C4C58[] = { 0xA0004, 0xA0005, 0xA0006, 0xA0007, 0xA0008, 0xA0009 };
 #ifdef TARGET_PC
 s32 LoadFormBinary(void*, u32); /* engine/ovlman.h; unprototyped here on the N64 */
 #endif
@@ -22,8 +25,6 @@ s32 func_80041664(s32);
 extern s16 D_800EE320;
 
 
-extern s32 D_800C4C40[];
-extern s32 D_800C4C58[];
 #ifdef TARGET_PC
 s16 func_80038D5C(unk2C0C0StructC0*, u16, s16, char*); /* host: matches the definition */
 #else
