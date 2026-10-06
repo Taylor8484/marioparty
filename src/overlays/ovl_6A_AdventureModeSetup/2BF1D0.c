@@ -22,8 +22,51 @@ void func_800F6678_AdventureModeSetup() {
     func_800F66A8_AdventureModeSetup();
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6A_AdventureModeSetup/2BF1D0", func_800F66A8_AdventureModeSetup);
+void func_800F66A8_AdventureModeSetup(void) {
+    s16 cam;
+    s32 i;
 
+    func_80101374_AdventureModeSetup();
+    func_80029090(0x32);
+    func_8001DE70(0x20);
+    omInitObjMan(0x3C, 0x3C);
+    func_80060088();
+    func_8006CEA0();
+    omSysPauseEnableFlag = 1;
+    omSetStatBit(omAddObj(0x7FDA, 0, 0, -1, func_80101338_AdventureModeSetup), 0xA0);
+    func_800178A0(1);
+    cam = func_800178E8();
+    func_80017660(cam, 0.0f, 0.0f, 320.0f, 240.0f);
+    func_800176C4(cam, 640.0f, 480.0f, 511.0f, 640.0f, 480.0f, 511.0f);
+    func_8001D494(cam, 45.0f, 80.0f, 8000.0f);
+    func_8001D420(0, &D_80102000_AdventureModeSetup, &D_8010200C_AdventureModeSetup, &D_80102018_AdventureModeSetup);
+    func_8001D57C(0);
+    func_8001D494(0, 45.0f, 80.0f, 8000.0f);
+    D_80102610_AdventureModeSetup = omAddObj(1, 0, 0, -1, func_801014C0_AdventureModeSetup);
+    func_800F6EEC_AdventureModeSetup();
+    func_800FBD98_AdventureModeSetup();
+    func_800FD3D8_AdventureModeSetup();
+    func_800FF064_AdventureModeSetup();
+    func_80100528_AdventureModeSetup();
+    func_801008B4_AdventureModeSetup();
+    func_80100D84_AdventureModeSetup();
+    func_80101274_AdventureModeSetup();
+    omAddPrcObj(func_800F70E4_AdventureModeSetup, 0x1002, 0x800, 0);
+    omAddPrcObj(func_800F71DC_AdventureModeSetup, 0x1002, 0x800, 0);
+    if (D_80101F70_AdventureModeSetup == 1) {
+        MBModelInit();
+        D_80101FF8_AdventureModeSetup = omAddObj(0x1E, 0, 0, -1, func_800F8FD8_AdventureModeSetup);
+    }
+    if (D_80101F70_AdventureModeSetup == 2) {
+        func_800532E0();
+        D_801025D4_AdventureModeSetup = func_8005077C(1);
+        for (i = 0; i < 7; i++) {
+            if (D_801025D4_AdventureModeSetup->unk_0C[i] != -1) {
+                func_800674BC(D_801025D4_AdventureModeSetup->unk_0A, i, 0x8000);
+            }
+        }
+    }
+}
 void func_800F6958_AdventureModeSetup(omObjData* arg0, Vec3f* arg1) {
     Vec3f vec;
     Vec3f* vecptr;
@@ -109,10 +152,52 @@ void func_800F6EEC_AdventureModeSetup() {
     omSetStatBit(D_80101F7C_AdventureModeSetup, 0xA0);
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6A_AdventureModeSetup/2BF1D0", func_800F6F34_AdventureModeSetup);
+void func_800F6F34_AdventureModeSetup(omObjData* arg0) {
+    AMSObjWork* work;
+    s32 i;
 
+    for (i = 0; i < arg0->mdlcnt; i++) {
+        arg0->model[i] = 0;
+    }
+    arg0->unk_50 = func_80023684(sizeof(AMSObjWork), 0x7918);
+    func_8009B770(arg0->unk_50, 0, sizeof(AMSObjWork));
+    work = arg0->unk_50;
+    work->unk_D8 = func_80023684(arg0->mtncnt * 4, 0x7918);
+    for (i = 0; i < arg0->mtncnt; i++) {
+        arg0->motion[i] = -1;
+    }
+    for (i = 0; i < arg0->mtncnt; i++) {
+        work->unk_D8[i][0] = 0;
+        work->unk_D8[i][1] = 0;
+    }
+    work->unk_56 = -1;
+    work->unk_52 = 0;
+    work->unk_A4 = 1.0f;
+    work->unk_C0 = 0xFFFF;
+    work->unk_4C = 0.5f;
+    work->unk_BC = 1.0f;
+    work->unk_60 = 0.0f;
+    func_80008FD0(arg0, 60.0f);
+    func_80008FDC(arg0, 150.0f);
+    func_80008FE8(arg0, 20.0f);
+    func_80008FF4(arg0, 30.0f);
+    func_80008FA0(arg0, 1000.0f);
+    work->unk_90 = work->unk_94 = work->unk_98 = 0.0f;
+    work->unk_B1 = -1;
+}
+// register allocation: the result is built in v1 and moved to v0 (masked 1, one extra move)
+#ifdef NON_MATCHING
+s32 func_800F70CC_AdventureModeSetup(s32 arg0) {
+    s32 ret = 1;
+
+    if (arg0 < 7) {
+        ret = arg0 < 1;
+    }
+    return ret;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6A_AdventureModeSetup/2BF1D0", func_800F70CC_AdventureModeSetup);
-
+#endif
 void func_800F70E4_AdventureModeSetup() {
     while (TRUE) {
         if (D_801025C0_AdventureModeSetup != 0) {
@@ -166,19 +251,646 @@ void func_800F71DC_AdventureModeSetup() {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6A_AdventureModeSetup/2BF1D0", func_800F72E0_AdventureModeSetup);
+void func_800F72E0_AdventureModeSetup(void) {
+    Vec3f vec;
+    s32 port;
+    s32 shown;
+    omObjData* obj;
+    AMSPiece* piece;
+    Vec3f* vecptr;
+    s32 i;
+    s32 j;
+    s32 k;
+    f32 target;
+    f32 step;
+    f32 diff;
+    GW_PLAYER* player;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6A_AdventureModeSetup/2BF1D0", func_800F86F8_AdventureModeSetup);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6A_AdventureModeSetup/2BF1D0", func_800F88C0_AdventureModeSetup);
+    shown = 0;
+    obj = D_80101FA0_AdventureModeSetup;
+    piece = &AMS_PIECES[obj->work[0]];
+    vecptr = &vec;
+    while (TRUE) {
+        switch (obj->work[1]) {
+            case 1:
+                if (D_80101F70_AdventureModeSetup != 2) {
+                    D_801025B4_AdventureModeSetup = func_8007194C(0x48, 0xBC, 5);
+                } else {
+                    D_801025B4_AdventureModeSetup = func_8007194C(0x48, 0xC0, 3);
+                }
+                port = func_8005B470(D_801025B4_AdventureModeSetup);
+                AMS_SEL.port = port;
+                func_8006E288(D_801025B4_AdventureModeSetup, 1);
+                func_80071FF4(D_801025B4_AdventureModeSetup, 0xDC);
+                if (D_80101F70_AdventureModeSetup != 3) {
+                    PlaySound(0x3C);
+                }
+                piece->unk40 = 4.0f;
+                piece->unk3C = 40.0f;
+                piece->unk58 = 0;
+                D_80101E40_AdventureModeSetup = 0.0f;
+                D_80101E44_AdventureModeSetup = 90.0f;
+                D_80101E48_AdventureModeSetup = 0.0f;
+                if (D_80101F70_AdventureModeSetup != 3) {
+                    func_800184BC(obj, 3);
+                }
+                obj->work[1] = 2;
+            case 2:
+                piece->unk3C += piece->unk40;
+                if (piece->unk3C > 40.0f) {
+                    piece->unk3C = 40.0f;
+                    piece->unk58++;
+                }
+                obj->trans.y -= piece->unk3C;
+                if (obj->trans.y < -4654.0f) {
+                    obj->work[1] = 3;
+                }
+                D_80102000_AdventureModeSetup.x = obj->trans.x;
+                D_80102000_AdventureModeSetup.y = obj->trans.y - func_800AEAC0(D_80101E44_AdventureModeSetup) * 500.0f + func_800AEAC0(D_80101E48_AdventureModeSetup) * 170.0f;
+                D_80102000_AdventureModeSetup.z = obj->trans.z + 400.0f;
+                D_8010200C_AdventureModeSetup.x = func_800AEAC0(D_80101E40_AdventureModeSetup) * 400.0f + obj->trans.x;
+                D_80102010_AdventureModeSetup.x = obj->trans.y - func_800AEAC0(D_80101E44_AdventureModeSetup) * 200.0f + func_800AEAC0(D_80101E48_AdventureModeSetup) * 170.0f;
+                D_80102014_AdventureModeSetup = obj->trans.z + 400.0f - func_800AEFD0(D_80101E40_AdventureModeSetup) * 400.0f;
+                D_80101E40_AdventureModeSetup += 0.4f;
+                if (D_80101E40_AdventureModeSetup > 20.0f) {
+                    D_80101E40_AdventureModeSetup = 20.0f;
+                }
+                D_80101E44_AdventureModeSetup -= 6.0f;
+                if (D_80101E44_AdventureModeSetup < 0.0f) {
+                    D_80101E44_AdventureModeSetup = 0.0f;
+                }
+                if (D_80101E44_AdventureModeSetup == 0.0f) {
+                    D_80101E48_AdventureModeSetup += 1.0f;
+                    if (D_80101E48_AdventureModeSetup > 90.0f) {
+                        D_80101E48_AdventureModeSetup = 90.0f;
+                    }
+                }
+                break;
+            case 3:
+                obj->work[1] = 4;
+            case 4:
+                piece->unk3C = 0.0f;
+                if (D_80101F70_AdventureModeSetup != 3) {
+                    func_800184BC(obj, 0);
+                }
+                switch (D_80101F70_AdventureModeSetup) {
+                    case 1:
+                        obj->work[1] = 0x20;
+                        break;
+                    case 2:
+                        obj->work[1] = 0x22;
+                        break;
+                    case 0:
+                    case 3:
+                        obj->work[1] = 7;
+                        break;
+                }
+                break;
+            case 5:
+                piece->unk40 = 2.0f;
+                piece->unk3C = -25.0f;
+                if (D_80101F70_AdventureModeSetup != 3) {
+                    func_800184BC(obj, 1);
+                }
+                obj->work[1] = 6;
+            case 6:
+                piece->unk3C += piece->unk40;
+                if (piece->unk3C > 0.0f) {
+                    piece->unk3C = 0.0f;
+                    if (D_80101F70_AdventureModeSetup != 3) {
+                        func_800184BC(obj, 0);
+                    }
+                    obj->work[1] = 7;
+                }
+                obj->trans.y -= piece->unk3C;
+                break;
+            case 7:
+                if (D_80101F70_AdventureModeSetup != 3) {
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x284, -1, -1);
+                } else {
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x26C, -1, -1);
+                }
+                func_80071C8C(D_801025B4_AdventureModeSetup, 1);
+                while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
+                    HuPrcVSleep();
+                }
+                obj->work[1] = 8;
+                break;
+            case 8:
+                if (D_80101F70_AdventureModeSetup != 3) {
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x285, -1, -1);
+                } else {
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x26D, -1, -1);
+                    while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
+                        HuPrcVSleep();
+                    }
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x26E, -1, -1);
+                }
+                while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
+                    HuPrcVSleep();
+                }
+                func_80071E80(D_801025B4_AdventureModeSetup, 1);
+                obj->work[1] = 9;
+                break;
+            case 9:
+                D_80101FA4_AdventureModeSetup->work[1] = 1;
+                obj->work[1] = 0xA;
+                break;
+            case 10:
+                if (D_80101FA4_AdventureModeSetup->work[1] == 0) {
+                    if (AMS_SEL.count != -1) {
+                        obj->work[1] = 0xB;
+                    } else {
+                        obj->work[1] = 0x26;
+                    }
+                }
+                break;
+            case 11:
+                if (D_80101F70_AdventureModeSetup != 3) {
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x286, -1, -1);
+                } else {
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x273, -1, -1);
+                }
+                func_80071C8C(D_801025B4_AdventureModeSetup, 1);
+                while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
+                    HuPrcVSleep();
+                }
+                func_80071E80(D_801025B4_AdventureModeSetup, 1);
+                obj->work[1] = 0xC;
+                break;
+            case 12:
+                D_80101FA8_AdventureModeSetup->work[1] = 1;
+                obj->work[1] = 0xD;
+                break;
+            case 13:
+                if (D_80101FA8_AdventureModeSetup->work[1] == 0) {
+                    if (AMS_SEL.count == 4) {
+                        obj->work[1] = 0x10;
+                    } else if (AMS_SEL.count != -1) {
+                        obj->work[1] = 0xE;
+                    } else {
+                        D_80101FA4_AdventureModeSetup->work[1] = 0xC;
+                        obj->work[1] = 0x1D;
+                    }
+                }
+                break;
+            case 14:
+                i = 0;
+                if (AMS_SEL.count != 4) {
+                    for (j = 0; j < 4; j++) {
+                        i += AMS_SEL.unk18[j] != -1;
+                    }
+                    if (i >= AMS_SEL.count) {
+                        if (D_80101F70_AdventureModeSetup != 3) {
+                            LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) (AMS_SEL.count + 0x286), -1, -1);
+                        } else {
+                            LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) (AMS_SEL.count + 0x273), -1, -1);
+                        }
+                        func_80071C8C(D_801025B4_AdventureModeSetup, 1);
+                        while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
+                            HuPrcVSleep();
+                        }
+                    }
+                }
+                obj->work[1] = 0xF;
+                break;
+            case 15:
+                D_80101FA8_AdventureModeSetup->work[1] = 6;
+                obj->work[1] = 0x10;
+                break;
+            case 16:
+                if (D_80101FA8_AdventureModeSetup->work[1] == 0) {
+                    obj->work[1] = 0x11;
+                }
+                break;
+            case 17:
+                D_80101FA8_AdventureModeSetup->work[1] = 8;
+                if (D_80101F70_AdventureModeSetup != 3) {
+                    obj->work[1] = 0x13;
+                } else {
+                    obj->work[1] = 0x14;
+                }
+                break;
+            case 19:
+                if (D_80101FA8_AdventureModeSetup->work[1] == 0) {
+                    if (AMS_SEL.count < 4) {
+                        for (j = AMS_SEL.count; j < 4; j++) {
+                            D_80101FD8_AdventureModeSetup[j]->work[1] = 1;
+                        }
+                        D_80101FA8_AdventureModeSetup->work[1] = 0x13;
+                    }
+                    obj->work[1] = 0x12;
+                }
+                break;
+            case 20:
+                if (D_80101FA8_AdventureModeSetup->work[1] == 0) {
+                    D_80101FA8_AdventureModeSetup->work[1] = 0x15;
+                    obj->work[1] = 0x13;
+                }
+                break;
+            case 18:
+                if (D_80101FA8_AdventureModeSetup->work[1] == 0) {
+                    if (D_80101F70_AdventureModeSetup != 3) {
+                        obj->work[1] = 0x15;
+                    } else {
+                        obj->work[1] = 0x1A;
+                    }
+                }
+                break;
+            case 21:
+                LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x28A, -1, -1);
+                func_80071C8C(D_801025B4_AdventureModeSetup, 1);
+                while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
+                    HuPrcVSleep();
+                }
+                func_80071E80(D_801025B4_AdventureModeSetup, 1);
+                obj->work[1] = 0x16;
+                break;
+            case 22:
+                D_80101FC0_AdventureModeSetup->work[1] = 1;
+                obj->work[1] = 0x17;
+                break;
+            case 23:
+                if (D_80101FC0_AdventureModeSetup->work[1] == 0) {
+                    obj->work[1] = 0x18;
+                }
+                break;
+            case 24:
+                D_80101FC0_AdventureModeSetup->work[1] = 3;
+                obj->work[1] = 0x19;
+                break;
+            case 25:
+                if (D_80101FC0_AdventureModeSetup->work[1] == 0) {
+                    if (AMS_SEL.unk2C != -1) {
+                        obj->work[1] = 0x1A;
+                    } else if (AMS_SEL.count == 4) {
+                        D_80101FA8_AdventureModeSetup->work[1] = 0xC;
+                        obj->work[1] = 0x1E;
+                    } else {
+                        obj->work[1] = 0x13;
+                    }
+                }
+                break;
+            case 26:
+                if (D_80101F70_AdventureModeSetup != 3) {
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x295, -1, -1);
+                    func_80071C8C(D_801025B4_AdventureModeSetup, 1);
+                } else {
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x27C, -1, -1);
+                }
+                while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
+                    HuPrcVSleep();
+                }
+                func_80071E80(D_801025B4_AdventureModeSetup, 1);
+                obj->work[1] = 0x1B;
+                break;
+            case 27:
+                D_80101FC4_AdventureModeSetup->work[1] = 1;
+                obj->work[1] = 0x1C;
+                break;
+            case 28:
+                if (D_80101FC4_AdventureModeSetup->work[1] == 0) {
+                    if (AMS_SEL.unk30 == -1) {
+                        D_80101FC0_AdventureModeSetup->work[1] = 0xF;
+                        obj->work[1] = 0x1F;
+                    } else if (AMS_SEL.unk30 == 1000) {
+                        for (i = 0; i < 4; i++) {
+                            AMS_SEL.unk18[i] = -1;
+                        }
+                        D_80101FA8_AdventureModeSetup->work[1] = 0x11;
+                        AMS_SEL.count = -1;
+                        D_80101FA4_AdventureModeSetup->work[1] = 0xD;
+                        AMS_SEL.unk2C = -1;
+                        if (D_80101F70_AdventureModeSetup != 3) {
+                            D_80101FC0_AdventureModeSetup->work[1] = 0x13;
+                        }
+                        AMS_SEL.unk30 = -1;
+                        D_80101FC4_AdventureModeSetup->work[1] = 6;
+                        obj->work[1] = 8;
+                    } else {
+                        obj->work[1] = 0x25;
+                    }
+                }
+                break;
+            case 29:
+                if (D_80101FA4_AdventureModeSetup->work[1] == 0) {
+                    obj->work[1] = 0xA;
+                }
+                break;
+            case 30:
+                if (D_80101FA8_AdventureModeSetup->work[1] == 0) {
+                    D_80101FA8_AdventureModeSetup->work[1] = 4;
+                    obj->work[1] = 0xD;
+                }
+                break;
+            case 31:
+                if (D_80101FC0_AdventureModeSetup->work[1] == 0) {
+                    if (D_80101F70_AdventureModeSetup != 3) {
+                        D_80101FC0_AdventureModeSetup->work[1] = 3;
+                        obj->work[1] = 0x19;
+                    } else if (AMS_SEL.count == 4) {
+                        obj->work[1] = 0x14;
+                    } else {
+                        obj->work[1] = 0x13;
+                    }
+                }
+                break;
+            case 32:
+                obj->work[1] = 0x21;
+                break;
+            case 33:
+                i = 0;
+                k = 0;
+                while (TRUE) {
+                    if ((i == 3) & (shown == 0)) {
+                        shown = 1;
+                        D_80101FF8_AdventureModeSetup->work[1] = 1;
+                    }
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) (i + 0x29A), -1, -1);
+                    if (k == 0) {
+                        k = 1;
+                        func_80071C8C(D_801025B4_AdventureModeSetup, 1);
+                    }
+                    while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
+                        if (ContDStkTrg[port] & 0x4000) {
+                            LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x2A6, -1, -1);
+                            HuPrcVSleep();
+                            j = func_8006FCF0(D_801025B4_AdventureModeSetup, 1, 0);
+                            if (j == 0) {
+                                obj->work[1] = 0x26;
+                            } else {
+                                i--;
+                            }
 
+                        }
+                        if (j == 0) {
+                            goto close33;
+                        }
+                        HuPrcVSleep();
+                    }
+                    if (j == 0) {
+                        break;
+                    }
+                    i++;
+                    j = 1;
+                    if (i >= 6) {
+                        break;
+                    }
+                }
+            close33:
+                func_80071E80(D_801025B4_AdventureModeSetup, 1);
+                if (j != 0) {
+                    D_80101FF8_AdventureModeSetup->work[1] = 3;
+                    obj->work[1] = 0x23;
+                }
+                break;
+            case 34:
+                for (i = 0; i < 7; i++) {
+                    if (D_801025D4_AdventureModeSetup->unk_0C[i] != -1) {
+                        func_80067480(D_801025D4_AdventureModeSetup->unk_0A, i, 0x8000);
+                    }
+                }
+                k = 0;
+                do {
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x2A7, -1, -1);
+                    if (k == 0) {
+                        k = 1;
+                        func_80071C8C(D_801025B4_AdventureModeSetup, 1);
+                    }
+                    HuPrcVSleep();
+                    i = func_8006FCF0(D_801025B4_AdventureModeSetup, 0, 0);
+                    if (i == 0) {
+                        obj->work[1] = 0x23;
+                    } else {
+                        LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x2A6, -1, -1);
+                        HuPrcVSleep();
+                        j = func_8006FCF0(D_801025B4_AdventureModeSetup, 1, 0);
+                        if (j == 0) {
+                            obj->work[1] = 0x26;
+                        }
+                    }
+                } while (((i == 0) | (j == 0)) == 0);
+                func_80071E80(D_801025B4_AdventureModeSetup, 1);
+                for (i = 0; i < 7; i++) {
+                    if (D_801025D4_AdventureModeSetup->unk_0C[i] != -1) {
+                        func_800674BC(D_801025D4_AdventureModeSetup->unk_0A, i, 0x8000);
+                    }
+                }
+                break;
+            case 35:
+                omAddObj(0x64, 0, 0, -1, func_800F88C0_AdventureModeSetup);
+                if (D_80101F70_AdventureModeSetup != 3) {
+                    func_800184BC(obj, 2);
+                }
+                for (i = 0; i < 6; i++) {
+                    D_80101F88_AdventureModeSetup[i]->work[3] &= ~8;
+                }
+                HuPrcVSleep();
+                PlaySound(3);
+                obj->work[1] = 0x24;
+                break;
+            case 36:
+                obj->trans.y -= 20.0f;
+                if (D_80101F70_AdventureModeSetup != 3) {
+                    func_800A0D00(vecptr, 0.0f, -D_80102004_AdventureModeSetup.x, D_80102004_AdventureModeSetup.y);
+                    vecptr->x -= 0.0f;
+                    vecptr->y += obj->trans.y;
+                    vecptr->z -= obj->trans.z;
+                    target = func_80029518(func_800B0CD8(vecptr->y, vecptr->z));
+                    obj->rot.x = func_80029518(obj->rot.x);
+                    step = 5.0f;
+                    if (obj->rot.x < target) {
+                        if (target - obj->rot.x > 180.0f) {
+                            step = -step;
+                        }
+                    } else if (obj->rot.x - target < 180.0f) {
+                        step = -step;
+                    }
+                    diff = target - obj->rot.x;
+                    if (diff < 0.0f) {
+                        diff = -diff;
+                    }
+                    if ((step < 0.0f) ? (-step < diff) : (step < diff)) {
+                        obj->rot.x = func_80029518(step + obj->rot.x);
+                    } else {
+                        obj->rot.x = target;
+                    }
+                }
+                if (obj->trans.y < -5500.0f) {
+                    switch (D_80101F70_AdventureModeSetup) {
+                        case 1:
+                            AMS_SEL.count = 1;
+                            AMS_SEL.unk2C = 8;
+                            AMS_SEL.joined[0] = 0;
+                            AMS_SEL.joined[1] = 0;
+                            AMS_SEL.joined[2] = 0;
+                            AMS_SEL.joined[3] = 0;
+                            AMS_SEL.joined[AMS_SEL.port] = 1;
+                            AMS_SEL.unk30 = 0;
+                            AMS_SEL.unk18[0] = 0;
+                            AMS_SEL.unk18[1] = 0;
+                            AMS_SEL.unk18[2] = 0;
+                            AMS_SEL.unk18[3] = 0;
+                            SetBoardFeatureFlag(1);
+                            break;
+                        case 2:
+                            AMS_SEL.count = 0;
+                            for (i = 0; i < 4; i++) {
+                                player = &GwPlayer[i];
+                                j = player->port;
+                                if (player->flags &= 1) {
+                                    AMS_SEL.joined[j] = 0;
+                                } else {
+                                    AMS_SEL.joined[j] = 1;
+                                    AMS_SEL.count++;
+                                }
+                            }
+                            AMS_SEL.unk2C = 8;
+                            AMS_SEL.unk30 = 0;
+                            AMS_SEL.unk18[0] = 0;
+                            AMS_SEL.unk18[1] = 0;
+                            AMS_SEL.unk18[2] = 0;
+                            AMS_SEL.unk18[3] = 0;
+                            break;
+                        default:
+                            osSyncPrintf("how!! enter");
+                            while (TRUE) {
+                                HuPrcVSleep();
+                            }
+                        case 0:
+                        case 3:
+                            break;
+                    }
+                    if (D_80101F74_AdventureModeSetup == 0) {
+                        D_80101F74_AdventureModeSetup = 1;
+                        omAddPrcObj(func_801015D0_AdventureModeSetup, 0x1002, 0x800, 0);
+                    }
+                }
+                break;
+            case 37:
+                D_80101FA8_AdventureModeSetup->work[1] = 0x12;
+                D_80101FA4_AdventureModeSetup->work[1] = 0xD;
+                if (D_80101F70_AdventureModeSetup != 3) {
+                    D_80101FC0_AdventureModeSetup->work[1] = 0x13;
+                }
+                D_80101FC4_AdventureModeSetup->work[1] = 6;
+                obj->work[1] = 0x23;
+                break;
+            case 38:
+                omAddObj(0x64, 0, 0, -1, func_800F88D4_AdventureModeSetup);
+                D_80101F7C_AdventureModeSetup->func_ptr = func_800F6BDC_AdventureModeSetup;
+                HuPrcVSleep();
+                PlaySound(3);
+                obj->work[1] = 0x27;
+                break;
+            case 39:
+                obj->trans.y += 20.0f;
+                if (obj->trans.y > -3500.0f && D_80101F74_AdventureModeSetup == 0) {
+                    D_80101F74_AdventureModeSetup = 1;
+                    D_80101F78_AdventureModeSetup = 1;
+                    omAddPrcObj(func_801015D0_AdventureModeSetup, 0x1002, 0x800, 0);
+                }
+                break;
+            case 0:
+                break;
+        }
+        func_80017DB0(obj);
+        HuPrcVSleep();
+    }
+}
+void func_800F86F8_AdventureModeSetup(omObjData* arg0) {
+    omObjData* obj = D_80101FA0_AdventureModeSetup;
+
+    switch (arg0->work[1]) {
+        case 0:
+            D_80101E4C_AdventureModeSetup = 40;
+            D_80101E50_AdventureModeSetup = -15.0f;
+            arg0->work[1] = 2;
+            break;
+        case 1:
+            D_80101E4C_AdventureModeSetup = 80;
+            D_80101E50_AdventureModeSetup = 15.0f;
+            arg0->work[1] = 2;
+            break;
+    }
+
+    switch (arg0->work[1]) {
+        case 2:
+            D_80101E54_AdventureModeSetup.x = obj->trans.x;
+            D_80101E54_AdventureModeSetup.y = obj->trans.y;
+            D_80101E54_AdventureModeSetup.z = obj->trans.z;
+            D_80101E60_AdventureModeSetup.x = (D_80101E54_AdventureModeSetup.x - D_8010200C_AdventureModeSetup.x) / D_80101E4C_AdventureModeSetup;
+            D_80101E60_AdventureModeSetup.y = (D_80101E54_AdventureModeSetup.y - D_8010200C_AdventureModeSetup.y) / D_80101E4C_AdventureModeSetup;
+            D_80101E60_AdventureModeSetup.z = (D_80101E54_AdventureModeSetup.z - D_8010200C_AdventureModeSetup.z) / D_80101E4C_AdventureModeSetup;
+            D_80101E54_AdventureModeSetup.x = D_8010200C_AdventureModeSetup.x - D_80101E54_AdventureModeSetup.x;
+            D_80101E54_AdventureModeSetup.y = D_8010200C_AdventureModeSetup.y - D_80101E54_AdventureModeSetup.y;
+            D_80101E54_AdventureModeSetup.z = D_8010200C_AdventureModeSetup.z - D_80101E54_AdventureModeSetup.z;
+            arg0->work[1] = 3;
+        case 3:
+            if (--D_80101E4C_AdventureModeSetup == -1) {
+                arg0->work[1] = 4;
+                break;
+            }
+            D_80102004_AdventureModeSetup.x += D_80101E50_AdventureModeSetup;
+            D_8010200C_AdventureModeSetup.x = obj->trans.x + D_80101E54_AdventureModeSetup.x;
+            D_8010200C_AdventureModeSetup.y = obj->trans.y + D_80101E54_AdventureModeSetup.y;
+            D_8010200C_AdventureModeSetup.z = obj->trans.z + D_80101E54_AdventureModeSetup.z;
+            D_80101E54_AdventureModeSetup.x += D_80101E60_AdventureModeSetup.x;
+            D_80101E54_AdventureModeSetup.y += D_80101E60_AdventureModeSetup.y;
+            D_80101E54_AdventureModeSetup.z += D_80101E60_AdventureModeSetup.z;
+            break;
+        case 4:
+            break;
+    }
+}
+void func_800F88C0_AdventureModeSetup(omObjData* arg0) {
+    arg0->work[1] = 0;
+    arg0->func_ptr = func_800F86F8_AdventureModeSetup;
+}
 void func_800F88D4_AdventureModeSetup(omObjData* arg0) {
     arg0->work[1] = 1;
     arg0->func_ptr = func_800F86F8_AdventureModeSetup;
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6A_AdventureModeSetup/2BF1D0", func_800F88EC_AdventureModeSetup);
+void func_800F88EC_AdventureModeSetup(omObjData* arg0) {
+    Vec3f vec;
+    AMSPiece* piece;
+    Vec3f* vecptr;
 
+    piece = &AMS_PIECES[arg0->work[0]];
+    vecptr = &vec;
+    func_800A0D00(vecptr, D_80102000_AdventureModeSetup.x, 0.0f, D_80102000_AdventureModeSetup.z);
+    vec.x -= arg0->trans.x;
+    vec.y -= 0.0f;
+    vec.z -= arg0->trans.z;
+    arg0->rot.y = func_80029518(func_800B0CD8(vec.x, vec.z));
+    if (arg0->work[2] != 0) {
+        func_800A0D00(vecptr, 0.0f, -D_80102000_AdventureModeSetup.y, D_80102000_AdventureModeSetup.z);
+        vec.x -= 0.0f;
+        vec.y += arg0->trans.y;
+        vec.z -= arg0->trans.z;
+        arg0->rot.x = func_80029518(func_800B0CD8(vec.y, vec.z));
+    }
+    if (func_800F70CC_AdventureModeSetup(arg0->work[1]) != 0) {
+        piece->unk44 += 5.0f;
+        if (piece->unk44 >= 360.0f) {
+            piece->unk44 -= 360.0f;
+        }
+    } else if (piece->unk44 != 0.0f || piece->unk44 != 180.0f) {
+        piece->unk44 += 5.0f;
+        if (piece->unk44 >= 360.0f) {
+            piece->unk44 -= 360.0f;
+        }
+        if (piece->unk44 > 0.0f && piece->unk44 < 5.0f) {
+            piece->unk44 = 0.0f;
+        }
+        if (piece->unk44 > 180.0f && piece->unk44 < 185.0f) {
+            piece->unk44 = 180.0f;
+        }
+    }
+    func_8009EA40(D_800F2B7C[*arg0->model].unk7C, 0.0f, func_800AEAC0(piece->unk44) * 10.0f, 0.0f);
+}
 void func_800F8BA4_AdventureModeSetup(omObjData* arg0) {
     func_800F6F34_AdventureModeSetup(arg0);
     if (D_80101F70_AdventureModeSetup != 3) {
@@ -218,8 +930,49 @@ void func_800F8BA4_AdventureModeSetup(omObjData* arg0) {
     func_80017DB0(arg0);
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6A_AdventureModeSetup/2BF1D0", func_800F8D90_AdventureModeSetup);
+void func_800F8D90_AdventureModeSetup(omObjData* arg0) {
+    Vec3f vec;
+    Vec3f* vecptr;
+    omObjData* obj;
 
+    obj = D_80101FA0_AdventureModeSetup;
+    vecptr = &vec;
+    switch (arg0->work[1]) {
+        case 1:
+            D_80101E6C_AdventureModeSetup = 0.0f;
+            func_800A0D00(&D_801025E8_AdventureModeSetup->coords, obj->trans.x + 150.0f, obj->trans.y - 150.0f, obj->trans.z);
+            arg0->work[1] = 2;
+            break;
+        case 2:
+            D_801025E8_AdventureModeSetup->coords.y += 20.0f;
+            if (obj->trans.y + 150.0f < D_801025E8_AdventureModeSetup->coords.y) {
+                D_801025F0_AdventureModeSetup = D_801025E8_AdventureModeSetup->coords.y;
+                arg0->work[1] = 4;
+            }
+            break;
+        case 3:
+            D_801025E8_AdventureModeSetup->coords.y += 20.0f;
+            if (obj->trans.y + 500.0f < D_801025E8_AdventureModeSetup->coords.y) {
+                arg0->work[1] = 0;
+            }
+            break;
+        case 0:
+            break;
+    }
+    func_800A0D00(vecptr, D_80102000_AdventureModeSetup.x, D_80102000_AdventureModeSetup.y, D_80102000_AdventureModeSetup.z);
+    vecptr->x -= D_801025E8_AdventureModeSetup->coords.x;
+    vecptr->y -= D_801025E8_AdventureModeSetup->coords.y;
+    vecptr->z -= D_801025E8_AdventureModeSetup->coords.z;
+    func_800A1250(vecptr);
+    func_800A0D50(&D_801025E8_AdventureModeSetup->unk_18, vecptr);
+    if (arg0->work[1] == 4) {
+        D_80101E6C_AdventureModeSetup += 5.0f;
+        if (D_80101E6C_AdventureModeSetup >= 360.0f) {
+            D_80101E6C_AdventureModeSetup -= 360.0f;
+        }
+        D_801025E8_AdventureModeSetup->coords.y = func_800AEAC0(D_80101E6C_AdventureModeSetup) * 20.0f + D_801025F0_AdventureModeSetup;
+    }
+}
 void func_800F8FD8_AdventureModeSetup(omObjData* arg0) {
     Object *temp_v0;
 
@@ -230,8 +983,21 @@ void func_800F8FD8_AdventureModeSetup(omObjData* arg0) {
     arg0->work[1] = 0;
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6A_AdventureModeSetup/2BF1D0", func_800F9030_AdventureModeSetup);
+s32 func_800F9030_AdventureModeSetup(s32 arg0, s32 arg1) {
+    s32 i = arg1;
+    s32* row;
 
+    while (TRUE) {
+        row = ((s32(*)[8])&D_801018B0_AdventureModeSetup)[i];
+        i = row[arg0];
+        if (D_80101F88_AdventureModeSetup[i]->work[1] == 0 && D_80101F88_AdventureModeSetup[i]->work[2] == 0) {
+            return i;
+        }
+        if (i == arg1) {
+            return -1;
+        }
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6A_AdventureModeSetup/2BF1D0", func_800F9090_AdventureModeSetup);
 
 void func_800FB2D8_AdventureModeSetup(omObjData* arg0) {

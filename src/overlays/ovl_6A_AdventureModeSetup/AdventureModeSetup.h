@@ -71,7 +71,7 @@ extern unk_D80102450_AdventureModeSetup D_80102450_AdventureModeSetup;
 extern f32 D_80102474_AdventureModeSetup;
 extern f32 D_80102478_AdventureModeSetup;
 extern void* D_80102530_AdventureModeSetup;
-extern void* D_80102570_AdventureModeSetup;
+/* D_80102570: declared as AMSSelect in the fork A block below */
 extern unkAMSetupStruct01 D_80102580_AdventureModeSetup;
 extern s32 D_80102584_AdventureModeSetup;
 extern void* D_80102588_AdventureModeSetup;
@@ -119,7 +119,7 @@ void func_8010179C_AdventureModeSetup();
 void func_800F6F34_AdventureModeSetup(omObjData*);
 void func_800F70E4_AdventureModeSetup();
 void func_800F71DC_AdventureModeSetup();
-s32 func_800F70CC_AdventureModeSetup(u8);
+s32 func_800F70CC_AdventureModeSetup(s32);
 void func_800F72E0_AdventureModeSetup();
 void func_800F86F8_AdventureModeSetup(omObjData*);
 void func_800F88EC_AdventureModeSetup(omObjData*);
@@ -150,3 +150,79 @@ void func_80100D84_AdventureModeSetup();
 void func_80100E48_AdventureModeSetup(omObjData*);
 void func_801010E0_AdventureModeSetup(omObjData*);
 void func_80101170_AdventureModeSetup(omObjData*);
+
+/* ---- fork A ---- */
+/* omObjData::unk_50 work block (same layout as MgWork in src/99E0.c). */
+typedef struct AMSObjWork {
+    /* 0x00 */ char unk_00[0x4C];
+    /* 0x4C */ f32 unk_4C;
+    /* 0x50 */ u16 unk_50;
+    /* 0x52 */ u8 unk_52;
+    /* 0x53 */ char unk_53[3];
+    /* 0x56 */ s8 unk_56;
+    /* 0x57 */ char unk_57[9];
+    /* 0x60 */ f32 unk_60;
+    /* 0x64 */ char unk_64[0x2C];
+    /* 0x90 */ f32 unk_90;
+    /* 0x94 */ f32 unk_94;
+    /* 0x98 */ f32 unk_98;
+    /* 0x9C */ char unk_9C[8];
+    /* 0xA4 */ f32 unk_A4;
+    /* 0xA8 */ char unk_A8[9];
+    /* 0xB1 */ s8 unk_B1;
+    /* 0xB2 */ char unk_B2[6];
+    /* 0xB8 */ omObjData* unk_B8;
+    /* 0xBC */ f32 unk_BC;
+    /* 0xC0 */ u16 unk_C0;
+    /* 0xC2 */ char unk_C2[0x16];
+    /* 0xD8 */ s16 (*unk_D8)[2];
+    /* 0xDC */ char unk_DC[0xC];
+} AMSObjWork; /* size = 0xE8 */
+
+/* D_80102028: an array of 0x6C-byte records indexed by omObjData::work[0]. */
+typedef struct AMSPiece {
+    /* 0x00 */ char unk00[0x3C];
+    /* 0x3C */ f32 unk3C;
+    /* 0x40 */ f32 unk40;
+    /* 0x44 */ f32 unk44;
+    /* 0x48 */ char unk48[0x10];
+    /* 0x58 */ s32 unk58;
+    /* 0x5C */ char unk5C[0x10];
+} AMSPiece; /* size = 0x6C */
+#define AMS_PIECES ((AMSPiece*)&D_80102028_AdventureModeSetup)
+
+/* The selection state at D_80102570 (asm bss): retail addresses it as one object (one base
+   register for D_80102584 and D_8010259C, D_80102570 reached as D_80102584 - 0x14). */
+typedef struct AMSSelect {
+    /* 0x00 */ s32 joined[4]; /* D_80102570: per controller port */
+    /* 0x10 */ s32 port;      /* D_80102580 */
+    /* 0x14 */ s32 count;     /* D_80102584 */
+    /* 0x18 */ s32 unk18[4];  /* D_80102588 */
+    /* 0x28 */ s32 unk28;
+    /* 0x2C */ s32 unk2C;     /* D_8010259C */
+    /* 0x30 */ s32 unk30;     /* D_801025A0 */
+} AMSSelect;
+extern AMSSelect D_80102570_AdventureModeSetup;
+#define AMS_SEL D_80102570_AdventureModeSetup
+
+extern f32 D_80101E40_AdventureModeSetup;
+extern f32 D_80101E44_AdventureModeSetup;
+extern f32 D_80101E48_AdventureModeSetup;
+extern f32 D_80102014_AdventureModeSetup;
+
+#ifdef TARGET_PC
+s16 func_8005B470(s16);
+#else
+s32 func_8005B470(s16); /* retail's call has no extension of the result (an int return) */
+#endif
+void func_80071FF4(s32, u8);
+void func_801015D0_AdventureModeSetup(void);
+void func_80101274_AdventureModeSetup();
+void func_80101374_AdventureModeSetup();
+void func_800F88C0_AdventureModeSetup(omObjData*);
+void func_800F88D4_AdventureModeSetup(omObjData*);
+void func_80008FA0(omObjData*, f32);
+void func_80008FDC(omObjData*, f32);
+void func_80008FE8(omObjData*, f32);
+void func_80008FF4(omObjData*, f32);
+/* ---- end fork A ---- */
