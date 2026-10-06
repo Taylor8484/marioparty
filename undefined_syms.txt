@@ -232,3 +232,9 @@ D_800F9A20_GameModeOverworld = D_800F9A1C_GameModeOverworld + 0x4;
 D_800F9A24_GameModeOverworld = D_800F9A1C_GameModeOverworld + 0x8;
 D_800F9A94_GameModeOverworld = D_800F9A1C_GameModeOverworld + 0x78;
 D_800FA15E_GameModeOverworld = D_800FA15C_GameModeOverworld + 0x2;
+
+/* ovl_6A 2BF1D0.c: splat labels inside C objects (NON_MATCHING asm, and the low halves C reads) */
+D_80101974_AdventureModeSetup = D_80101970_AdventureModeSetup + 0x4;
+D_80101978_AdventureModeSetup = D_80101970_AdventureModeSetup + 0x8;
+D_8010197C_AdventureModeSetup = D_80101970_AdventureModeSetup + 0xC;
+D_80101ADE_AdventureModeSetup = D_80101ADC_AdventureModeSetup + 0x2;
