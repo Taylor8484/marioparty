@@ -65,13 +65,13 @@ extern Vec3f D_80102010_AdventureModeSetup;
 extern Vec3f D_80102018_AdventureModeSetup;
 extern unk_Struct00* D_80102028_AdventureModeSetup;
 extern void* D_8010206C_AdventureModeSetup;
-extern unk_Struct00* D_80102410_AdventureModeSetup;
+extern unk_Struct00 D_80102410_AdventureModeSetup;
 extern f32 D_80102448_AdventureModeSetup;
 extern unk_D80102450_AdventureModeSetup D_80102450_AdventureModeSetup;
 extern f32 D_80102474_AdventureModeSetup;
 extern f32 D_80102478_AdventureModeSetup;
 extern void* D_80102530_AdventureModeSetup;
-extern void* D_80102570_AdventureModeSetup;
+extern s32 D_80102570_AdventureModeSetup[];
 extern unkAMSetupStruct01 D_80102580_AdventureModeSetup;
 extern s32 D_80102584_AdventureModeSetup;
 extern void* D_80102588_AdventureModeSetup;
@@ -150,3 +150,53 @@ void func_80100D84_AdventureModeSetup();
 void func_80100E48_AdventureModeSetup(omObjData*);
 void func_801010E0_AdventureModeSetup(omObjData*);
 void func_80101170_AdventureModeSetup(omObjData*);
+
+/* ---- fork C ---- */
+extern s32 D_80101870_AdventureModeSetup[][4];
+extern s32 D_80101A64_AdventureModeSetup;
+extern s32 D_80101A68_AdventureModeSetup;
+typedef struct AMSetup3C {
+    /* 0x00 */ f32 unk00;
+    /* 0x04 */ f32 unk04;
+    /* 0x08 */ char unk08[0x1C];
+    /* 0x24 */ f32 unk24;
+    /* 0x28 */ f32 unk28;
+    /* 0x2C */ f32 unk2C;
+    /* 0x30 */ f32 unk30;
+    /* 0x34 */ f32 unk34;
+    /* 0x38 */ char unk38[4];
+} AMSetup3C; /* sizeof 0x3C */
+typedef struct AMSetupVec2 {
+    f32 x;
+    f32 y;
+} AMSetupVec2;
+extern AMSetupVec2 D_801019F0_AdventureModeSetup[];
+extern s32 D_80101A44_AdventureModeSetup[];
+extern f32 D_80101A54_AdventureModeSetup[];
+extern s32 D_80101EF0_AdventureModeSetup;
+extern f32 D_80101EF4_AdventureModeSetup;
+extern f32 D_80101EF8_AdventureModeSetup;
+extern f32 D_80101EFC_AdventureModeSetup;
+extern f32 D_80101F00_AdventureModeSetup;
+extern f32 D_80101F04_AdventureModeSetup;
+extern f32 D_80101F08_AdventureModeSetup;
+extern AMSetup3C D_80102320_AdventureModeSetup[];
+s32 func_800FCA78_AdventureModeSetup(s32, s32, s32);
+typedef struct AMSetup1C {
+    /* 0x00 */ Vec3f pos;
+    /* 0x0C */ char unk0C[0x10];
+} AMSetup1C; /* sizeof 0x1C */
+extern AMSetup1C D_80102490_AdventureModeSetup[];
+extern s32 D_80101F0C_AdventureModeSetup;
+s32 func_800141FC(s16);
+extern s32 D_80101A6C_AdventureModeSetup;
+extern s32 D_80101F20_AdventureModeSetup;
+extern f32 D_80101F24_AdventureModeSetup;
+extern f32 D_80101F28_AdventureModeSetup;
+extern f32 D_80101F2C_AdventureModeSetup;
+extern f32 D_80101F30_AdventureModeSetup;
+extern f32 D_80101F34_AdventureModeSetup;
+extern f32 D_80101F38_AdventureModeSetup;
+extern f32 D_80101F3C_AdventureModeSetup;
+extern f32 D_80101F40_AdventureModeSetup;
+/* ---- end fork C ---- */
