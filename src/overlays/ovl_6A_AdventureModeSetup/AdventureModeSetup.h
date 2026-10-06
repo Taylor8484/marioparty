@@ -83,10 +83,18 @@ extern Vec3f D_80102010_AdventureModeSetup;
 #endif
 extern Vec3f D_80102018_AdventureModeSetup;
 extern unk_Struct00 D_80102410_AdventureModeSetup;
-extern f32 D_80102448_AdventureModeSetup;
 extern unk_D80102450_AdventureModeSetup D_80102450_AdventureModeSetup;
+/* D_80102410 is a 0x40 record (fields to unk30.z) and D_80102450 a 0x40 struct: splat's
+   D_80102448, D_80102474 and D_80102478 are their fields. On the host they are views. */
+#ifndef TARGET_PC
+extern f32 D_80102448_AdventureModeSetup;
 extern f32 D_80102474_AdventureModeSetup;
 extern f32 D_80102478_AdventureModeSetup;
+#else
+#define D_80102448_AdventureModeSetup (D_80102410_AdventureModeSetup.unk30.z)
+#define D_80102474_AdventureModeSetup (D_80102450_AdventureModeSetup.unk24)
+#define D_80102478_AdventureModeSetup (D_80102450_AdventureModeSetup.unk28)
+#endif
 extern s16 D_801025B4_AdventureModeSetup;
 extern s32 D_801025B8_AdventureModeSetup;
 extern s32 D_801025BC_AdventureModeSetup;
@@ -97,7 +105,11 @@ extern s32 D_801025CC_AdventureModeSetup;
 extern void* D_801025D0_AdventureModeSetup;
 extern unk_Struct02* D_801025D4_AdventureModeSetup;
 extern u16 D_801025D8_AdventureModeSetup[];     // seems wrong... used as u16, s16*
+#ifndef TARGET_PC
 extern s16 D_801025DA_AdventureModeSetup;
+#else
+#define D_801025DA_AdventureModeSetup (*(s16*)&D_801025D8_AdventureModeSetup[1]) /* [1] of the pair */
+#endif
 extern f32 D_801025DC_AdventureModeSetup;
 extern f32 D_801025E0_AdventureModeSetup;
 extern f32 D_801025E4_AdventureModeSetup;
