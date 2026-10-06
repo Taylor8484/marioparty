@@ -70,10 +70,17 @@ extern omObjData* D_80101FD8_AdventureModeSetup[];
 extern omObjData* D_80101FE8_AdventureModeSetup[];
 extern omObjData* D_80101FFC_AdventureModeSetup;
 extern omObjData* D_80101FF8_AdventureModeSetup;
+/* Two Vec3f at D_80102000 and D_8010200C; splat's D_80102004/D_80102010/D_80102014 are their
+   .y/.z, read as overlapping Vec3f views. On the host those labels are views of the two objects. */
 extern Vec3f D_80102000_AdventureModeSetup;
-extern Vec3f D_80102004_AdventureModeSetup;
 extern Vec3f D_8010200C_AdventureModeSetup;
+#ifndef TARGET_PC
+extern Vec3f D_80102004_AdventureModeSetup;
 extern Vec3f D_80102010_AdventureModeSetup;
+#else
+#define D_80102004_AdventureModeSetup (*(Vec3f*)&D_80102000_AdventureModeSetup.y)
+#define D_80102010_AdventureModeSetup (*(Vec3f*)&D_8010200C_AdventureModeSetup.y)
+#endif
 extern Vec3f D_80102018_AdventureModeSetup;
 extern unk_Struct00 D_80102410_AdventureModeSetup;
 extern f32 D_80102448_AdventureModeSetup;
@@ -185,7 +192,11 @@ typedef struct AMSObjWork {
 extern f32 D_80101E40_AdventureModeSetup;
 extern f32 D_80101E44_AdventureModeSetup;
 extern f32 D_80101E48_AdventureModeSetup;
+#ifndef TARGET_PC
 extern f32 D_80102014_AdventureModeSetup;
+#else
+#define D_80102014_AdventureModeSetup (D_8010200C_AdventureModeSetup.z)
+#endif
 
 #ifdef TARGET_PC
 s16 func_8005B470(s16);
