@@ -664,7 +664,7 @@ s16 func_80039084(void* arg) {
     spr = &D_800F3F40[slot];
     nframes = (arg0[0x10] << 8) + arg0[0x11];
     spr->unk_00 = nframes;
-    spr->unk_0C = func_80023684(nframes * 12, slot + 20000);
+    spr->unk_0C = func_80023684(nframes * sizeof(*spr->unk_0C), slot + 20000);
     p = arg0 + (arg0[1] << 16) + (arg0[2] << 8) + arg0[3];
     spr->unk_06 = (arg0[0x18] << 8) + arg0[0x19];
     bpp = spr->unk_06 & 0xFF;
@@ -682,12 +682,12 @@ s16 func_80039084(void* arg) {
 
     spr->unk_02 = n = (arg0[0x12] << 8) + arg0[0x13];
     if (n != 0) {
-        spr->unk_10 = func_80023684(n * 8, slot + 20000);
+        spr->unk_10 = func_80023684(n * sizeof(*spr->unk_10), slot + 20000);
         p = arg0 + (arg0[5] << 16) + (arg0[6] << 8) + arg0[7];
         for (i = 0; i < n; i++) {
             q = arg0 + (p[i * 4 + 1] << 16) + (p[i * 4 + 2] << 8) + p[i * 4 + 3];
             spr->unk_10[i].unk_00 = t = (q[0] << 8) + q[1];
-            spr->unk_10[i].unk_04 = func_80023684(t * 8, slot + 20000);
+            spr->unk_10[i].unk_04 = func_80023684(t * sizeof(*spr->unk_10->unk_04), slot + 20000);
             q += 2;
             total = 0;
             for (j = 0; j < t; j++) {
@@ -706,9 +706,9 @@ s16 func_80039084(void* arg) {
         }
     } else {
         spr->unk_02 = 1;
-        spr->unk_10 = func_80023684(8, slot + 20000);
+        spr->unk_10 = func_80023684(sizeof(*spr->unk_10), slot + 20000);
         spr->unk_10->unk_00 = nframes;
-        spr->unk_10->unk_04 = func_80023684(nframes * 8, slot + 20000);
+        spr->unk_10->unk_04 = func_80023684(nframes * sizeof(*spr->unk_10->unk_04), slot + 20000);
         for (j = 0; j < nframes; j++) {
             af = &spr->unk_10->unk_04[j];
             af->unk_00 = j;
