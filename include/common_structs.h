@@ -130,7 +130,8 @@ typedef struct unkGlobalStruct_00 {
     /* 0xB0 */ u16 unk_B0;
     /* 0xB2 */ char unk_B2[1];
     /* 0xB3 */ s8 unk_B3;
-    /* 0xB4 */ char unk_B4[0x08];
+    /* 0xB4 */ char unk_B4[0x04];
+    /* 0xB8 */ void* unk_B8; /* MgWork's held item (99E0.c): a pointer in every view of this work */
     /* 0xBC */ f32 unk_BC;
     /* 0xC0 */ u16 unk_C0;
     /* 0xC2 */ char unk_C2[0x16];

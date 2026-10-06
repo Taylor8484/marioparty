@@ -196,7 +196,8 @@ typedef struct AMSObjWork {
     /* 0xC0 */ u16 unk_C0;
     /* 0xC2 */ char unk_C2[0x16];
     /* 0xD8 */ s16 (*unk_D8)[2];
-    /* 0xDC */ char unk_DC[0xC];
+    /* 0xDC */ char unk_DC[8];
+    /* 0xE4 */ void* unk_E4; /* as MgWork */
 } AMSObjWork; /* size = 0xE8 */
 
 
