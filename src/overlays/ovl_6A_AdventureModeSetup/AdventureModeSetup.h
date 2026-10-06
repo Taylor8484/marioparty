@@ -20,7 +20,6 @@ typedef struct unk_D80102450_AdventureModeSetup {
 } unk_D80102450_AdventureModeSetup;
 
 extern s8 omSysPauseEnableFlag;
-extern unkStructSize14 D_800C59AC[];
 // extern void* D_800C59B0[];
 extern u8 D_800F64F8;
 

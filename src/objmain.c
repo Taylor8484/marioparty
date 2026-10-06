@@ -145,6 +145,21 @@ objmainChr D_800C59A8[6] = {
     { 0, 0, 1, 0, 0x9F, 0x9E, 1.0f }, { 1, 0, 2, 0, 0x9F, 0x9E, 1.0f }, { 2, 0, 6, 0, 0x9F, 0x9E, 1.0f },
     { 3, 0, 3, 0, 0x9F, 0x9E, 0.9f }, { 4, 0, 4, 0, 0x9F, 0x9E, 0.8f }, { 5, 0, 5, 0, 0x9F, 0x9E, 0.7f },
 };
+#ifdef TARGET_PC
+/* D_800C59AC (common_structs.h): retail reads entry i from its `chr` field as an unkStructSize14 */
+unkStructSize14* pb_objmainChrView(void) {
+    static unkStructSize14 view[6];
+    s32 i;
+
+    for (i = 0; i < 6; i++) {
+        view[i].unk_00 = (s32)(((u32)(u16)D_800C59A8[i].chr << 16) | (u16)D_800C59A8[i].unk06);
+        view[i].unk_04 = D_800C59A8[i].file0;
+        view[i].unk_08 = D_800C59A8[i].file1;
+        memcpy(view[i].unk_0C, &D_800C59A8[i].scale, sizeof(f32));
+    }
+    return view;
+}
+#endif
 u8 D_800C5A20 = 0;
 u8 D_800C5A21 = 0;
 omDBGMenuItem D_800C5A24[6] = {

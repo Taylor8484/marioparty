@@ -207,6 +207,16 @@ typedef struct unkStructSize14 {
     /* 0x0C */ char unk_0C[8];
 } unkStructSize14; //sizeof 0x14
 
+/* D_800C59AC: objmain.c's objmainChr D_800C59A8[6] read from each entry's `chr` field (+4).
+   unk_00 is the big-endian word (chr, unk06) -- the character's file directory as chr << 16 --
+   unk_04 is file0 and unk_08 file1. The host has no such word: a view is built from the entries. */
+#ifndef TARGET_PC
+extern unkStructSize14 D_800C59AC[];
+#else
+unkStructSize14* pb_objmainChrView(void);
+#define D_800C59AC (pb_objmainChrView())
+#endif
+
 typedef struct jump_buf
 {
     void *sp;
