@@ -16,7 +16,7 @@ typedef struct unk_D80102450_AdventureModeSetup {
     /* 0x30 */ char unk30[4];
     /* 0x34 */ f32 unk34;
     /* 0x38 */ f32 unk38;
-    /* 0x3C */ f32 unk3C;
+    /* 0x3C */ s32 unk3C; // a counter (retail loads/stores it as int)
 } unk_D80102450_AdventureModeSetup;
 
 extern s8 omSysPauseEnableFlag;
@@ -350,3 +350,58 @@ extern f32 D_80101F38_AdventureModeSetup;
 extern f32 D_80101F3C_AdventureModeSetup;
 extern f32 D_80101F40_AdventureModeSetup;
 /* ---- end fork C ---- */
+/* ---- fork D ---- */
+typedef struct unkAMSetupSprites3 {
+    /* 0x00 */ s32 unk00;
+    /* 0x04 */ s16 sprite[3];
+} unkAMSetupSprites3; // sizeof 0xC
+
+typedef struct unkAMSetupSprites5 {
+    /* 0x00 */ s32 unk00;
+    /* 0x04 */ s16 sprite[5];
+} unkAMSetupSprites5; // sizeof 0x10
+
+typedef struct unkAMSetupMove {
+    /* 0x00 */ Vec3f target;
+    /* 0x0C */ s32 frames;
+    /* 0x10 */ Vec3f step;
+} unkAMSetupMove; // sizeof 0x1C
+
+typedef struct unkAMSetupChar {
+    /* 0x00 */ char unk00[0x44];
+    /* 0x44 */ f32 unk44;
+    /* 0x48 */ char unk48[0x24];
+} unkAMSetupChar; // sizeof 0x6C
+
+/* The shared declarations above are scalars/pointers at addresses that are really arrays; these views
+   keep them untouched (same address, same codegen). */
+#define AMSD_CHAR ((unkAMSetupChar*)&D_80102028_AdventureModeSetup)
+#define AMSD_ALPHA5 ((f32*)&D_80101F60_AdventureModeSetup)
+typedef struct unkAMSetupState {
+    /* 0x00 */ s32 unk00;
+    /* 0x04 */ s32 count;    /* humans */
+    /* 0x08 */ s32 order[4]; /* character per port */
+    /* 0x18 */ s32 sel;      /* board index */
+    /* 0x1C */ s32 mode;     /* low half = play type */
+    /* 0x20 */ s32 coins[4]; /* low half = start coins */
+} unkAMSetupState; // starts at D_80102580
+#define AMSD_S (*(unkAMSetupState*)&D_80102580_AdventureModeSetup)
+#define AMSD_AR ((s32*)&D_80102584_AdventureModeSetup) /* [0] humans, [1..4] character per port */
+#define AMSD_ACTIVE ((s32*)&D_80102570_AdventureModeSetup) /* s32[4]: nonzero = human */
+#define AMSD_ORDER ((s32*)&D_80102588_AdventureModeSetup)  /* s32[4]: character per port */
+#define AMSD_COINS ((s32*)&D_801025A4_AdventureModeSetup)  /* s32[4]: low half = start coins */
+#define AMSD_SPR5 ((unkAMSetupSprites5*)&D_80102530_AdventureModeSetup)
+extern f32 D_80101F50_AdventureModeSetup[];
+extern unkAMSetupMove D_80102490_AdventureModeSetup[];
+extern s32 D_80101AE0_AdventureModeSetup;
+extern unkAMSetupSprites3 D_80102500_AdventureModeSetup[];
+void func_80100958_AdventureModeSetup(omObjData*);
+extern s8 ContStkY[];
+extern s32 D_80101F44_AdventureModeSetup;
+extern f32 D_80101F48_AdventureModeSetup;
+extern f32 D_80101F4C_AdventureModeSetup;
+extern void* D_80101A70_AdventureModeSetup[][3]; /* [board][answer - 1]: message string */
+extern void* D_80101ACC_AdventureModeSetup[]; /* [n] for n = 1..3 */
+#define AMSD_MODE (*(s32*)&D_801025A0_AdventureModeSetup) /* declared void* above; retail stores ints */
+#define AMSD_ABS(x) (((x) < 0.0f) ? -(x) : (x))
+/* ---- end fork D ---- */
