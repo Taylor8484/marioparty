@@ -226,3 +226,77 @@ void func_80008FDC(omObjData*, f32);
 void func_80008FE8(omObjData*, f32);
 void func_80008FF4(omObjData*, f32);
 /* ---- end fork A ---- */
+/* ---- fork B ---- */
+/* D_80102028: 7 entries of 0x6C (bss 0x80102028..0x8010231C); declared above as a pointer. */
+typedef struct AMSPiece {
+    /* 0x00 */ char unk00[0xC];
+    /* 0x0C */ Vec3f unkC;
+    /* 0x18 */ f32 unk18;
+    /* 0x1C */ f32 unk1C;
+    /* 0x20 */ f32 unk20;
+    /* 0x24 */ Vec3f unk24;
+    /* 0x30 */ Vec3f unk30;
+    /* 0x3C */ f32 unk3C;
+    /* 0x40 */ f32 unk40;
+    /* 0x44 */ f32 unk44;
+    /* 0x48 */ f32 unk48;
+    /* 0x4C */ f32 unk4C;
+    /* 0x50 */ f32 unk50;
+    /* 0x54 */ f32 unk54;
+    /* 0x58 */ char unk58[0x14];
+} AMSPiece; /* size = 0x6C */
+#define AMS_PIECES ((AMSPiece*)&D_80102028_AdventureModeSetup)
+/* D_80102570 (s32[4], read to [4] = D_80102580) and D_80102588 (s32[5]) hold indices, declared void* above. */
+#define AMS_ACTIVE ((s32*)&D_80102570_AdventureModeSetup)
+#define AMS_SLOTS ((s32*)&D_80102588_AdventureModeSetup)
+extern u8 D_80101E88_AdventureModeSetup[];
+extern s32 D_80101E90_AdventureModeSetup[];
+extern f32 D_80101EA8_AdventureModeSetup[];
+extern f32 D_80101EC0_AdventureModeSetup[];
+extern f32 D_80101ED8_AdventureModeSetup[];
+extern f32 D_801019D0_AdventureModeSetup[][2]; /* 4 (x, y) pairs; splat split it at D_801019D4 */
+extern f32 D_80101A20_AdventureModeSetup[];
+extern f32 D_80101A30_AdventureModeSetup[];
+void func_800F6958_AdventureModeSetup(omObjData*, Vec3f*);
+typedef struct AMSWork {
+    u8 w0, w1, w2, w3;
+} AMSWork; /* omObjData.work[] as fields: retail tests two of them in one word */
+#define AMS_WORK(o) ((AMSWork*)(o)->work)
+typedef struct AMSCursor {
+    /* 0x00 */ Vec3f pos;
+    /* 0x0C */ char unk0C[0x10];
+} AMSCursor; /* size = 0x1C */
+typedef struct AMSUnk2500 {
+    /* 0x00 */ s32 unk0;
+    /* 0x04 */ char unk4[8];
+} AMSUnk2500; /* size = 0xC */
+typedef struct AMSUnk2530 {
+    /* 0x00 */ s32 unk0;
+    /* 0x04 */ char unk4[0xC];
+} AMSUnk2530; /* size = 0x10 */
+extern AMSCursor D_80102490_AdventureModeSetup[];
+extern AMSUnk2500 D_80102500_AdventureModeSetup[];
+#define AMS_2500 D_80102500_AdventureModeSetup
+#define AMS_2530 ((AMSUnk2530*)&D_80102530_AdventureModeSetup)
+/* 0x80102580..0x801025B4 looks like one block in retail: func_800F9090 reads the count (0x80102584)
+   through D_80102580 and once relative to D_801025A4. The C uses D_80102580.unk04 for it and the
+   separate labels for the rest; the host defines each label as its own array. */
+#define AMS_A4 ((s32*)&D_801025A4_AdventureModeSetup)
+#define AMS_CUR (D_80102580_AdventureModeSetup.unk00)
+#define AMS_COUNT (D_80102580_AdventureModeSetup.unk04)
+#define AMS_NEIGHBORS ((s32(*)[8])&D_801018B0_AdventureModeSetup)
+extern f32 D_80101970_AdventureModeSetup[][4];
+extern s32 D_80101A10_AdventureModeSetup[];
+extern s32 D_80101E70_AdventureModeSetup;
+extern s32 D_80101E74_AdventureModeSetup;
+extern s32 D_80101E78_AdventureModeSetup;
+extern s32 D_80101E7C_AdventureModeSetup;
+extern f32 D_80101E80_AdventureModeSetup;
+extern f32 D_80101E84_AdventureModeSetup;
+s32 func_800F9030_AdventureModeSetup(s32, s32);
+#ifdef TARGET_PC
+void func_80052CCC(s32, u8); /* host: matches the definition */
+#else
+void func_80052CCC(s32, s32);
+#endif
+/* ---- end fork B ---- */
