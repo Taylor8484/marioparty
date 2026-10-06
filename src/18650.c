@@ -30,7 +30,9 @@ typedef struct ActorWork {
     /* 0xAC */ char unk_AC[2];
     /* 0xAE */ u16 unk_AE;
     /* 0xB0 */ u8 unk_B0;
-    /* 0xB1 */ char unk_B1[0xF];
+    /* 0xB1 */ char unk_B1[7];
+    /* 0xB8 */ void* unk_B8; /* MgWork's held item: a pointer, so the host layout agrees */
+    /* 0xBC */ char unk_BC[4];
     /* 0xC0 */ u16 cur;
     /* 0xC2 */ u16 count;
     /* 0xC4 */ char unk_C4[2];

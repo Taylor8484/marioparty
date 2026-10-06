@@ -155,7 +155,6 @@ void func_80067284(s16, s32, f32);
 s32 func_80067328(s16, s16);
 f64 func_8009B618(f64, f64);
 
-extern unkStructSize14 D_800C59AC[];
 extern unkStructSizeUnknown* D_800EC700[];
 extern s16 ContBtn[];
 extern s8 ContStkY[];

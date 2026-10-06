@@ -20,7 +20,6 @@ typedef struct unk_D80102450_AdventureModeSetup {
 } unk_D80102450_AdventureModeSetup;
 
 extern s8 omSysPauseEnableFlag;
-extern unkStructSize14 D_800C59AC[];
 // extern void* D_800C59B0[];
 extern u8 D_800F64F8;
 
@@ -70,16 +69,31 @@ extern omObjData* D_80101FD8_AdventureModeSetup[];
 extern omObjData* D_80101FE8_AdventureModeSetup[];
 extern omObjData* D_80101FFC_AdventureModeSetup;
 extern omObjData* D_80101FF8_AdventureModeSetup;
+/* Two Vec3f at D_80102000 and D_8010200C; splat's D_80102004/D_80102010/D_80102014 are their
+   .y/.z, read as overlapping Vec3f views. On the host those labels are views of the two objects. */
 extern Vec3f D_80102000_AdventureModeSetup;
-extern Vec3f D_80102004_AdventureModeSetup;
 extern Vec3f D_8010200C_AdventureModeSetup;
+#ifndef TARGET_PC
+extern Vec3f D_80102004_AdventureModeSetup;
 extern Vec3f D_80102010_AdventureModeSetup;
+#else
+#define D_80102004_AdventureModeSetup (*(Vec3f*)&D_80102000_AdventureModeSetup.y)
+#define D_80102010_AdventureModeSetup (*(Vec3f*)&D_8010200C_AdventureModeSetup.y)
+#endif
 extern Vec3f D_80102018_AdventureModeSetup;
 extern unk_Struct00 D_80102410_AdventureModeSetup;
-extern f32 D_80102448_AdventureModeSetup;
 extern unk_D80102450_AdventureModeSetup D_80102450_AdventureModeSetup;
+/* D_80102410 is a 0x40 record (fields to unk30.z) and D_80102450 a 0x40 struct: splat's
+   D_80102448, D_80102474 and D_80102478 are their fields. On the host they are views. */
+#ifndef TARGET_PC
+extern f32 D_80102448_AdventureModeSetup;
 extern f32 D_80102474_AdventureModeSetup;
 extern f32 D_80102478_AdventureModeSetup;
+#else
+#define D_80102448_AdventureModeSetup (D_80102410_AdventureModeSetup.unk30.z)
+#define D_80102474_AdventureModeSetup (D_80102450_AdventureModeSetup.unk24)
+#define D_80102478_AdventureModeSetup (D_80102450_AdventureModeSetup.unk28)
+#endif
 extern s16 D_801025B4_AdventureModeSetup;
 extern s32 D_801025B8_AdventureModeSetup;
 extern s32 D_801025BC_AdventureModeSetup;
@@ -90,7 +104,11 @@ extern s32 D_801025CC_AdventureModeSetup;
 extern void* D_801025D0_AdventureModeSetup;
 extern unk_Struct02* D_801025D4_AdventureModeSetup;
 extern u16 D_801025D8_AdventureModeSetup[];     // seems wrong... used as u16, s16*
+#ifndef TARGET_PC
 extern s16 D_801025DA_AdventureModeSetup;
+#else
+#define D_801025DA_AdventureModeSetup (*(s16*)&D_801025D8_AdventureModeSetup[1]) /* [1] of the pair */
+#endif
 extern f32 D_801025DC_AdventureModeSetup;
 extern f32 D_801025E0_AdventureModeSetup;
 extern f32 D_801025E4_AdventureModeSetup;
@@ -177,7 +195,8 @@ typedef struct AMSObjWork {
     /* 0xC0 */ u16 unk_C0;
     /* 0xC2 */ char unk_C2[0x16];
     /* 0xD8 */ s16 (*unk_D8)[2];
-    /* 0xDC */ char unk_DC[0xC];
+    /* 0xDC */ char unk_DC[8];
+    /* 0xE4 */ void* unk_E4; /* as MgWork */
 } AMSObjWork; /* size = 0xE8 */
 
 
@@ -185,7 +204,11 @@ typedef struct AMSObjWork {
 extern f32 D_80101E40_AdventureModeSetup;
 extern f32 D_80101E44_AdventureModeSetup;
 extern f32 D_80101E48_AdventureModeSetup;
+#ifndef TARGET_PC
 extern f32 D_80102014_AdventureModeSetup;
+#else
+#define D_80102014_AdventureModeSetup (D_8010200C_AdventureModeSetup.z)
+#endif
 
 #ifdef TARGET_PC
 s16 func_8005B470(s16);
