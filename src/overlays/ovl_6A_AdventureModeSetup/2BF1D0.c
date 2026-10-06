@@ -323,6 +323,11 @@ void func_800F72E0_AdventureModeSetup(void) {
     GW_PLAYER* player;
 
 
+#ifdef TARGET_PC
+    /* State 33 tests j before any state has set it on the first pass; retail keeps j in s3, which
+       still holds the creating process's (nonzero) value there. The host local starts undefined. */
+    j = 1;
+#endif
     shown = 0;
     obj = D_80101FA0_AdventureModeSetup;
     piece = &AMS_PIECES[obj->work[0]];
