@@ -1,5 +1,61 @@
 #include "AdventureModeSetup.h"
 
+/* .data (0x80101870..0x80101AF0) */
+s32 D_80101870_AdventureModeSetup[4][4] = {
+    { 2, 2, 1, 1 },
+    { 3, 3, 0, 0 },
+    { 0, 0, 3, 3 },
+    { 1, 1, 2, 2 },
+};
+s32 D_801018B0_AdventureModeSetup[6][8] = {
+    { 3, 4, 1, 4, 3, 5, 2, 5 },
+    { 4, 5, 2, 5, 4, 3, 0, 3 },
+    { 5, 3, 0, 3, 5, 4, 1, 4 },
+    { 0, 1, 4, 1, 0, 2, 5, 2 },
+    { 1, 2, 5, 2, 1, 0, 3, 0 },
+    { 2, 0, 3, 0, 2, 1, 4, 1 },
+};
+f32 D_80101970_AdventureModeSetup[6][4] = {
+    { -70.0f, -200.0f, 75.0f, 500.0f },
+    { 20.0f, -270.0f, 70.0f, 500.0f },
+    { 120.0f, -350.0f, 65.0f, 500.0f },
+    { -80.0f, -330.0f, -50.0f, 500.0f },
+    { 10.0f, -500.0f, -25.0f, 500.0f },
+    { 100.0f, -400.0f, -45.0f, 500.0f },
+};
+f32 D_801019D0_AdventureModeSetup[4][2] = {
+    { 250.0f, 140.0f }, { 250.0f, 70.0f }, { 250.0f, 0.0f }, { 250.0f, -70.0f },
+};
+AMSetupVec2 D_801019F0_AdventureModeSetup[4] = {
+    { -100.0f, 60.0f }, { -300.0f, 60.0f }, { -100.0f, 130.0f }, { -300.0f, 130.0f },
+};
+s32 D_80101A10_AdventureModeSetup[4] = { 0, 1, 2, 3 };
+f32 D_80101A20_AdventureModeSetup[4] = { -170.0f, 130.0f, -150.0f, 160.0f };
+f32 D_80101A30_AdventureModeSetup[4] = { -160.0f, -160.0f, 130.0f, 170.0f };
+s32 D_80101A40_AdventureModeSetup = 0;
+s32 D_80101A44_AdventureModeSetup[4] = { 0, 0, 0, 0 };
+f32 D_80101A54_AdventureModeSetup[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+s32 D_80101A64_AdventureModeSetup = 0x80; /* the s16 at D_80101A66 is its low half */
+s32 D_80101A68_AdventureModeSetup = 0;
+s32 D_80101A6C_AdventureModeSetup = -1;
+/* [board][answer - 1]; the last word (D_80101ACC) also starts the table retail indexes from 1 */
+void* D_80101A70_AdventureModeSetup[8][3] = {
+    { (void*)D_80101DC0_AdventureModeSetup, (void*)D_80101DBC_AdventureModeSetup, (void*)D_80101DB8_AdventureModeSetup },
+    { (void*)D_80101DC0_AdventureModeSetup, (void*)D_80101DBC_AdventureModeSetup, (void*)D_80101DB8_AdventureModeSetup },
+    { (void*)D_80101DC0_AdventureModeSetup, (void*)D_80101DBC_AdventureModeSetup, (void*)D_80101DB8_AdventureModeSetup },
+    { (void*)D_80101DC0_AdventureModeSetup, (void*)D_80101DBC_AdventureModeSetup, (void*)D_80101DB8_AdventureModeSetup },
+    { (void*)D_80101DC0_AdventureModeSetup, (void*)D_80101DBC_AdventureModeSetup, (void*)D_80101DB8_AdventureModeSetup },
+    { (void*)D_80101DC0_AdventureModeSetup, (void*)D_80101DBC_AdventureModeSetup, (void*)D_80101DB8_AdventureModeSetup },
+    { (void*)D_80101DC0_AdventureModeSetup, (void*)D_80101DBC_AdventureModeSetup, (void*)D_80101DB8_AdventureModeSetup },
+    { (void*)D_80101DC0_AdventureModeSetup, (void*)D_80101DBC_AdventureModeSetup, (void*)D_80101DB8_AdventureModeSetup },
+};
+void* D_80101AD0_AdventureModeSetup[3] = {
+    (void*)D_80101DB4_AdventureModeSetup, (void*)D_80101DC0_AdventureModeSetup, (void*)D_80101DB0_AdventureModeSetup,
+};
+s32 D_80101ADC_AdventureModeSetup = 0; /* the u16 at D_80101ADE is its low half */
+s32 D_80101AE0_AdventureModeSetup = 0;
+s32 D_80101AE4_AdventureModeSetup = 0;
+
 void func_800F6610_AdventureModeSetup() {
     D_80101F70_AdventureModeSetup = 0;
     func_800F66A8_AdventureModeSetup();
@@ -3028,15 +3084,15 @@ void func_800FF0A0_AdventureModeSetup(void) {
 #else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6A_AdventureModeSetup/2BF1D0", func_800FF0A0_AdventureModeSetup);
 #endif
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6A_AdventureModeSetup/2BF1D0", D_80101DB0_AdventureModeSetup);
+const char D_80101DB0_AdventureModeSetup[] = "30";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6A_AdventureModeSetup/2BF1D0", D_80101DB4_AdventureModeSetup);
+const char D_80101DB4_AdventureModeSetup[] = "10";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6A_AdventureModeSetup/2BF1D0", D_80101DB8_AdventureModeSetup);
+const char D_80101DB8_AdventureModeSetup[] = "50";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6A_AdventureModeSetup/2BF1D0", D_80101DBC_AdventureModeSetup);
+const char D_80101DBC_AdventureModeSetup[] = "35";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6A_AdventureModeSetup/2BF1D0", D_80101DC0_AdventureModeSetup);
+const char D_80101DC0_AdventureModeSetup[] = "20";
 
 void func_800FF328_AdventureModeSetup(void) {
     s32 pad[4]; // retail's frame has an unexplained 16-byte local area
@@ -3102,7 +3158,7 @@ void func_800FF328_AdventureModeSetup(void) {
                         D_801025D0_AdventureModeSetup = D_80101A70_AdventureModeSetup[D_8010259C_AdventureModeSetup.unk00][0];
                     } else {
                         D_801025C4_AdventureModeSetup = 0x27D;
-                        D_801025D0_AdventureModeSetup = D_80101ACC_AdventureModeSetup[1];
+                        D_801025D0_AdventureModeSetup = D_80101AD0_AdventureModeSetup[1 - 1];
                     }
                     c->unk18 = 1;
                     obj->work[1] = 3;
@@ -3166,7 +3222,7 @@ void func_800FF328_AdventureModeSetup(void) {
                                     D_801025D0_AdventureModeSetup = D_80101A70_AdventureModeSetup[D_8010259C_AdventureModeSetup.unk00][n - 1];
                                 } else {
                                     D_801025C4_AdventureModeSetup = n + 0x27C;
-                                    D_801025D0_AdventureModeSetup = D_80101ACC_AdventureModeSetup[n];
+                                    D_801025D0_AdventureModeSetup = D_80101AD0_AdventureModeSetup[n - 1];
                                 }
                             }
                             break;
@@ -3239,7 +3295,7 @@ void func_800FF328_AdventureModeSetup(void) {
                                     D_801025D0_AdventureModeSetup = D_80101A70_AdventureModeSetup[D_8010259C_AdventureModeSetup.unk00][n - 1];
                                 } else {
                                     D_801025C4_AdventureModeSetup = n + 0x27C;
-                                    D_801025D0_AdventureModeSetup = D_80101ACC_AdventureModeSetup[n];
+                                    D_801025D0_AdventureModeSetup = D_80101AD0_AdventureModeSetup[n - 1];
                                 }
                             }
                             PlaySound(0x4A);

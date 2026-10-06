@@ -2277,8 +2277,8 @@ segments:
     subsegments:
       - [0x2BF1A0, c]
       - [0x2BF1D0, c]
-      - [0x2CA400, data, 2BF1A0]
-      - [0x2CA430, data, 2BF1D0]
+      - [0x2CA400, .data, 2BF1A0]
+      - [0x2CA430, .data, 2BF1D0]
       - [0x2CA6B0, .rodata, 2BF1D0]
       - {0x2CAA00, type: bss, vram: 0x80101E40, name: ovl_6A_bss}
   - type: code

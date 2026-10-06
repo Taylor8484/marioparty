@@ -24,13 +24,25 @@ extern unkStructSize14 D_800C59AC[];
 // extern void* D_800C59B0[];
 extern u8 D_800F64F8;
 
-extern board_overlay_entrypoint D_80101840_AdventureModeSetup;
+extern board_overlay_entrypoint D_80101840_AdventureModeSetup[];
+void func_800F6610_AdventureModeSetup();
+void func_800F6630_AdventureModeSetup();
+void func_800F6654_AdventureModeSetup();
+void func_800F6678_AdventureModeSetup();
+extern const char D_80101DB0_AdventureModeSetup[];
+extern const char D_80101DB4_AdventureModeSetup[];
+extern const char D_80101DB8_AdventureModeSetup[];
+extern const char D_80101DBC_AdventureModeSetup[];
+extern const char D_80101DC0_AdventureModeSetup[];
 extern s32 D_80101870_AdventureModeSetup[][4];
 extern s32 D_801018B0_AdventureModeSetup[][8]; /* neighbour table */
 extern s32 D_80101A40_AdventureModeSetup;
-extern u8 D_80101A43_AdventureModeSetup;
 extern s32 D_80101ADC_AdventureModeSetup;
-extern u16 D_80101ADE_AdventureModeSetup;
+#ifndef TARGET_PC
+extern u16 D_80101ADE_AdventureModeSetup; /* the low half of D_80101ADC (undefined_syms alias) */
+#else
+#define D_80101ADE_AdventureModeSetup ((u16)D_80101ADC_AdventureModeSetup)
+#endif
 extern s32 D_80101AE4_AdventureModeSetup;
 extern s32 D_80101E4C_AdventureModeSetup;
 extern f32 D_80101E50_AdventureModeSetup;
@@ -281,8 +293,8 @@ extern s8 ContStkY[];
 extern s32 D_80101F44_AdventureModeSetup;
 extern f32 D_80101F48_AdventureModeSetup;
 extern f32 D_80101F4C_AdventureModeSetup;
-extern void* D_80101A70_AdventureModeSetup[][3]; /* [board][answer - 1]: message string */
-extern void* D_80101ACC_AdventureModeSetup[]; /* [n] for n = 1..3 */
+extern void* D_80101A70_AdventureModeSetup[8][3]; /* [board][answer - 1]: message string */
+extern void* D_80101AD0_AdventureModeSetup[]; /* retail indexes it from D_80101ACC: [n - 1], n = 1..3 */
 #define AMSD_ABS(x) (((x) < 0.0f) ? -(x) : (x))
 /* ---- end fork D ---- */
 
