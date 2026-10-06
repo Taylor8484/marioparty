@@ -262,7 +262,7 @@ void func_800F70E4_AdventureModeSetup() {
         }
 
         if (D_801025B8_AdventureModeSetup != -1) {
-            LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) D_801025B8_AdventureModeSetup, -1, -1);
+            LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)D_801025B8_AdventureModeSetup, -1, -1);
             D_801025B8_AdventureModeSetup = -1;
         }
 
@@ -284,7 +284,7 @@ void func_800F70E4_AdventureModeSetup() {
 void func_800F71DC_AdventureModeSetup() {
     while (TRUE) {
         if (D_801025C4_AdventureModeSetup != -1) {
-            LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) D_801025C4_AdventureModeSetup, -1, -1);
+            LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)D_801025C4_AdventureModeSetup, -1, -1);
             func_8006DA5C(D_801025B4_AdventureModeSetup, D_801025D0_AdventureModeSetup, 0);
 
             while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
@@ -423,9 +423,9 @@ void func_800F72E0_AdventureModeSetup(void) {
                 break;
             case 7:
                 if (D_80101F70_AdventureModeSetup != 3) {
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x284, -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x284, -1, -1);
                 } else {
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x26C, -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x26C, -1, -1);
                 }
                 func_80071C8C(D_801025B4_AdventureModeSetup, 1);
                 while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
@@ -435,13 +435,13 @@ void func_800F72E0_AdventureModeSetup(void) {
                 break;
             case 8:
                 if (D_80101F70_AdventureModeSetup != 3) {
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x285, -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x285, -1, -1);
                 } else {
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x26D, -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x26D, -1, -1);
                     while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
                         HuPrcVSleep();
                     }
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x26E, -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x26E, -1, -1);
                 }
                 while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
                     HuPrcVSleep();
@@ -464,9 +464,9 @@ void func_800F72E0_AdventureModeSetup(void) {
                 break;
             case 11:
                 if (D_80101F70_AdventureModeSetup != 3) {
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x286, -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x286, -1, -1);
                 } else {
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x273, -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x273, -1, -1);
                 }
                 func_80071C8C(D_801025B4_AdventureModeSetup, 1);
                 while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
@@ -499,9 +499,9 @@ void func_800F72E0_AdventureModeSetup(void) {
                     }
                     if (i >= AMS_SEL.count) {
                         if (D_80101F70_AdventureModeSetup != 3) {
-                            LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) (AMS_SEL.count + 0x286), -1, -1);
+                            LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)(AMS_SEL.count + 0x286), -1, -1);
                         } else {
-                            LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) (AMS_SEL.count + 0x273), -1, -1);
+                            LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)(AMS_SEL.count + 0x273), -1, -1);
                         }
                         func_80071C8C(D_801025B4_AdventureModeSetup, 1);
                         while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
@@ -555,7 +555,7 @@ void func_800F72E0_AdventureModeSetup(void) {
                 }
                 break;
             case 21:
-                LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x28A, -1, -1);
+                LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x28A, -1, -1);
                 func_80071C8C(D_801025B4_AdventureModeSetup, 1);
                 while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
                     HuPrcVSleep();
@@ -590,10 +590,10 @@ void func_800F72E0_AdventureModeSetup(void) {
                 break;
             case 26:
                 if (D_80101F70_AdventureModeSetup != 3) {
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x295, -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x295, -1, -1);
                     func_80071C8C(D_801025B4_AdventureModeSetup, 1);
                 } else {
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x27C, -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x27C, -1, -1);
                 }
                 while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
                     HuPrcVSleep();
@@ -663,14 +663,14 @@ void func_800F72E0_AdventureModeSetup(void) {
                         shown = 1;
                         D_80101FF8_AdventureModeSetup->work[1] = 1;
                     }
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) (i + 0x29A), -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)(i + 0x29A), -1, -1);
                     if (k == 0) {
                         k = 1;
                         func_80071C8C(D_801025B4_AdventureModeSetup, 1);
                     }
                     while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
                         if (ContDStkTrg[port] & 0x4000) {
-                            LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x2A6, -1, -1);
+                            LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x2A6, -1, -1);
                             HuPrcVSleep();
                             j = func_8006FCF0(D_801025B4_AdventureModeSetup, 1, 0);
                             if (j == 0) {
@@ -709,7 +709,7 @@ void func_800F72E0_AdventureModeSetup(void) {
                 }
                 k = 0;
                 do {
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x2A7, -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x2A7, -1, -1);
                     if (k == 0) {
                         k = 1;
                         func_80071C8C(D_801025B4_AdventureModeSetup, 1);
@@ -719,7 +719,7 @@ void func_800F72E0_AdventureModeSetup(void) {
                     if (i == 0) {
                         obj->work[1] = 0x23;
                     } else {
-                        LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*) 0x2A6, -1, -1);
+                        LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x2A6, -1, -1);
                         HuPrcVSleep();
                         j = func_8006FCF0(D_801025B4_AdventureModeSetup, 1, 0);
                         if (j == 0) {
@@ -1299,9 +1299,9 @@ void func_800F9090_AdventureModeSetup(void) {
                 }
             }
             if (D_80101F70_AdventureModeSetup != 3) {
-                LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)0x2A8, -1, -1);
+                LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x2A8, -1, -1);
             } else {
-                LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)0x281, -1, -1);
+                LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x281, -1, -1);
             }
             while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
                 HuPrcVSleep();
@@ -1360,7 +1360,7 @@ void func_800F9090_AdventureModeSetup(void) {
                 } else {
                     k = AMS_COUNT - 0x281;
                 }
-                LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)(j - k - 1), -1, -1);
+                LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)(PB_PTR32)(j - k - 1), -1, -1);
                 while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
                     HuPrcVSleep();
                 }
@@ -1414,7 +1414,7 @@ void func_800F9090_AdventureModeSetup(void) {
                     } else {
                         k = AMS_COUNT - 0x281;
                     }
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)(j - k), -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)(PB_PTR32)(j - k), -1, -1);
                     while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
                         HuPrcVSleep();
                     }
@@ -1582,9 +1582,9 @@ void func_800F9090_AdventureModeSetup(void) {
                     func_800184BC(D_80101F88_AdventureModeSetup[AMS_SLOTS[k]], 2);
                 }
                 if (D_80101F70_AdventureModeSetup != 3) {
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)0x2A5, -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x2A5, -1, -1);
                 } else {
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)0x27B, -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x27B, -1, -1);
                 }
                 if (D_80101E7C_AdventureModeSetup == 0) {
                     D_80101E7C_AdventureModeSetup = 1;
@@ -1661,9 +1661,9 @@ void func_800F9090_AdventureModeSetup(void) {
                 D_80101FD8_AdventureModeSetup[j]->work[1] = 1;
                 func_800184BC(D_80101F88_AdventureModeSetup[AMS_SLOTS[j]], 2);
                 if (D_80101F70_AdventureModeSetup != 3) {
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)0x2A4, -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x2A4, -1, -1);
                 } else {
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)0x27A, -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x27A, -1, -1);
                 }
                 func_8006DA5C(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)(AMS_SLOTS[j] + 0x2C), 0);
                 if (D_80101E7C_AdventureModeSetup == 0) {
@@ -1720,7 +1720,7 @@ void func_800F9090_AdventureModeSetup(void) {
             }
             break;
         case 21:
-            LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)0x277, -1, -1);
+            LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x277, -1, -1);
             if (D_80101E7C_AdventureModeSetup == 0) {
                 D_80101E7C_AdventureModeSetup = 1;
                 func_80071C8C(D_801025B4_AdventureModeSetup, 1);
@@ -1758,9 +1758,9 @@ void func_800F9090_AdventureModeSetup(void) {
                 AMS_A4[j] = 0;
                 func_800184BC(D_80101F88_AdventureModeSetup[AMS_SLOTS[j]], 2);
                 if (j < AMS_COUNT) {
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)0x278, -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x278, -1, -1);
                 } else {
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)0x279, -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x279, -1, -1);
                 }
                 func_8006DA5C(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)(AMS_SLOTS[k] + 0x2C), 0);
                 if (D_80101E7C_AdventureModeSetup == 0) {
@@ -2342,9 +2342,9 @@ void func_800FCAB8_AdventureModeSetup(void) {
             obj->trans.y = pos->unk28;
             obj->trans.z = pos->unk2C;
             if (D_80101F70_AdventureModeSetup != 3) {
-                LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(sel + 0x2A0), -1, -1);
+                LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)(sel + 0x2A0), -1, -1);
             } else {
-                LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(sel + 0x26F), -1, -1);
+                LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)(sel + 0x26F), -1, -1);
             }
             func_80071C8C(D_801025B4_AdventureModeSetup, 1);
             self->work[1] = 5;
@@ -2638,7 +2638,7 @@ void func_800FD804_AdventureModeSetup(void) {
             }
             break;
         case 5:
-            LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(D_80101A6C_AdventureModeSetup + 0x28C), -1, -1);
+            LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)(D_80101A6C_AdventureModeSetup + 0x28C), -1, -1);
             func_80071C8C(D_801025B4_AdventureModeSetup, 1);
             while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
                 HuPrcVSleep();
@@ -2660,7 +2660,7 @@ void func_800FD804_AdventureModeSetup(void) {
             }
             if (ContDStkTrg[D_80102580_AdventureModeSetup.unk00] & 0x8000) {
                 PlaySound(0x53);
-                LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)0x28B, -1, -1);
+                LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x28B, -1, -1);
                 while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
                     HuPrcVSleep();
                 }
@@ -2670,7 +2670,7 @@ void func_800FD804_AdventureModeSetup(void) {
                     self->work[1] = 11;
                     func_80071E80(D_801025B4_AdventureModeSetup, 1);
                 } else {
-                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(D_80101A6C_AdventureModeSetup + 0x28C), -1, -1);
+                    LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)(D_80101A6C_AdventureModeSetup + 0x28C), -1, -1);
                 }
             } else if (dir != -1) {
                 prev = D_80101A6C_AdventureModeSetup;
@@ -3175,9 +3175,9 @@ void func_800FF328_AdventureModeSetup(void) {
                     D_801025C8_AdventureModeSetup != 0 && D_801025C4_AdventureModeSetup == -1) {
                     PlaySound(0x53);
                     if (D_80101F70_AdventureModeSetup != 3) {
-                        LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)0x299, -1, -1);
+                        LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x299, -1, -1);
                     } else {
-                        LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)0x280, -1, -1);
+                        LoadStringIntoWindow(D_801025B4_AdventureModeSetup, (void*)(PB_PTR32)0x280, -1, -1);
                     }
                     while (func_8006FCC0(D_801025B4_AdventureModeSetup) != 0) {
                         HuPrcVSleep();
