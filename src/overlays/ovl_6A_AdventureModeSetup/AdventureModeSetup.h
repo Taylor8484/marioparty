@@ -25,8 +25,8 @@ extern unkStructSize14 D_800C59AC[];
 extern u8 D_800F64F8;
 
 extern board_overlay_entrypoint D_80101840_AdventureModeSetup;
-// extern void* D_80101870_AdventureModeSetup;
-extern void* D_801018B0_AdventureModeSetup;
+extern s32 D_80101870_AdventureModeSetup[][4];
+extern s32 D_801018B0_AdventureModeSetup[][8]; /* neighbour table */
 extern s32 D_80101A40_AdventureModeSetup;
 extern u8 D_80101A43_AdventureModeSetup;
 extern s32 D_80101ADC_AdventureModeSetup;
@@ -41,7 +41,7 @@ extern f32 D_80101F10_AdventureModeSetup;
 extern f32 D_80101F14_AdventureModeSetup;
 extern f32 D_80101F18_AdventureModeSetup;
 extern f32 D_80101F1C_AdventureModeSetup;
-extern void* D_80101F60_AdventureModeSetup;
+extern f32 D_80101F60_AdventureModeSetup[];
 extern s32 D_80101F74_AdventureModeSetup;
 extern s32 D_80101F78_AdventureModeSetup;
 extern omObjData* D_80101F88_AdventureModeSetup[];
@@ -63,23 +63,11 @@ extern Vec3f D_80102004_AdventureModeSetup;
 extern Vec3f D_8010200C_AdventureModeSetup;
 extern Vec3f D_80102010_AdventureModeSetup;
 extern Vec3f D_80102018_AdventureModeSetup;
-extern unk_Struct00* D_80102028_AdventureModeSetup;
-extern void* D_8010206C_AdventureModeSetup;
 extern unk_Struct00 D_80102410_AdventureModeSetup;
 extern f32 D_80102448_AdventureModeSetup;
 extern unk_D80102450_AdventureModeSetup D_80102450_AdventureModeSetup;
 extern f32 D_80102474_AdventureModeSetup;
 extern f32 D_80102478_AdventureModeSetup;
-extern void* D_80102530_AdventureModeSetup;
-/* D_80102570: declared as AMSSelect in the fork A block below */
-extern s32 D_80102570_AdventureModeSetup[];
-extern unkAMSetupStruct01 D_80102580_AdventureModeSetup;
-extern s32 D_80102584_AdventureModeSetup;
-extern void* D_80102588_AdventureModeSetup;
-extern unkAMSetupStruct01 D_8010259C_AdventureModeSetup;
-extern void* D_801025A0_AdventureModeSetup;
-extern u16 D_801025A2_AdventureModeSetup;
-extern void* D_801025A4_AdventureModeSetup;
 extern s16 D_801025B4_AdventureModeSetup;
 extern s32 D_801025B8_AdventureModeSetup;
 extern s32 D_801025BC_AdventureModeSetup;
@@ -180,31 +168,7 @@ typedef struct AMSObjWork {
     /* 0xDC */ char unk_DC[0xC];
 } AMSObjWork; /* size = 0xE8 */
 
-/* D_80102028: an array of 0x6C-byte records indexed by omObjData::work[0]. */
-typedef struct AMSPiece {
-    /* 0x00 */ char unk00[0x3C];
-    /* 0x3C */ f32 unk3C;
-    /* 0x40 */ f32 unk40;
-    /* 0x44 */ f32 unk44;
-    /* 0x48 */ char unk48[0x10];
-    /* 0x58 */ s32 unk58;
-    /* 0x5C */ char unk5C[0x10];
-} AMSPiece; /* size = 0x6C */
-#define AMS_PIECES ((AMSPiece*)&D_80102028_AdventureModeSetup)
 
-/* The selection state at D_80102570 (asm bss): retail addresses it as one object (one base
-   register for D_80102584 and D_8010259C, D_80102570 reached as D_80102584 - 0x14). */
-typedef struct AMSSelect {
-    /* 0x00 */ s32 joined[4]; /* D_80102570: per controller port */
-    /* 0x10 */ s32 port;      /* D_80102580 */
-    /* 0x14 */ s32 count;     /* D_80102584 */
-    /* 0x18 */ s32 unk18[4];  /* D_80102588 */
-    /* 0x28 */ s32 unk28;
-    /* 0x2C */ s32 unk2C;     /* D_8010259C */
-    /* 0x30 */ s32 unk30;     /* D_801025A0 */
-} AMSSelect;
-extern AMSSelect D_80102570_AdventureModeSetup;
-#define AMS_SEL D_80102570_AdventureModeSetup
 
 extern f32 D_80101E40_AdventureModeSetup;
 extern f32 D_80101E44_AdventureModeSetup;
@@ -228,28 +192,6 @@ void func_80008FE8(omObjData*, f32);
 void func_80008FF4(omObjData*, f32);
 /* ---- end fork A ---- */
 /* ---- fork B ---- */
-/* D_80102028: 7 entries of 0x6C (bss 0x80102028..0x8010231C); declared above as a pointer. */
-typedef struct AMSPiece {
-    /* 0x00 */ char unk00[0xC];
-    /* 0x0C */ Vec3f unkC;
-    /* 0x18 */ f32 unk18;
-    /* 0x1C */ f32 unk1C;
-    /* 0x20 */ f32 unk20;
-    /* 0x24 */ Vec3f unk24;
-    /* 0x30 */ Vec3f unk30;
-    /* 0x3C */ f32 unk3C;
-    /* 0x40 */ f32 unk40;
-    /* 0x44 */ f32 unk44;
-    /* 0x48 */ f32 unk48;
-    /* 0x4C */ f32 unk4C;
-    /* 0x50 */ f32 unk50;
-    /* 0x54 */ f32 unk54;
-    /* 0x58 */ char unk58[0x14];
-} AMSPiece; /* size = 0x6C */
-#define AMS_PIECES ((AMSPiece*)&D_80102028_AdventureModeSetup)
-/* D_80102570 (s32[4], read to [4] = D_80102580) and D_80102588 (s32[5]) hold indices, declared void* above. */
-#define AMS_ACTIVE ((s32*)&D_80102570_AdventureModeSetup)
-#define AMS_SLOTS ((s32*)&D_80102588_AdventureModeSetup)
 extern u8 D_80101E88_AdventureModeSetup[];
 extern s32 D_80101E90_AdventureModeSetup[];
 extern f32 D_80101EA8_AdventureModeSetup[];
@@ -263,29 +205,6 @@ typedef struct AMSWork {
     u8 w0, w1, w2, w3;
 } AMSWork; /* omObjData.work[] as fields: retail tests two of them in one word */
 #define AMS_WORK(o) ((AMSWork*)(o)->work)
-typedef struct AMSCursor {
-    /* 0x00 */ Vec3f pos;
-    /* 0x0C */ char unk0C[0x10];
-} AMSCursor; /* size = 0x1C */
-typedef struct AMSUnk2500 {
-    /* 0x00 */ s32 unk0;
-    /* 0x04 */ char unk4[8];
-} AMSUnk2500; /* size = 0xC */
-typedef struct AMSUnk2530 {
-    /* 0x00 */ s32 unk0;
-    /* 0x04 */ char unk4[0xC];
-} AMSUnk2530; /* size = 0x10 */
-extern AMSCursor D_80102490_AdventureModeSetup[];
-extern AMSUnk2500 D_80102500_AdventureModeSetup[];
-#define AMS_2500 D_80102500_AdventureModeSetup
-#define AMS_2530 ((AMSUnk2530*)&D_80102530_AdventureModeSetup)
-/* 0x80102580..0x801025B4 looks like one block in retail: func_800F9090 reads the count (0x80102584)
-   through D_80102580 and once relative to D_801025A4. The C uses D_80102580.unk04 for it and the
-   separate labels for the rest; the host defines each label as its own array. */
-#define AMS_A4 ((s32*)&D_801025A4_AdventureModeSetup)
-#define AMS_CUR (D_80102580_AdventureModeSetup.unk00)
-#define AMS_COUNT (D_80102580_AdventureModeSetup.unk04)
-#define AMS_NEIGHBORS ((s32(*)[8])&D_801018B0_AdventureModeSetup)
 extern f32 D_80101970_AdventureModeSetup[][4];
 extern s32 D_80101A10_AdventureModeSetup[];
 extern s32 D_80101E70_AdventureModeSetup;
@@ -302,7 +221,6 @@ void func_80052CCC(s32, s32);
 #endif
 /* ---- end fork B ---- */
 /* ---- fork C ---- */
-extern s32 D_80101870_AdventureModeSetup[][4];
 extern s32 D_80101A64_AdventureModeSetup;
 extern s32 D_80101A68_AdventureModeSetup;
 typedef struct AMSetup3C {
@@ -332,11 +250,6 @@ extern f32 D_80101F04_AdventureModeSetup;
 extern f32 D_80101F08_AdventureModeSetup;
 extern AMSetup3C D_80102320_AdventureModeSetup[];
 s32 func_800FCA78_AdventureModeSetup(s32, s32, s32);
-typedef struct AMSetup1C {
-    /* 0x00 */ Vec3f pos;
-    /* 0x0C */ char unk0C[0x10];
-} AMSetup1C; /* sizeof 0x1C */
-extern AMSetup1C D_80102490_AdventureModeSetup[];
 extern s32 D_80101F0C_AdventureModeSetup;
 s32 func_800141FC(s16);
 extern s32 D_80101A6C_AdventureModeSetup;
@@ -361,40 +274,8 @@ typedef struct unkAMSetupSprites5 {
     /* 0x04 */ s16 sprite[5];
 } unkAMSetupSprites5; // sizeof 0x10
 
-typedef struct unkAMSetupMove {
-    /* 0x00 */ Vec3f target;
-    /* 0x0C */ s32 frames;
-    /* 0x10 */ Vec3f step;
-} unkAMSetupMove; // sizeof 0x1C
-
-typedef struct unkAMSetupChar {
-    /* 0x00 */ char unk00[0x44];
-    /* 0x44 */ f32 unk44;
-    /* 0x48 */ char unk48[0x24];
-} unkAMSetupChar; // sizeof 0x6C
-
-/* The shared declarations above are scalars/pointers at addresses that are really arrays; these views
-   keep them untouched (same address, same codegen). */
-#define AMSD_CHAR ((unkAMSetupChar*)&D_80102028_AdventureModeSetup)
-#define AMSD_ALPHA5 ((f32*)&D_80101F60_AdventureModeSetup)
-typedef struct unkAMSetupState {
-    /* 0x00 */ s32 unk00;
-    /* 0x04 */ s32 count;    /* humans */
-    /* 0x08 */ s32 order[4]; /* character per port */
-    /* 0x18 */ s32 sel;      /* board index */
-    /* 0x1C */ s32 mode;     /* low half = play type */
-    /* 0x20 */ s32 coins[4]; /* low half = start coins */
-} unkAMSetupState; // starts at D_80102580
-#define AMSD_S (*(unkAMSetupState*)&D_80102580_AdventureModeSetup)
-#define AMSD_AR ((s32*)&D_80102584_AdventureModeSetup) /* [0] humans, [1..4] character per port */
-#define AMSD_ACTIVE ((s32*)&D_80102570_AdventureModeSetup) /* s32[4]: nonzero = human */
-#define AMSD_ORDER ((s32*)&D_80102588_AdventureModeSetup)  /* s32[4]: character per port */
-#define AMSD_COINS ((s32*)&D_801025A4_AdventureModeSetup)  /* s32[4]: low half = start coins */
-#define AMSD_SPR5 ((unkAMSetupSprites5*)&D_80102530_AdventureModeSetup)
 extern f32 D_80101F50_AdventureModeSetup[];
-extern unkAMSetupMove D_80102490_AdventureModeSetup[];
 extern s32 D_80101AE0_AdventureModeSetup;
-extern unkAMSetupSprites3 D_80102500_AdventureModeSetup[];
 void func_80100958_AdventureModeSetup(omObjData*);
 extern s8 ContStkY[];
 extern s32 D_80101F44_AdventureModeSetup;
@@ -402,6 +283,110 @@ extern f32 D_80101F48_AdventureModeSetup;
 extern f32 D_80101F4C_AdventureModeSetup;
 extern void* D_80101A70_AdventureModeSetup[][3]; /* [board][answer - 1]: message string */
 extern void* D_80101ACC_AdventureModeSetup[]; /* [n] for n = 1..3 */
-#define AMSD_MODE (*(s32*)&D_801025A0_AdventureModeSetup) /* declared void* above; retail stores ints */
 #define AMSD_ABS(x) (((x) < 0.0f) ? -(x) : (x))
 /* ---- end fork D ---- */
+
+/* ---- bss blocks that retail indexes across splat's labels ----
+   Each block is one object: the C names its base label, and the labels inside it are views of the
+   base. The N64 build keeps splat's separate symbols (same addresses, same codegen); on the host the
+   inner labels are macros over the base object, so gen_ovl.py emits one object per block and the
+   cross-label indexing (count at D_801025A4 - 0x20, [4] of D_80102570, pieces 2..6) stays inside it.
+   The blocks hold no pointers, so the host layout is the N64 layout. */
+
+/* D_80102028: 7 records of 0x6C, indexed by omObjData::work[0] (splat split it at D_8010206C). */
+typedef struct AMSPiece {
+    /* 0x00 */ char unk00[0xC];
+    /* 0x0C */ Vec3f unkC;
+    /* 0x18 */ f32 unk18;
+    /* 0x1C */ f32 unk1C;
+    /* 0x20 */ f32 unk20;
+    /* 0x24 */ Vec3f unk24;
+    /* 0x30 */ Vec3f unk30;
+    /* 0x3C */ f32 unk3C;
+    /* 0x40 */ f32 unk40;
+    /* 0x44 */ f32 unk44;
+    /* 0x48 */ f32 unk48;
+    /* 0x4C */ f32 unk4C;
+    /* 0x50 */ f32 unk50;
+    /* 0x54 */ f32 unk54;
+    /* 0x58 */ s32 unk58;
+    /* 0x5C */ char unk5C[0x10];
+} AMSPiece; /* size = 0x6C */
+extern AMSPiece D_80102028_AdventureModeSetup[7];
+#define AMS_PIECES D_80102028_AdventureModeSetup
+#define AMSD_CHAR D_80102028_AdventureModeSetup
+
+/* D_80102570..0x801025B3: the selection state. Retail addresses it as one object (one base
+   register for D_80102584 and D_8010259C, D_80102570 reached as D_80102584 - 0x14). */
+typedef struct AMSSelect {
+    /* 0x00 */ s32 joined[4]; /* D_80102570: per controller port, nonzero = human */
+    /* 0x10 */ s32 port;      /* D_80102580 (its low half is D_80102582) */
+    /* 0x14 */ s32 count;     /* D_80102584: humans */
+    /* 0x18 */ s32 unk18[4];  /* D_80102588: character per port */
+    /* 0x28 */ s32 unk28;     /* board index */
+    /* 0x2C */ s32 unk2C;     /* D_8010259C */
+    /* 0x30 */ s32 unk30;     /* D_801025A0: mode; low half (D_801025A2) = play type */
+    /* 0x34 */ s32 coins[4];  /* D_801025A4: low half = start coins */
+} AMSSelect; /* size = 0x44 */
+extern AMSSelect D_80102570_AdventureModeSetup;
+#define AMS_SEL D_80102570_AdventureModeSetup
+
+/* The same block from D_80102580 (fork D's view). */
+typedef struct unkAMSetupState {
+    /* 0x00 */ s32 unk00;
+    /* 0x04 */ s32 count;    /* humans */
+    /* 0x08 */ s32 order[4]; /* character per port */
+    /* 0x18 */ s32 sel;      /* board index */
+    /* 0x1C */ s32 mode;     /* low half = play type */
+    /* 0x20 */ s32 coins[4]; /* low half = start coins */
+} unkAMSetupState;
+
+#ifndef TARGET_PC
+extern s32 D_8010206C_AdventureModeSetup;
+extern unkAMSetupStruct01 D_80102580_AdventureModeSetup;
+extern s32 D_80102584_AdventureModeSetup;
+extern s32 D_80102588_AdventureModeSetup;
+extern unkAMSetupStruct01 D_8010259C_AdventureModeSetup;
+extern s32 D_801025A0_AdventureModeSetup;
+extern u16 D_801025A2_AdventureModeSetup;
+extern s32 D_801025A4_AdventureModeSetup;
+#else
+#define PB_AMS_AT(T, base, off) (*(T*)((u8*)&(base) + (off)))
+#define D_8010206C_AdventureModeSetup PB_AMS_AT(s32, D_80102028_AdventureModeSetup, 0x44)
+#define D_80102580_AdventureModeSetup PB_AMS_AT(unkAMSetupStruct01, D_80102570_AdventureModeSetup, 0x10)
+#define D_80102584_AdventureModeSetup PB_AMS_AT(s32, D_80102570_AdventureModeSetup, 0x14)
+#define D_80102588_AdventureModeSetup PB_AMS_AT(s32, D_80102570_AdventureModeSetup, 0x18)
+#define D_8010259C_AdventureModeSetup PB_AMS_AT(unkAMSetupStruct01, D_80102570_AdventureModeSetup, 0x2C)
+#define D_801025A0_AdventureModeSetup PB_AMS_AT(s32, D_80102570_AdventureModeSetup, 0x30)
+/* the low half of D_801025A0's word: offset 0 of it on a little-endian host */
+#define D_801025A2_AdventureModeSetup ((u16)D_801025A0_AdventureModeSetup)
+#define D_801025A4_AdventureModeSetup PB_AMS_AT(s32, D_80102570_AdventureModeSetup, 0x34)
+#endif
+
+#define AMS_ACTIVE (AMS_SEL.joined)
+#define AMSD_ACTIVE (AMS_SEL.joined)
+#define AMS_SLOTS ((s32*)&D_80102588_AdventureModeSetup)
+#define AMSD_ORDER ((s32*)&D_80102588_AdventureModeSetup)  /* s32[4]: character per port */
+#define AMSD_COINS ((s32*)&D_801025A4_AdventureModeSetup)  /* s32[4]: low half = start coins */
+#define AMS_A4 ((s32*)&D_801025A4_AdventureModeSetup)
+#define AMSD_AR ((s32*)&D_80102584_AdventureModeSetup) /* [0] humans, [1..4] character per port */
+#define AMSD_S (*(unkAMSetupState*)&D_80102580_AdventureModeSetup)
+#define AMS_CUR (D_80102580_AdventureModeSetup.unk00)
+#define AMS_COUNT (D_80102580_AdventureModeSetup.unk04)
+#define AMSD_MODE D_801025A0_AdventureModeSetup
+
+/* D_80102490: per-player camera/cursor moves. */
+typedef struct unkAMSetupMove {
+    /* 0x00 */ Vec3f target;
+    /* 0x0C */ s32 frames;
+    /* 0x10 */ Vec3f step;
+} unkAMSetupMove; /* size = 0x1C */
+extern unkAMSetupMove D_80102490_AdventureModeSetup[];
+
+extern unkAMSetupSprites3 D_80102500_AdventureModeSetup[];
+#define AMS_2500 D_80102500_AdventureModeSetup
+extern unkAMSetupSprites5 D_80102530_AdventureModeSetup[];
+#define AMS_2530 D_80102530_AdventureModeSetup
+#define AMSD_SPR5 D_80102530_AdventureModeSetup
+#define AMSD_ALPHA5 D_80101F60_AdventureModeSetup
+#define AMS_NEIGHBORS D_801018B0_AdventureModeSetup

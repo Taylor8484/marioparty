@@ -1006,7 +1006,7 @@ void func_800F9090_AdventureModeSetup(void) {
     omObjData* obj;
     omObjData* o;
     omObjData* q;
-    AMSCursor* c;
+    unkAMSetupMove* c;
     s32 i;
     s32 j;
     s32 k;
@@ -1221,9 +1221,9 @@ void func_800F9090_AdventureModeSetup(void) {
                         o->work[2] = 2;
                         D_80101FC8_AdventureModeSetup[i]->work[1] = 3;
                         c = &D_80102490_AdventureModeSetup[i];
-                        c->pos.x = o->trans.x;
-                        c->pos.y = o->trans.y;
-                        c->pos.z = o->trans.z;
+                        c->target.x = o->trans.x;
+                        c->target.y = o->trans.y;
+                        c->target.z = o->trans.z;
                     }
                 }
             }
@@ -1404,9 +1404,9 @@ void func_800F9090_AdventureModeSetup(void) {
                 o->work[2] = 2;
                 D_80101FC8_AdventureModeSetup[AMS_CUR]->work[1] = 3;
                 c = &D_80102490_AdventureModeSetup[AMS_CUR];
-                c->pos.x = o->trans.x;
-                c->pos.y = o->trans.y;
-                c->pos.z = o->trans.z;
+                c->target.x = o->trans.x;
+                c->target.y = o->trans.y;
+                c->target.z = o->trans.z;
             }
             break;
         case 8:
@@ -1542,7 +1542,7 @@ void func_800F9090_AdventureModeSetup(void) {
                 case 0:
                     for (j = AMS_COUNT; j < 4; j++) {
                         func_80052CCC(j, 0);
-                        AMS_2500[j].unk0 = 1;
+                        AMS_2500[j].unk00 = 1;
                         D_80101FD8_AdventureModeSetup[j]->work[1] = 3;
                         D_80101FD8_AdventureModeSetup[j]->work[3] = AMS_SLOTS[j];
                     }
@@ -1554,7 +1554,7 @@ void func_800F9090_AdventureModeSetup(void) {
                 case 2:
                     for (j = AMS_COUNT; j < 4; j++) {
                         func_80052CCC(j, 1);
-                        AMS_2500[j].unk0 = 2;
+                        AMS_2500[j].unk00 = 2;
                         D_80101FD8_AdventureModeSetup[j]->work[1] = 3;
                         D_80101FD8_AdventureModeSetup[j]->work[3] = AMS_SLOTS[j];
                     }
@@ -1562,7 +1562,7 @@ void func_800F9090_AdventureModeSetup(void) {
                 case 3:
                     for (j = AMS_COUNT; j < 4; j++) {
                         func_80052CCC(j, 2);
-                        AMS_2500[j].unk0 = 0;
+                        AMS_2500[j].unk00 = 0;
                         D_80101FD8_AdventureModeSetup[j]->work[1] = 3;
                         D_80101FD8_AdventureModeSetup[j]->work[3] = AMS_SLOTS[j];
                     }
@@ -1621,15 +1621,15 @@ void func_800F9090_AdventureModeSetup(void) {
                 switch (res) {
                 case 0:
                     func_80052CCC(j, 0);
-                    AMS_2500[j].unk0 = 1;
+                    AMS_2500[j].unk00 = 1;
                     goto set20;
                 case 1:
                     func_80052CCC(j, 1);
-                    AMS_2500[j].unk0 = 2;
+                    AMS_2500[j].unk00 = 2;
                     goto set20;
                 case 2:
                     func_80052CCC(j, 2);
-                    AMS_2500[j].unk0 = 0;
+                    AMS_2500[j].unk00 = 0;
                 set20:
                     D_80101FD8_AdventureModeSetup[j]->work[1] = 3;
                     D_80101FD8_AdventureModeSetup[j]->work[3] = AMS_SLOTS[j];
@@ -1729,7 +1729,7 @@ void func_800F9090_AdventureModeSetup(void) {
                     n++;
                 case 2:
                     AMS_A4[k] = (n + 1) * 10;
-                    AMS_2530[j].unk0 = n;
+                    AMS_2530[j].unk00 = n;
                     D_80101FE8_AdventureModeSetup[j]->work[1] = 3;
                     D_80101FE8_AdventureModeSetup[j]->work[3] = AMS_SLOTS[k];
                     break;
@@ -2215,7 +2215,7 @@ void func_800FCAB8_AdventureModeSetup(void) {
     omObjData* it;
     AMSetup3C* cam;
     AMSetup3C* pos;
-    AMSetup1C* dst;
+    unkAMSetupMove* dst;
     s32 sel;
     s32 prev;
     s32 dir;
@@ -2237,10 +2237,10 @@ void func_800FCAB8_AdventureModeSetup(void) {
                     if (D_80102580_AdventureModeSetup.unk00 == -1) {
                         D_80102580_AdventureModeSetup.unk00 = i;
                     }
-                    D_80102570_AdventureModeSetup[i] = 1;
+                    D_80102570_AdventureModeSetup.joined[i] = 1;
                     D_80101F0C_AdventureModeSetup++;
                 } else {
-                    D_80102570_AdventureModeSetup[i] = 0;
+                    D_80102570_AdventureModeSetup.joined[i] = 0;
                 }
             }
             if (D_80101F0C_AdventureModeSetup == 0) {
@@ -2324,7 +2324,7 @@ void func_800FCAB8_AdventureModeSetup(void) {
                 PlaySound(0x53);
                 i = D_80102580_AdventureModeSetup.unk00;
                 for (cnt = 0; cnt < sel + 1; i++) {
-                    if (D_80102570_AdventureModeSetup[i] != 0) {
+                    if (D_80102570_AdventureModeSetup.joined[i] != 0) {
                         cnt++;
                         func_8006CE64(i, 2, 3, 10);
                     }
@@ -2351,9 +2351,9 @@ void func_800FCAB8_AdventureModeSetup(void) {
                     cam = &D_80102320_AdventureModeSetup[sel];
                     D_80101FC8_AdventureModeSetup[D_80102580_AdventureModeSetup.unk00]->work[1] = 3;
                     dst = &D_80102490_AdventureModeSetup[D_80102580_AdventureModeSetup.unk00];
-                    dst->pos.x = cam->unk24;
-                    dst->pos.y = cam->unk28;
-                    dst->pos.z = cam->unk2C;
+                    dst->target.x = cam->unk24;
+                    dst->target.y = cam->unk28;
+                    dst->target.z = cam->unk2C;
                     if (D_80101F70_AdventureModeSetup != 3) {
                         D_801025B8_AdventureModeSetup = sel + 0x2A0;
                     } else {
@@ -3487,7 +3487,7 @@ void func_80100958_AdventureModeSetup(omObjData* arg0) {
     s32 i;
     s32 idx = arg0->work[0];
     omObjData* obj = D_80101F88_AdventureModeSetup[arg0->work[3]];
-    unkAMSetupChar* chr = &AMSD_CHAR[arg0->work[3]];
+    AMSPiece* chr = &AMSD_CHAR[arg0->work[3]];
     unkAMSetupSprites3* p = &D_80102500_AdventureModeSetup[idx];
 
     switch (arg0->work[1]) {
@@ -3579,7 +3579,7 @@ void func_80100E48_AdventureModeSetup(omObjData* arg0) {
     s32 i;
     s32 idx = arg0->work[0];
     omObjData* obj = D_80101F88_AdventureModeSetup[arg0->work[3]];
-    unkAMSetupChar* chr = &AMSD_CHAR[arg0->work[3]];
+    AMSPiece* chr = &AMSD_CHAR[arg0->work[3]];
     unkAMSetupSprites5* p = &AMSD_SPR5[idx];
 
     switch (arg0->work[1]) {
