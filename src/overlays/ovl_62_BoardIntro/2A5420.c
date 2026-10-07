@@ -8,6 +8,13 @@
 #endif
 extern Vec3f D_800FD690_BoardIntro[2]; /* camera path: start, end (+8 bytes unused) */
 
+/* .data */
+
+Vec3f D_800FD690_BoardIntro[2] = {
+    { -482.0f, 0.0f, 0.0f },
+    { -1276.0f, 0.0f, 758.0f },
+};
+
 void func_800F9500_BoardIntro(void) {
     LoadBackgroundIndex(7);
     HuPrcSleep(2);

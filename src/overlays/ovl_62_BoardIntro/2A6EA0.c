@@ -1,12 +1,41 @@
 #include "ovl62b.h"
 
 /* 2A2500 .data: the sign-turning object. Declared as an array: retail reloads it after its own store. */
+/* D_800FCD98_BoardIntro[1..3] (2A2500's data), split off by splat. */
+#ifdef TARGET_PC
+extern omObjData* D_800FCD98_BoardIntro[4];
+#define D_800FCD9C_BoardIntro (&D_800FCD98_BoardIntro[1])
+#else
 extern omObjData* D_800FCD9C_BoardIntro[1];
+#endif
 /* Camera path points; splat split it into D_800FD7D0 ([0]) and D_800FD7DC ([1]..[3]). [3] is unused. */
 extern Vec3f D_800FD7D0_BoardIntro[4];
 extern Vec3f D_800FD800_BoardIntro;
 extern Vec3f D_800FD80C_BoardIntro;
 extern Vec3f D_800FD818_BoardIntro; /* (+12 bytes unused) */
+
+/* .data */
+
+Vec3f D_800FD7D0_BoardIntro[4] = {
+    { -1182.0f, 0.0f, 726.0f },
+    { -4.0f, 0.0f, -1249.0f },
+    { 1244.0f, 0.0f, 727.0f },
+    { 510.0f, 410.0f, 450.0f },
+};
+
+Vec3f D_800FD800_BoardIntro = { -345.0f, 260.0f, 1800.0f };
+
+Vec3f D_800FD80C_BoardIntro = { -895.0f, 260.0f, 1800.0f };
+
+Vec3f D_800FD818_BoardIntro = { -413.0f, 210.0f, 1368.0f };
+
+/* Unreferenced position after D_800FD818. */
+Vec3f D_800FD824_BoardIntro = { 70.0f, 150.0f, 2834.0f };
+
+Vec3f D_800FD830_BoardIntro[2] = {
+    { 4.0f, 0.0f, -1335.0f },
+    { 1326.0f, 0.0f, 982.0f },
+};
 
 void func_800FAF80_BoardIntro(void) {
     LoadBackgroundIndex(0x2F);

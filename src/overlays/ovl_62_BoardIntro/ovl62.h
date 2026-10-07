@@ -14,17 +14,16 @@ extern Object* D_800FCD70_BoardIntro;
 /* Model/sprite ids kept as words; retail also reads their low halves (big-endian +2) as s16 under
    their own labels. On the host the low half is the word's value. */
 extern s32 D_800FCD74_BoardIntro;
-extern s32 D_800FCD78_BoardIntro;
+extern s32 D_800FCD78_BoardIntro[4];
 #ifdef TARGET_PC
 #define D_800FCD76_BoardIntro ((s16)D_800FCD74_BoardIntro)
-#define D_800FCD7A_BoardIntro ((s16)D_800FCD78_BoardIntro)
+#define D_800FCD7A_BoardIntro ((s16)D_800FCD78_BoardIntro[0])
 #else
 extern s16 D_800FCD76_BoardIntro;
 extern s16 D_800FCD7A_BoardIntro;
 #endif
-extern Object* D_800FCD88_BoardIntro;
-extern Object* D_800FCD8C_BoardIntro;
-extern Object* D_800FCD90_BoardIntro[2];
+/* Four models; splat split [1] off as D_800FCD8C and [2..3] as D_800FCD90 (N64 aliases only). */
+extern Object* D_800FCD88_BoardIntro[4];
 extern s32 D_800FCDA8_BoardIntro;
 extern Process* D_800FCDB4_BoardIntro;
 /* One camera position per board (indexed by D_801102B0); splat split it into the labels

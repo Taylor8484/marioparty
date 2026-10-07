@@ -7,6 +7,29 @@ extern Vec3f D_800FD6EC_BoardIntro;
 extern Vec3f D_800FD6F8_BoardIntro; /* centre of the star ring */
 extern s32 D_800FD704_BoardIntro[]; /* MBModelCreate motion list: count, file ids */
 
+/* .data */
+
+Vec3f D_800FD6B0_BoardIntro[2] = {
+    { -220.0f, 0.0f, -65.0f },
+    { -1303.0f, 0.0f, 579.0f },
+};
+
+Vec3f D_800FD6C8_BoardIntro[2] = {
+    { -500.0f, 0.0f, -87.0f },
+    { 89.0f, 0.0f, -87.0f },
+};
+
+Vec3f D_800FD6E0_BoardIntro = { -1750.0f, 0.0f, -5000.0f };
+
+Vec3f D_800FD6EC_BoardIntro = { -650.0f, 0.0f, 350.0f };
+
+Vec3f D_800FD6F8_BoardIntro = { 89.0f, 0.0f, -87.0f };
+
+s32 D_800FD704_BoardIntro[5] = {
+    4, 0xA0072, 0xA0073, 0xA0074,
+    0xA00B6,
+};
+
 void func_800F9920_BoardIntro(void) {
     Object* stars[7];
     f32 angle;

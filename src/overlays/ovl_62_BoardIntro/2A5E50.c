@@ -18,6 +18,25 @@ extern Object* D_800FDAC0_BoardIntro; /* bss: the first marker model (later ones
 extern Object* D_800FDAC8_BoardIntro[4]; /* bss: marker models */
 extern Object* D_800FDAD8_BoardIntro; /* bss */
 
+/* .data */
+
+s16 D_800FD720_BoardIntro[4] = {
+    71, 73, 69, 70,
+};
+
+s16 D_800FD728_BoardIntro[4] = {
+    98, 95, 96, 97,
+};
+
+s16 D_800FD730_BoardIntro[4] = {
+    96, 97, 98, 95,
+};
+
+Vec3f D_800FD738_BoardIntro[2] = {
+    { 1035.0f, 0.0f, -1209.0f },
+    { -1318.0f, 0.0f, 456.0f },
+};
+
 void func_800F9F30_BoardIntro(void) {
     LoadInitialSpaceTextures();
     LoadBoardSpaces(10, 0x48);

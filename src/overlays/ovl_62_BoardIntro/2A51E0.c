@@ -3,6 +3,15 @@
 extern Vec3f D_800FD660_BoardIntro[2]; /* camera path: start, end */
 extern Vec3f D_800FD678_BoardIntro;
 
+/* .data */
+
+Vec3f D_800FD660_BoardIntro[2] = {
+    { -1440.0f, 0.0f, -978.0f },
+    { 849.0f, 0.0f, 704.0f },
+};
+
+Vec3f D_800FD678_BoardIntro = { -109.5459976196289f, -167.447998046875f, -1129.89501953125f };
+
 void func_800F92C0_BoardIntro(void) {
     LoadBackgroundIndex(0);
     HuPrcSleep(2);
@@ -17,7 +26,7 @@ void func_800F92C0_BoardIntro(void) {
     func_800726AC(2, 20);
     HuPrcSleep(20);
     func_8004A140();
-    D_800FCD78_BoardIntro = LoadFormFile(0xA009C, 0x2B9);
+    D_800FCD78_BoardIntro[0] = LoadFormFile(0xA009C, 0x2B9);
     func_80025798(D_800FCD7A_BoardIntro, D_800FD678_BoardIntro.x, D_800FD678_BoardIntro.y, D_800FD678_BoardIntro.z);
     func_80025EB4(D_800FCD7A_BoardIntro, 2, 1);
 }

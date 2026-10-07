@@ -238,3 +238,7 @@ D_80101974_AdventureModeSetup = D_80101970_AdventureModeSetup + 0x4;
 D_80101978_AdventureModeSetup = D_80101970_AdventureModeSetup + 0x8;
 D_8010197C_AdventureModeSetup = D_80101970_AdventureModeSetup + 0xC;
 D_80101ADE_AdventureModeSetup = D_80101ADC_AdventureModeSetup + 0x2;
+/* ovl_62 BoardIntro: labels splat split out of C objects (2A2500 .data) */
+D_800FCD76_BoardIntro = D_800FCD74_BoardIntro + 0x2;
+D_800FCD7A_BoardIntro = D_800FCD78_BoardIntro + 0x2;
+D_800FCD9C_BoardIntro = D_800FCD98_BoardIntro + 0x4;

@@ -85,12 +85,8 @@ extern u8 D_800FD610_BoardIntro[8];
 extern void (*D_800FD618_BoardIntro[9])(void);
 extern void (*D_800FD63C_BoardIntro[9])(void);
 
-/* ovl62.h declares D_800FCD78 and D_800FCD88 as scalars, but retail indexes both as 4-entry
-   arrays: D_800FCD78 s32[4] (sprite ids, low half used as s16; FCD78..FCD87) and D_800FCD88
-   Object*[4] (D_800FCD8C = [1], D_800FCD90 = [2..3]). Layout-dependent until ovl62.h types
-   them as arrays. */
-#define BI_SPRITE(i) ((&D_800FCD78_BoardIntro)[i])
-#define BI_MODEL(i) ((&D_800FCD88_BoardIntro)[i])
+#define BI_SPRITE(i) (D_800FCD78_BoardIntro[i])
+#define BI_MODEL(i) (D_800FCD88_BoardIntro[i])
 
 /* bss: the board-name message block (splat split its .unk_14 off as D_800FDA64). */
 extern unkCommonStruct0 D_800FDA50_BoardIntro;

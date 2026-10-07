@@ -29,6 +29,87 @@ extern s32 D_800FD910_BoardIntro[]; /* MBModelCreate motion lists: a count, then
 extern s32 D_800FD920_BoardIntro[];
 extern s16 D_800FDB80_BoardIntro; /* bss: the message window */
 
+/* .data */
+
+Vec3f D_800FD850_BoardIntro[3] = {
+    { -1033.0f, 0.0f, -1058.0f },
+    { 1114.0f, 0.0f, -796.0f },
+    { 886.0f, 0.0f, 1067.0f },
+};
+
+Vec3f D_800FD874_BoardIntro[2] = {
+    { 525.0f, 185.0f, -3100.0f },
+    { 200.0f, 215.0f, -3350.0f },
+};
+
+Vec3f D_800FD88C_BoardIntro = { -400.0f, 20.0f, 1475.0f };
+
+Vec3f D_800FD898_BoardIntro = { -370.0f, 180.0f, 1125.0f };
+
+Vec3f D_800FD8A4_BoardIntro = { -145.0f, 0.0f, 1390.0f };
+
+Vec3f D_800FD8B0_BoardIntro = { 865.0f, 180.0f, 820.0f };
+
+Vec3f D_800FD8BC_BoardIntro = { -1605.0f, 180.0f, 5930.0f };
+
+Vec3f D_800FD8C8_BoardIntro[4] = {
+    { -25.0f, 0.0f, 2160.0f },
+    { 160.0f, 0.0f, 1665.0f },
+    { 270.0f, 0.0f, 1865.0f },
+    { 375.0f, 0.0f, 2035.0f },
+};
+
+Vec3f D_800FD8F8_BoardIntro = { 752.0f, 0.0f, 1443.0f };
+
+Vec3f D_800FD904_BoardIntro = { -145.0f, 0.0f, 1390.0f };
+
+s32 D_800FD910_BoardIntro[4] = {
+    3, 0xA0068, 0xA006B, 0xA006E,
+};
+
+s32 D_800FD920_BoardIntro[4] = {
+    1, 0xA00EC, 0, 0,
+};
+
+char D_800FD930_BoardIntro[12] = {
+    0x94, 0x92, 0x94, 0xBD, 0xA9, 0xDD, 0xE0, 0x84,
+    0x00, 0x00, 0x00, 0x00,
+};
+
+char D_800FD93C_BoardIntro[12] = {
+    0xD8, 0xCF, 0xEA, 0x81, 0xA9, 0x96, 0x9B, 0x80,
+    0xBD, 0x00, 0x00, 0x00,
+};
+
+char D_800FD948_BoardIntro[12] = {
+    0xEF, 0xF8, 0xD5, 0xA9, 0xA6, 0x9C, 0x80, 0xA9,
+    0x9C, 0xBB, 0x00, 0x00,
+};
+
+char D_800FD954_BoardIntro[12] = {
+    0xF9, 0xD2, 0x84, 0xDC, 0x80, 0xA9, 0x97, 0x96,
+    0xBD, 0x9C, 0xA2, 0x00,
+};
+
+char D_800FD960_BoardIntro[12] = {
+    0xFC, 0xF8, 0xD5, 0xA9, 0x9E, 0xBD, 0x9C, 0x80,
+    0x8E, 0x93, 0x00, 0x00,
+};
+
+char D_800FD96C_BoardIntro[8] = {
+    0xF6, 0xCF, 0xDC, 0x84, 0xA9, 0x9C, 0xAF, 0x00,
+};
+
+char D_800FD974_BoardIntro[12] = {
+    0xEB, 0x81, 0x84, 0xE1, 0xA9, 0xD9, 0x84, 0xD7,
+    0x00, 0x00, 0x00, 0x00,
+};
+
+char D_800FD980_BoardIntro[16] = {
+    0xE4, 0x80, 0xFD, 0xD7, 0x84, 0xA9, 0xDC, 0x80,
+    0xCC, 0xFD, 0xD8, 0x80, 0xF9, 0x00, 0x00, 0x00,
+};
+
 void func_800FB7C0_BoardIntro(void) {
     Object* obj;
 

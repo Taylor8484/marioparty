@@ -27,6 +27,42 @@ extern Object* D_800FDB08_BoardIntro[9]; /* bss: gate models */
 /* bss: gate states; splat split it into D_800FDB30 (.on of [0]) and D_800FDB34 (from .scale of [0]). */
 extern GateState D_800FDB30_BoardIntro[9];
 
+/* .data */
+
+s16 D_800FD750_BoardIntro[5] = {
+    98, 102, 101, 99, 100,
+};
+
+s16 D_800FD75C_BoardIntro[9] = {
+    74, 76, 75, 77, 78, 79, 80, 82,
+    83,
+};
+
+f32 D_800FD770_BoardIntro[9] = {
+    90.0f, 0.0f, 90.0f, 0.0f,
+    90.0f, 90.0f, 90.0f, 90.0f,
+    90.0f,
+};
+
+u16 D_800FD794_BoardIntro[2] = {
+    0x77, 0x33,
+};
+
+s16 D_800FD798_BoardIntro[9] = {
+    0, 1, 0, 0, 1, 0, 1, 0,
+    1,
+};
+
+/* Three more gate-kind halfwords past the nine gates (unread); scalars keep halfword alignment. */
+s16 D_800FD7AA_BoardIntro = 0;
+s16 D_800FD7AC_BoardIntro = 1;
+s16 D_800FD7AE_BoardIntro = 0;
+
+Vec3f D_800FD7B0_BoardIntro[2] = {
+    { 0.0f, 0.0f, -1078.0f },
+    { 1193.0f, 0.0f, 1014.0f },
+};
+
 void func_800FA5E0_BoardIntro(void) {
     LoadInitialSpaceTextures();
     LoadBoardSpaces(10, 0x49);

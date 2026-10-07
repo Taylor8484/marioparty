@@ -2,6 +2,257 @@
 #include "ovl62.h"
 #include "2A2500.h"
 
+/* .data */
+
+void func_800F6854_BoardIntro(void);
+void func_800F69F8_BoardIntro(void);
+void func_800F6B18_BoardIntro(void);
+void func_800F6BE4_BoardIntro(void);
+void func_800F6DAC_BoardIntro(void);
+void func_800F7054_BoardIntro(void);
+void func_800F7330_BoardIntro(void);
+void func_800F73FC_BoardIntro(void);
+void func_800F92C0_BoardIntro(void);
+void func_800F9500_BoardIntro(void);
+void func_800F9920_BoardIntro(void);
+void func_800FA168_BoardIntro(void);
+void func_800FAD50_BoardIntro(void);
+void func_800FAF80_BoardIntro(void);
+void func_800FB5D0_BoardIntro(void);
+void func_800FB7C0_BoardIntro(void);
+void func_800F93AC_BoardIntro(void);
+void func_800F959C_BoardIntro(void);
+void func_800F9BCC_BoardIntro(void);
+void func_800FA214_BoardIntro(void);
+void func_800FADFC_BoardIntro(void);
+void func_800FB20C_BoardIntro(void);
+void func_800FB66C_BoardIntro(void);
+void func_800FC1CC_BoardIntro(void);
+void func_800FC67C_BoardIntro(void);
+extern char D_800FD930_BoardIntro[];
+extern char D_800FD93C_BoardIntro[];
+extern char D_800FD948_BoardIntro[];
+extern char D_800FD954_BoardIntro[];
+extern char D_800FD960_BoardIntro[];
+extern char D_800FD96C_BoardIntro[];
+extern char D_800FD974_BoardIntro[];
+extern char D_800FD980_BoardIntro[];
+
+omObjData* D_800FCD30_BoardIntro[16] = {
+    NULL, NULL, NULL, NULL,
+    NULL, NULL, NULL, NULL,
+    NULL, NULL, NULL, NULL,
+    NULL, NULL, NULL, NULL,
+};
+
+Object* D_800FCD70_BoardIntro = NULL;
+
+s32 D_800FCD74_BoardIntro = -1;
+
+s32 D_800FCD78_BoardIntro[4] = {
+    -1, -1, -1, -1,
+};
+
+Object* D_800FCD88_BoardIntro[4] = {
+    NULL, NULL, NULL, NULL,
+};
+
+omObjData* D_800FCD98_BoardIntro[4] = {
+    NULL, NULL, NULL, NULL,
+};
+
+s32 D_800FCDA8_BoardIntro = 0;
+
+s32 D_800FCDAC_BoardIntro = 0;
+
+s32 D_800FCDB0_BoardIntro = 0;
+
+Process* D_800FCDB4_BoardIntro = NULL;
+
+s32 D_800FCDB8_BoardIntro[8] = {
+    6, 17, 26, 38,
+    46, 55, 67, 76,
+};
+
+s32 D_800FCDD8_BoardIntro[9] = {
+    1, 8, 19, 28,
+    40, 48, 57, 69,
+    78,
+};
+
+u8 D_800FCDFC_BoardIntro[8] = {
+    0x0A, 0x07, 0x07, 0x09, 0x0A, 0x09, 0x07, 0x08,
+};
+
+char* D_800FCE04_BoardIntro[8] = {
+    D_800FD980_BoardIntro, D_800FD974_BoardIntro, D_800FD96C_BoardIntro, D_800FD960_BoardIntro,
+    D_800FD954_BoardIntro, D_800FD948_BoardIntro, D_800FD93C_BoardIntro, D_800FD930_BoardIntro,
+};
+
+Vec3f D_800FCE24_BoardIntro[9] = {
+    { 0.0f, 0.0f, 2040.0f },
+    { 0.0f, 0.0f, 2040.0f },
+    { 0.0f, 0.0f, 2040.0f },
+    { 0.0f, 0.0f, 2040.0f },
+    { 0.0f, 0.0f, 2040.0f },
+    { 0.0f, 0.0f, 2040.0f },
+    { 0.0f, 0.0f, 2040.0f },
+    { 0.0f, 0.0f, 2040.0f },
+    { 0.0f, 0.0f, 2040.0f },
+};
+
+Vec3f D_800FCE90_BoardIntro = { -134.0f, 200.0f, 3263.0f };
+
+Vec3f D_800FCE9C_BoardIntro[9][4] = {
+    { { -105.0f, 0.0f, 2360.0f }, { 10.0f, 0.0f, 1725.0f }, { 205.0f, 0.0f, 1875.0f }, { 315.0f, 0.0f, 2300.0f } },
+    { { -105.0f, 0.0f, 2360.0f }, { 10.0f, 0.0f, 1725.0f }, { 205.0f, 0.0f, 1875.0f }, { 315.0f, 0.0f, 2300.0f } },
+    { { -105.0f, 0.0f, 2360.0f }, { 10.0f, 0.0f, 1725.0f }, { 205.0f, 0.0f, 1875.0f }, { 315.0f, 0.0f, 2300.0f } },
+    { { -105.0f, 0.0f, 2360.0f }, { 10.0f, 0.0f, 1725.0f }, { 205.0f, 0.0f, 1875.0f }, { 315.0f, 0.0f, 2300.0f } },
+    { { -105.0f, 0.0f, 2360.0f }, { 10.0f, 0.0f, 1725.0f }, { 205.0f, 0.0f, 1875.0f }, { 315.0f, 0.0f, 2300.0f } },
+    { { -105.0f, 0.0f, 2360.0f }, { 10.0f, 0.0f, 1725.0f }, { 205.0f, 0.0f, 1875.0f }, { 315.0f, 0.0f, 2300.0f } },
+    { { -105.0f, 0.0f, 2360.0f }, { 10.0f, 0.0f, 1725.0f }, { 205.0f, 0.0f, 1875.0f }, { 315.0f, 0.0f, 2300.0f } },
+    { { -105.0f, 0.0f, 2360.0f }, { 10.0f, 0.0f, 1725.0f }, { 205.0f, 0.0f, 1875.0f }, { 315.0f, 0.0f, 2300.0f } },
+    { { -105.0f, 0.0f, 2360.0f }, { 10.0f, 0.0f, 1725.0f }, { 205.0f, 0.0f, 1875.0f }, { 315.0f, 0.0f, 2300.0f } },
+};
+
+Vec3f D_800FD04C_BoardIntro[9][4] = {
+    { { -130.0f, 0.0f, 2175.0f }, { -35.0f, 0.0f, 1930.0f }, { 125.0f, 0.0f, 2045.0f }, { 220.0f, 0.0f, 2230.0f } },
+    { { -130.0f, 0.0f, 2175.0f }, { -35.0f, 0.0f, 1930.0f }, { 125.0f, 0.0f, 2045.0f }, { 220.0f, 0.0f, 2230.0f } },
+    { { -130.0f, 0.0f, 2175.0f }, { -35.0f, 0.0f, 1930.0f }, { 125.0f, 0.0f, 2045.0f }, { 220.0f, 0.0f, 2230.0f } },
+    { { -130.0f, 0.0f, 2175.0f }, { -35.0f, 0.0f, 1930.0f }, { 125.0f, 0.0f, 2045.0f }, { 220.0f, 0.0f, 2230.0f } },
+    { { -130.0f, 0.0f, 2175.0f }, { -35.0f, 0.0f, 1930.0f }, { 125.0f, 0.0f, 2045.0f }, { 220.0f, 0.0f, 2230.0f } },
+    { { -130.0f, 0.0f, 2175.0f }, { -35.0f, 0.0f, 1930.0f }, { 125.0f, 0.0f, 2045.0f }, { 220.0f, 0.0f, 2230.0f } },
+    { { -130.0f, 0.0f, 2175.0f }, { -35.0f, 0.0f, 1930.0f }, { 125.0f, 0.0f, 2045.0f }, { 220.0f, 0.0f, 2230.0f } },
+    { { -205.0f, 0.0f, 1925.0f }, { 40.0f, 0.0f, 1605.0f }, { 175.0f, 0.0f, 1770.0f }, { 245.0f, 0.0f, 1980.0f } },
+    { { -130.0f, 0.0f, 2175.0f }, { -35.0f, 0.0f, 1930.0f }, { 125.0f, 0.0f, 2045.0f }, { 220.0f, 0.0f, 2230.0f } },
+};
+
+Vec3f D_800FD1FC_BoardIntro[9][4] = {
+    { { -190.0f, 0.0f, 2120.0f }, { -15.0f, 0.0f, 2120.0f }, { 160.0f, 0.0f, 2120.0f }, { 335.0f, 0.0f, 2120.0f } },
+    { { -190.0f, 0.0f, 2120.0f }, { -15.0f, 0.0f, 2120.0f }, { 160.0f, 0.0f, 2120.0f }, { 335.0f, 0.0f, 2120.0f } },
+    { { -190.0f, 0.0f, 2120.0f }, { -15.0f, 0.0f, 2120.0f }, { 160.0f, 0.0f, 2120.0f }, { 335.0f, 0.0f, 2120.0f } },
+    { { -190.0f, 0.0f, 2120.0f }, { -15.0f, 0.0f, 2120.0f }, { 160.0f, 0.0f, 2120.0f }, { 335.0f, 0.0f, 2120.0f } },
+    { { -190.0f, 0.0f, 2120.0f }, { -15.0f, 0.0f, 2120.0f }, { 160.0f, 0.0f, 2120.0f }, { 335.0f, 0.0f, 2120.0f } },
+    { { -190.0f, 0.0f, 2120.0f }, { -15.0f, 0.0f, 2120.0f }, { 160.0f, 0.0f, 2120.0f }, { 335.0f, 0.0f, 2120.0f } },
+    { { -190.0f, 0.0f, 2120.0f }, { -15.0f, 0.0f, 2120.0f }, { 160.0f, 0.0f, 2120.0f }, { 335.0f, 0.0f, 2120.0f } },
+    { { -190.0f, 0.0f, 2120.0f }, { -15.0f, 0.0f, 2120.0f }, { 160.0f, 0.0f, 2120.0f }, { 335.0f, 0.0f, 2120.0f } },
+    { { -190.0f, 0.0f, 2120.0f }, { -15.0f, 0.0f, 2120.0f }, { 160.0f, 0.0f, 2120.0f }, { 335.0f, 0.0f, 2120.0f } },
+};
+
+s32 D_800FD3AC_BoardIntro[8] = {
+    0x23B, 0x23C, 0x23D, 0x23E,
+    0x23F, 0x240, 0x241, 0x242,
+};
+
+Vec3f D_800FD3CC_BoardIntro[8] = {
+    { -590.0f, 0.0f, 2040.0f },
+    { -345.0f, 600.0f, 2040.0f },
+    { -2250.0f, 0.0f, -5000.0f },
+    { -345.0f, 0.0f, 2040.0f },
+    { -45.0f, 0.0f, 4080.0f },
+    { 760.0f, 935.0f, -355.0f },
+    { -590.0f, 0.0f, 2040.0f },
+    { 865.0f, 180.0f, -3680.0f },
+};
+
+Vec3f D_800FD42C_BoardIntro = { -345.0f, 0.0f, 2040.0f };
+
+s32 D_800FD438_BoardIntro[9] = {
+    8, 0x1001E, 0x1001C, 0x10000,
+    0x10001, 0x10003, 0xA008B, 0x1003B,
+    0x10039,
+};
+
+s32 D_800FD45C_BoardIntro[9] = {
+    8, 0x2001E, 0x2001C, 0x20000,
+    0x20001, 0x20003, 0xA008C, 0x2003B,
+    0x20039,
+};
+
+s32 D_800FD480_BoardIntro[9] = {
+    8, 0x6001E, 0x6001C, 0x60000,
+    0x60001, 0x60003, 0xA008D, 0x6003B,
+    0x60039,
+};
+
+s32 D_800FD4A4_BoardIntro[9] = {
+    8, 0x3001E, 0x3001C, 0x30000,
+    0x30001, 0x30003, 0xA008E, 0x3003B,
+    0x30039,
+};
+
+s32 D_800FD4C8_BoardIntro[9] = {
+    8, 0x4001E, 0x4001C, 0x40000,
+    0x40001, 0x40003, 0xA008F, 0x4003B,
+    0x40039,
+};
+
+s32 D_800FD4EC_BoardIntro[9] = {
+    8, 0x5001E, 0x5001C, 0x50000,
+    0x50001, 0x50003, 0xA0090, 0x5003B,
+    0x50039,
+};
+
+s32* D_800FD510_BoardIntro[6] = {
+    D_800FD438_BoardIntro, D_800FD45C_BoardIntro, D_800FD480_BoardIntro, D_800FD4A4_BoardIntro,
+    D_800FD4C8_BoardIntro, D_800FD4EC_BoardIntro,
+};
+
+s32 D_800FD528_BoardIntro[4] = {
+    3, 0xA0072, 0xA0073, 0xA0074,
+};
+
+s32 D_800FD538_BoardIntro[4] = {
+    3, 0x70000, 0x70002, 0x70003,
+};
+
+u8 D_800FD548_BoardIntro[12] = {
+    0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+    0x00, 0x00, 0x00, 0x00,
+};
+
+BoardIntroPos D_800FD554_BoardIntro[18] = {
+    { 160, 84 }, { 160, 84 }, { -161, 80 }, { 162, 102 },
+    { 160, 84 }, { 161, 97 }, { 156, -79 }, { 161, 99 },
+    { 165, -73 }, { 485, 87 }, { 160, 100 }, { 160, 111 },
+    { 160, 93 }, { 161, 103 }, { 160, 88 }, { 811, -80 },
+    { 160, 100 }, { 160, 100 },
+};
+
+s32 D_800FD59C_BoardIntro[18] = {
+    0xA0164, 0xA0165, 0xA0167, 0xA0168,
+    0xA016A, 0xA016B, 0xA016D, 0xA016E,
+    0xA0170, 0xA0171, 0xA0173, 0xA0174,
+    0xA0176, 0xA0177, 0xA0179, 0xA017A,
+    0xA0164, 0xA0165,
+};
+
+void (*D_800FD5E4_BoardIntro[9])(void) = {
+    func_800F6854_BoardIntro, func_800F69F8_BoardIntro, func_800F6B18_BoardIntro, func_800F6BE4_BoardIntro,
+    func_800F6DAC_BoardIntro, func_800F7054_BoardIntro, func_800F7330_BoardIntro, func_800F73FC_BoardIntro,
+    NULL,
+};
+
+u8 D_800FD608_BoardIntro[8] = {
+    0x12, 0x13, 0x11, 0x11, 0x10, 0x11, 0x12, 0x11,
+};
+
+u8 D_800FD610_BoardIntro[8] = {
+    0x04, 0x04, 0x03, 0x04, 0x04, 0x03, 0x04, 0x04,
+};
+
+void (*D_800FD618_BoardIntro[9])(void) = {
+    func_800F92C0_BoardIntro, func_800F9500_BoardIntro, func_800F9920_BoardIntro, func_800FA168_BoardIntro,
+    func_800FAD50_BoardIntro, func_800FAF80_BoardIntro, func_800FB5D0_BoardIntro, func_800FB7C0_BoardIntro,
+    NULL,
+};
+
+void (*D_800FD63C_BoardIntro[9])(void) = {
+    func_800F93AC_BoardIntro, func_800F959C_BoardIntro, func_800F9BCC_BoardIntro, func_800FA214_BoardIntro,
+    func_800FADFC_BoardIntro, func_800FB20C_BoardIntro, func_800FB66C_BoardIntro, func_800FC1CC_BoardIntro,
+    func_800FC67C_BoardIntro,
+};
+
 void func_800F65E0_BoardIntro(void) {
     D_801102B0 = GwSystem.curBoardIndex;
     omInitObjMan(50, 10);
@@ -345,7 +596,7 @@ void func_800F7538_BoardIntro(void) {
    (a store into a struct may alias another struct's field, not a scalar global). The matching
    build reaches the same symbol through a one-field struct; the host reads the global directly. */
 #ifdef TARGET_PC
-#define D_800FCD88_RELOAD D_800FCD88_BoardIntro
+#define D_800FCD88_RELOAD (D_800FCD88_BoardIntro[0])
 #else
 typedef struct ObjectRef {
     Object* p;
@@ -504,7 +755,7 @@ void func_800F8090_BoardIntro(void) {
         func_8006E070(win, 0);
         ShowTextWindow(win);
         WaitForTextConfirmation_s32(win);
-        func_8004EE14(0, &D_800FCD88_BoardIntro->coords, 10, D_800FCD70_BoardIntro);
+        func_8004EE14(0, &D_800FCD88_BoardIntro[0]->coords, 10, D_800FCD70_BoardIntro);
         LoadStringIntoWindow(win, (void*)0x244, -1, -1);
         func_8006E070(win, 0);
         WaitForTextConfirmation_s32(win);
