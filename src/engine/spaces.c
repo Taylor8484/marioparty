@@ -162,9 +162,24 @@ INCLUDE_ASM("asm/nonmatchings/engine/spaces", RenderSpaces);
 #endif
 
 /* Get pointer to space data section */
+/* The board-space file is big-endian and read in place: the host swaps each halfword and float as
+   it reads it (BE16/BEF32 are plain loads on the N64). */
+#ifdef TARGET_PC
+#define BE16(p) pb_bswap16(*(u16*)(p))
+static f32 BEF32(const void* p) {
+   u32 w = pb_bswap32(*(const u32*)p);
+   f32 f;
+   memcpy(&f, &w, sizeof(f));
+   return f;
+}
+#else
+#define BE16(p) (*(u16*)(p))
+#define BEF32(p) (*(f32*)(p))
+#endif
+
 u8 *GetSpaceDataStream(u8 *byteSteam, s32 metaDataOffset) {
    u16* pDataOffset = (u16*) &byteSteam[metaDataOffset];
-   return &byteSteam[*pDataOffset];
+   return &byteSteam[BE16(pDataOffset)];
 }
 
 void func_80028E8C(s16, void*); // Unk
@@ -186,9 +201,9 @@ s32 LoadBoardSpaces(s16 dir, s16 file) {
       D_800D814C = NULL;
       D_800D8150 = NULL;
       pDataStream = (u16*) D_800C4FD0;
-      spaceCnt = *pDataStream++;
-      D_800D8102 = *pDataStream++;
-      D_800D8104 = *pDataStream++;
+      spaceCnt = BE16(pDataStream++);
+      D_800D8102 = BE16(pDataStream++);
+      D_800D8104 = BE16(pDataStream++);
 
       /* Load space data */
       D_800D8108 = (BoardSpace*) MallocTemp(spaceCnt * sizeof(BoardSpace));
@@ -196,12 +211,12 @@ s32 LoadBoardSpaces(s16 dir, s16 file) {
       for (i = 0, pSpaceData = D_800D8108; i < spaceCnt; i++, pSpaceData++) {
          Vec3f *pos;
          pSpaceData->unk0 = 1;
-         pSpaceData->unk2 = *pDataStream++;
-         pSpaceData->spaceType = *pDataStream++;
+         pSpaceData->unk2 = BE16(pDataStream++);
+         pSpaceData->spaceType = BE16(pDataStream++);
          pos = (Vec3f*) pDataStream;
-         pSpaceData->coords.x = pos->x * 5.0f;
-         pSpaceData->coords.y = pos->y * 5.0f;
-         pSpaceData->coords.z = pos->z * 5.0f;
+         pSpaceData->coords.x = BEF32(&pos->x) * 5.0f;
+         pSpaceData->coords.y = BEF32(&pos->y) * 5.0f;
+         pSpaceData->coords.z = BEF32(&pos->z) * 5.0f;
          pDataStream = (u16*) (++pos);
          pSpaceData->sx = 1.0f;
          pSpaceData->sy = 1.0f;
@@ -214,13 +229,13 @@ s32 LoadBoardSpaces(s16 dir, s16 file) {
       chainOffsets = GetSpaceDataStream(D_800C4FD0, 8);
       for (i = 0, pChainData = D_800D810C; i < D_800D8102; i++, pChainData++) {
          pDataStream = (u16*) GetSpaceDataStream(chainOffsets, i * 2);
-         pChainData->len = *pDataStream;
+         pChainData->len = BE16(pDataStream);
          pDataStream++;
 
          pChainData->spaceIndices = (s16*)MallocTemp( (s16) pChainData->len * sizeof(s16));
          chainValues = pChainData->spaceIndices;
          for(j = 0; j < (s16) pChainData->len; j++) {
-               *chainValues++ = *pDataStream++;
+               *chainValues++ = BE16(pDataStream++);
          }
       }
 
@@ -229,13 +244,13 @@ s32 LoadBoardSpaces(s16 dir, s16 file) {
       chainOffsets = GetSpaceDataStream(D_800C4FD0, 10);
       for (i = 0, pChainData = D_800D8110; i < D_800D8104; i++, pChainData++) {
          pDataStream = (u16*) GetSpaceDataStream(chainOffsets, i * 2);
-         pChainData->len = *pDataStream;
+         pChainData->len = BE16(pDataStream);
          pDataStream++;
 
          pChainData->spaceIndices = (s16*)MallocTemp( (s16)pChainData->len * sizeof(s16));
          chainValues = pChainData->spaceIndices;
          for(j = 0; j < (s16) pChainData->len; j++) {
-               *chainValues++ = *pDataStream++;
+               *chainValues++ = BE16(pDataStream++);
          }
       }
 
