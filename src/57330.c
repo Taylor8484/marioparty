@@ -34,25 +34,6 @@ extern s32 D_800D86E8;
 void func_80056F40(void);
 s32 func_80056FA8(void);
 
-/* Object with the s16 at 0x46 that the board player model uses (Object types 0x44 as f32) */
-typedef struct BoardPlayerObj {
-    /* 0x00 */ struct Object* prev;
-    /* 0x04 */ struct Object* next;
-    /* 0x08 */ s16 unk_08;
-    /* 0x0A */ u16 unk_0A;
-    /* 0x0C */ Vec3f coords;
-    /* 0x18 */ Vec3f unk_18;
-    /* 0x24 */ f32 xScale;
-    /* 0x28 */ f32 yScale;
-    /* 0x2C */ f32 zScale;
-    /* 0x30 */ f32 unk_30;
-    /* 0x34 */ f32 unk_34;
-    /* 0x38 */ f32 unk_38;
-    /* 0x3C */ unk_Struct04* unk_3C;
-    /* 0x40 */ unk_Struct04* unk_40;
-    /* 0x44 */ s16 unk_44;
-    /* 0x46 */ s16 unk_46;
-} BoardPlayerObj;
 s32 D_800C56D0[] = { 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x7F };
 
 

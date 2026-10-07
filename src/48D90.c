@@ -189,7 +189,7 @@ void func_800481F8(omObjData* arg0) {
     }
 }
 
-mystery_struct_ret_func_80048224* func_80048224(s16* ptr) {
+mystery_struct_ret_func_80048224* func_80048224(void* ptr) {
     Process* process;
     mystery_struct_ret_func_80048224* temp_v0;
 

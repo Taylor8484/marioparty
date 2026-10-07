@@ -238,7 +238,7 @@ void func_80071C8C(s32 a, s32 b);
 void func_80071E80(s32 a, s32 b);
 void SetFadeInTypeAndTime(s16 a, s16 b);
 void func_800726AC(s16 a, s16 b);
-mystery_struct_ret_func_80048224* func_80048224(s16 *ptr);
+mystery_struct_ret_func_80048224* func_80048224(void* ptr);
 void func_8004847C(mystery_struct_ret_func_80048224 *);
 void func_8004A520(void);
 void LoadStringIntoWindow(s16 win_id, void* string_id, s16 a, s16 b);

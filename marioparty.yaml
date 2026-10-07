@@ -1657,7 +1657,7 @@ segments:
       - [0x256FF0, c]
       - [0x257020, c]
       - [0x259140, .data, 256FF0]
-      - [0x259160, data, 257020]
+      - [0x259160, .data, 257020]
       - [0x259220, .rodata, 257020]
       - {0x2592A0, type: bss, vram: 0x800F8890, name: ovl_3E_bss}
   - type: code
