@@ -329,7 +329,27 @@ typedef struct Object {
 /* 0x53 */ s8 unk_53;
 /* 0x54 */ char unk_54[0x38];
 /* 0x8C */ struct Object* unk_8C;
-} Object; // //sizeof 0xAC? (this and mpSource_object are the same struct)
+} Object; 
+/* Object with the s16 at 0x46 that the board player model uses (Object types 0x44 as f32) */
+typedef struct BoardPlayerObj {
+    /* 0x00 */ struct Object* prev;
+    /* 0x04 */ struct Object* next;
+    /* 0x08 */ s16 unk_08;
+    /* 0x0A */ u16 unk_0A;
+    /* 0x0C */ Vec3f coords;
+    /* 0x18 */ Vec3f unk_18;
+    /* 0x24 */ f32 xScale;
+    /* 0x28 */ f32 yScale;
+    /* 0x2C */ f32 zScale;
+    /* 0x30 */ f32 unk_30;
+    /* 0x34 */ f32 unk_34;
+    /* 0x38 */ f32 unk_38;
+    /* 0x3C */ unk_Struct04* unk_3C;
+    /* 0x40 */ unk_Struct04* unk_40;
+    /* 0x44 */ s16 unk_44;
+    /* 0x46 */ s16 unk_46;
+} BoardPlayerObj;
+// //sizeof 0xAC? (this and mpSource_object are the same struct)
 
 typedef struct GW_PLAYER {
 /* 0x00 */ u8 group;
