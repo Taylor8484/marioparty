@@ -1,12 +1,13 @@
 #include "common.h"
+#include "ovl62.h"
 #include "2A2500.h"
 
-//what memory region does D_801102B0_BoardIntro belong to?
+//what memory region does D_801102B0 belong to?
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_62_BoardIntro/2A2500", func_800F65E0_BoardIntro);
 
 // void func_800F65E0_BoardIntro(void) {
-//     D_801102B0_BoardIntro = GwSystem.curBoardIndex;
+//     D_801102B0 = GwSystem.curBoardIndex;
 //     omInitObjMan(50, 10);
 //     func_800F9200_BoardIntro();
 //     func_800F906C_BoardIntro();
@@ -35,9 +36,9 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_62_BoardIntro/2A2500", func_800F677C_
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_62_BoardIntro/2A2500", func_800F67F8_BoardIntro);
 
-//D_801102B0_BoardIntro symbol again
+//D_801102B0 symbol again
 // s32 func_800F67F8_BoardIntro(s32 arg0) {
-//     return func_8004F628(D_800FD59C_ovl62[(D_801102B0_BoardIntro * 2) + arg0], 0xA, D_800FD554_BoardIntro[(D_801102B0_BoardIntro * 2) + arg0].unk0, D_800FD554_BoardIntro[(D_801102B0_BoardIntro * 2) + arg0].unk2);
+//     return func_8004F628(D_800FD59C_ovl62[(D_801102B0 * 2) + arg0], 0xA, D_800FD554_BoardIntro[(D_801102B0 * 2) + arg0].unk0, D_800FD554_BoardIntro[(D_801102B0 * 2) + arg0].unk2);
 // }
 
 s32 func_800F684C_BoardIntro(void) {

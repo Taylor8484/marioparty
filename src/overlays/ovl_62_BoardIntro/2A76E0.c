@@ -1,4 +1,5 @@
 #include "common.h"
+#include "ovl62.h"
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_62_BoardIntro/2A76E0", func_800FB7C0_BoardIntro);
 
