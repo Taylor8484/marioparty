@@ -131,7 +131,7 @@ void func_8003BA68(unk_8003B8D4Struct* arg0, unk_ProcessUserData08* arg1) {
 unk_ProcessUserData08* func_8003BB30(unk_8003B8D4Struct* arg0, s16 arg1) {
     return arg0->unk04[arg1];
 }
-// GCC hoists the 360.0f constant out of the loop into $f24; retail reloads it (masked 37, mostly shifted branch targets)
+// GCC hoists the 360.0f constant out of the loop into $f24; retail reloads it
 #ifdef NON_MATCHING
 void func_8003BB48(void) {
     OSMesg msg;
@@ -149,7 +149,7 @@ void func_8003BB48(void) {
     prev = w->unk0C;
     angle = 0.0f;
     repeat = 0;
-    while (TRUE) {
+    do {
         HuPrcVSleep();
         if (fade < 0) {
             if (repeat == 0) {
