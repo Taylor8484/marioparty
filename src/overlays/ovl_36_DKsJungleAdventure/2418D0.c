@@ -650,30 +650,350 @@ void func_800F7C34_DKsJungleAdventure(void) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F7C6C_DKsJungleAdventure);
+void func_800F7C6C_DKsJungleAdventure(void) {
+    unk_8003B8D4Struct* prompt;
+    s32 dir;
+    s32 i;
+    s32 count;
+    s16 win;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F7E88_DKsJungleAdventure);
+    SetPlayerAnimation(-1, -1, 2);
+    HuPrcVSleep();
+    if (PlayerHasCoins(-1, 10) != 0) {
+        func_800F7920_DKsJungleAdventure();
+        prompt = func_8003C218(-1, D_800F9F7C_DKsJungleAdventure);
+        func_8003C060(prompt, -1, 0);
+        if (PlayerIsCPU(-1) != 0) {
+            count = RunDecisionTree(D_800F9C74_DKsJungleAdventure);
+            for (i = 0; i < count; i++) {
+                func_8003BE84(prompt, -2);
+            }
+            func_8003BE84(prompt, -4);
+        }
+        dir = DirectionPrompt(prompt);
+        func_8003B908(prompt);
+        func_800F79D0_DKsJungleAdventure();
+        if ((GwCommon.boardWork[1] == 0) & (dir != 0)) {
+            SetNextChainAndSpace(-1, 15, 0);
+        } else if ((GwCommon.boardWork[1] != 0) & (dir == 0)) {
+            SetNextChainAndSpace(-1, 14, 0);
+        } else {
+            GwCommon.boardWork[15] = 1;
+            func_800587EC(0x47, 0, 1);
+            SetEventReturnFlag(1);
+        }
+    } else {
+        while (func_8004B850() != 0) {
+            HuPrcVSleep();
+        }
+        HuPrcVSleep();
+        win = CreateTextWindow(0x32, 0x3C, 0xC, 2);
+        LoadStringIntoWindow(win, (void*)0x18B, -1, -1);
+        func_8006E070(win, 0);
+        ShowTextWindow(win);
+        PlaySound(0x8F);
+        func_8004DBD4(win, GetCurrentPlayerIndex());
+        HideTextWindow(win);
+        if (GwCommon.boardWork[1] == 0) {
+            SetNextChainAndSpace(-1, 15, 0);
+        } else {
+            SetNextChainAndSpace(-1, 14, 0);
+        }
+    }
+    EndProcess(NULL);
+}
+void func_800F7E88_DKsJungleAdventure(void) {
+    if (GwCommon.boardWork[1] != 0) {
+        SetNextChainAndSpace(-1, 14, 0);
+    } else {
+        SetNextChainAndSpace(-1, 15, 0);
+    }
+}
+void func_800F7EC0_DKsJungleAdventure(void) {
+    unk_8003B8D4Struct* prompt;
+    s32 dir;
+    s32 i;
+    s32 count;
+    s16 win;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F7EC0_DKsJungleAdventure);
+    SetPlayerAnimation(-1, -1, 2);
+    HuPrcVSleep();
+    if (PlayerHasCoins(-1, 10) != 0) {
+        func_800F7920_DKsJungleAdventure();
+        prompt = func_8003C218(-1, D_800F9F9C_DKsJungleAdventure);
+        func_8003C060(prompt, -1, 0);
+        if (PlayerIsCPU(-1) != 0) {
+            count = RunDecisionTree(D_800F9D7C_DKsJungleAdventure);
+            for (i = 0; i < count; i++) {
+                func_8003BE84(prompt, -2);
+            }
+            func_8003BE84(prompt, -4);
+        }
+        dir = DirectionPrompt(prompt);
+        func_8003B908(prompt);
+        func_800F79D0_DKsJungleAdventure();
+        if ((GwCommon.boardWork[2] == 0) & (dir == 0)) {
+            SetNextChainAndSpace(-1, 6, 0);
+        } else if ((GwCommon.boardWork[2] != 0) & (dir != 0)) {
+            SetNextChainAndSpace(-1, 5, 0);
+        } else {
+            GwCommon.boardWork[15] = 2;
+            func_800587EC(0x47, 0, 1);
+            SetEventReturnFlag(1);
+        }
+    } else {
+        while (func_8004B850() != 0) {
+            HuPrcVSleep();
+        }
+        HuPrcVSleep();
+        win = CreateTextWindow(0x32, 0x3C, 0xC, 2);
+        LoadStringIntoWindow(win, (void*)0x18B, -1, -1);
+        func_8006E070(win, 0);
+        ShowTextWindow(win);
+        PlaySound(0x8F);
+        func_8004DBD4(win, GetCurrentPlayerIndex());
+        HideTextWindow(win);
+        if (GwCommon.boardWork[2] == 0) {
+            SetNextChainAndSpace(-1, 6, 0);
+        } else {
+            SetNextChainAndSpace(-1, 5, 0);
+        }
+    }
+    EndProcess(NULL);
+}
+void func_800F80DC_DKsJungleAdventure(void) {
+    if (GwCommon.boardWork[2] != 0) {
+        SetNextChainAndSpace(-1, 5, 0);
+    } else {
+        SetNextChainAndSpace(-1, 6, 0);
+    }
+}
+// register allocation (masked 0)
+#ifdef NON_MATCHING
+void func_800F8114_DKsJungleAdventure(void) {
+    Vec3f sp10;
+    Process* proc;
+    DKThwompMove* work;
+    Object* obj;
+    BoardSpace* dest;
+    Vec3f* destPos;
+    Vec3f* pos;
+    Vec3f* rot;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F80DC_DKsJungleAdventure);
-
+    proc = HuPrcCurrentGet();
+    work = proc->user_data;
+    obj = work->obj;
+    dest = work->dest;
+    MBMotionSet(obj, 0, 2);
+    destPos = &dest->coords;
+    pos = &obj->coords;
+    func_800A0E80(&sp10, destPos, pos);
+    rot = &obj->unk_18;
+    HuPrcChildLink(proc, func_8004D1EC(rot, &sp10, rot, 10));
+    HuPrcChildWatch();
+    func_800A0D50(&sp10, pos);
+    HuPrcChildLink(proc, func_8004D3F4(&sp10, destPos, pos, 25));
+    HuPrcChildWatch();
+    func_800A0E80(&sp10, &work->facing->coords, pos);
+    HuPrcChildLink(proc, func_8004D1EC(rot, &sp10, rot, 10));
+    HuPrcChildWatch();
+    MBMotionSet(obj, -1, 2);
+    EndProcess(NULL);
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F8114_DKsJungleAdventure);
+#endif
 
+// register allocation: retail copies idx into a second callee-saved register for the table reads (one extra move; masked 2)
+#ifdef NON_MATCHING
+void func_800F8248_DKsJungleAdventure(void) {
+    Process* proc;
+    DKThwompMove* work;
+    s16 space;
+    s32 dest;
+    s32 idx;
+    s16 cur;
+
+    cur = GetCurrentSpaceIndex();
+    space = -1;
+    idx = 0;
+    switch (cur) {
+    case 0x45:
+        space = 0x65;
+        GwCommon.boardWork[0] = 1;
+        idx = 0;
+        break;
+    case 0x48:
+        space = 0x68;
+        GwCommon.boardWork[0] = 0;
+        idx = 0;
+        break;
+    case 0x38:
+        idx = 1;
+        GwCommon.boardWork[1] = idx;
+        space = 0x6C;
+        break;
+    case 0x42:
+        space = 0x66;
+        GwCommon.boardWork[1] = 0;
+        idx = 1;
+        break;
+    case 0x1A:
+        space = 0x5E;
+        GwCommon.boardWork[2] = 1;
+        idx = 2;
+        break;
+    case 0x25:
+        space = 0x67;
+        idx = 2;
+        GwCommon.boardWork[2] = 0;
+        break;
+    }
+    dest = space;
+    if (dest != 0) {
+        proc = omAddPrcObj(func_800F8114_DKsJungleAdventure, 0x4800, 0, 0x40);
+        work = HuMemMemoryAlloc(proc->heap, sizeof(DKThwompMove));
+        proc->user_data = work;
+        work->obj = D_800FA330_DKsJungleAdventure[idx];
+        work->dest = BoardSpaceGet(dest);
+        work->facing = BoardSpaceGet(D_800F997C_DKsJungleAdventure[idx]);
+    }
+    EndProcess(NULL);
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F8248_DKsJungleAdventure);
+#endif
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F83B0_DKsJungleAdventure);
+void func_800F83B0_DKsJungleAdventure(void) {
+    if (_CheckFlag(0xD) == 0) {
+        func_800A0D50(&D_800FA300_DKsJungleAdventure->coords, &BoardSpaceGet(0x6A)->coords);
+    }
+    if (_CheckFlag(0x48) == 0) {
+        func_800A0D50(&D_800FA310_DKsJungleAdventure[2]->coords, &BoardSpaceGet(0x69)->coords);
+    }
+    if (_CheckFlag(0x4A) == 0) {
+        func_800A0D50(&D_800FA310_DKsJungleAdventure[4]->coords, &BoardSpaceGet(0x6B)->coords);
+    }
+}
+void func_800F8448_DKsJungleAdventure(void) {
+    if (_CheckFlag(0xD) == 0) {
+        func_800A0D50(&D_800FA300_DKsJungleAdventure->coords, &BoardSpaceGet(0x70)->coords);
+    }
+    if (_CheckFlag(0x48) == 0) {
+        func_800A0D50(&D_800FA310_DKsJungleAdventure[2]->coords, &BoardSpaceGet(0x6D)->coords);
+    }
+    if (_CheckFlag(0x4A) == 0) {
+        func_800A0D50(&D_800FA310_DKsJungleAdventure[4]->coords, &BoardSpaceGet(0x71)->coords);
+    }
+}
+void func_800F84E0_DKsJungleAdventure(void) {
+    func_800726AC(4, 16);
+    HuPrcSleep(16);
+    func_800F83B0_DKsJungleAdventure();
+    func_8004A7DC();
+    func_8004A7A4();
+    D_800FA364_DKsJungleAdventure = func_8004B844();
+    func_8004B838(-1.0f);
+    D_800FA368_DKsJungleAdventure = func_8004B5D0();
+    func_8004B5C4(1.0f);
+    func_8004A510();
+    func_8004B5DC(&BoardSpaceGet(0)->coords);
+    HuPrcVSleep();
+    func_8004A520();
+    func_8004B5C4(D_800FA368_DKsJungleAdventure);
+    func_8004B838(D_800FA364_DKsJungleAdventure);
+    func_800421E0();
+    SetFadeInTypeAndTime(4, 16);
+    HuPrcSleep(16);
+}
+void func_800F85BC_DKsJungleAdventure(void) {
+    func_800726AC(4, 16);
+    HuPrcSleep(16);
+    func_800F8448_DKsJungleAdventure();
+    func_8004A7DC();
+    func_8004A7A4();
+    D_800FA364_DKsJungleAdventure = func_8004B844();
+    func_8004B838(-1.0f);
+    D_800FA368_DKsJungleAdventure = func_8004B5D0();
+    func_8004B5C4(1.0f);
+    func_8004A510();
+    func_8004B5DC(&GetPlayerStruct(-1)->player_obj->coords);
+    HuPrcVSleep();
+    func_8004A520();
+    func_8004B5C4(D_800FA368_DKsJungleAdventure);
+    func_8004B838(D_800FA364_DKsJungleAdventure);
+    func_8004220C();
+    SetFadeInTypeAndTime(4, 16);
+    HuPrcSleep(16);
+}
+void func_800F869C_DKsJungleAdventure(void) {
+    Vec3f sp10;
+    void* rumble;
+    Process* proc;
+    GW_PLAYER* player;
+    Object* obj;
+    Object* boulder;
+    s16 space;
+    s16 remaining;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F8448_DKsJungleAdventure);
+    space = 0;
+    player = HuPrcCurrentGet()->user_data;
+    obj = player->player_obj;
+    boulder = D_800FA370_DKsJungleAdventure;
+    proc = HuPrcCurrentGet();
+    rumble = func_80058A4C(player->player_index, 0, 10);
+    while (!(func_800A13C0(&BoardSpaceGet(GetAbsSpaceIndexFromChainSpaceIndex(player->cur_chain, player->cur_space))->coords,
+                           &boulder->coords) < 310.0f)) {
+        func_8004CCD0(&obj->coords, &boulder->coords, &obj->unk_18);
+        HuPrcVSleep();
+    }
+    func_80060618(0x45F, player->player_index);
+    remaining = BoardGetChainLength(player->cur_chain) - player->cur_space;
+    SetPlayerAnimation(player->player_index, 1, 2);
+    for (; remaining > 0; remaining--) {
+        if (remaining == 1) {
+            SetNextChainAndSpace(player->player_index, 9, 1);
+        }
+        if (space == 0x7C) {
+            obj->unk_34 = 40.0f;
+            obj->unk_38 = -5.0f;
+            SetPlayerAnimation(player->player_index, 2, 0);
+        }
+        if (space == 0x24) {
+            SetPlayerAnimation(player->player_index, -1, 2);
+            func_800A0E80(&sp10, &boulder->coords, &obj->coords);
+            func_8004D1EC(&obj->unk_18, &sp10, &obj->unk_18, 8);
+            HuPrcSleep(30);
+            SetPlayerAnimation(player->player_index, 1, 2);
+        }
+        if (((BoardPlayerObj*)player->player_obj)->unk_38 == 0.0f && ((BoardPlayerObj*)player->player_obj)->unk_46 != 1) {
+            SetPlayerAnimation(player->player_index, 1, 2);
+        }
+        space = GetAbsSpaceIndexFromChainSpaceIndex(player->next_chain, player->next_space);
+        func_8004CB70(player->player_index, space, &sp10);
+        func_8004CCD0(&obj->coords, &sp10, &obj->unk_18);
+        HuPrcChildLink(proc, func_8004D648(&obj->coords, &sp10, &obj->coords, 20.0f));
+        HuPrcChildWatch();
+        SetPlayerOntoChain(player->player_index, player->next_chain, player->next_space);
+    }
+    SetPlayerAnimation(player->player_index, -1, 2);
+    func_80058AD0(rumble);
+    EndProcess(NULL);
+}
+void func_800F8978_DKsJungleAdventure(void) {
+    s16 saved;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F84E0_DKsJungleAdventure);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F85BC_DKsJungleAdventure);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F869C_DKsJungleAdventure);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F8978_DKsJungleAdventure);
-
+    saved = func_80056E3C();
+    func_80056E30(0);
+    func_800F84E0_DKsJungleAdventure();
+    while (D_800FA370_DKsJungleAdventure != NULL) {
+        func_8004B5DC(&D_800FA370_DKsJungleAdventure->coords);
+        HuPrcVSleep();
+    }
+    func_800F85BC_DKsJungleAdventure();
+    func_80056E30(saved);
+    EndProcess(NULL);
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F8A00_DKsJungleAdventure);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F8DC8_DKsJungleAdventure);
