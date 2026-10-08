@@ -292,7 +292,7 @@ void func_8004E184(void) {
 }
 void func_8004E248(omObjData* arg0) {
     Object* temp_v0;
-    unkGlobalStruct_00* temp_v1;
+    Object* temp_v1; /* a board model; was unkGlobalStruct_00, whose unk_0C.. sit 8 bytes before coords on 64-bit hosts */
 
     temp_v1 = arg0->unk_50;
     arg0->work[1]--;
@@ -315,17 +315,17 @@ void func_8004E248(omObjData* arg0) {
     }
     
     if (arg0->work[1] == 0) {
-        temp_v1->unk_0C = arg0->trans.x;
-        temp_v1->unk_10 = arg0->trans.y;
-        temp_v1->unk_14 = arg0->trans.z;
+        temp_v1->coords.x = arg0->trans.x;
+        temp_v1->coords.y = arg0->trans.y;
+        temp_v1->coords.z = arg0->trans.z;
         arg0->unk_50 = NULL;
         omDelObj(arg0);
         return;
     }
     
-    temp_v1->unk_0C += arg0->scale.x;
-    temp_v1->unk_10 += arg0->scale.y;
-    temp_v1->unk_14 += arg0->scale.z;
+    temp_v1->coords.x += arg0->scale.x;
+    temp_v1->coords.y += arg0->scale.y;
+    temp_v1->coords.z += arg0->scale.z;
 }
 
 omObjData* func_8004E3E0(s32 arg0, Vec3f* arg1, s32 arg2, void* arg3) { //fix arg3 type later
@@ -344,12 +344,12 @@ omObjData* func_8004E3E0(s32 arg0, Vec3f* arg1, s32 arg2, void* arg3) { //fix ar
         obj->scale.y = (arg1->y - GwPlayer[arg0].player_obj->coords.y) / arg2;
         obj->scale.z = (arg1->z - GwPlayer[arg0].player_obj->coords.z) / arg2;
     } else {
-        obj->scale.x = (arg1->x - ((unkGlobalStruct_00*)arg3)->unk_0C) / arg2;
-        obj->scale.y = (arg1->y - ((unkGlobalStruct_00*)arg3)->unk_10) / arg2;
-        obj->scale.z = (arg1->z - ((unkGlobalStruct_00*)arg3)->unk_14) / arg2;
+        obj->scale.x = (arg1->x - ((Object*)arg3)->coords.x) / arg2;
+        obj->scale.y = (arg1->y - ((Object*)arg3)->coords.y) / arg2;
+        obj->scale.z = (arg1->z - ((Object*)arg3)->coords.z) / arg2;
     }
     
-    obj->unk_50 = (unkGlobalStruct_00* )arg3;
+    obj->unk_50 = arg3;
 
     for (i = 0; i < ARRAY_COUNT(D_800F50C0); i++) {
         if (D_800F50C0[i] == NULL) {
