@@ -36,16 +36,82 @@ void func_800FE33C_KeyPaWay(void) {
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1FDF10", func_800FE3DC_KeyPaWay);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1FDF10", func_800FE710_KeyPaWay);
+void func_800FE710_KeyPaWay(omObjData* obj) {
+    obj->unk_50 = func_80023684(sizeof(KPWCameraWork), 0x7918);
+    obj->func_ptr = NULL;
+}
+void func_800FE744_KeyPaWay(u16 frames, f32 eyeX, f32 eyeY, f32 eyeZ, f32 atX, f32 atY, f32 atZ) {
+    KPWCameraWork* work = D_800FF574_KeyPaWay->unk_50;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1FDF10", func_800FE744_KeyPaWay);
+    work->unk_00 = frames;
+    work->unk_10 = eyeX;
+    work->unk_14 = eyeY;
+    work->unk_18 = eyeZ;
+    work->unk_1C = atX;
+    work->unk_20 = atY;
+    work->unk_24 = atZ;
+    work->unk_28 = (eyeX - D_800FF564_KeyPaWay.x) / (f32)frames;
+    work->unk_2C = (eyeY - D_800FF564_KeyPaWay.y) / (f32)frames;
+    work->unk_30 = (eyeZ - D_800FF564_KeyPaWay.z) / (f32)frames;
+    work->unk_34 = (atX - D_800FF584_KeyPaWay.x) / (f32)frames;
+    work->unk_38 = (atY - D_800FF584_KeyPaWay.y) / (f32)frames;
+    work->unk_3C = (atZ - D_800FF584_KeyPaWay.z) / (f32)frames;
+    D_800FF574_KeyPaWay->func_ptr = func_800FE858_KeyPaWay;
+}
+void func_800FE814_KeyPaWay(void) {
+    D_800FF574_KeyPaWay->func_ptr = func_800FE8EC_KeyPaWay;
+}
+void func_800FE82C_KeyPaWay(f32 arg0, f32 arg1) {
+    KPWCameraWork* work = D_800FF574_KeyPaWay->unk_50;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1FDF10", func_800FE814_KeyPaWay);
+    work->unk_04 = arg0;
+    work->unk_08 = arg1;
+    work->unk_0C = -arg1;
+    D_800FF574_KeyPaWay->func_ptr = func_800FEA28_KeyPaWay;
+}
+void func_800FE858_KeyPaWay(omObjData* obj) {
+    KPWCameraWork* work = obj->unk_50;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1FDF10", func_800FE82C_KeyPaWay);
+    D_800FF564_KeyPaWay.x += work->unk_28;
+    D_800FF564_KeyPaWay.y += work->unk_2C;
+    D_800FF564_KeyPaWay.z += work->unk_30;
+    D_800FF584_KeyPaWay.x += work->unk_34;
+    D_800FF584_KeyPaWay.y += work->unk_38;
+    D_800FF584_KeyPaWay.z += work->unk_3C;
+    if (--work->unk_00 == 0) {
+        obj->func_ptr = NULL;
+    }
+}
+void func_800FE8EC_KeyPaWay(omObjData* obj) {
+    Vec3f pos;
+    Vec2f scr;
+    f32 lim;
+    omObjData* target;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1FDF10", func_800FE858_KeyPaWay);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1FDF10", func_800FE8EC_KeyPaWay);
+    target = D_800FF57C_KeyPaWay;
+    if (target == NULL) {
+        target = D_800FF590_KeyPaWay;
+    }
+    pos.x = target->trans.x;
+    pos.y = target->trans.y;
+    pos.z = target->trans.z;
+    Convert3DTo2D(0, &pos, &scr);
+    D_800FF570_KeyPaWay = 0.0f;
+    if (scr.x < 48.0f) {
+        D_800FF570_KeyPaWay = -(48.0f - scr.x);
+    } else if (scr.x > 272.0f) {
+        D_800FF570_KeyPaWay = -(272.0f - scr.x);
+    }
+    D_800FF584_KeyPaWay.x += D_800FF570_KeyPaWay;
+    if (D_800FF584_KeyPaWay.x < -330.0f) {
+        D_800FF584_KeyPaWay.x = -330.0f;
+        D_800FF564_KeyPaWay.x = -330.0f;
+    } else if (D_800FF584_KeyPaWay.x > 330.0f) {
+        D_800FF584_KeyPaWay.x = 330.0f;
+        D_800FF564_KeyPaWay.x = 330.0f;
+    } else {
+        D_800FF564_KeyPaWay.x += D_800FF570_KeyPaWay;
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1FDF10", func_800FEA28_KeyPaWay);
