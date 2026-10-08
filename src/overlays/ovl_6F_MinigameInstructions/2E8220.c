@@ -735,8 +735,62 @@ void func_8010C3A4_MinigameInstructions(Ovl6FPlayerWork* work) {
 #else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010C3A4_MinigameInstructions);
 #endif
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010C8CC_MinigameInstructions);
+void func_8010C8CC_MinigameInstructions(Ovl6FPlayerWork* work) {
+    Vec2f pos;
+    Vec3f out;
+    Ovl6FPlayerWork* partner;
+    s16 frame;
+    f32 t;
 
+    func_800A2A50(D_800F2B7C[work->unk_4E].unk7C);
+    func_80025C20(work->unk_4E, func_80025E48(work->unk_52), 0, 8, 2);
+    partner = D_8010F750_MinigameInstructions[work->unk_B6];
+    work->unk_BA = 0;
+    pos.x = work->unk_08;
+    if (work->unk_38 > work->unk_B6) {
+        frame = 0;
+        do {
+            HuPrcVSleep();
+            t = 1.0f - frame / 8.0f;
+            pos.y = work->unk_04 - t * 32.0f;
+            func_8001DD24(0, CZoom, (Vec3f*)&pos, &out);
+            func_80025798(work->unk_4E, out.x, out.y, -180.0f);
+            func_80025798(partner->unk_4E, partner->unk_0C, out.y, partner->unk_14);
+            t *= 0.28f;
+            func_80025830(OVL6F_F50C(work->unk_3E), 0.28f, t, 0.28f);
+            func_80025830(OVL6F_F50E(work->unk_3E), 0.28f, t, 0.28f);
+            frame++;
+        } while (frame < 9);
+        func_80025830(OVL6F_F50C(work->unk_3E), 0.0f, 0.0f, 0.0f);
+        func_80025830(OVL6F_F50E(work->unk_3E), 0.0f, 0.0f, 0.0f);
+        partner->unk_BA = 1;
+    } else {
+        while (work->unk_BA == 0) {
+            HuPrcVSleep();
+        }
+    }
+    frame = 0;
+    do {
+        func_800257E4(work->unk_4E, 0.0f, frame, 0.0f);
+        if ((work->unk_42++ & 7) == 0) {
+            func_800FA300_MinigameInstructions(0x112, work);
+        }
+        HuPrcVSleep();
+        frame -= 15;
+    } while (frame >= -90);
+    pos.x = work->unk_00;
+    pos.y = work->unk_04;
+    out.z = 0.0f;
+    while (work->unk_00 > -50.0f) {
+        pos.x = work->unk_00 = work->unk_00 - 12.0f;
+        func_8001DD24(0, CZoom, (Vec3f*)&pos, &out);
+        func_80025798(work->unk_4E, out.x, out.y, -180.0f);
+        if ((work->unk_42++ & 3) == 0) {
+            func_800FA300_MinigameInstructions(0x119, work);
+        }
+        HuPrcVSleep();
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010CC54_MinigameInstructions);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010D200_MinigameInstructions);
