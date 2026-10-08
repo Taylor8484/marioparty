@@ -238,8 +238,56 @@ f32 func_800FB38C_KeyPaWay(KPWBodyWork* work, f32 angle) {
 }
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FB498_KeyPaWay);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FB748_KeyPaWay);
+s32 func_800FB748_KeyPaWay(omObjData* obj, omObjData* other) {
+    KPWPlayerWork* work = KPW_PLAYER(obj);
+    KPWPlayerExt* ext = work->unk_E4;
+    KPWBodyWork* ow = KPW_BODY(other);
+    f32 dot;
 
+    if (D_800FF580_KeyPaWay == 2) {
+        return 1;
+    }
+    if (ow->unk_52 == 3 && work->unk_AE == 0) {
+        if (func_8000A634(obj, other) == 1) {
+            func_80017D1C(obj);
+            D_800FF57C_KeyPaWay = obj;
+            ext->unk_30 = 2;
+            if (D_800FF580_KeyPaWay != 0) {
+                func_80060540(0x15F, work->unk_58);
+            }
+        }
+    } else if (ow->unk_52 == 7) {
+        func_80060618(0x145, work->unk_58);
+        func_80060F04(work->unk_58, 2, 2, 20);
+        ext->unk_00 = 1;
+        ext->unk_30 = 0;
+        dot = func_8000A72C(func_800AEAC0(work->unk_3C), func_800AEFD0(work->unk_3C),
+                            obj->trans.x - other->trans.x, obj->trans.z - other->trans.z);
+        if (work->unk_50 & 0x20) {
+            func_8000A534(obj, D_800B8988);
+        }
+        if (dot < 0.0f) {
+            func_800184BC(obj, 30);
+            if (work->unk_38 == 1000.0f) {
+                work->unk_40 = -D_800B8980;
+            } else {
+                work->unk_40 = -D_800B8980;
+                work->unk_38 = -D_800B8964 * 0.8f;
+            }
+            work->unk_3C = func_80029518(ow->unk_3C) + 180.0f;
+        } else {
+            func_800184BC(obj, 31);
+            if (work->unk_38 == 1000.0f) {
+                work->unk_40 = D_800B8980;
+            } else {
+                work->unk_40 = D_800B8980;
+                work->unk_38 = -D_800B8964 * 0.8f;
+            }
+            work->unk_3C = ow->unk_3C;
+        }
+    }
+    return 1;
+}
 void func_800FB9D4_KeyPaWay(omObjData* obj) {
     KPWStageWork* work;
 
@@ -308,8 +356,33 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FCCB0_Ke
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FDA7C_KeyPaWay);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FDE64_KeyPaWay);
+u16 func_800FDE64_KeyPaWay(f32 x, f32 z, f32 range, omObjData* out[]) {
+    omObjData* p;
+    f32 dx;
+    f32 dz;
+    f32 dist;
+    f32 nearest;
+    u16 count;
+    s32 i;
 
+    count = 0;
+    nearest = 10000.0f;
+    for (i = 0; i < 5; i++) {
+        p = D_800FF548_KeyPaWay[i];
+        dx = p->trans.x - x;
+        dx *= dx;
+        dz = p->trans.z - z;
+        dist = func_800B1750(dx + dz * dz);
+        if (dist < nearest) {
+            nearest = dist;
+        }
+        if (dist <= range) {
+            out[count++] = p;
+        }
+    }
+    D_800FF520_KeyPaWay = nearest;
+    return count;
+}
 omObjData* func_800FDFAC_KeyPaWay(omObjData* arg0) {
     omObjData* sp10[6]; //likely some unknown struct
     omObjData* temp_s0;
