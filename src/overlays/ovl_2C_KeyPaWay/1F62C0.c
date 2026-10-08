@@ -330,13 +330,294 @@ f32 func_800F7134_KeyPaWay(omObjData* obj, f32 x, f32 z, f32 angle, f32 dist) {
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", D_800FF3B0_KeyPaWay);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F747C_KeyPaWay);
+void func_800F747C_KeyPaWay(omObjData* arg0) {
+    void* data;
+    KPWStageWork* work;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F76C8_KeyPaWay);
+    arg0->model[0] = LoadFormFile(0x400012, 0x289);
+    data = DataRead(0x27);
+    func_80038A9C(D_800F2B7C[arg0->model[0]].unk_6C, data, 0, "00mt001s_IA44");
+    func_80025AD4(arg0->model[0]);
+    func_80025B34(arg0->model[0]);
+    HuMemDirectFree(data);
+    arg0->model[1] = LoadFormFile(0x40000E, 0x299);
+    arg0->model[2] = LoadFormFile(0x40000F, 0x289);
+    arg0->model[4] = LoadFormFile(0x400013, 0x2029D);
+    func_80025798(arg0->model[4], 0.0f, 0.0f, -15.0f);
+    arg0->model[5] = LoadFormFile(0x40000D, 0x69D);
+    data = DataRead(0x400014);
+    D_800FF53A_KeyPaWay = func_80038A9C(D_800F2B7C[arg0->model[2]].unk_6C, data, 0, "keybar_DEF");
+    func_80025AD4(arg0->model[2]);
+    func_80025B34(arg0->model[2]);
+    HuMemDirectFree(data);
+    func_8003967C(D_800FF53A_KeyPaWay, 1);
+    func_80039644(D_800FF53A_KeyPaWay, 1, 1);
+    func_800090B8(D_800ED440);
+    D_800F2AF8[D_800ED440++] = arg0;
+    work = arg0->unk_50 = func_80023684(sizeof(KPWStageWork), 0x7918);
+    func_8009B770(work, 0, sizeof(KPWStageWork));
+    work->unk_04 = 1;
+    work->unk_05 = 0;
+    func_80009028(arg0, 0, -700.0f, -1000.0f, 700.0f, 1000.0f);
+    arg0->func_ptr = NULL;
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F7840_KeyPaWay);
+void func_800F76C8_KeyPaWay(omObjData* arg0) {
+    KPWBodyWork* work;
+    KPWKeyExt* key;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F7AE0_KeyPaWay);
+    arg0->model[0] = LoadFormFile(0x400000, 0x699);
+    arg0->model[1] = LoadFormFile(6, 0x699);
+    func_800258EC(arg0->model[1], 4, 4);
+    work = arg0->unk_50 = func_80023684(sizeof(KPWBodyWork), 0x7918);
+    work->unk_44 = 0.1f;
+    work->unk_48 = 30.0f;
+    work->unk_34 = 0;
+    work->unk_3C = 0;
+    work->unk_5C = 0;
+    work->unk_52 = 3;
+    work->unk_60 = 0;
+    work->unk_50 = 0x40;
+    work->unk_54 = 1;
+    work->unk_38 = 1000.0f;
+    work->unk_40 = 0;
+    work->unk_58 = 0.7f;
+    work->unk_64 = NULL;
+    omSetTra(arg0, 0.0f, 300.0f, 700.0f);
+    omSetSca(arg0, 0.0f, 1.0f, 0.0f);
+    D_800EDE70[D_800EE984++] = arg0;
+    key = work->unk_68.key = func_80023684(sizeof(KPWKeyExt), 0x7918);
+    key->unk_00 = 0;
+    key->unk_18 = key->unk_10 = key->unk_1C = 0.0f;
+    key->unk_20 = 0;
+    key->unk_24 = NULL;
+    arg0->func_ptr = func_800F7840_KeyPaWay;
+}
+
+/* Retail read D_800FF370's two halves as u16 scalars (a fresh %hi/%lo per access); the array
+   spelling CSEs the address. The matching build names them through asm labels. */
+#ifdef TARGET_PC
+#define D_800FF370_0 (D_800FF370_KeyPaWay[0])
+#define D_800FF370_1 (D_800FF370_KeyPaWay[1])
+#else
+extern u16 D_800FF370_0 __asm__("D_800FF370_KeyPaWay");
+extern u16 D_800FF370_1 __asm__("D_800FF370_KeyPaWay+2");
+#endif
+/* Retail read D_800FF370's two halves as u16 scalars (a fresh %hi/%lo per access); the array
+   spelling CSEs the address. The matching build names them through asm labels. */
+#ifdef TARGET_PC
+#define D_800FF370_0 (D_800FF370_KeyPaWay[0])
+#define D_800FF370_1 (D_800FF370_KeyPaWay[1])
+#else
+extern u16 D_800FF370_0 __asm__("D_800FF370_KeyPaWay");
+extern u16 D_800FF370_1 __asm__("D_800FF370_KeyPaWay+2");
+#endif
+void func_800F7840_KeyPaWay(omObjData* arg0) {
+    f32 s, c;
+
+    if (D_800FF370_0 != 0) {
+        D_800FF370_0--;
+        return;
+    }
+    if (--D_800FF370_1 == 0) {
+        func_80060128(0x1F);
+    }
+    if (D_800FF368_KeyPaWay == 0.0f) {
+        PlaySound(0x316);
+    }
+    if (D_800FF368_KeyPaWay < 1.0f) {
+        D_800FF368_KeyPaWay += 0.01f;
+        D_800FF36C_KeyPaWay += 0.01f;
+        if (D_800FF368_KeyPaWay >= 1.0f) {
+            D_800FF5A4_KeyPaWay = 3;
+            D_800FF368_KeyPaWay = D_800FF36C_KeyPaWay = 1.0f;
+        }
+        omSetSca(arg0, D_800FF368_KeyPaWay, arg0->scale.y, D_800FF36C_KeyPaWay);
+    }
+    D_800FF360_KeyPaWay += 1.5f;
+    if (--D_800FF364_KeyPaWay == 0) {
+        s = func_800AEFD0(-D_800FF35C_KeyPaWay) * 60.0f;
+        c = func_800AEAC0(-D_800FF35C_KeyPaWay) * 60.0f;
+        func_800F8A28_KeyPaWay(-9.0f, s + arg0->trans.x, arg0->trans.y + D_800FF360_KeyPaWay, c + arg0->trans.z);
+        D_800FF364_KeyPaWay = 3;
+    }
+    D_800FF35C_KeyPaWay += 12.0f;
+    if (D_800FF35C_KeyPaWay >= 360.0f) {
+        D_800FF35C_KeyPaWay -= 360.0f;
+    }
+    D_800FF358_KeyPaWay += 5.0f;
+    if (D_800FF358_KeyPaWay >= 360.0f) {
+        D_800FF358_KeyPaWay -= 360.0f;
+    }
+    omSetRot(arg0, arg0->rot.x, D_800FF358_KeyPaWay, arg0->rot.z);
+}
+
+void func_800F7AE0_KeyPaWay(omObjData* arg0) {
+    KPWBodyWork* work;
+    KPWKeyExt* key;
+    KPWPlayerWork* pw;
+    omObjData* other;
+    f32 scale, dx, dy, dz, dist, r, x, y, z;
+    u32 i;
+    s32 hit;
+
+    work = KPW_BODY(arg0);
+    key = work->unk_68.key;
+    if (work->unk_64 != key->unk_24) {
+        if (work->unk_64 != NULL) {
+            key->unk_00 = 1;
+            func_800258EC(arg0->model[1], 4, 4);
+            work->unk_38 = 1000.0f;
+            work->unk_40 = 0.0f;
+            D_800FF57C_KeyPaWay = work->unk_64;
+        } else {
+            scale = (800.0f - arg0->trans.y) / 800.0f;
+            func_80025798(arg0->model[1], arg0->trans.x, 0.0f, arg0->trans.z);
+            func_80025830(arg0->model[1], scale, scale, scale);
+            if (work->unk_40 < 10.0f) {
+                work->unk_40 = 10.0f;
+            }
+            key->unk_00 = 0;
+            pw = KPW_PLAYER(D_800FF57C_KeyPaWay);
+            pw->unk_E4->unk_30 = 0;
+            D_800FF57C_KeyPaWay = NULL;
+            func_800258EC(arg0->model[1], 4, 0);
+            key->unk_08 = 30.0f;
+            key->unk_10 = 30.0f;
+            key->unk_04 = 6.0f;
+            work->unk_40 = fabs(work->unk_40) * 2.0;
+            key->unk_0C = func_800AEAC0(work->unk_3C);
+            key->unk_14 = func_800AEFD0(work->unk_3C);
+            key->unk_18 = key->unk_0C * work->unk_40;
+            key->unk_1C = key->unk_14 * work->unk_40;
+            work->unk_38 = 0.0f;
+            key->unk_20 = 6;
+            key->unk_22 = 1;
+        }
+        key->unk_24 = work->unk_64;
+    }
+    if (D_800FF580_KeyPaWay == 1) {
+        hit = arg0->unk_10;
+        if (hit != 0 && (arg0->unk_10 = 0, hit == D_800FF580_KeyPaWay)) {
+            func_800258EC(arg0->model[1], 4, 4);
+            D_800FF524_KeyPaWay = 14;
+            D_800FF580_KeyPaWay = 2;
+            D_800FF578_KeyPaWay = 14;
+            func_800601D4(0x28);
+            PlaySound(0x323);
+            for (i = 0; i < 4; i++) {
+                pw = KPW_PLAYER(D_800FF594_KeyPaWay[i]);
+                pw->unk_50 |= 0x200;
+                pw->unk_AE = 0;
+                pw->unk_9C = 0;
+                pw->unk_50 &= 0xFFF8;
+                omSetSca(D_800FF594_KeyPaWay[i], 1.0f, 1.0f, 1.0f);
+            }
+        } else {
+            if (key->unk_20 != 0) {
+                if (--key->unk_22 == 0) {
+                    func_800F8A28_KeyPaWay(0.0f, arg0->trans.x, arg0->trans.y, arg0->trans.z);
+                    key->unk_22 = 2;
+                    key->unk_20--;
+                }
+            }
+            if (work->unk_38 != 1000.0f) {
+                if ((u16)func_800FE134_KeyPaWay(arg0->trans.x + key->unk_18, arg0->trans.y, arg0->trans.z + key->unk_1C, work->unk_48) == 1) {
+                    work->unk_40 *= 0.7f;
+                    key->unk_08 -= 5.0f;
+                    key->unk_14 = -key->unk_14;
+                    key->unk_0C = -key->unk_0C;
+                    key->unk_1C = key->unk_14 * work->unk_40;
+                    key->unk_18 = key->unk_0C * work->unk_40;
+                }
+                for (i = 0; i < 4; i++) {
+                    other = D_800FF594_KeyPaWay[i];
+                    pw = KPW_PLAYER(other);
+                    if (pw->unk_AE == 0) {
+                        continue;
+                    }
+                    x = arg0->trans.x + key->unk_18;
+                    y = arg0->trans.y + key->unk_10;
+                    z = arg0->trans.z + key->unk_1C;
+                    dx = other->trans.x;
+                    dy = other->trans.y;
+                    dz = other->trans.z;
+                    dist = func_800B1750((dx - x) * (dx - x) + (dy - y) * (dy - y) + (dz - z) * (dz - z));
+                    r = pw->unk_48 + work->unk_48;
+                    if (dist <= func_800B1750(r * r)) {
+                        work->unk_3C = func_8009B618((f32)(rand8() + rand8()), 360.0);
+                        if (key->unk_08 < 15.0f) {
+                            key->unk_08 = 15.0f;
+                        }
+                        key->unk_10 = key->unk_08;
+                        if (work->unk_40 < 10.0f) {
+                            work->unk_40 = 10.0f;
+                        }
+                        key->unk_0C = func_800AEAC0(work->unk_3C);
+                        key->unk_14 = func_800AEFD0(work->unk_3C);
+                        key->unk_18 = key->unk_0C * work->unk_40;
+                        key->unk_1C = key->unk_14 * work->unk_40;
+                        break;
+                    }
+                }
+                if (arg0->trans.x + key->unk_18 >= 670.0f || arg0->trans.x + key->unk_18 <= -670.0f) {
+                    work->unk_40 *= 0.3f;
+                    key->unk_08 -= 9.0f;
+                    key->unk_0C = -key->unk_0C;
+                    key->unk_18 = key->unk_0C * work->unk_40;
+                    func_800F8514_KeyPaWay(2, 3, 1.5f, arg0->trans.x, arg0->trans.y, arg0->trans.z);
+                }
+                if (arg0->trans.z + key->unk_1C >= 970.0f || arg0->trans.z + key->unk_1C <= -970.0f) {
+                    work->unk_40 *= 0.3f;
+                    key->unk_08 -= 9.0f;
+                    key->unk_14 = -key->unk_14;
+                    key->unk_1C = key->unk_14 * work->unk_40;
+                    func_800F8514_KeyPaWay(1, 3, 1.5f, arg0->trans.x, arg0->trans.y, arg0->trans.z);
+                }
+                if (key->unk_08 <= 6.0f) {
+                    if (arg0->trans.y <= 0.0f) {
+                        work->unk_40 *= 0.9f;
+                        key->unk_08 -= 0.05f;
+                        if (key->unk_08 <= 0.0f) {
+                            work->unk_40 = 0.0f;
+                            work->unk_38 = 1000.0f;
+                            key->unk_18 = key->unk_10 = key->unk_1C = 0.0f;
+                        } else {
+                            key->unk_18 = key->unk_0C * work->unk_40;
+                            key->unk_1C = key->unk_14 * work->unk_40;
+                        }
+                    } else {
+                        key->unk_08 += 6.0f;
+                        work->unk_40 += 2.0f;
+                    }
+                }
+                if (key->unk_08 > 6.0f) {
+                    arg0->trans.y += key->unk_10;
+                    key->unk_10 -= key->unk_04;
+                    if ((u16)func_800FE134_KeyPaWay(arg0->trans.x + key->unk_18, arg0->trans.y, arg0->trans.z + key->unk_1C, work->unk_48) == 1) {
+                        arg0->trans.y = 201.0f;
+                        if (key->unk_08 > 6.0f) {
+                            key->unk_10 = key->unk_08;
+                        }
+                    } else if (arg0->trans.y < 0.0f) {
+                        arg0->trans.y = 0.0f;
+                        key->unk_08 -= 6.0f;
+                        if (key->unk_08 > 6.0f) {
+                            key->unk_10 = key->unk_08;
+                            work->unk_40 *= 0.9f;
+                            key->unk_18 = key->unk_0C * work->unk_40;
+                            key->unk_1C = key->unk_14 * work->unk_40;
+                            func_800F8514_KeyPaWay(0, 3, 1.5f, arg0->trans.x, arg0->trans.y, arg0->trans.z);
+                        }
+                    }
+                }
+            }
+            arg0->trans.x += key->unk_18;
+            arg0->trans.z += key->unk_1C;
+            func_80025798(arg0->model[1], arg0->trans.x, 0.0f, arg0->trans.z);
+        }
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F842C_KeyPaWay);
 
