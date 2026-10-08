@@ -34,8 +34,6 @@ void func_800FE33C_KeyPaWay(void) {
     func_8001D57C(0);
 }
 
-// constant scheduling: retail loads 50.0f inside the outer loop, not hoisted (masked 5)
-#ifdef NON_MATCHING
 void func_800FE3DC_KeyPaWay(Vec3f* out) {
     Vec3f eye;
     Vec3f at;
@@ -51,7 +49,6 @@ void func_800FE3DC_KeyPaWay(Vec3f* out) {
     f32 hiZ;
     f32 loZ;
     s32 i;
-    f32 step;
 
     eye = D_800FF564_KeyPaWay;
     at = D_800FF584_KeyPaWay;
@@ -97,10 +94,10 @@ void func_800FE3DC_KeyPaWay(Vec3f* out) {
     do {
         func_8001D420(0, &D_800FF564_KeyPaWay, &D_800FF584_KeyPaWay, &D_800FF598_KeyPaWay);
         func_8001D57C(0);
-        for (i = 0, step = 50.0f; i < 4; i++) {
+        for (i = 0; i < 4; i++) {
             Convert3DTo2D(0, &pts[i], &scr);
             if (scr.x < 32.0f || scr.x > 288.0f || scr.y < 32.0f || scr.y > 208.0f) {
-                D_800FF564_KeyPaWay.z = D_800FF564_KeyPaWay.z + step;
+                D_800FF564_KeyPaWay.z += 50.0f;
                 break;
             }
         }
@@ -109,9 +106,6 @@ void func_800FE3DC_KeyPaWay(Vec3f* out) {
     D_800FF564_KeyPaWay = eye;
     D_800FF584_KeyPaWay = at;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1FDF10", func_800FE3DC_KeyPaWay);
-#endif
 void func_800FE710_KeyPaWay(omObjData* obj) {
     obj->unk_50 = func_80023684(sizeof(KPWCameraWork), 0x7918);
     obj->func_ptr = NULL;
