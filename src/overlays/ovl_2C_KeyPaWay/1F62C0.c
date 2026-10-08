@@ -951,7 +951,84 @@ void func_800F92B8_KeyPaWay(omObjData* arg0) {
     ContBtn[work->unk_56] = btn;
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F9620_KeyPaWay);
+void func_800F9620_KeyPaWay(omObjData* arg0) {
+    KPWPlayerWork* work;
+    KPWPlayerExt* ext;
+    KPWEnemyExt* en;
+    omObjData* obj;
+    u16 btn;
+    u16 btnTrg;
+    u8 stkX;
+    u8 stkY;
+    s16 i;
+
+    work = KPW_PLAYER(arg0);
+    ext = work->unk_E4;
+    btn = ContBtn[work->unk_56];
+    btnTrg = ContBtnTrg[work->unk_56];
+    stkX = ContStkX[work->unk_56];
+    stkY = ContStkY[work->unk_56];
+    if (D_800FF580_KeyPaWay == 2) {
+        func_80009730();
+        arg0->func_ptr = func_800F9A90_KeyPaWay;
+        func_800F9A90_KeyPaWay(arg0);
+        return;
+    }
+    if (GwPlayer[work->unk_58].flags & 1) {
+        ContBtn[work->unk_56] = ContBtnTrg[work->unk_56] = ContStkX[work->unk_56] = ContStkY[work->unk_56] = 0;
+        func_800FCCB0_KeyPaWay(arg0);
+    }
+    func_80005A28(arg0);
+    ContBtn[work->unk_56] = btn;
+    ContBtnTrg[work->unk_56] = btnTrg;
+    ContStkX[work->unk_56] = stkX;
+    ContStkY[work->unk_56] = stkY;
+    if (work->unk_AE == 0) {
+        ext->unk_00 = 0;
+    }
+    if (D_800FF57C_KeyPaWay == arg0 && work->unk_53 == 1) {
+        D_800FF528_KeyPaWay = arg0->trans.x;
+        D_800FF52C_KeyPaWay = arg0->trans.z;
+        D_800FF514_KeyPaWay = 1;
+        D_800FF524_KeyPaWay = 2;
+        D_800FF580_KeyPaWay = 2;
+        D_800FF578_KeyPaWay = 4;
+        ext->unk_08 = (180.0 - fabs(work->unk_3C)) / 5.0;
+        if (work->unk_3C < 0.0f) {
+            ext->unk_08 = -ext->unk_08;
+        }
+        work->unk_40 = 0.0f;
+        ext->unk_0C = (work->unk_40 - arg0->trans.x) / 5.0f;
+        ext->unk_10 = (-850.0f - arg0->trans.z) / 5.0f;
+        ext->unk_24 = 5;
+        D_800FF54C_KeyPaWay = arg0;
+        for (i = 0; i < 4; i++) {
+            obj = D_800FF594_KeyPaWay[i];
+            work = KPW_PLAYER(obj);
+            ext = work->unk_E4;
+            func_80009E20(obj);
+            work->unk_40 = 0.0f;
+            work->unk_50 |= 0x200;
+            ext->unk_08 = (180.0 - fabs(work->unk_3C)) / 5.0;
+            if (work->unk_3C < 0.0f) {
+                ext->unk_08 = -ext->unk_08;
+            }
+            ext->unk_24 = 5;
+            GwPlayer[i].coins_mg += 10;
+        }
+        PlaySound(0x326);
+        for (i = 0; i < 5; i++) {
+            func_800258EC(D_800FF548_KeyPaWay[i]->model[0], 4, 4);
+            en = KPW_BODY(D_800FF548_KeyPaWay[i])->unk_68.enemy;
+            func_800258EC(en->unk_2C, 4, 0);
+            func_80025798(en->unk_2C, D_800FF548_KeyPaWay[i]->trans.x, D_800FF548_KeyPaWay[i]->trans.y + 50.0f,
+                          D_800FF548_KeyPaWay[i]->trans.z + 100.0f);
+            func_8001E268(en->unk_2A, 4, 4);
+            func_8001E268(en->unk_2A, 1, 0);
+            func_8001E2A8(en->unk_2A, 0);
+        }
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F9A90_KeyPaWay);
 
