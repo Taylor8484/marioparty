@@ -346,80 +346,65 @@ void func_800F6F44_DKsJungleAdventure(void) { //ov054_Entrypoint1
     omOvlReturnEx(1);
 }
 
-void func_800F7024_DKsJungleAdventure(void);
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F7024_DKsJungleAdventure);
+void func_800F7024_DKsJungleAdventure(void) {
+    GW_PLAYER* player;
+    s32 i;
 
-// void func_800F7024_DKsJungleAdventure(void) { //ov054_SetupRoutine
-//     s32 player_index;
-//     GW_PLAYER* player;
+    omInitObjMan(0x50, 0x28);
+    func_80060088();
+    func_80023448(1);
+    func_800234B8(0, 0x78, 0x78, 0x78);
+    func_800234B8(1, 0x40, 0x40, 0x60);
+    func_80023504(1, -100.0f, 100.0f, 300.0f);
+    func_80056A08(0, 0x45, 4, 0);
+    func_80052E84(0);
+    func_80052E84(1);
+    func_80052E84(2);
+    func_80052E84(3);
 
-//     omInitObjMan(80, 40); // InitObjectSystem
-//     func_80060088();
-//     func_80023448(1);
-//     func_800234B8(0, 0x78, 0x78, 0x78);
-//     func_800234B8(1, 0x40, 0x40, 0x60);
-//     func_80023504(1, -100.0f, 100.0f, 300.0f);
-//     SetupBoard(0, 0x45, 4, 0);
+    for (i = 0; i < 4; i++) {
+        player = GetPlayerStruct(i);
+        func_8003E174(player->player_obj);
+        player->player_obj->unk_0A |= 2;
+    }
 
-//     // Reset animations for characters?
-//     func_80052E84(0);
-//     func_80052E84(1);
-//     func_80052E84(2);
-//     func_80052E84(3);
+    if (_CheckFlag(0x4E) != 0) {
+        ClearBoardFeatureFlag(0x4E);
+        func_800F67A4_DKsJungleAdventure();
+    }
 
-//     for (player_index = 0; player_index < 4; player_index++) {
-//         player = GetPlayerStruct(player_index);
-//         func_8003E174(player->obj);
-//         player->player_obj->unk_0A |= 2;
-//     }
+    func_800F6830_DKsJungleAdventure();
+    func_800F748C_DKsJungleAdventure();
+    func_800F766C_DKsJungleAdventure();
+    func_800F78DC_DKsJungleAdventure();
 
-//     if (_CheckFlag(0x4e)) {
-//         ClearBoardFeatureFlag(0x4e);
-//         ov054_func_800F67A4();
-//     }
+    if (_CheckFlag(0xE) == 0) {
+        func_800F7368_DKsJungleAdventure();
+    }
+    if (_CheckFlag(0xF) == 0) {
+        func_800F77B8_DKsJungleAdventure();
+    }
+    if (_CheckFlag(0xD) == 0) {
+        func_800F72CC_DKsJungleAdventure();
+    }
+}
 
-//     func_800F6830_DKsJungleAdventure();
-//     ov054_DrawToadsOuter();
-//     ov054_DrawThwompsOuter();
-//     ov054_Draw20CoinGateOuter();
-
-//     if (!_CheckFlag(0xe)) {
-//         ov054_DrawKoopaOuter();
-//     }
-
-//     if (!_CheckFlag(0xf)) {
-//         ov054_DrawBooOuter();
-//     }
-
-//     if (!_CheckFlag(0xd)) {
-//         ov054_DrawBowserOuter();
-//     }
-// }
-
-void func_800F7190_DKsJungleAdventure(void);
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F7190_DKsJungleAdventure);
-
-// void func_800F7190_DKsJungleAdventure(void) { //ov054_Entrypoint2
-//     func_80060128(8);
-//     InitCameras(2);
-//     func_800F7024_DKsJungleAdventure();
-
-//     EventTableHydrate(main_event_table);
-
-//     if (!_CheckFlag(0xe)) {
-//         EventTableHydrate(koopa_event_table);
-//     }
-
-//     if (!_CheckFlag(0xf)) {
-//         EventTableHydrate(boo_event_table);
-//     }
-
-//     if (!_CheckFlag(0xd)) {
-//         EventTableHydrate(bowser_event_table);
-//     }
-
-//     func_800584F0(0);
-// }
+void func_800F7190_DKsJungleAdventure(void) {
+    func_80060128(8);
+    InitCameras(2);
+    func_800F7024_DKsJungleAdventure();
+    EventTableHydrate(D_800FA0CC_DKsJungleAdventure);
+    if (_CheckFlag(0xE) == 0) {
+        EventTableHydrate(D_800FA1FC_DKsJungleAdventure);
+    }
+    if (_CheckFlag(0xF) == 0) {
+        EventTableHydrate(D_800FA20C_DKsJungleAdventure);
+    }
+    if (_CheckFlag(0xD) == 0) {
+        EventTableHydrate(D_800FA224_DKsJungleAdventure);
+    }
+    func_800584F0(0);
+}
 
 void func_800F7224_DKsJungleAdventure(void) { //ov054_Entrypoint3
     InitCameras(1);
@@ -466,31 +451,204 @@ void func_800F72EC_DKsJungleAdventure(void) { //ov054_DrawKoopaInner
     func_8003C314(9, ptr, -1, -3);
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F7368_DKsJungleAdventure);
+void func_800F7368_DKsJungleAdventure(void) {
+    D_800FA304_DKsJungleAdventure = NULL;
+    func_800F72EC_DKsJungleAdventure();
+}
+void func_800F7388_DKsJungleAdventure(s16 arg0) {
+    Object* obj;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F7388_DKsJungleAdventure);
+    if (D_800FA310_DKsJungleAdventure[arg0] == NULL) {
+        if (D_800FA308_DKsJungleAdventure == NULL) {
+            obj = MBModelCreate(0x3A, NULL);
+            func_8003E174(obj);
+            D_800FA308_DKsJungleAdventure = obj;
+        } else {
+            obj = MBModelParamCreate(D_800FA308_DKsJungleAdventure);
+        }
+        D_800FA310_DKsJungleAdventure[arg0] = obj;
+        obj->unk_0A |= 2;
+        func_8004CDCC(obj);
+        func_800A0D50(&obj->coords, &BoardSpaceGet(D_800F9928_DKsJungleAdventure[arg0])->coords);
+        func_8003C314(6, obj, D_800F9948_DKsJungleAdventure[arg0].one, D_800F9948_DKsJungleAdventure[arg0].two);
+    }
+}
+void func_800F748C_DKsJungleAdventure(void) {
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F748C_DKsJungleAdventure);
+    D_800FA308_DKsJungleAdventure = NULL;
+    for (i = 0; i < DK_STAR_COUNT; i++) {
+        D_800FA310_DKsJungleAdventure[i] = NULL;
+        if (_CheckFlag(D_800F9938_DKsJungleAdventure[i]) == 0) {
+            func_800F7388_DKsJungleAdventure(i);
+        }
+    }
+}
+void func_800F7514_DKsJungleAdventure(s16 arg0) {
+    Object* obj;
+    BoardSpace* space;
+    Vec3f* pos;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F7514_DKsJungleAdventure);
+    if (D_800FA330_DKsJungleAdventure[arg0] == NULL) {
+        if (D_800FA32C_DKsJungleAdventure == NULL) {
+            obj = MBModelCreate(0xA, D_800F9984_DKsJungleAdventure);
+            func_8003E174(obj);
+            D_800FA32C_DKsJungleAdventure = obj;
+        } else {
+            obj = MBModelParamCreate(D_800FA32C_DKsJungleAdventure);
+        }
+        D_800FA330_DKsJungleAdventure[arg0] = obj;
+        func_800A0D00(&obj->xScale, 0.8f, 0.8f, 0.8f);
+        obj->unk_0A |= 2;
+        if (GwCommon.boardWork[D_800F9964_DKsJungleAdventure[arg0]] == 0) {
+            space = BoardSpaceGet(D_800F996C_DKsJungleAdventure[arg0]);
+        } else {
+            space = BoardSpaceGet(D_800F9974_DKsJungleAdventure[arg0]);
+        }
+        pos = &obj->coords;
+        func_800A0D50(pos, &space->coords);
+        func_800A0E80(&obj->unk_18, &BoardSpaceGet(D_800F997C_DKsJungleAdventure[arg0])->coords, pos);
+    }
+}
+void func_800F766C_DKsJungleAdventure(void) {
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F766C_DKsJungleAdventure);
+    D_800FA32C_DKsJungleAdventure = NULL;
+    for (i = 0; i < DK_THWOMP_COUNT; i++) {
+        func_800F7514_DKsJungleAdventure(i);
+    }
+}
+void func_800F76B0_DKsJungleAdventure(s16 arg0) {
+    Object* obj;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F76B0_DKsJungleAdventure);
+    if (D_800FA340_DKsJungleAdventure[arg0] == NULL) {
+        if (D_800FA33C_DKsJungleAdventure == NULL) {
+            obj = MBModelCreate(0x6A, NULL);
+            func_8003E174(obj);
+            D_800FA33C_DKsJungleAdventure = obj;
+        } else {
+            obj = MBModelParamCreate(D_800FA33C_DKsJungleAdventure);
+        }
+        D_800FA340_DKsJungleAdventure[arg0] = obj;
+        obj->unk_0A |= 2;
+        func_800A0D00(&obj->xScale, 0.6f, 0.6f, 0.6f);
+        obj->unk_30 = 100.0f;
+        func_800A0D50(&obj->coords, &BoardSpaceGet(D_800F998C_DKsJungleAdventure[arg0])->coords);
+        func_8003C314(8, obj, 0, 0);
+    }
+}
+void func_800F77B8_DKsJungleAdventure(void) {
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F77B8_DKsJungleAdventure);
+    D_800FA33C_DKsJungleAdventure = NULL;
+    for (i = 0; i < DK_BOO_COUNT; i++) {
+        func_800F76B0_DKsJungleAdventure(i);
+    }
+}
+void func_800F77FC_DKsJungleAdventure(s16 arg0) {
+    Object* obj;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F77FC_DKsJungleAdventure);
+    if (D_800FA34C_DKsJungleAdventure[arg0] == NULL) {
+        if (D_800FA348_DKsJungleAdventure == NULL) {
+            obj = MBModelCreate(0x29, NULL);
+            func_8003E174(obj);
+            D_800FA348_DKsJungleAdventure = obj;
+        } else {
+            obj = MBModelParamCreate(D_800FA348_DKsJungleAdventure);
+        }
+        obj->unk_0A |= 2;
+        D_800FA34C_DKsJungleAdventure[arg0] = obj;
+        func_800A0D50(&obj->coords, &BoardSpaceGet(D_800F9990_DKsJungleAdventure[arg0])->coords);
+        func_8004CD48(obj, D_800F9994_DKsJungleAdventure[arg0]);
+    }
+}
+void func_800F78DC_DKsJungleAdventure(void) {
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F78DC_DKsJungleAdventure);
+    D_800FA348_DKsJungleAdventure = NULL;
+    for (i = 0; i < DK_COIN_GATE_COUNT; i++) {
+        func_800F77FC_DKsJungleAdventure(i);
+    }
+}
+void func_800F7920_DKsJungleAdventure(void) {
+    while (func_8004B850() != 0) {
+        HuPrcVSleep();
+    }
+    HuPrcVSleep();
+    D_800FA354_DKsJungleAdventure = func_80045D84(0, 0x92, 1);
+    D_800FA358_DKsJungleAdventure = func_80045D84(1, 0xA0, 1);
+    D_800FA35C_DKsJungleAdventure = func_80045D84(3, 0xAE, 1);
+    D_800FA360_DKsJungleAdventure = func_80045D84(0xB, 0xBC, 1);
+    HuPrcSleep(3);
+    D_800EE320 = 1;
+}
+void func_800F79D0_DKsJungleAdventure(void) {
+    D_800EE320 = 0;
+    func_80045E6C(D_800FA354_DKsJungleAdventure);
+    func_80045E6C(D_800FA358_DKsJungleAdventure);
+    func_80045E6C(D_800FA35C_DKsJungleAdventure);
+    func_80045E6C(D_800FA360_DKsJungleAdventure);
+}
+void func_800F7A1C_DKsJungleAdventure(void) {
+    unk_8003B8D4Struct* prompt;
+    s32 dir;
+    s32 i;
+    s32 count;
+    s16 win;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F7920_DKsJungleAdventure);
+    SetPlayerAnimation(-1, -1, 2);
+    HuPrcVSleep();
+    if (PlayerHasCoins(-1, 10) != 0) {
+        func_800F7920_DKsJungleAdventure();
+        prompt = func_8003C218(-1, D_800F9F5C_DKsJungleAdventure);
+        func_8003C060(prompt, -1, 0);
+        if (PlayerIsCPU(-1) != 0) {
+            count = RunDecisionTree(D_800F9ADC_DKsJungleAdventure);
+            for (i = 0; i < count; i++) {
+                func_8003BE84(prompt, -2);
+            }
+            func_8003BE84(prompt, -4);
+        }
+        dir = DirectionPrompt(prompt);
+        func_8003B908(prompt);
+        func_800F79D0_DKsJungleAdventure();
+        if ((GwCommon.boardWork[0] == 0) & (dir != 0)) {
+            SetNextChainAndSpace(-1, 3, 0);
+        } else if ((GwCommon.boardWork[0] != 0) & (dir == 0)) {
+            SetNextChainAndSpace(-1, 1, 0);
+        } else {
+            GwCommon.boardWork[15] = 0;
+            func_800587EC(0x47, 0, 1);
+            SetEventReturnFlag(1);
+        }
+    } else {
+        while (func_8004B850() != 0) {
+            HuPrcVSleep();
+        }
+        HuPrcVSleep();
+        win = CreateTextWindow(0x32, 0x3C, 0xC, 2);
+        LoadStringIntoWindow(win, (void*)0x18B, -1, -1);
+        func_8006E070(win, 0);
+        ShowTextWindow(win);
+        PlaySound(0x8F);
+        func_8004DBD4(win, GetCurrentPlayerIndex());
+        HideTextWindow(win);
+        if (GwCommon.boardWork[0] == 0) {
+            SetNextChainAndSpace(-1, 3, 0);
+        } else {
+            SetNextChainAndSpace(-1, 1, 0);
+        }
+    }
+    EndProcess(NULL);
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F79D0_DKsJungleAdventure);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F7A1C_DKsJungleAdventure);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F7C34_DKsJungleAdventure);
+void func_800F7C34_DKsJungleAdventure(void) {
+    if (GwCommon.boardWork[0] != 0) {
+        SetNextChainAndSpace(-1, 1, 0);
+    } else {
+        SetNextChainAndSpace(-1, 3, 0);
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F7C6C_DKsJungleAdventure);
 
