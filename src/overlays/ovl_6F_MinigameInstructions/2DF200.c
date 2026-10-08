@@ -145,14 +145,140 @@ void func_800FE924_MinigameInstructions(Ovl6FPlayerWork* work) {
     func_80025798(work->unk_70, out.x, out.y, work->unk_14);
     work->unk_2C = 0.0f;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FEB5C_MinigameInstructions);
+void func_800FEB5C_MinigameInstructions(Ovl6FPlayerWork* work) {
+    Vec2f pos;
+    Vec3f out;
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FEE08_MinigameInstructions);
+    func_800258EC(work->unk_4E, 4, 0);
+    func_80025BB8(work->unk_4E, work->unk_52);
+    func_80025EB4(work->unk_4E, 2, 2);
+    func_800257E4(work->unk_4E, 0.0f, 90.0f, 0.0f);
+    func_800257E4(work->unk_70, 0.0f, 90.0f, 0.0f);
+    pos.x = work->unk_00;
+    pos.y = work->unk_04;
+    out.z = 0.0f;
+    while (work->unk_00 < work->unk_08) {
+        pos.x = work->unk_00 += 12.0f;
+        func_8001DD24(0, CZoom, (Vec3f*)&pos, &out);
+        func_80025798(work->unk_4E, out.x, out.y + 20.0f, work->unk_14);
+        func_80025798(work->unk_70, out.x, out.y, work->unk_14);
+        func_800257E4(work->unk_70, work->unk_2C, 90.0f, 0.0f);
+        work->unk_2C += 20.0f;
+        HuPrcVSleep();
+    }
+    pos.x = work->unk_00 = work->unk_08;
+    func_8001DD24(0, CZoom, (Vec3f*)&pos, &out);
+    func_80025798(work->unk_4E, out.x, out.y + 20.0f, work->unk_14);
+    func_80025798(work->unk_70, out.x, out.y, work->unk_14);
+    for (i = 90; i >= 0; i -= 30) {
+        func_800257E4(work->unk_4E, 0.0f, i, 0.0f);
+        func_800257E4(work->unk_70, work->unk_2C, i, 0.0f);
+        work->unk_2C += 2.0f;
+        HuPrcVSleep();
+    }
+    func_80025C20(work->unk_4E, func_80025E48(work->unk_50), 0, 8, 2);
+    work->unk_3C = 0;
+    work->unk_0C = out.x;
+    work->unk_10 = out.y;
+    work->unk_14 = -180.0f;
+    work->unk_20 = 0.0f;
+    work->unk_24 = 90.0f;
+    work->unk_28 = 0.0f;
+    HuPrcSleep(8);
+}
+void func_800FEE08_MinigameInstructions(Ovl6FPlayerWork* work) {
+    Vec2f pos;
+    Vec3f out;
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FF010_MinigameInstructions);
+    if (func_80025E48(work->unk_4E) != func_80025E48(work->unk_52)) {
+        func_80025C20(work->unk_4E, func_80025E48(work->unk_52), 0, 8, 2);
+    }
+    HuPrcSleep(8);
+    for (i = 0; i >= -90; i -= 30) {
+        func_800257E4(work->unk_4E, 0.0f, i, 0.0f);
+        func_800257E4(work->unk_70, work->unk_2C, i, 0.0f);
+        work->unk_2C += 2.0f;
+        HuPrcVSleep();
+    }
+    pos.x = work->unk_00;
+    pos.y = work->unk_04;
+    out.z = 0.0f;
+    while (work->unk_00 > -50.0f) {
+        pos.x = work->unk_00 -= 12.0f;
+        func_8001DD24(0, CZoom, (Vec3f*)&pos, &out);
+        func_80025798(work->unk_4E, out.x, out.y + 20.0f, work->unk_14);
+        func_80025798(work->unk_70, out.x, out.y, work->unk_14);
+        func_800257E4(work->unk_70, work->unk_2C, 90.0f, 0.0f);
+        work->unk_2C += 20.0f;
+        HuPrcVSleep();
+    }
+    func_800258EC(work->unk_4E, 4, 4);
+}
+void func_800FF010_MinigameInstructions(Ovl6FPlayerWork* work) {
+    f32 x;
+    f32 y;
+    f32 mag;
+    s16 motion;
+    u16 prev;
+    u8 port;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FF23C_MinigameInstructions);
+    motion = 0;
+    port = GwPlayer[work->unk_38].port;
+    x = ContStkX[port];
+    y = ContStkY[port];
+    mag = func_800B1750(x * x + y * y);
+    if (mag != 0.0f) {
+        work->unk_24 = func_800B0CD8(x, -y);
+        func_800257E4(work->unk_4E, 0.0f, work->unk_24, 0.0f);
+        func_800257E4(work->unk_70, work->unk_30, work->unk_24, 0.0f);
+    }
+    prev = work->unk_3C;
+    if (mag == 0.0f) {
+        work->unk_3C = 0;
+        motion = func_80025E48(work->unk_50);
+    } else if (mag <= 16.0f) {
+        work->unk_3C = 1;
+        motion = func_80025E48(work->unk_54);
+        work->unk_2C += 10.0f;
+        func_800257E4(work->unk_70, work->unk_2C, work->unk_24, 0.0f);
+    } else if (mag > 16.0f) {
+        work->unk_3C = 2;
+        motion = func_80025E48(work->unk_52);
+        work->unk_2C += 20.0f;
+        func_800257E4(work->unk_70, work->unk_2C, work->unk_24, 0.0f);
+    }
+    if ((s16)prev != work->unk_3C) {
+        func_80025C20(work->unk_4E, motion, 0, 8, 2);
+    }
+    if (work->unk_2C > 360.0f) {
+        work->unk_2C -= 360.0f;
+    }
+}
+void func_800FF23C_MinigameInstructions(Ovl6FPlayerWork* work) {
+    Vec2f pos;
+    Vec3f out;
+    u8 chr;
 
+    chr = GwPlayer[work->unk_38].character;
+    work->unk_4E = LoadFormFile((D_8010E964_MinigameInstructions[chr] << 16) | 0x9F, 0x29D);
+    work->unk_50 = func_80023FC8(work->unk_4E);
+    work->unk_52 = LoadFormFile((D_8010E964_MinigameInstructions[chr] << 16) | 3, 0x1D);
+    work->unk_54 = LoadFormFile((D_8010E964_MinigameInstructions[chr] << 16) | 0x53, 0x1D);
+    func_80025830(work->unk_4E, 0.4f, 0.4f, 0.4f);
+    work->unk_70 = LoadFormFile(0x1E0006, 0x29D);
+    func_80025830(work->unk_70, 0.4f, 0.4f, 0.4f);
+    func_80025EB4(work->unk_70, 1, 1);
+    work->unk_08 = 70.0f;
+    pos.x = work->unk_00 = -50.0f;
+    pos.y = work->unk_04 = 150.0f;
+    work->unk_14 = -180.0f;
+    func_8001DD24(0, CZoom - work->unk_14, (Vec3f*)&pos, &out);
+    work->unk_0C = out.x;
+    work->unk_10 = out.y;
+    func_80025798(work->unk_4E, out.x, out.y, work->unk_14);
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FF3CC_MinigameInstructions);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FF68C_MinigameInstructions);
