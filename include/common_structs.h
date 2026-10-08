@@ -114,7 +114,7 @@ typedef struct unkGlobalStruct_00 {
     /* 0x5C */ s32 unk_5C;
     /* 0x60 */ f32 unk_60;
     /* 0x64 */ f32 unk_64;
-    /* 0x68 */ struct unkGlobalStruct_00* unk_68;
+    /* 0x68 */ u32 unk_68; /* MgWork's f32; a pointer here would move every later field on the host */
     /* 0x6C */ char unk_6C[0x14];
 
     /* 0x80 */ s32 unk80;
@@ -136,7 +136,7 @@ typedef struct unkGlobalStruct_00 {
     /* 0xC0 */ u16 unk_C0;
     /* 0xC2 */ char unk_C2[0x16];
     /* 0xD8 */ void* unk_D8; // possibly unkGlobalStruct_00*
-    /* 0xDC */ s32 unk_DC;
+    /* 0xDC */ void* unk_DC; /* MgWork's collision callback */
     /* 0xE0 */ s32 unk_E0;
     /* 0xE4 */ unk_Struct01* unk_E4; // possibly void*
 } unkGlobalStruct_00; /* size = 0xE8 */

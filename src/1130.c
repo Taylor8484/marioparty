@@ -135,12 +135,8 @@ typedef struct PlayerWork {
     /* 0x5C */ s32 unk_5C;
     /* 0x60 */ f32 unk_60;
     /* 0x64 */ f32 unk_64;
-    /* 0x68 */ void* unk_68;
-    /* 0x6C */ void* unk_6C;
-    /* 0x70 */ char unk_70[8];
-    /* 0x78 */ void* unk_78;
-    /* 0x7C */ char unk_7C[4];
-    /* 0x80 */ void* unk_80;
+    /* 0x68 */ f32 unk_68;
+    /* 0x6C */ s32 unk_6C[6]; /* MgWork's stick samples; no pointers here, so host offsets agree */
     /* 0x84 */ f32 unk_84;
     /* 0x88 */ f32 unk_88;
     /* 0x8C */ f32 unk_8C;
@@ -158,10 +154,12 @@ typedef struct PlayerWork {
     /* 0xB2 */ s8 unk_B2;
     /* 0xB3 */ s8 unk_B3;
     /* 0xB4 */ s16 unk_B4;
-    /* 0xB6 */ char unk_B6[6];
+    /* 0xB6 */ char unk_B6[2];
+    /* 0xB8 */ void* unk_B8; /* MgWork's held item: a pointer, so the host layout agrees */
     /* 0xBC */ f32 unk_BC;
     /* 0xC0 */ u16 unk_C0;
-    /* 0xC2 */ char unk_C2[0x1A];
+    /* 0xC2 */ char unk_C2[0x16];
+    /* 0xD8 */ void* unk_D8;
     /* 0xDC */ s32 (*unk_DC)(omObjData*, omObjData*);
     /* 0xE0 */ u16 unk_E0;
     /* 0xE2 */ char unk_E2[2];

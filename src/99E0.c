@@ -57,7 +57,8 @@ typedef struct MgWork {
     /* 0xC0 */ u16 unk_C0;
     /* 0xC2 */ char unk_C2[0x16];
     /* 0xD8 */ s16 (*unk_D8)[2]; /* one pair per motion */
-    /* 0xDC */ char unk_DC[8];
+    /* 0xDC */ void* unk_DC; /* collision callback (PlayerWork in 1130.c) */
+    /* 0xE0 */ char unk_E0[4];
     /* 0xE4 */ void* unk_E4; /* unkGlobalStruct_00's pointer: named so the host layout agrees */
 } MgWork; /* size = 0xE8 */
 
