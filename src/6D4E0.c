@@ -387,7 +387,7 @@ void func_8006CEA0(void)
   s32 mode;
   if (D_800C5DF1 == 0)
   {
-    D_800ED4B0 = MallocTemp(0x22C8);
+    D_800ED4B0 = MallocTemp(14 * sizeof(TextWindow)); /* 0x22C8 on the N64; TextWindow holds pointers */
     for (i = 0; i < 14; i++)
     {
       D_800ED4B0[i].unk_36 = -1;

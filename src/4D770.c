@@ -249,7 +249,7 @@ Process* func_8004D3F4(Vec3f* arg0, Vec3f* arg1, Vec3f* arg2, s32 arg3) {
     unkProcessUserDataStruct* temp_s0;
 
     temp_s1 = omAddPrcObj(func_8004D328, 0x4001, 0, 0x50);
-    temp_s0 = HuMemMemoryAlloc(temp_s1->heap, 0x20);
+    temp_s0 = HuMemMemoryAlloc(temp_s1->heap, sizeof(*temp_s0)); /* 0x20 on the N64; a pointer field */
     temp_s1->user_data = temp_s0;
     temp_s0->unk_00 = *arg0;
     temp_s0->unk_0C = *arg1;
@@ -299,7 +299,7 @@ Process* func_8004D648(Vec3f* arg0, Vec3f* arg1, Vec3f* arg2, f32 arg3) {
     unkProcessUserDataStruct* temp_s0;
 
     temp_s1 = omAddPrcObj(func_8004D580, 0x4001, 0, 0x50);
-    temp_s0 = HuMemMemoryAlloc(temp_s1->heap, 0x20);
+    temp_s0 = HuMemMemoryAlloc(temp_s1->heap, sizeof(*temp_s0)); /* 0x20 on the N64; a pointer field */
     temp_s1->user_data = temp_s0;
     temp_s0->unk_00 = *arg0;
     temp_s0->unk_0C = *arg1;

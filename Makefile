@@ -119,6 +119,8 @@ build/src/34D80.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 build/src/3DEB0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # 59E80.c (save data, menus, camera) also has the mul fix on: nop between back-to-back mul.s (func_80059EBC)
 build/src/59E80.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# ovl_62 2A2500.c (board intro) also has the mul fix on: nop between cvt.d.s and mul.d (func_800F6854)
+build/src/overlays/ovl_62_BoardIntro/2A2500.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # 29C90.c (collision grid) also has the mul fix on: nop before a mult at a loop head (func_80029174)
 build/src/29C90.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 
@@ -242,7 +244,8 @@ $(BUILD_DIR)/src/%.c.o: src/%.c
 # 3DEB0.c too (func_8003D8CC: mul.s right after a call's return).
 # 59E80.c too (func_80059EBC: mul.s right after a call's return).
 # ovl_61 29B410.c too (func_800F7E50, func_800FB670: mul.s right after a call's return).
-$(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o $(BUILD_DIR)/src/1B800.c.o $(BUILD_DIR)/src/3DEB0.c.o $(BUILD_DIR)/src/59E80.c.o $(BUILD_DIR)/src/overlays/ovl_61_OpeningScene/29B410.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
+# ovl_62 2A2500.c too (func_800F6854: mul.s right after sinf's return).
+$(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o $(BUILD_DIR)/src/1B800.c.o $(BUILD_DIR)/src/3DEB0.c.o $(BUILD_DIR)/src/59E80.c.o $(BUILD_DIR)/src/overlays/ovl_61_OpeningScene/29B410.c.o $(BUILD_DIR)/src/overlays/ovl_62_BoardIntro/2A2500.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
 	@$(PRINT)$(GREEN)Compiling C file: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
 	@mkdir -p $(shell dirname $@)
 	@$(CC_HOST) $(CFLAGS_CHECK) $(CPPFLAGS) -MMD -MP -MT $@ -MF $@.d $<
