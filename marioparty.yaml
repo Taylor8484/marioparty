@@ -1375,7 +1375,7 @@ segments:
     subsegments:
       - [0x1F62C0, c]
       - [0x1FDF10, c]
-      - [0x1FEF50, data, 1F62C0]
+      - [0x1FEF50, .data, 1F62C0]
       - [0x1FF090, .rodata, 1F62C0]
       - [0x1FF1D0, .rodata, 1FDF10]
       - {0x1FF1E0, type: bss, vram: 0x800FF500, name: ovl_2C_bss}

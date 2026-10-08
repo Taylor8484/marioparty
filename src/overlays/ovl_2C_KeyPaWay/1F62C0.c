@@ -328,7 +328,7 @@ f32 func_800F7134_KeyPaWay(omObjData* obj, f32 x, f32 z, f32 angle, f32 dist) {
     return dir;
 }
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", D_800FF3B0_KeyPaWay);
+const u8 D_800FF3B0_KeyPaWay[] __attribute__((section(".rodata"))) = { 0x82, 0x72, 0x82, 0x73, 0x82, 0x60, 0x82, 0x71, 0x00 };
 
 void func_800F747C_KeyPaWay(omObjData* arg0) {
     void* data;
@@ -2352,3 +2352,35 @@ f32 func_800FE1F0_KeyPaWay(f32 arg0, f32 arg1) {
 
     return var_f12;
 }
+
+/* .data */
+f32 D_800FF270_KeyPaWay[5][2] = { { -600.0f, -100.0f }, { -300.0f, -350.0f }, { 0.0f, -600.0f }, { 300.0f, -350.0f }, { 600.0f, -100.0f } };
+Vec3f D_800FF298_KeyPaWay[4] = { { 0.0f, 0.0f, 900.0f }, { 300.0f, 0.0f, 900.0f }, { 450.0f, 0.0f, 900.0f }, { 600.0f, 0.0f, 900.0f } };
+Vec3f D_800FF2C8_KeyPaWay[4] = { { 0.0f, 0.0f, 0.0f }, { -200.0f, 0.0f, 900.0f }, { 0.0f, 0.0f, 900.0f }, { 200.0f, 0.0f, 900.0f } };
+s32 D_800FF2F8_KeyPaWay[6] = { 0x7, 0x8, 0x9, 0xa, 0xb, 0xc };
+f32 D_800FF310_KeyPaWay[3][3][2] = { { { -450.0f, 750.0f }, { -450.0f, 0.0f }, { -450.0f, -850.0f } }, { { 0.0f, 750.0f }, { 0.0f, 0.0f }, { 0.0f, -750.0f } }, { { 450.0f, 750.0f }, { 450.0f, 0.0f }, { 450.0f, -850.0f } } };
+f32 D_800FF358_KeyPaWay = 0.0f;
+f32 D_800FF35C_KeyPaWay = 0.0f;
+f32 D_800FF360_KeyPaWay = 0.0f;
+u16 D_800FF364_KeyPaWay = 1;
+u16 D_800FF366_KeyPaWay = 0; /* unreferenced */
+f32 D_800FF368_KeyPaWay = 0.0f;
+f32 D_800FF36C_KeyPaWay = 0.0f;
+u16 D_800FF370_KeyPaWay[2] = { 30, 30 };
+s32 D_800FF374_KeyPaWay = 1;
+u16 D_800FF378_KeyPaWay = 0;
+u16 D_800FF37A_KeyPaWay = 0;
+omObjData* D_800FF37C_KeyPaWay = NULL;
+u16 D_800FF380_KeyPaWay = 0;
+u16 D_800FF382_KeyPaWay = 1;
+f32 D_800FF384_KeyPaWay = 0.0f;
+f32 D_800FF388_KeyPaWay = 0.0f;
+f32 D_800FF38C_KeyPaWay = 0.0f;
+f32 D_800FF390_KeyPaWay = 1.0f;
+f32 D_800FF394_KeyPaWay[4] = { 0.0f, 0.0f, 0.0f, 0.0f }; /* unreferenced */
+u16 D_800FF3A4_KeyPaWay = 0;
+u16 D_800FF3A6_KeyPaWay = 0; /* unreferenced */
+u16 D_800FF3A8_KeyPaWay = 0; /* unreferenced */
+u16 D_800FF3AA_KeyPaWay = 0; /* unreferenced */
+u16 D_800FF3AC_KeyPaWay = 0; /* unreferenced */
+u16 D_800FF3AE_KeyPaWay = 0; /* unreferenced */

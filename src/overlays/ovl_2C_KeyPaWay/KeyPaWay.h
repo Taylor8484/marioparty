@@ -439,7 +439,7 @@ extern f32 D_800FF390_KeyPaWay; /* = 1.0f; four unreferenced f32 0s follow */
 extern u16 D_800FF3A4_KeyPaWay; /* five unreferenced halfwords follow */
 
 /* .rodata (1F62C0, INCLUDE_RODATA): SJIS string passed to func_8007B168. */
-extern u8 D_800FF3B0_KeyPaWay[];
+extern const u8 D_800FF3B0_KeyPaWay[];
 
 /* ---------------------------------------------------------------------------------------------
    .bss (ovl_2C_bss.bss.s, 0x800FF500..0x800FF5B0). Inner labels of one object are #define views
