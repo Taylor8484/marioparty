@@ -401,8 +401,187 @@ void func_800F785C_MinigameInstructions(void) {
         HuPrcVSleep();
     }
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F7C58_MinigameInstructions);
+// registers in the team loop; retail reuses one load of D_8010F4EA for the range check (masked 12)
+#ifdef NON_MATCHING
+void func_800F7C58_MinigameInstructions(void) {
+    s32 win;
+    s16 i;
+    s16 max;
+    s32 a;
+    s32 b;
+    s32 t;
+    s32 chr;
+    s16 allcpu;
+    s16 timer;
+    s16 extra;
+    s16 prev;
+    s16 cur;
+    u8 port;
 
+    D_8010F408_MinigameInstructions = win = func_8007194C(0x50, 0xC6, 4);
+    if (D_8010F760_MinigameInstructions == 2) {
+        for (i = 0, max = 0; i < 4; i++) {
+            if (max < GwPlayer[i].group) {
+                max = GwPlayer[i].group;
+            }
+        }
+        if (max < 2) {
+            a = 0;
+            b = 2;
+            for (i = 0; i < 4; i++) {
+                if (GwPlayer[i].group == 0) {
+                    func_8006DA5C(win, (void*) (PB_PTR32) (GwPlayer[i].character + 0x2C), a);
+                } else {
+                    func_8006DA5C(win, (void*) (PB_PTR32) (GwPlayer[i].character + 0x2C), b);
+                }
+            }
+        } else {
+            for (i = 0; i < 4; i++) {
+                func_8006DA5C(win, (void*) (PB_PTR32) (GwPlayer[i].character + 0x2C), GwPlayer[i].group);
+            }
+        }
+    } else if (D_8010F760_MinigameInstructions == 3) {
+        a = 0;
+        b = 1;
+        for (i = 0; i < 4; i++) {
+            if (GwPlayer[i].group == 0) {
+                chr = GwPlayer[i].character;
+                t = a++;
+            } else {
+                chr = GwPlayer[i].character;
+                t = b++;
+            }
+            func_8006DA5C(win, (void*) (PB_PTR32) (chr + 0x2C), t);
+        }
+    } else {
+        for (i = 0; i < 4; i++) {
+            func_8006DA5C(win, (void*) (PB_PTR32) (GwPlayer[i].character + 0x2C), GwPlayer[i].group);
+        }
+    }
+    if (D_8010F760_MinigameInstructions != 0) {
+        for (i = 0; i < 4; i++) {
+            if (!(GwPlayer[i].flags & 1)) {
+                break;
+            }
+        }
+        allcpu = (i == 4);
+    } else {
+        allcpu = GwPlayer[D_8010F772_MinigameInstructions].flags & 1;
+    }
+    D_8010F4EA_MinigameInstructions = 1;
+    omAddPrcObj(func_800F84B0_MinigameInstructions, 0x3F00, 0x800, 0);
+    HuPrcSleep(30);
+    func_8006E288(win, 1);
+    LoadStringIntoWindow(win, (void*) (PB_PTR32) func_800F885C_MinigameInstructions(D_8010F766_MinigameInstructions), -1, -1);
+    while (D_8010E950_MinigameInstructions == 0) {
+        HuPrcVSleep();
+    }
+    func_80071C8C((s16) win, 1);
+    extra = D_8010E4F0_MinigameInstructions[(s16) D_8010F766_MinigameInstructions].unk_0E;
+    timer = 60;
+    while (1) {
+        HuPrcVSleep();
+        if (D_8010F400_MinigameInstructions == 1) {
+            break;
+        }
+        prev = D_8010F4EA_MinigameInstructions;
+        if (D_8010F760_MinigameInstructions == 0) {
+            port = GwPlayer[D_8010F772_MinigameInstructions].port;
+            if (ContBtnTrg[port] & 2) {
+                cur = D_8010F4EA_MinigameInstructions;
+                D_8010F4EA_MinigameInstructions = cur - 1;
+                if (extra != 0 && D_8010F4EA_MinigameInstructions == 2) {
+                    D_8010F4EA_MinigameInstructions = cur - 2;
+                }
+            } else if (ContBtnTrg[port] & 1) {
+                cur = D_8010F4EA_MinigameInstructions;
+                D_8010F4EA_MinigameInstructions = cur + 1;
+                if (extra != 0 && D_8010F4EA_MinigameInstructions == 2) {
+                    D_8010F4EA_MinigameInstructions = cur + 2;
+                }
+            }
+            if (ContBtnTrg[port] & 0x1000) {
+                D_8010F764_MinigameInstructions = 0;
+            }
+        } else {
+            for (i = 0; i < 4; i++) {
+                if (ContBtnTrg[i] & 2) {
+                    cur = D_8010F4EA_MinigameInstructions;
+                    D_8010F4EA_MinigameInstructions = cur - 1;
+                    if (extra != 0 && D_8010F4EA_MinigameInstructions == 2) {
+                        D_8010F4EA_MinigameInstructions = cur - 2;
+                    }
+                    break;
+                }
+                if (ContBtnTrg[i] & 1) {
+                    cur = D_8010F4EA_MinigameInstructions;
+                    D_8010F4EA_MinigameInstructions = cur + 1;
+                    if (extra != 0 && D_8010F4EA_MinigameInstructions == 2) {
+                        D_8010F4EA_MinigameInstructions = cur + 2;
+                    }
+                    break;
+                }
+                if (ContBtnTrg[i] & 0x1000) {
+                    D_8010F764_MinigameInstructions = 0;
+                }
+            }
+        }
+        if (allcpu != 0) {
+            timer--;
+            if (timer <= 0) {
+                D_8010F764_MinigameInstructions = 0;
+            }
+        }
+        if (D_8010F764_MinigameInstructions == 0) {
+            break;
+        }
+        if (D_8010F4EA_MinigameInstructions < 0) {
+            if (extra != 0) {
+                D_8010F4EA_MinigameInstructions = 4;
+            } else {
+                D_8010F4EA_MinigameInstructions = 2;
+            }
+        }
+        if (extra == 0) {
+            if (D_8010F4EA_MinigameInstructions >= 3) {
+                D_8010F4EA_MinigameInstructions = 0;
+            }
+        } else if (D_8010F4EA_MinigameInstructions >= 5) {
+            D_8010F4EA_MinigameInstructions = 0;
+        }
+        if (D_8010F4EA_MinigameInstructions != prev) {
+            func_8006EB40(win);
+            if (D_8010F4EA_MinigameInstructions == 0) {
+                LoadStringIntoWindow(win, (void*) (PB_PTR32) func_800F8910_MinigameInstructions(D_8010F766_MinigameInstructions), -1, -1);
+            }
+            if (D_8010F4EA_MinigameInstructions == 1) {
+                LoadStringIntoWindow(win, (void*) (PB_PTR32) func_800F885C_MinigameInstructions(D_8010F766_MinigameInstructions), -1, -1);
+            }
+            if (extra == 0) {
+                if (D_8010F4EA_MinigameInstructions == 2) {
+                    LoadStringIntoWindow(win, (void*) (PB_PTR32) D_8010E4F0_MinigameInstructions[(s16) D_8010F766_MinigameInstructions].unk_0C, -1, -1);
+                }
+            } else {
+                if (D_8010F4EA_MinigameInstructions == 3) {
+                    LoadStringIntoWindow(win, (void*) (PB_PTR32) D_8010E4F0_MinigameInstructions[(s16) D_8010F766_MinigameInstructions].unk_0C, -1, -1);
+                }
+                if (D_8010F4EA_MinigameInstructions == 4) {
+                    LoadStringIntoWindow(win, (void*) (PB_PTR32) (u16) D_8010E4F0_MinigameInstructions[(s16) D_8010F766_MinigameInstructions].unk_0E, -1, -1);
+                }
+            }
+            while (func_8006FCC0(win) != 0) {
+                HuPrcVSleep();
+            }
+        }
+    }
+    func_80071E80((s16) win, 1);
+    while (1) {
+        HuPrcVSleep();
+    }
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F7C58_MinigameInstructions);
+#endif
 void func_800F84B0_MinigameInstructions(void) {
     s16 ids[4];
     s32 pad[2]; /* retail frame is 8 bytes larger */
