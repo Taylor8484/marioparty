@@ -791,8 +791,81 @@ void func_8010C8CC_MinigameInstructions(Ovl6FPlayerWork* work) {
         HuPrcVSleep();
     }
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010CC54_MinigameInstructions);
+/* D_8010F538[i]'s low half; the header's D_8010F538_LO16 addresses it as a halfword pointer,
+   retail as a field at +2 of each word (one base register). */
+#ifdef TARGET_PC
+#define OVL6F_F538_LO16(i) ((s16)D_8010F538_MinigameInstructions[i])
+#else
+#define OVL6F_F538_LO16(i) (((Ovl6FPairS16*)D_8010F538_MinigameInstructions)[i].unk_02)
+#endif
 
+void func_8010CC54_MinigameInstructions(Ovl6FPlayerWork* work) {
+    s16 port;
+    Ovl6FPlayerWork* partner;
+    s16 side;
+    s16 sum;
+    u16 model;
+
+    port = GwPlayer[work->unk_38].port;
+    partner = D_8010F750_MinigameInstructions[work->unk_B6];
+    side = work->unk_3E;
+    if (ContBtnTrg[port] & 0x8000) {
+        D_8010F514_MinigameInstructions[side] += 0.3f;
+        if (D_8010F514_MinigameInstructions[work->unk_3E] > 5.0f) {
+            D_8010F514_MinigameInstructions[work->unk_3E] = 5.0f;
+        }
+    }
+    D_8010F538_MinigameInstructions[work->unk_38] = (s8)(ContStkY[port] / 10);
+    if (work->unk_38 > work->unk_B6) {
+        sum = OVL6F_F538_LO16(work->unk_38);
+        sum += OVL6F_F538_LO16(work->unk_B6);
+        if (sum != 0) {
+            D_8010F530_MinigameInstructions[side] = sum / 15.0f * 15.0f;
+            if (D_8010F530_MinigameInstructions[side] > 15.0f) {
+                D_8010F530_MinigameInstructions[side] = 15.0f;
+            }
+            if (D_8010F530_MinigameInstructions[side] < -15.0f) {
+                D_8010F530_MinigameInstructions[side] = -15.0f;
+            }
+        } else {
+            D_8010F530_MinigameInstructions[side] /= 2.0f;
+            if (D_8010F530_MinigameInstructions[side] < 0.1f && D_8010F530_MinigameInstructions[side] > -0.1f) {
+                D_8010F530_MinigameInstructions[side] = 0.0f;
+            }
+        }
+        model = OVL6F_F50E(work->unk_3E);
+        D_8010F51C_MinigameInstructions[side] += D_8010F514_MinigameInstructions[side] * D_8010F524_MinigameInstructions[side];
+        if (D_8010F52C_MinigameInstructions < D_8010F51C_MinigameInstructions[side]) {
+            D_8010F524_MinigameInstructions[side] = -D_8010F524_MinigameInstructions[side];
+            D_8010F51C_MinigameInstructions[side] = D_8010F52C_MinigameInstructions;
+        } else if (D_8010F51C_MinigameInstructions[side] < 0.0f) {
+            D_8010F51C_MinigameInstructions[side] = 0.0f;
+            D_8010F524_MinigameInstructions[side] = -D_8010F524_MinigameInstructions[side];
+        }
+        D_800F2B7C[(s16)model].unk_48 = D_8010F51C_MinigameInstructions[side];
+        D_800F2B7C[work->unk_4E].unk_48 = D_8010F51C_MinigameInstructions[side];
+        D_800F2B7C[partner->unk_4E].unk_48 = D_8010F52C_MinigameInstructions - D_8010F51C_MinigameInstructions[side];
+        func_8009ECB0(D_800F2B7C[work->unk_4E].unk7C, 0.0f, 0.0f, D_8010F530_MinigameInstructions[side]);
+        func_8009ECB0(D_800F2B7C[partner->unk_4E].unk7C, 0.0f, 0.0f, -D_8010F530_MinigameInstructions[side]);
+        func_8009ECB0(D_800F2B7C[(s16)model].unk7C, 0.0f, 0.0f, D_8010F530_MinigameInstructions[side]);
+        D_8010F514_MinigameInstructions[work->unk_3E] -= 0.06f;
+        if (D_8010F514_MinigameInstructions[work->unk_3E] < 0.0f) {
+            D_8010F514_MinigameInstructions[work->unk_3E] = 0.0f;
+        }
+        if (D_8010F514_MinigameInstructions[side] > 0.5f) {
+            if (work->unk_44 == -1) {
+                work->unk_44 = func_800FA284_MinigameInstructions(0x33C);
+            }
+            func_800FA350_MinigameInstructions(work->unk_44, (D_8010F514_MinigameInstructions[side] - 0.5f) * 0.6666667f * 100.0f);
+            work->unk_BC = 10;
+        } else if (work->unk_BC == 0 || --work->unk_BC == 0) {
+            if (work->unk_44 != -1) {
+                func_800FA380_MinigameInstructions(work->unk_44);
+            }
+            work->unk_44 = -1;
+        }
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010D200_MinigameInstructions);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010D5E4_MinigameInstructions);
