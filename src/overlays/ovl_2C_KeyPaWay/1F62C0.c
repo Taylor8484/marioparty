@@ -1190,19 +1190,87 @@ restore:
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FA3B0_KeyPaWay);
+void func_800FA3B0_KeyPaWay(omObjData* arg0) {
+    func_800FA450_KeyPaWay(arg0, 0, 0);
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FA3D0_KeyPaWay);
+void func_800FA3D0_KeyPaWay(omObjData* arg0) {
+    func_800FA450_KeyPaWay(arg0, 1, 0);
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FA3F0_KeyPaWay);
+void func_800FA3F0_KeyPaWay(omObjData* arg0) {
+    func_800FA450_KeyPaWay(arg0, 2, 0);
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FA410_KeyPaWay);
+void func_800FA410_KeyPaWay(omObjData* arg0) {
+    func_800FA450_KeyPaWay(arg0, 3, 0);
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FA430_KeyPaWay);
+void func_800FA430_KeyPaWay(omObjData* arg0) {
+    func_800FA450_KeyPaWay(arg0, 4, 0);
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FA450_KeyPaWay);
+void func_800FA450_KeyPaWay(omObjData* obj, u16 index, u16 kind) {
+    KPWBodyWork* work;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FA59C_KeyPaWay);
+    work = obj->unk_50 = func_80023684(sizeof(KPWBodyWork), 0x7918);
+    work->unk_44 = 0.1f;
+    work->unk_48 = 45.0f;
+    work->unk_34 = 100.0f;
+    work->unk_3C = 0;
+    work->unk_5C = 0;
+    work->unk_52 = 7;
+    work->unk_60 = 0;
+    work->unk_50 = 0;
+    work->unk_54 = 1;
+    work->unk_68.enemy = NULL;
+    work->unk_38 = 1000.0f;
+    work->unk_40 = 0;
+    func_800FA59C_KeyPaWay(obj, kind);
+    work->unk_68.enemy->unk_02 = index;
+    func_80025BB8(obj->model[0], obj->motion[1]);
+    func_80025EB4(obj->model[0], 2, 2);
+    omSetTra(obj, D_800FF270_KeyPaWay[index][0], 0.0f, D_800FF270_KeyPaWay[index][1]);
+    D_800EDE70[D_800EE984++] = obj;
+}
+
+void func_800FA59C_KeyPaWay(omObjData* obj, u16 kind) {
+    KPWBodyWork* work;
+    KPWEnemyExt* en;
+
+    work = KPW_BODY(obj);
+    en = work->unk_68.enemy = func_80023684(sizeof(KPWEnemyExt), 0x7918);
+    en->unk_06 = kind;
+    en->unk_0A = 0;
+    en->unk_1C = 0;
+    en->unk_28 = 0;
+    en->unk_34 = 1;
+    if (kind == 0) {
+        if (D_800FF37C_KeyPaWay == NULL) {
+            obj->model[0] = LoadFormFile(0x400002, 0x20699);
+            func_8001775C(obj, 0, 0x400004);
+            func_8001775C(obj, 1, 0x400003);
+            func_8001775C(obj, 2, 0x400005);
+            D_800FF37C_KeyPaWay = obj;
+        } else {
+            obj->model[0] = func_80023FC8(D_800FF37C_KeyPaWay->model[0]);
+            obj->motion[0] = D_800FF37C_KeyPaWay->motion[0];
+            obj->motion[1] = D_800FF37C_KeyPaWay->motion[1];
+            obj->motion[2] = D_800FF37C_KeyPaWay->motion[2];
+        }
+        en->unk_2A = func_8001E00C((void*)-1, 0x69D, 8);
+        D_800ECDE0[en->unk_2A].unk_02 = D_800FF536_KeyPaWay;
+        en->unk_2C = D_800ECDE0[en->unk_2A].unk_00;
+        func_80025930(en->unk_2C, 0x40000000, 0x40000000);
+        func_80025830(en->unk_2C, 2.0f, 2.0f, 2.0f);
+        func_8001E268(en->unk_2A, 1, 1);
+        en->unk_04 = 0;
+        work->unk_40 = en->unk_18 = (D_800FF538_KeyPaWay * 2.5f + 370.0f) / 30.0f;
+        en->unk_08 = 10;
+        en->unk_24 = 200.0f;
+        obj->func_ptr = func_800FAF28_KeyPaWay;
+    }
+}
 
 void func_800FA7E0_KeyPaWay(omObjData* arg0) {
     arg0->work[0] = 0;
