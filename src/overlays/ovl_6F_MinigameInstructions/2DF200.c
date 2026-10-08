@@ -775,7 +775,7 @@ void func_8010078C_MinigameInstructions(Ovl6FPlayerWork* work) {
         HuPrcVSleep();
     }
 }
-// jump-loop constants (10/100.0f) hoisted above the dead func_800AEAC0(0) call in retail; port copy (masked 14)
+// the loop's 10.0f/100.0f are hoisted above the dead func_800AEAC0(0) call in retail, below it here; port copy (masked 14)
 #ifdef NON_MATCHING
 void func_801009B4_MinigameInstructions(Ovl6FPlayerWork* work) {
     f32 x;
