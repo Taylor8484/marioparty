@@ -1,5 +1,8 @@
 #include "ovl6f.h"
 
+extern u16 ContBtn[];
+
+
 extern s8 ContStkY[];
 
 
@@ -38,8 +41,134 @@ void func_80103560_MinigameInstructions(Ovl6FPlayerWork* work) {
     func_8001DD24(0, CZoom, (Vec3f*)&pos, &out);
     func_80025798(work->unk_4E, out.x, out.y, -180.0f);
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_80103788_MinigameInstructions);
+void func_80103788_MinigameInstructions(Ovl6FPlayerWork* work) {
+    f32 x;
+    f32 y;
+    f32 mag;
+    f32 ang;
+    f32 step;
+    f32 amp;
+    f32 h;
+    s32 flags;
+    s16 motion;
+    s16 prev;
+    s32 pressed;
+    s16 f;
+    s16 port;
 
+    motion = 0;
+    if (work->unk_3E != 0) {
+        func_800FADF4_MinigameInstructions(work);
+    }
+    port = GwPlayer[work->unk_38].port;
+    x = (s8)(ContStkX[port] / 10);
+    y = (s8)(ContStkY[port] / 10);
+    mag = (x * x) + (y * y);
+    flags = D_8010E970_MinigameInstructions[(s16)D_8010F766_MinigameInstructions].flags;
+    if (mag != 0.0f && (flags & 3)) {
+        func_800257E4(work->unk_4E, 0.0f, func_800B0CD8(x, -y), 0.0f);
+    }
+    prev = work->unk_3C;
+    if ((ContBtnTrg[port] & 0x8000) && (flags & 4)) {
+        work->unk_3C = 3;
+        func_80025C20(work->unk_4E, func_80025E48(work->unk_56), 0, 8, 0);
+        func_800FA300_MinigameInstructions(0x127, work);
+        if (work->unk_3E == 0) {
+            func_800258EC(work->unk_70, 0x4000, 0x4000);
+        }
+        ang = 0.0f;
+        step = 10.0f;
+        amp = 100.0f;
+        h = func_800AEAC0(ang) * amp;
+        pressed = 0;
+        do {
+            ang += step;
+            if (ang == 40.0f && !(ContBtn[port] & 0x8000)) {
+                ang = 90.0f;
+                amp = h;
+            }
+            if (((ContBtnTrg[port] >> 14) & 1 & (pressed ^ 1)) && work->unk_3E == 0) {
+                func_800FA300_MinigameInstructions(0x13C, work);
+                if (flags & 0x20) {
+                    func_80025BB8(work->unk_4E, work->unk_5E);
+                } else {
+                    func_80025BB8(work->unk_4E, work->unk_5C);
+                }
+                if (work->unk_3E == 0) {
+                    while (1) {
+                        HuPrcVSleep();
+                        f = func_80025D18(work->unk_4E);
+                        if (f == 28) {
+                            func_800258EC(work->unk_70, 0x4000, 0);
+                        }
+                        if (f == func_80025D40(work->unk_4E)) {
+                            break;
+                        }
+                    }
+                } else {
+                    func_800FB4DC_MinigameInstructions(work->unk_4E);
+                }
+                step = 20.0f;
+                ang = 90.0f;
+                amp = h;
+                pressed = 1;
+            }
+            if (ang > 180.0f) {
+                ang = 180.0f;
+            }
+            h = func_800AEAC0(ang) * amp;
+            func_80025798(work->unk_4E, work->unk_0C, h + work->unk_10, work->unk_14);
+            HuPrcVSleep();
+        } while (ang < 180.0f);
+        func_800FA300_MinigameInstructions(0x12E, work);
+        func_80025C20(work->unk_4E, func_80025E48(work->unk_50), 0, 8, 2);
+        mag = 0.0f;
+    }
+    if (mag == 0.0f) {
+        work->unk_3C = 0;
+        motion = func_80025E48(work->unk_50);
+    } else if (mag <= 16.0f && (flags & 1)) {
+        work->unk_3C = 1;
+        motion = func_80025E48(work->unk_54);
+        func_800FB590_MinigameInstructions(work, motion);
+    } else if (16.0f < mag && (flags & 2)) {
+        work->unk_3C = 2;
+        motion = func_80025E48(work->unk_52);
+        func_800FB60C_MinigameInstructions(work, motion);
+    }
+    if ((ContBtnTrg[port] & 0x4000) && work->unk_3E == 0) {
+        func_800FA300_MinigameInstructions(0x135, work);
+        func_80025BB8(work->unk_4E, work->unk_5C);
+        D_800F2B7C[work->unk_4E].unk_0C = -1;
+        if (work->unk_3E == 0) {
+            func_800258EC(work->unk_70, 0x4000, 0x4000);
+            do {
+                HuPrcVSleep();
+                f = func_80025D18(work->unk_4E);
+                if (f == 28) {
+                    func_800258EC(work->unk_70, 0x4000, 0);
+                }
+            } while (f != func_80025D40(work->unk_4E));
+            work->unk_3C = 0;
+        } else {
+            func_800FB4DC_MinigameInstructions(work->unk_4E);
+            work->unk_3C = 0;
+        }
+        motion = func_80025E48(work->unk_50);
+        prev = -1;
+        if (work->unk_3E == 0) {
+            func_80025C20(work->unk_4E, motion, 0, 8, 2);
+            HuPrcSleep(8);
+            func_800258EC(work->unk_70, 0x4000, 0x4000);
+        }
+    }
+    if (prev != work->unk_3C) {
+        func_80025C20(work->unk_4E, motion, 0, 8, 2);
+    }
+    if (D_800F2B7C[work->unk_4E].unk_0C == -1 && work->unk_3E == 0) {
+        func_800258EC(work->unk_70, 0x4000, 0x4000);
+    }
+}
 void func_80103E48_MinigameInstructions(Ovl6FPlayerWork* work) {
     Vec2f pos;
     Vec3f out;
