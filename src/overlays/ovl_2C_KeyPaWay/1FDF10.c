@@ -34,8 +34,84 @@ void func_800FE33C_KeyPaWay(void) {
     func_8001D57C(0);
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1FDF10", func_800FE3DC_KeyPaWay);
+// constant scheduling: retail loads 50.0f inside the outer loop, not hoisted (masked 5)
+#ifdef NON_MATCHING
+void func_800FE3DC_KeyPaWay(Vec3f* out) {
+    Vec3f eye;
+    Vec3f at;
+    Vec3f pts[4];
+    Vec2f scr;
+    omObjData* maxX;
+    omObjData* minX;
+    omObjData* maxZ;
+    omObjData* minZ;
+    omObjData* p;
+    f32 hiX;
+    f32 loX;
+    f32 hiZ;
+    f32 loZ;
+    s32 i;
+    f32 step;
 
+    eye = D_800FF564_KeyPaWay;
+    at = D_800FF584_KeyPaWay;
+    D_800FF584_KeyPaWay.x = 0.0f;
+    D_800FF584_KeyPaWay.y = 250.0f;
+    D_800FF584_KeyPaWay.z = -700.0f;
+    D_800FF564_KeyPaWay.x = 0.0f;
+    D_800FF564_KeyPaWay.y = 250.0f;
+    D_800FF564_KeyPaWay.z = 500.0f;
+    hiX = hiZ = -10000.0f;
+    loX = loZ = 10000.0f;
+    for (i = 0; i < 4; i++) {
+        p = D_800FF594_KeyPaWay[i];
+        if (hiX < p->trans.x) {
+            hiX = p->trans.x;
+            maxX = p;
+        }
+        if (p->trans.x < loX) {
+            loX = p->trans.x;
+            minX = p;
+        }
+        if (hiZ < p->trans.z) {
+            hiZ = p->trans.z;
+            maxZ = p;
+        }
+        if (p->trans.z < loZ) {
+            loZ = p->trans.z;
+            minZ = p;
+        }
+    }
+    pts[0].x = maxX->trans.x;
+    pts[0].y = maxX->trans.y;
+    pts[0].z = maxX->trans.z;
+    pts[1].x = minX->trans.x;
+    pts[1].y = minX->trans.y;
+    pts[1].z = minX->trans.z;
+    pts[2].x = maxZ->trans.x;
+    pts[2].y = maxZ->trans.y;
+    pts[2].z = maxZ->trans.z;
+    pts[3].x = minZ->trans.x;
+    pts[3].y = minZ->trans.y;
+    pts[3].z = minZ->trans.z;
+    do {
+        func_8001D420(0, &D_800FF564_KeyPaWay, &D_800FF584_KeyPaWay, &D_800FF598_KeyPaWay);
+        func_8001D57C(0);
+        for (i = 0, step = 50.0f; i < 4; i++) {
+            Convert3DTo2D(0, &pts[i], &scr);
+            if (scr.x < 32.0f || scr.x > 288.0f || scr.y < 32.0f || scr.y > 208.0f) {
+                D_800FF564_KeyPaWay.z = D_800FF564_KeyPaWay.z + step;
+                break;
+            }
+        }
+    } while (i != 4);
+    *out = D_800FF564_KeyPaWay;
+    D_800FF564_KeyPaWay = eye;
+    D_800FF584_KeyPaWay = at;
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1FDF10", func_800FE3DC_KeyPaWay);
+#endif
 void func_800FE710_KeyPaWay(omObjData* obj) {
     obj->unk_50 = func_80023684(sizeof(KPWCameraWork), 0x7918);
     obj->func_ptr = NULL;
