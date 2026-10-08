@@ -1,9 +1,49 @@
 #include "ovl6f.h"
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FA540_MinigameInstructions);
+void func_800FA540_MinigameInstructions(void) {
+    Process* proc = HuPrcCurrentGet();
+    Ovl6FPairS16* state = proc->relative->user_data;
+    Ovl6FPlayerWork* work = proc->user_data;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FA630_MinigameInstructions);
+    work->unk_B6 = work->unk_B8 = work->unk_BA = work->unk_BC = work->unk_B4 = 0;
+    work->unk_20 = work->unk_24 = work->unk_28 = 0.0f;
+    work->unk_B0 = (3 - work->unk_38) * 4;
+    work->unk_40 = GwPlayer[work->unk_38].character;
+    D_8010F762_MinigameInstructions = 0;
+    D_8010E970_MinigameInstructions[(s16) D_8010F766_MinigameInstructions].fn[0](work);
+    while (1) {
+        HuPrcVSleep();
+        if (state->unk_00 == 1) {
+            func_800FA630_MinigameInstructions(work);
+        }
+    }
+}
+void func_800FA630_MinigameInstructions(Ovl6FPlayerWork* work) {
+    Ovl6FPairS16* state = HuPrcCurrentGet()->relative->user_data;
 
+    HuPrcSleep(work->unk_B0);
+    work->unk_44 = work->unk_46 = work->unk_48 = work->unk_4A = -1;
+    work->unk_4C = 0;
+    D_8010E970_MinigameInstructions[(s16) D_8010F766_MinigameInstructions].fn[1](work);
+    state->unk_02++;
+    work->unk_B2 = 0;
+    while (1) {
+        HuPrcVSleep();
+        if (state->unk_00 == 2) {
+            break;
+        }
+        D_8010E970_MinigameInstructions[(s16) D_8010F766_MinigameInstructions].fn[2](work);
+        work->unk_B2 = 1;
+    }
+    D_8010F762_MinigameInstructions = 1;
+    HuPrcSleep(work->unk_38 * 4);
+    D_8010E970_MinigameInstructions[(s16) D_8010F766_MinigameInstructions].fn[3](work);
+    state->unk_02++;
+    do {
+        HuPrcVSleep();
+    } while (state->unk_00 != 0);
+    D_8010F762_MinigameInstructions = 0;
+}
 void func_800FA77C_MinigameInstructions(s32 file) {
     if (D_8010E960_MinigameInstructions == NULL) {
         D_8010E960_MinigameInstructions = func_80021308(file, 0x10);
