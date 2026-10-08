@@ -107,6 +107,8 @@ DEPENDS := $(OBJECTS:=.d)
 
 #leave the mul fix on
 build/src/overlays/ovl_23_CraneGame/%.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# ovl_6F (minigame instructions) also has the mul fix on: nop between back-to-back mul.s (func_801024FC)
+build/src/overlays/ovl_6F_MinigameInstructions/%.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # ovl_61 29B410.c (opening scene) also has the mul fix on: nop between back-to-back mul.s (func_800F86D0, func_800FB670)
 build/src/overlays/ovl_61_OpeningScene/29B410.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # 69010.c (sprite draw) was built with the assembler VR4300 mul fix on: a nop after each mul.s pair
