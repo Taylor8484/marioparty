@@ -100,10 +100,160 @@ void func_800F6990_MinigameInstructions(void) {
 }
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", D_8010F050_MinigameInstructions);
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", D_8010F058_MinigameInstructions);
+// one delay slot: retail's branch to count = 37 is bnez, this is bnezl (masked 1)
+#ifdef NON_MATCHING
+void func_800F6B14_MinigameInstructions(void) {
+    Vec2f in;
+    Vec3f out;
+    Process* proc;
+    u16 model;
+    u16 deco;
+    s16 count;
+    s16 alpha;
+    s16 i;
+    s16 j;
+    f32 scale;
+    f32 rot;
+    f32 step;
+    f32 t;
 
+    scale = 0.0f;
+    model = 0;
+    if (D_8010F4E0_MinigameInstructions == 0 && _CheckFlag(0x2D) == 0) {
+        model = LoadFormFile(0x90006, 0x289);
+        func_80021240(model);
+        func_80025B34(model);
+        func_800211BC(model, 0xFF);
+        func_80025EB4(model, 2, 2);
+        func_80025930(model, 0x600, 0x200);
+        SetFadeInTypeAndTime(0, 16);
+        scale = 0.1f;
+        func_80025830(model, scale, scale, scale);
+        PlaySound(0x38);
+        count = 0;
+        do {
+            count++;
+            HuPrcVSleep();
+            scale += 0.2f;
+            func_80025830(model, scale, scale, scale);
+        } while (scale < 2.0f);
+        step = 1.0f;
+        rot = 0.0f;
+        do {
+            count++;
+            HuPrcVSleep();
+            scale += 0.1f;
+            rot += step;
+            step += 1.0f;
+            func_80025830(model, scale, scale, scale);
+            func_800257E4(model, -rot, 0.0f, 0.0f);
+        } while (rot < 180.0f);
+    } else {
+        count = 37;
+    }
+    HuPrcSleep(38 - count);
+    func_80060128(0x15);
+    D_8010F40A_MinigameInstructions = func_80019060((s16) InitSprite(0xB0002), 0, 1);
+    SetBasicSpritePos(D_8010F40A_MinigameInstructions, 160, 120);
+    SetBasicSpriteSize(D_8010F40A_MinigameInstructions, 2.0f, 2.0f);
+    func_80018D44(D_8010F40A_MinigameInstructions, 0x4008);
+    deco = LoadFormFile(0xB000A, 0x299);
+    in.x = 160.0f;
+    in.y = 281.0f;
+    func_8001DD24(0, CZoom, (Vec3f*) &in, &out);
+    func_80025798(deco, out.x, out.y, 57.0f);
+    func_80025830(deco, 2.1f, 2.1f, 2.1f);
+    deco = LoadFormFile(0xB000B, 0x299);
+    in.x = 160.0f;
+    in.y = 280.0f;
+    func_8001DD24(0, CZoom + -130.0f, (Vec3f*) &in, &out);
+    func_80025798(deco, out.x, out.y, -130.0f);
+    func_80025830(deco, 2.2f, 2.2f, 2.2f);
+    if (D_8010F4E0_MinigameInstructions == 0 && _CheckFlag(0x2D) == 0) {
+        alpha = 255;
+        do {
+            HuPrcVSleep();
+            scale += 0.2f;
+            func_80025830(model, scale, scale, scale);
+            alpha -= 20;
+            func_800211BC(model, alpha);
+        } while (alpha > 0);
+        func_8002456C(model);
+    } else {
+        if (_CheckFlag(0x2D) != 0) {
+            SetFadeInTypeAndTime(0, 16);
+        } else {
+            SetFadeInTypeAndTime(3, 16);
+        }
+    }
+    model = LoadFormFile(0xB0004, 0x289);
+    func_80025EB4(model, 2, 2);
+    func_80025830(model, 0.0f, 0.0f, 0.0f);
+    omAddPrcObj(func_800F7398_MinigameInstructions, 0x3F00, 0x800, 0);
+    omAddPrcObj(func_800F785C_MinigameInstructions, 0x3F00, 0x800, 0);
+    omAddPrcObj(func_800F7C58_MinigameInstructions, 0x3F00, 0x800, 0);
+    proc = omAddPrcObj(func_800F8ED4_MinigameInstructions, 0x3F00, 0x800, 0);
+    proc->user_data = func_80023684(0x14, 0x7918);
+    func_800F8980_MinigameInstructions(D_8010F766_MinigameInstructions);
+    HuPrcVSleep();
+    D_8010F4E8_MinigameInstructions = 0;
+    for (i = 0; i < 16; i++) {
+        HuPrcVSleep();
+        in.x = 80.0f;
+        in.y = 55.0f;
+        func_8001DD24(0, CZoom, (Vec3f*) &in, &out);
+        t = i;
+        t /= 15.0f;
+        out.x = t * out.x;
+        out.y = t * out.y;
+        func_80025798(model, out.x, out.y, 0.0f);
+        t *= 0.3f;
+        func_80025830(model, t, t, t);
+    }
+    while (D_8010F4E8_MinigameInstructions < 2) {
+        HuPrcVSleep();
+    }
+    rot = 0.0f;
+    do {
+        HuPrcVSleep();
+        rot += 18.0f;
+        func_800257E4(model, 0.0f, rot, 0.0f);
+    } while (rot <= 180.0);
+    HuPrcSleep(4);
+    func_800F8E3C_MinigameInstructions();
+    if (D_8010E4F0_MinigameInstructions[(s16) D_8010F766_MinigameInstructions].unk_10 == 0) {
+        GMesMaxTimeGet(GMesCreate(6, "\x82\xA9\x82\xA2\x82\xCD\x82\xC2\x82\xBF\x82\xE3\x82\xA4" /* kaihatsu-chuu */, 0xA0, 0x78, 2.0, 2.0, 0), 0x7D00);
+    }
+    do {
+        HuPrcVSleep();
+    } while (D_8010F764_MinigameInstructions != 0);
+    in.x = 90.0f;
+    in.y = 50.0f;
+    for (i = 0; i < 10; i++) {
+        HuPrcVSleep();
+        for (j = 0; j < 2; j++) {
+            if (D_8010F410_MinigameInstructions[j].unk_08 != -1) {
+                D_8010F410_MinigameInstructions[j].unk_54 -= 0.4f;
+                D_8010F410_MinigameInstructions[j].unk_58 -= 1.6f;
+                func_80066DC4(D_8010F410_MinigameInstructions[j].unk_14[D_8010F410_MinigameInstructions[j].unk_08], 0,
+                              D_8010F410_MinigameInstructions[j].unk_54, D_8010F410_MinigameInstructions[j].unk_58);
+            }
+        }
+        in.x -= 0.4f;
+        in.y -= 1.6f;
+        func_8001DD24(0, CZoom, (Vec3f*) &in, &out);
+        func_80025798(model, out.x, out.y, 0.0f);
+    }
+    while (1) {
+        HuPrcVSleep();
+    }
+}
+#else
+/* the string the C version above emits as a literal */
+const char D_8010F058_MinigameInstructions[] __attribute__((section(".rodata"))) =
+    "\x82\xA9\x82\xA2\x82\xCD\x82\xC2\x82\xBF\x82\xE3\x82\xA4";
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F6B14_MinigameInstructions);
-
+#endif
 // loop-invariant order: (s16)model is hoisted before the float constants (masked 6)
 #ifdef NON_MATCHING
 void func_800F7398_MinigameInstructions(void) {
