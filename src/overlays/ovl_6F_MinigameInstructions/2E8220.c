@@ -147,12 +147,12 @@ void func_80106948_MinigameInstructions(Ovl6FPlayerWork* work) {
     }
     func_800258EC(work->unk_4E, 4, 4);
 }
-// loop-invariant hoisting of 10.0f/100.0f/150.0f around the two bounce loops (masked 23)
-#ifdef NON_MATCHING
 void func_80106B2C_MinigameInstructions(Ovl6FPlayerWork* work) {
     f32 angle;
     f32 tilt;
     f32 y;
+    f32 step;
+    f32 amp;
     s16 motion;
     s16 prev;
     u8 port;
@@ -178,11 +178,13 @@ void func_80106B2C_MinigameInstructions(Ovl6FPlayerWork* work) {
         func_80025C20(work->unk_4E, func_80025E48(work->unk_54), 0, 4, 0);
         func_800FA300_MinigameInstructions(0x127, work);
         angle = 0.0f;
+        step = 10.0f;
+        amp = 100.0f;
         tilt = 0.0f;
-        func_800AEAC0(angle);
+        y = func_800AEAC0(angle) * amp;
         do {
-            angle += 10.0f;
-            y = func_800AEAC0(angle) * 100.0f;
+            angle += step;
+            y = func_800AEAC0(angle) * amp;
             func_80025798(work->unk_4E, work->unk_0C, y + work->unk_10, work->unk_14);
             func_80025798(work->unk_70, work->unk_0C, y + work->unk_10, work->unk_14);
             tilt -= 3.5f;
@@ -195,11 +197,11 @@ void func_80106B2C_MinigameInstructions(Ovl6FPlayerWork* work) {
         } while (angle < 150.0f);
         func_80025BB8(work->unk_4E, work->unk_56);
         while (angle < 180.0f) {
-            angle += 10.0f;
+            angle += step;
             if (angle > 180.0f) {
                 angle = 180.0f;
             }
-            y = func_800AEAC0(angle) * 100.0f;
+            y = func_800AEAC0(angle) * amp;
             func_80025798(work->unk_4E, work->unk_0C, y + work->unk_10, work->unk_14);
             func_80025798(work->unk_70, work->unk_0C, y + work->unk_10, work->unk_14);
             tilt *= 0.7f;
@@ -221,9 +223,6 @@ void func_80106B2C_MinigameInstructions(Ovl6FPlayerWork* work) {
         work->unk_24 = 0.0f;
     }
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_80106B2C_MinigameInstructions);
-#endif
 void func_80106F90_MinigameInstructions(Ovl6FPlayerWork* work) {
     if ((work->unk_3E = GwPlayer[work->unk_38].group) == 0) {
         func_801064A4_MinigameInstructions(work);
