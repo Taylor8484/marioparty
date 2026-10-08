@@ -1,4 +1,4 @@
-#include "common.h"
+#include "ovl6f.h"
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FA540_MinigameInstructions);
 

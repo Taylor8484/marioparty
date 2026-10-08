@@ -1,36 +1,4 @@
-#include "common.h"
-
-void func_800593AC(s32);
-void func_8007FAC0(void);
-void func_800F6990_MinigameInstructions(void);
-void func_800F6B14_MinigameInstructions(void);
-void func_800F9110_MinigameInstructions(void);
-void func_800F92D4_MinigameInstructions(omObjData*);
-void func_800F9E64_MinigameInstructions(s16);
-void func_800FA470_MinigameInstructions(void);
-void func_8010E090_MinigameInstructions(s16);
-extern s8 omSysPauseEnableFlag;
-extern u8 D_8010F050_MinigameInstructions;
-extern s16 D_8010F400_MinigameInstructions;
-extern s16 D_8010F402_MinigameInstructions;
-extern omObjData* D_8010F404_MinigameInstructions;
-extern s16 D_8010F408_MinigameInstructions;
-extern s16 D_8010F4E0_MinigameInstructions;
-extern s16 D_8010F4E2_MinigameInstructions;
-extern void* D_8010F4E4_MinigameInstructions;
-extern s16 D_8010F760_MinigameInstructions;
-extern s16 D_8010F764_MinigameInstructions;
-extern u16 D_8010F766_MinigameInstructions;
-extern s16 D_8010F772_MinigameInstructions;
-void func_800F692C_MinigameInstructions(omObjData*);
-void func_800F9440_MinigameInstructions(omObjData*);
-
-typedef struct Unk_D_8010E4F4_MinigameInstructions {
-    u8 unk_00;
-    char unk_01[0x13];
-} Unk_D_8010E4F4_MinigameInstructions;
-
-extern Unk_D_8010E4F4_MinigameInstructions D_8010E4F4_MinigameInstructions[];
+#include "ovl6f.h"
 
 void func_800F6610_MinigameInstructions(void) {
     omObjData* obj;
@@ -44,7 +12,7 @@ void func_800F6610_MinigameInstructions(void) {
     func_8006CEA0();
     omSysPauseEnableFlag = 1;
     D_8010F766_MinigameInstructions = GwSystem.unk_1E;
-    D_8010F760_MinigameInstructions = D_8010E4F4_MinigameInstructions[GwSystem.unk_1E].unk_00;
+    D_8010F760_MinigameInstructions = D_8010E4F0_MinigameInstructions[GwSystem.unk_1E].unk_04;
     if (_CheckFlag(0x2B) != 0) {
         func_8010E090_MinigameInstructions((s16) D_8010F766_MinigameInstructions);
     } else {
