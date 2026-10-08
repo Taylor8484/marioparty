@@ -898,7 +898,58 @@ void func_800F8CC4_KeyPaWay(omObjData* obj, s32 player) {
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F8CC4_KeyPaWay);
 #endif
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F92B8_KeyPaWay);
+void func_800F92B8_KeyPaWay(omObjData* arg0) {
+    KPWPlayerWork* work;
+    s16 stkX;
+    s16 stkY;
+    u16 btnTrg;
+    u16 btn;
+
+    if (D_800FF580_KeyPaWay != 0) {
+        arg0->func_ptr = func_800F9620_KeyPaWay;
+        func_800F9620_KeyPaWay(arg0);
+        return;
+    }
+    work = KPW_PLAYER(arg0);
+    stkX = (s8)((u8*)ContStkX)[work->unk_56];
+    stkY = (s8)((u8*)ContStkY)[work->unk_56];
+    btnTrg = ContBtnTrg[work->unk_56];
+    btn = ContBtn[work->unk_56];
+    ContStkX[work->unk_56] = ContStkY[work->unk_56] = 0;
+    ContBtnTrg[work->unk_56] &= 0x3FFF;
+    ContBtn[work->unk_56] &= 0x3FFF;
+    if (D_800FF5A4_KeyPaWay == 3 || D_800FF5A4_KeyPaWay == 4) {
+        if (D_800FF5A4_KeyPaWay == 3) {
+            if (GwPlayer[work->unk_58].group == 0) {
+                if (D_800FF57C_KeyPaWay == NULL) {
+                    ContStkY[work->unk_56] = 80;
+                    if (arg0->trans.z < 750.0f && D_800FF57C_KeyPaWay == NULL) {
+                        ContBtn[work->unk_56] |= 0x8000;
+                        ContBtnTrg[work->unk_56] |= 0x8000;
+                    }
+                } else if (D_800FF590_KeyPaWay->func_ptr != func_800F7AE0_KeyPaWay) {
+                    D_800FF590_KeyPaWay->func_ptr = func_800F7AE0_KeyPaWay;
+                    omSetRot(D_800FF590_KeyPaWay, 0.0f, 0.0f, 0.0f);
+                }
+            } else if (arg0->trans.x > D_800FF2C8_KeyPaWay[D_800FF50C_KeyPaWay[work->unk_58]].x) {
+                ContStkX[work->unk_56] = -80;
+            }
+        } else {
+            if (GwPlayer[work->unk_58].group != 0) {
+                if (D_800FF2C8_KeyPaWay[D_800FF50C_KeyPaWay[work->unk_58]].x + 80.0f < arg0->trans.x) {
+                    ContStkX[work->unk_56] = -80;
+                } else if (work->unk_3C != 180.0f) {
+                    ContStkY[work->unk_56] = 80;
+                }
+            }
+        }
+    }
+    func_80005A28(arg0);
+    ContStkX[work->unk_56] = stkX;
+    ContStkY[work->unk_56] = stkY;
+    ContBtnTrg[work->unk_56] = btnTrg;
+    ContBtn[work->unk_56] = btn;
+}
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F9620_KeyPaWay);
 
