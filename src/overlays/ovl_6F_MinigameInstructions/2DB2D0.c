@@ -308,10 +308,101 @@ void func_800F949C_MinigameInstructions(omObjData* obj) {
 }
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F94E8_MinigameInstructions);
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", D_8010F09C_MinigameInstructions);
+void func_800F9E64_MinigameInstructions(s16 idx) {
+    s16 order[4] = { 0, 1, 2, 3 };
+    s16 i;
+    s16 tmp;
+    s16 r;
+    u8 g;
+    u8 next;
+    s16 j;
+    s16 k;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F9E64_MinigameInstructions);
-
+    switch ((s16) (idx - 6)) {
+    case 31:
+        if (_CheckFlag(0x30) == 0) {
+            if (rand8() & 1) {
+                SetBoardFeatureFlag(0x31);
+                ClearBoardFeatureFlag(0x32);
+                func_800593AC(6);
+            } else {
+                SetBoardFeatureFlag(0x32);
+                ClearBoardFeatureFlag(0x31);
+                func_800593AC(8);
+            }
+        }
+        break;
+    case 0:
+        SetBoardFeatureFlag(0x31);
+        ClearBoardFeatureFlag(0x32);
+        break;
+    case 2:
+        SetBoardFeatureFlag(0x32);
+        ClearBoardFeatureFlag(0x31);
+        break;
+    case 21:
+        SetBoardFeatureFlag(0x33);
+        ClearBoardFeatureFlag(0x34);
+        ClearBoardFeatureFlag(0x35);
+        break;
+    case 30:
+        ClearBoardFeatureFlag(0x33);
+        SetBoardFeatureFlag(0x34);
+        ClearBoardFeatureFlag(0x35);
+        break;
+    case 47:
+        ClearBoardFeatureFlag(0x33);
+        ClearBoardFeatureFlag(0x34);
+        SetBoardFeatureFlag(0x35);
+        break;
+    case 38:
+    case 39:
+        r = (u8) (rand8() & 3);
+        next = 1;
+        for (i = 0; i < 4; i++) {
+            if (i == r) {
+                GwPlayer[i].group = 0;
+            } else {
+                GwPlayer[i].group = next++;
+            }
+        }
+        break;
+    case 32:
+        for (i = 0; i < 12; i++) {
+            r = (u8) (rand8() & 3);
+            tmp = order[r];
+            order[r] = order[i & 3];
+            order[i & 3] = tmp;
+        }
+        for (i = 0; i < 4; i++) {
+            GwPlayer[i].group = order[i];
+        }
+        break;
+    case 43:
+        j = 0;
+        k = 2;
+        for (i = 0; i < 4; i++) {
+            if (GwPlayer[i].group == 0) {
+                order[j] = i;
+                GwPlayer[i].group = j++;
+            } else {
+                order[k] = i;
+                GwPlayer[i].group = k++;
+            }
+        }
+        if (rand8() & 1) {
+            g = GwPlayer[order[0]].group;
+            GwPlayer[order[0]].group = GwPlayer[order[1]].group;
+            GwPlayer[order[1]].group = g;
+        }
+        if (rand8() & 1) {
+            g = GwPlayer[order[2]].group;
+            GwPlayer[order[2]].group = GwPlayer[order[3]].group;
+            GwPlayer[order[3]].group = g;
+        }
+        break;
+    }
+}
 s16 func_800FA284_MinigameInstructions(s16 sound) {
     if (D_8010F764_MinigameInstructions == 0) {
         return -1;
