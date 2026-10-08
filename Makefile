@@ -130,6 +130,8 @@ build/src/overlays/ovl_6F_MinigameInstructions/2DB2D0.c.o: CFLAGS = -G0 -mips3 -
 # ovl_6F 2DF200.c and 2E8220.c also have the mul fix on: nop between back-to-back mul.s (func_800FADF4, func_801077C8)
 build/src/overlays/ovl_6F_MinigameInstructions/2DF200.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 build/src/overlays/ovl_6F_MinigameInstructions/2E8220.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# ovl_2C 1F62C0.c (Key-pa-Way) also has the mul fix on: nop between dependent mul.s (func_800FDA7C)
+build/src/overlays/ovl_2C_KeyPaWay/1F62C0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 
 #build/src/libultra/os/%.o: CFLAGS := -O2 $(CFLAGSCOMMON)
 #build/src/libultra/libc/%.o: CFLAGS := -O2 $(CFLAGSCOMMON)

@@ -66,7 +66,7 @@ void func_800F65E0_KeyPaWay(void) {
     D_800FF574_KeyPaWay = omAddObj(60, 0, 0, -1, &func_800FE710_KeyPaWay);
     D_800FF55C_KeyPaWay = omAddObj(40, 2, 0, -1, &func_800F6D98_KeyPaWay);
     D_800FF55C_KeyPaWay->unk_50 = func_80023684(sizeof(unkKeyPaWayStruct), 0x7918);
-    func_8007B168(&D_800FF3B0_KeyPaWay, 1);
+    func_8007B168(D_800FF3B0_KeyPaWay, 1);
     temp_s0 = DataRead(42);
     D_800FF534_KeyPaWay = func_80039084(temp_s0);
     HuMemDirectFree(temp_s0);
@@ -241,7 +241,7 @@ omObjData* func_800FDFAC_KeyPaWay(omObjData* arg0) {
     omObjData* temp_s5 = arg0;
     u16 var_s3 = 15;
     omObjData* var_s4 = NULL;
-    unkGlobalStruct_00* temp_s2;
+    KPWPlayerWork* temp_s2;
 
     for (i = 0; i < 4; i++) {
         temp_s0 = D_800FF594_KeyPaWay[i];
@@ -250,7 +250,7 @@ omObjData* func_800FDFAC_KeyPaWay(omObjData* arg0) {
         } else {
             temp_s2 = temp_s0->unk_50;
             var_a0 = func_800FDE64_KeyPaWay(temp_s0->trans.x, temp_s0->trans.z, 700.0f, sp10);
-            if ((var_a0 < var_s3) && (temp_s2->unkAE == 0)) {
+            if ((var_a0 < var_s3) && (temp_s2->unk_AE == 0)) {
                 var_s3 = var_a0;
                 var_s4 = temp_s0;
             }
