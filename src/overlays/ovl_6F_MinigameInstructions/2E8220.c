@@ -1011,8 +1011,88 @@ void func_8010D5E4_MinigameInstructions(Ovl6FPlayerWork* work) {
     }
     work->unk_B6 = 2;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010DB24_MinigameInstructions);
+void func_8010DB24_MinigameInstructions(Ovl6FPlayerWork* work) {
+    Vec2f pos;
+    Vec3f out;
+    Ovl6FPlayerWork* p;
+    s16 i;
+    s16 j;
+    f32 t;
+    f32 scale;
+    f32 angle;
+    f32 y;
+    f32 z;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010DF34_MinigameInstructions);
+    i = 0;
+    if (work->unk_38 == 0) {
+        D_8010F768_MinigameInstructions = 0;
+        do {
+            HuPrcVSleep();
+            t = 1.0f - i / 8.0f;
+            scale = t * 0.28f;
+            angle = t * 30.0f;
+            func_80025830(OVL6F_F54A, scale, scale, scale);
+            func_800257E4(OVL6F_F54A, angle, 0.0f, 0.0f);
+            for (j = 0; j < 4; j++) {
+                p = D_8010F750_MinigameInstructions[j];
+                func_80025830(p->unk_70, scale, scale, scale);
+                y = func_800AEAC0(-angle) * p->unk_34 + p->unk_10 + func_800AEFD0(-angle) * p->unk_30;
+                z = func_800AEFD0(-angle) * p->unk_34 + p->unk_14 - func_800AEAC0(-angle) * p->unk_30;
+                func_80025798(p->unk_4E, p->unk_0C, y, z);
+                func_800257E4(p->unk_4E, -angle, 180.0f, 0.0f);
+                func_80025798(p->unk_70, p->unk_0C, y, z);
+                func_800257E4(p->unk_70, -angle, 180.0f, 0.0f);
+            }
+            i++;
+        } while (i < 9);
+        D_8010F768_MinigameInstructions = 1;
+    } else {
+        while (D_8010F768_MinigameInstructions == 0) {
+            HuPrcVSleep();
+        }
+    }
+    D_800F2B7C[work->unk_4E].unk_4C = 1.0f;
+    i = 0;
+    func_80025C20(work->unk_4E, func_80025E48(work->unk_52), 0, 8, 2);
+    HuPrcSleep(8);
+    do {
+        func_800257E4(work->unk_4E, 0.0f, i, 0.0f);
+        if ((work->unk_42++ & 7) == 0) {
+            func_800FA300_MinigameInstructions(0x112, work);
+        }
+        HuPrcVSleep();
+        i -= 30;
+    } while (i >= -90);
+    pos.x = work->unk_00;
+    pos.y = work->unk_04;
+    out.z = 0.0f;
+    while (work->unk_00 > -50.0f) {
+        pos.x = work->unk_00 = work->unk_00 - 12.0f;
+        func_8001DD24(0, CZoom, (Vec3f*)&pos, &out);
+        func_80025798(work->unk_4E, out.x, out.y, work->unk_14);
+        if ((work->unk_42++ & 3) == 0) {
+            func_800FA300_MinigameInstructions(0x119, work);
+        }
+        HuPrcVSleep();
+    }
+}
+void func_8010DF34_MinigameInstructions(Ovl6FPlayerWork* work) {
+    s32 port;
 
+    port = GwPlayer[work->unk_38].port;
+    if (func_80009E4C(port, 0xE, ContStkX[port], ContStkY[port]) != 0) {
+        if ((work->unk_B6 += 5) > 150) {
+            work->unk_B6 = 150;
+        }
+    } else {
+        if ((work->unk_B6 /= 2) < 2) {
+            work->unk_B6 = 2;
+        }
+    }
+    D_800F2B7C[work->unk_4E].unk_4C = work->unk_B6 / 100.0f;
+    D_800F2B7C[work->unk_70].unk_4C = work->unk_B6 / 100.0f;
+    if (func_80025D18(work->unk_4E) == 30.0f) {
+        func_800FA2C0_MinigameInstructions(0x361, work);
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010E090_MinigameInstructions);
