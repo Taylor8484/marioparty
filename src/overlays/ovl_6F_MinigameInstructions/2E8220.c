@@ -633,8 +633,108 @@ void func_8010BF20_MinigameInstructions(Ovl6FPlayerWork* work) {
 #else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010BF20_MinigameInstructions);
 #endif
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010C3A4_MinigameInstructions);
+/* D_8010F50C's model pairs as two s16 arrays with stride 2 (retail addresses D_8010F50C and
+   D_8010F50E as separate bases; the pair halves are s16 so this is endian-neutral). */
+#define OVL6F_F50C(g) ((&D_8010F50C_MinigameInstructions[0].unk_00)[(g) * 2])
+#define OVL6F_F50E(g) ((&D_8010F50C_MinigameInstructions[0].unk_02)[(g) * 2])
 
+// register allocation: v0/v1 swapped around the D_8010F514 store (masked 0, raw 6)
+#ifdef NON_MATCHING
+void func_8010C3A4_MinigameInstructions(Ovl6FPlayerWork* work) {
+    Vec2f pos;
+    Vec3f out;
+    Ovl6FPlayerWork* partner;
+    s16 rot;
+    s16 frame;
+    f32 t;
+
+    func_800258EC(work->unk_4E, 4, 0);
+    func_80025BB8(work->unk_4E, work->unk_52);
+    func_80025EB4(work->unk_4E, 2, 2);
+    func_800257E4(work->unk_4E, 0.0f, 90.0f, 0.0f);
+    func_800A2A50(D_800F2B7C[work->unk_4E].unk7C);
+    pos.x = work->unk_00;
+    pos.y = work->unk_04;
+    out.z = 0.0f;
+    while (work->unk_00 < work->unk_08) {
+        pos.x = work->unk_00 = work->unk_00 + 12.0f;
+        func_8001DD24(0, CZoom, (Vec3f*)&pos, &out);
+        work->unk_0C = out.x;
+        work->unk_10 = out.y;
+        func_80025798(work->unk_4E, out.x, out.y, -180.0f);
+        if ((work->unk_42++ & 3) == 0) {
+            func_800FA300_MinigameInstructions(0x119, work);
+        }
+        HuPrcVSleep();
+    }
+    pos.x = work->unk_00 = work->unk_08;
+    func_8001DD24(0, CZoom, (Vec3f*)&pos, &out);
+    func_80025798(work->unk_4E, out.x, out.y, -180.0f);
+    if (work->unk_38 > work->unk_B6) {
+        s32 g = work->unk_3E;
+        f32* speed = D_8010F514_MinigameInstructions;
+
+        speed = g + speed;
+        *speed = 0.0f;
+        func_80025CA8(OVL6F_F50E(work->unk_3E), *speed);
+        rot = 90;
+        do {
+            func_800257E4(work->unk_4E, 0.0f, rot, 0.0f);
+            if ((work->unk_42++ & 7) == 0) {
+                func_800FA300_MinigameInstructions(0x112, work);
+            }
+            HuPrcVSleep();
+            rot += 30;
+        } while (rot < 270);
+    }
+    frame = 0;
+    if (work->unk_38 < work->unk_B6) {
+        work->unk_B8 = 0;
+        work->unk_B4 = 0;
+    } else {
+        work->unk_B8 = 1;
+        frame = func_80025D40(work->unk_56);
+        work->unk_B4 = frame;
+    }
+    func_80025C20(work->unk_4E, func_80025E48(work->unk_56), frame, 8, 0);
+    D_800F2B7C[OVL6F_F50E(work->unk_3E)].unk_4C = 0.0f;
+    D_800F2B7C[work->unk_4E].unk_58 = 0.0f;
+    func_80025EB4(OVL6F_F50E(work->unk_3E), 1, 0);
+    work->unk_0C = out.x;
+    work->unk_10 = out.y;
+    work->unk_14 = -180.0f;
+    work->unk_20 = 0.0f;
+    work->unk_24 = 0.0f;
+    work->unk_28 = 0.0f;
+    partner = D_8010F750_MinigameInstructions[work->unk_B6];
+    work->unk_BA = 0;
+    pos.x = work->unk_08;
+    work->unk_44 = -1;
+    if (work->unk_38 > work->unk_B6) {
+        func_800A2A50(D_800F2B7C[OVL6F_F50E(work->unk_3E)].unk7C);
+        D_8010F530_MinigameInstructions[work->unk_3E] = 0.0f;
+        for (frame = 0; frame < 9; frame++) {
+            HuPrcVSleep();
+            t = frame / 8.0f;
+            pos.y = work->unk_04 - t * 32.0f;
+            func_8001DD24(0, CZoom, (Vec3f*)&pos, &out);
+            func_80025798(work->unk_4E, out.x, out.y, -180.0f);
+            func_80025798(partner->unk_4E, partner->unk_0C, out.y, partner->unk_14);
+            t *= 0.28f;
+            func_80025830(OVL6F_F50C(work->unk_3E), 0.28f, t, 0.28f);
+            func_80025830(OVL6F_F50E(work->unk_3E), 0.28f, t, 0.28f);
+        }
+        partner->unk_BA = 1;
+    } else {
+        while (work->unk_BA == 0) {
+            HuPrcVSleep();
+        }
+    }
+    work->unk_BC = 0;
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010C3A4_MinigameInstructions);
+#endif
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010C8CC_MinigameInstructions);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010CC54_MinigameInstructions);
