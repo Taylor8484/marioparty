@@ -4,8 +4,12 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FA630_MinigameInstructions);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FA77C_MinigameInstructions);
-
+void func_800FA77C_MinigameInstructions(s32 file) {
+    if (D_8010E960_MinigameInstructions == NULL) {
+        D_8010E960_MinigameInstructions = func_80021308(file, 0x10);
+        omAddPrcObj(func_800FA7C8_MinigameInstructions, 0x3F00, 0x800, 0);
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FA7C8_MinigameInstructions);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FA7F8_MinigameInstructions);
