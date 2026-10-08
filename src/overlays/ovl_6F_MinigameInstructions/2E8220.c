@@ -222,20 +222,153 @@ void func_80106B2C_MinigameInstructions(Ovl6FPlayerWork* work) {
 #else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_80106B2C_MinigameInstructions);
 #endif
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_80106F90_MinigameInstructions);
+void func_80106F90_MinigameInstructions(Ovl6FPlayerWork* work) {
+    if ((work->unk_3E = GwPlayer[work->unk_38].group) == 0) {
+        func_801064A4_MinigameInstructions(work);
+    } else {
+        func_800FA7F8_MinigameInstructions(work);
+    }
+}
+void func_80106FE0_MinigameInstructions(Ovl6FPlayerWork* work) {
+    if (work->unk_3E == 0) {
+        func_801066C4_MinigameInstructions(work);
+    } else {
+        func_800FA9EC_MinigameInstructions(work);
+    }
+}
+void func_80107018_MinigameInstructions(Ovl6FPlayerWork* work) {
+    if (work->unk_3E == 0) {
+        func_80106948_MinigameInstructions(work);
+    } else {
+        func_800FAC2C_MinigameInstructions(work);
+    }
+}
+void func_80107050_MinigameInstructions(Ovl6FPlayerWork* work) {
+    if (work->unk_3E == 0) {
+        func_80106B2C_MinigameInstructions(work);
+    } else {
+        func_800FADF4_MinigameInstructions(work);
+    }
+}
+extern char D_8010F360_MinigameInstructions[]; /* "item_hook" (INCLUDE_RODATA above) */
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_80106FE0_MinigameInstructions);
+void func_80107088_MinigameInstructions(Ovl6FPlayerWork* work) {
+    Vec2f in;
+    Vec3f out;
+    u8 chr;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_80107018_MinigameInstructions);
+    chr = GwPlayer[work->unk_38].character;
+    work->unk_3E = GwPlayer[work->unk_38].group;
+    work->unk_4E = LoadFormFile((D_8010E964_MinigameInstructions[chr] << 16) | 0x9F, 0x299);
+    if (work->unk_3E == 0) {
+        work->unk_50 = LoadFormFile((D_8010E964_MinigameInstructions[chr] << 16) | 0x4F, 0x1D);
+        work->unk_52 = LoadFormFile((D_8010E964_MinigameInstructions[chr] << 16) | 0x73, 0x1D);
+        work->unk_54 = LoadFormFile((D_8010E964_MinigameInstructions[chr] << 16) | 0x72, 0x1D);
+        work->unk_56 = LoadFormFile((D_8010E964_MinigameInstructions[chr] << 16) | 0x50, 0x1D);
+        work->unk_5C = LoadFormFile((D_8010E964_MinigameInstructions[chr] << 16) | 0x5F, 0x1D);
+        work->unk_70 = LoadFormFile(0x3E0009, 0x299);
+        func_80025830(work->unk_70, 0.4f, 0.4f, 0.4f);
+        func_80025798(work->unk_70, -10000.0f, -10000.0f, 0.0f);
+        func_8002859C(work->unk_70, work->unk_4E, D_8010F360_MinigameInstructions);
+        func_800258EC(work->unk_70, 0x4000, 0x4000);
+    } else {
+        work->unk_50 = func_80023FC8(work->unk_4E);
+        func_800258EC(work->unk_50, 4, 4);
+        work->unk_52 = LoadFormFile((D_8010E964_MinigameInstructions[chr] << 16) | 3, 0x1D);
+        work->unk_54 = LoadFormFile((D_8010E964_MinigameInstructions[chr] << 16) | 1, 0x1D);
+        work->unk_56 = LoadFormFile((D_8010E964_MinigameInstructions[chr] << 16) | 5, 0x1D);
+        work->unk_5C = LoadFormFile((D_8010E964_MinigameInstructions[chr] << 16) | 4, 0x1D);
+    }
+    work->unk_08 = (work->unk_38 * 35) + 25;
+    func_80025830(work->unk_4E, 0.4f, 0.4f, 0.4f);
+    in.x = work->unk_00 = -50.0f;
+    in.y = work->unk_04 = 150.0f;
+    out.z = 0.0f;
+    func_8001DD24(0, CZoom, (Vec3f*)&in, &out);
+    func_80025798(work->unk_4E, out.x, out.y, -180.0f);
+}
+void func_8010732C_MinigameInstructions(Ovl6FPlayerWork* work) {
+    Vec2f in;
+    Vec3f out;
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_80107050_MinigameInstructions);
+    func_800258EC(work->unk_4E, 4, 0);
+    func_80025BB8(work->unk_4E, work->unk_52);
+    func_80025EB4(work->unk_4E, 2, 2);
+    func_800257E4(work->unk_4E, 0.0f, 90.0f, 0.0f);
+    in.x = work->unk_00;
+    in.y = work->unk_04;
+    out.z = 0.0f;
+    while (work->unk_00 < work->unk_08) {
+        in.x = work->unk_00 += 12.0f;
+        func_8001DD24(0, CZoom, (Vec3f*)&in, &out);
+        func_80025798(work->unk_4E, out.x, out.y, -180.0f);
+        if ((work->unk_42++ & 3) == 0) {
+            func_800FA300_MinigameInstructions(0x119, work);
+        }
+        if ((work->unk_42 & 7) == 0 && work->unk_3E == 0) {
+            func_800FA2C0_MinigameInstructions(0x30C, work);
+        }
+        HuPrcVSleep();
+    }
+    in.x = work->unk_00 = work->unk_08;
+    func_8001DD24(0, CZoom, (Vec3f*)&in, &out);
+    func_80025798(work->unk_4E, out.x, out.y, -180.0f);
+    for (i = 90; i >= 0; i -= 30) {
+        func_800257E4(work->unk_4E, 0.0f, i, 0.0f);
+        HuPrcVSleep();
+        if ((work->unk_42++ & 7) == 0) {
+            func_800FA300_MinigameInstructions(0x112, work);
+        }
+        if ((work->unk_42 & 7) == 0 && work->unk_3E == 0) {
+            func_800FA2C0_MinigameInstructions(0x30C, work);
+        }
+    }
+    func_80025C20(work->unk_4E, func_80025E48(work->unk_50), 0, 8, 2);
+    work->unk_3C = 0;
+    work->unk_0C = out.x;
+    work->unk_10 = out.y;
+    work->unk_14 = -180.0f;
+    work->unk_20 = 0.0f;
+    work->unk_24 = 90.0f;
+    work->unk_28 = 0.0f;
+    HuPrcSleep(8);
+}
+void func_801075B8_MinigameInstructions(Ovl6FPlayerWork* work) {
+    Vec2f in;
+    Vec3f out;
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_80107088_MinigameInstructions);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010732C_MinigameInstructions);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_801075B8_MinigameInstructions);
-
+    if (func_80025E48(work->unk_4E) != func_80025E48(work->unk_52)) {
+        func_80025C20(work->unk_4E, func_80025E48(work->unk_52), 0, 8, 2);
+    }
+    HuPrcSleep(8);
+    for (i = 0; i >= -90; i -= 30) {
+        func_800257E4(work->unk_4E, 0.0f, i, 0.0f);
+        if ((work->unk_42++ & 7) == 0) {
+            func_800FA300_MinigameInstructions(0x119, work);
+        }
+        if ((work->unk_42 & 7) == 0 && work->unk_3E == 0) {
+            func_800FA2C0_MinigameInstructions(0x30C, work);
+        }
+        HuPrcVSleep();
+    }
+    in.x = work->unk_00;
+    in.y = work->unk_04;
+    out.z = 0.0f;
+    while (work->unk_00 > -50.0f) {
+        in.x = work->unk_00 -= 12.0f;
+        func_8001DD24(0, CZoom, (Vec3f*)&in, &out);
+        func_80025798(work->unk_4E, out.x, out.y, -180.0f);
+        if ((work->unk_42++ & 3) == 0) {
+            func_800FA300_MinigameInstructions(0x112, work);
+        }
+        if ((work->unk_42 & 7) == 0 && work->unk_3E == 0) {
+            func_800FA2C0_MinigameInstructions(0x30C, work);
+        }
+        HuPrcVSleep();
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_801077C8_MinigameInstructions);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_80107F4C_MinigameInstructions);
