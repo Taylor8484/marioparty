@@ -208,16 +208,93 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FAAF4_Ke
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FAF28_KeyPaWay);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FB38C_KeyPaWay);
+f32 func_800FB38C_KeyPaWay(KPWBodyWork* work, f32 angle) {
+    f32 cur;
+    f32 d;
 
+    cur = work->unk_3C;
+    if (cur > 180.0f) {
+        cur -= 360.0f;
+    }
+    if (cur != angle) {
+        d = angle - cur;
+        if (d < 0.0f) {
+            d += 360.0f;
+        }
+        if (d < 180.0f) {
+            if (d > 10.0f) {
+                cur += 10.0f;
+            } else {
+                cur += d;
+            }
+        } else if (360.0f - d > 10.0f) {
+            cur -= 10.0f;
+        } else {
+            cur -= 360.0f - d;
+        }
+    }
+    work->unk_3C = cur;
+    return cur;
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FB498_KeyPaWay);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FB748_KeyPaWay);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FB9D4_KeyPaWay);
+void func_800FB9D4_KeyPaWay(omObjData* obj) {
+    KPWStageWork* work;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FBAD4_KeyPaWay);
+    obj->model[0] = LoadFormFile(0x400001, 0x20699);
+    omSetTra(obj, 0.0f, 0.0f, -850.0f);
+    D_800F2AF8[D_800ED440++] = obj;
+    work = obj->unk_50 = func_80023684(sizeof(KPWStageWork), 0x7918);
+    func_8009B770(work, 0, sizeof(KPWStageWork));
+    work->unk_04 = 1;
+    work->unk_05 = 1;
+    work->unk_08 = 0.8f;
+    func_80009058(obj, 200.0f, 200.0f, -90.0f, -180.0f, 90.0f, 90.0f);
+    obj->func_ptr = NULL;
+}
+void func_800FBAD4_KeyPaWay(omObjData* obj) {
+    f32 temp;
 
+    switch (D_800FF5A4_KeyPaWay) {
+    case 0:
+        D_800FF5A4_KeyPaWay = 1;
+        break;
+    case 1:
+        if (func_80072718() == 0) {
+            D_800FF5A4_KeyPaWay = 2;
+            D_800FF500_KeyPaWay = 22;
+        }
+        break;
+    case 3:
+        if (D_800FF590_KeyPaWay->func_ptr == func_800F7AE0_KeyPaWay) {
+            D_800FF502_KeyPaWay = 22;
+            func_800FE744_KeyPaWay(22, 0.0f, 1100.0f, 2700.0f, 0.0f, 0.0f, -120.0f);
+            D_800FF5A4_KeyPaWay = 4;
+        }
+        break;
+    case 4:
+        if (--D_800FF502_KeyPaWay == 0) {
+            D_800FF5A4_KeyPaWay = 5;
+        }
+        break;
+    case 5:
+        D_800FF5A4_KeyPaWay = 6;
+        GMesCreate(0);
+        break;
+    case 6:
+        if (GMesStatAllGet() == 0) {
+            temp = func_800B0CD8(1100.0f, 2100.0f);
+            func_800FE82C_KeyPaWay(temp, func_800B1750(9162400.0f));
+            D_800FF580_KeyPaWay = 1;
+            D_800ED430 = 1;
+            omDelObj(obj);
+            GMesCreate(8, (u16)D_800FF532_KeyPaWay, 160, 32);
+        }
+        break;
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FBC98_KeyPaWay);
 
 void func_800FCC6C_KeyPaWay(void) {
