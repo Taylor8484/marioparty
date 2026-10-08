@@ -758,8 +758,88 @@ void func_80108A90_MinigameInstructions(Ovl6FPlayerWork* work) {
     work->unk_2C = D_800F2B7C[work->unk_4E].unk_24 - D_800F2B7C[D_8010F4F0_MinigameInstructions[work->unk_3E]].unk_24;
     work->unk_30 = D_800F2B7C[work->unk_4E].unk_2C - D_800F2B7C[D_8010F4F0_MinigameInstructions[work->unk_3E]].unk_2C;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_80108FE4_MinigameInstructions);
+void func_80108FE4_MinigameInstructions(Ovl6FPlayerWork* work) {
+    Vec2f in;
+    Vec3f out;
+    Ovl6FPlayerWork* p;
+    f32 x;
+    f32 z;
+    f32 scale;
+    s16 i;
 
+    if (D_8010F4F6_MinigameInstructions[work->unk_38] == 0) {
+        func_80025C20(work->unk_4E, func_80025E48(work->unk_52), 0, 8, 2);
+        if (work->unk_38 < work->unk_B6) {
+            in.x = work->unk_3E * 70 + 42;
+            for (i = 0; i < 8; i++) {
+                in.y = 150 - i * 20;
+                func_8001DD24(0, CZoom, (Vec3f*)&in, &out);
+                func_80025798(D_8010F4F0_MinigameInstructions[work->unk_3E], out.x, out.y, -180.0f);
+                if ((work->unk_42++ & 7) == 0) {
+                    func_800FA300_MinigameInstructions(0x112, work);
+                }
+                HuPrcVSleep();
+            }
+            in.y = -20.0f;
+            func_8001DD24(0, CZoom, (Vec3f*)&in, &out);
+            func_80025798(D_8010F4F0_MinigameInstructions[work->unk_3E], out.x, out.y, -180.0f);
+        } else {
+            HuPrcSleep(8);
+        }
+        in.x = work->unk_00;
+        in.y = work->unk_04;
+        out.z = 0.0f;
+        while (work->unk_00 > -50.0f) {
+            in.x = work->unk_00 -= 12.0f;
+            func_8001DD24(0, CZoom, (Vec3f*)&in, &out);
+            func_80025798(work->unk_4E, out.x, out.y, -180.0f);
+            if ((work->unk_42++ & 3) == 0) {
+                func_800FA300_MinigameInstructions(0x119, work);
+            }
+            HuPrcVSleep();
+        }
+    } else if (work->unk_38 <= work->unk_B6) {
+        scale = 0.28f;
+        do {
+            if (work->unk_38 < work->unk_B6) {
+                D_800F2B7C[D_8010F4F0_MinigameInstructions[work->unk_3E]].unk_2C += 10.0f;
+                func_80025830(D_8010F4F0_MinigameInstructions[work->unk_3E], scale, scale, scale);
+            }
+            p = work;
+            for (i = 0; i < 2; i++) {
+                x = func_800AEFD0(90.0f) * p->unk_2C - func_800AEAC0(90.0f) * p->unk_30;
+                z = func_800AEAC0(90.0f) * p->unk_2C + func_800AEFD0(90.0f) * p->unk_30;
+                x *= scale;
+                z *= scale;
+                func_80025798(p->unk_70,
+                              x + D_800F2B7C[D_8010F4F0_MinigameInstructions[p->unk_3E]].unk_24,
+                              p->unk_10,
+                              z + D_800F2B7C[D_8010F4F0_MinigameInstructions[p->unk_3E]].unk_2C);
+                func_800257E4(p->unk_70, 0.0f, i, 0.0f);
+                func_80025830(p->unk_70, scale, scale, scale);
+                p = D_8010F750_MinigameInstructions[work->unk_B6];
+            }
+            HuPrcVSleep();
+            scale -= 0.028f;
+        } while (scale > 0.0f);
+        func_80060758(0x299);
+        func_80025830(D_8010F4F0_MinigameInstructions[work->unk_3E], 0.28f, 0.28f, 0.28f);
+        in.x = work->unk_3E * 70 + 42;
+        in.y = -20.0f;
+        func_8001DD24(0, CZoom, (Vec3f*)&in, &out);
+        func_80025798(D_8010F4F0_MinigameInstructions[work->unk_3E], out.x, out.y, -180.0f);
+        p = work;
+        for (i = 0; i < 2; i++) {
+            func_80025830(p->unk_70, 0.28f, 0.28f, 0.28f);
+            func_800258EC(p->unk_70, 4, 4);
+            in.x = p->unk_00 = -50.0f;
+            in.y = p->unk_04 = 150.0f;
+            func_8001DD24(0, CZoom, (Vec3f*)&in, &out);
+            func_80025798(p->unk_4E, out.x, out.y, -180.0f);
+            p = D_8010F750_MinigameInstructions[work->unk_B6];
+        }
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_80109600_MinigameInstructions);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_80109BFC_MinigameInstructions);
