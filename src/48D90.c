@@ -931,7 +931,7 @@ void func_8004A684(void) {
         var_s0->archive = NULL;
         var_s0++;
     }
-    bzero(&D_800D6A60, sizeof(Object));
+    bzero(&D_800D6A60, sizeof(D_800D6A60)); /* retail wrote sizeof(Object): the same 0x90 bytes on the N64 only */
 }
 
 void func_8004A6F8(void) {

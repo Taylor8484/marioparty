@@ -13,7 +13,7 @@ void* func_8003B820() {
     Object* temp_v0_2;
     unk_ProcessUserData08* temp_v0;
 
-    temp_v0 = MallocTemp(0x8);
+    temp_v0 = MallocTemp(sizeof(*temp_v0)); /* 8 on the N64; a pointer field */
     temp_v0->unk00 = 0;
     temp_v0_2 = MBModelCreate(0x24, NULL);
     temp_v0->unk04 = temp_v0_2;
@@ -31,7 +31,7 @@ void func_8003B8A4(unk_ProcessUserData08* arg0) {
 unk_8003B8D4Struct* func_8003B8D4(void) {
     unk_8003B8D4Struct* temp_v0;
 
-    temp_v0 = MallocTemp(0x6C);
+    temp_v0 = MallocTemp(sizeof(*temp_v0)); /* 0x6C on the N64; pointers and a message queue */
     temp_v0->unk00 = 0;
     temp_v0->unk02 = 0;
     temp_v0->unk04 = 0;
@@ -76,7 +76,11 @@ void func_8003B994(unk_8003B8D4Struct* arg0, unk_ProcessUserData08* arg1, s16 ar
 
     temp_a0 = arg0->unk02 + 1;
     arg0->unk02 = temp_a0;
+#ifdef TARGET_PC
+    temp_v0 = MallocTemp((s16)temp_a0 * sizeof(*temp_v0)); /* a pointer list: 4 bytes per entry on the N64 */
+#else
     temp_v0 = MallocTemp((temp_a0 << 0x10) >> 0xE);
+#endif
     temp_v0_2 = arg0->unk04;
     var_a0 = temp_v0;
     if (temp_v0_2 != NULL) {
