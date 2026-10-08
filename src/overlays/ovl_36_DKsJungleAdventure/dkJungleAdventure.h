@@ -27,7 +27,7 @@ extern s16 D_800F9900_DKsJungleAdventure[]; //ov054_star_space_indices
 extern s16 D_800F9910_DKsJungleAdventure[]; //ov054_toad_space_indices
     //0x61, 0x6E, 0x6D, 0x72, 0x71, 0x5F, 0x60
 
-extern s16 D_800F9920_DKsJungleAdventure[]; //ov054_data_star_related_800F9920
+extern s32 D_800F9920_DKsJungleAdventure[]; //ov054_data_star_related_800F9920
     //0, 1, 7, 3
 
 extern s16 D_800F9928_DKsJungleAdventure[]; //ov054_toad_space_indices_repeat

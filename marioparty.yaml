@@ -1534,7 +1534,7 @@ segments:
       - [0x2418A0, c]
       - [0x2418D0, c]
       - [0x244B50, .data, 2418A0]
-      - [0x244B80, data, 2418D0]
+      - [0x244B80, .data, 2418D0]
       - [0x245500, .rodata, 2418D0]
       - {0x2455C0, type: bss, vram: 0x800FA300, name: ovl_36_bss}
   - type: code

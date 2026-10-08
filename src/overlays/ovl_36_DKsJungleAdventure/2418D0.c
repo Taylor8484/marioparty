@@ -1,6 +1,387 @@
 #include "engine/process.h"
 #include "dkJungleAdventure.h"
 
+/* event-list functions (defined below) */
+void func_800F7A1C_DKsJungleAdventure(void);
+void func_800F7C34_DKsJungleAdventure(void);
+void func_800F7C6C_DKsJungleAdventure(void);
+void func_800F7E88_DKsJungleAdventure(void);
+void func_800F7EC0_DKsJungleAdventure(void);
+void func_800F80DC_DKsJungleAdventure(void);
+void func_800F8248_DKsJungleAdventure(void);
+void func_800F8A00_DKsJungleAdventure(void);
+void func_800F8FC4_DKsJungleAdventure(void);
+void func_800F91B4_DKsJungleAdventure(void);
+void func_800F9398_DKsJungleAdventure(void);
+void func_800F93BC_DKsJungleAdventure(void);
+void func_800F93E0_DKsJungleAdventure(void);
+void func_800F9404_DKsJungleAdventure(void);
+void func_800F9428_DKsJungleAdventure(void);
+void func_800F944C_DKsJungleAdventure(void);
+void func_800F9674_DKsJungleAdventure(void);
+void func_800F96A8_DKsJungleAdventure(void);
+void func_800F970C_DKsJungleAdventure(void);
+void func_800F9798_DKsJungleAdventure(void);
+void func_800F9804_DKsJungleAdventure(void);
+
+/* .data (0x800F98C0..0x800FA240) */
+Vec4f D_800F98C0_DKsJungleAdventure = { 0.0f, 0.0f, 320.0f, 240.0f };
+s16 D_800F98D0_DKsJungleAdventure[] = { 3, 5, 6, 0, 1, 2, 4, 0 };
+s16 D_800F98E0_DKsJungleAdventure[] = { 0, 0, 0, 1, 1, 1, 3, 0 };
+s16 D_800F98F0_DKsJungleAdventure[] = { 0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0 };
+s16 D_800F9900_DKsJungleAdventure[] = { 0x77, 0x80, 0x7F, 0x84, 0x83, 0x75, 0x76, 0 };
+s16 D_800F9910_DKsJungleAdventure[] = { 0x61, 0x6E, 0x6D, 0x72, 0x71, 0x5F, 0x60, 0 };
+s32 D_800F9920_DKsJungleAdventure[] = { 1, 0x70003 }; /* MBModelCreate motion list: words */
+s16 D_800F9928_DKsJungleAdventure[] = { 0x61, 0x6E, 0x6D, 0x72, 0x71, 0x5F, 0x60, 0 };
+s16 D_800F9938_DKsJungleAdventure[] = { 0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0 };
+/* splat's D_800F994A is the .two half of entry 0 onwards */
+struct D_800F9948_tuple D_800F9948_DKsJungleAdventure[] = {
+    { 6, 0 }, { 0, -3 }, { 0, -8 }, { -3, 0 }, { -2, 0 }, { -2, 0 }, { -3, 0 },
+};
+s16 D_800F9964_DKsJungleAdventure[] = { 0, 1, 2, 0 };
+s16 D_800F996C_DKsJungleAdventure[] = { 0x68, 0x66, 0x67, 0 };
+s16 D_800F9974_DKsJungleAdventure[] = { 0x65, 0x6C, 0x5E, 0 };
+s16 D_800F997C_DKsJungleAdventure[] = { 0x74, 0x7E, 0x85, 0 };
+s32 D_800F9984_DKsJungleAdventure[] = { 1, 0x68 }; /* MBModelCreate motion list: words */
+s16 D_800F998C_DKsJungleAdventure[] = { 0x6F, 0x62 };
+s16 D_800F9990_DKsJungleAdventure[] = { 0x64, 0x63 };
+s16 D_800F9994_DKsJungleAdventure[] = { 0x7A, 0x7B };
+DecisionTreeNonLeafNode D_800F9998_DKsJungleAdventure[2] = {
+    { 0x03000000, { (void*)0x3F }, { 0x1503C } },
+    { 0x0, { (void*)0x0 }, { 0x11E32 } },
+};
+DecisionTreeNonLeafNode D_800F99B0_DKsJungleAdventure[5] = {
+    { 0x01000000, { (void*)0x28 }, { 0x16450 } },
+    { 0x01000000, { (void*)0x1E }, { 0x15F46 } },
+    { 0x01000000, { (void*)0x14 }, { (PB_UPTR32)D_800F9998_DKsJungleAdventure } },
+    { 0x03000000, { (void*)0x3F }, { 0x14632 } },
+    { 0x0, { (void*)0x0 }, { 0x11E28 } },
+};
+DecisionTreeNonLeafNode D_800F99EC_DKsJungleAdventure[2] = {
+    { 0x03000000, { (void*)0x1F }, { 0x1503C } },
+    { 0x0, { (void*)0x0 }, { 0x12832 } },
+};
+DecisionTreeNonLeafNode D_800F9A04_DKsJungleAdventure[5] = {
+    { 0x01000000, { (void*)0x28 }, { 0x1645A } },
+    { 0x01000000, { (void*)0x1E }, { 0x15F50 } },
+    { 0x01000000, { (void*)0x14 }, { (PB_UPTR32)D_800F99EC_DKsJungleAdventure } },
+    { 0x03000000, { (void*)0x1F }, { 0x14632 } },
+    { 0x0, { (void*)0x0 }, { 0x11E32 } },
+};
+DecisionTreeNonLeafNode D_800F9A40_DKsJungleAdventure[5] = {
+    { 0x02000000, { (void*)0x1 }, { 0x6450 } },
+    { 0x02000000, { (void*)0x2 }, { (PB_UPTR32)D_800F99B0_DKsJungleAdventure } },
+    { 0x02000000, { (void*)0x4 }, { (PB_UPTR32)D_800F9A04_DKsJungleAdventure } },
+    { 0x01000000, { (void*)0x14 }, { 0x15F46 } },
+    { 0x0, { (void*)0x0 }, { 0x1503C } },
+};
+DecisionTreeNonLeafNode D_800F9A7C_DKsJungleAdventure[2] = {
+    { 0x03000000, { (void*)0xF }, { 0x5F50 } },
+    { 0x0, { (void*)0x0 }, { 0x3C3C } },
+};
+DecisionTreeNonLeafNode D_800F9A94_DKsJungleAdventure[2] = {
+    { 0x03000000, { (void*)0xF }, { 0x4646 } },
+    { 0x0, { (void*)0x0 }, { 0x1428 } },
+};
+DecisionTreeNonLeafNode D_800F9AAC_DKsJungleAdventure[4] = {
+    { 0x02000000, { (void*)0x7E }, { 0x1645A } },
+    { 0x01000000, { (void*)0x1E }, { 0x5F50 } },
+    { 0x01000000, { (void*)0x14 }, { (PB_UPTR32)D_800F9A7C_DKsJungleAdventure } },
+    { 0x0, { (void*)0x0 }, { (PB_UPTR32)D_800F9A94_DKsJungleAdventure } },
+};
+DecisionTreeNonLeafNode D_800F9ADC_DKsJungleAdventure[2] = {
+    { 0x04000000, { (void*)0x10000 }, { (PB_UPTR32)D_800F9A40_DKsJungleAdventure } },
+    { 0x0, { (void*)0x0 }, { (PB_UPTR32)D_800F9AAC_DKsJungleAdventure } },
+};
+DecisionTreeNonLeafNode D_800F9AF4_DKsJungleAdventure[2] = {
+    { 0x03000000, { (void*)0x18 }, { 0x1141E } },
+    { 0x0, { (void*)0x0 }, { 0x16450 } },
+};
+DecisionTreeNonLeafNode D_800F9B0C_DKsJungleAdventure[3] = {
+    { 0x01000000, { (void*)0x1E }, { (PB_UPTR32)D_800F9AF4_DKsJungleAdventure } },
+    { 0x03000000, { (void*)0x7 }, { 0x15F50 } },
+    { 0x0, { (void*)0x0 }, { 0x11E28 } },
+};
+DecisionTreeNonLeafNode D_800F9B30_DKsJungleAdventure[2] = {
+    { 0x03000000, { (void*)0x118 }, { 0x13232 } },
+    { 0x0, { (void*)0x0 }, { 0x10028 } },
+};
+DecisionTreeNonLeafNode D_800F9B48_DKsJungleAdventure[5] = {
+    { 0x02000000, { (void*)0x4 }, { (PB_UPTR32)D_800F9B0C_DKsJungleAdventure } },
+    { 0x02000000, { (void*)0x2 }, { 0x6450 } },
+    { 0x02000000, { (void*)0x1 }, { (PB_UPTR32)D_800F9B30_DKsJungleAdventure } },
+    { 0x03000000, { (void*)0x200 }, { 0x1463C } },
+    { 0x0, { (void*)0x0 }, { 0x10028 } },
+};
+DecisionTreeNonLeafNode D_800F9B84_DKsJungleAdventure[3] = {
+    { 0x03000000, { (void*)0x7 }, { 0x16450 } },
+    { 0x03000000, { (void*)0x7 }, { 0x11432 } },
+    { 0x0, { (void*)0x0 }, { 0x16450 } },
+};
+DecisionTreeNonLeafNode D_800F9BA8_DKsJungleAdventure[4] = {
+    { 0x01000000, { (void*)0x14 }, { (PB_UPTR32)D_800F9B84_DKsJungleAdventure } },
+    { 0x03000000, { (void*)0x7 }, { 0x16450 } },
+    { 0x03000000, { (void*)0x7 }, { 0x11432 } },
+    { 0x0, { (void*)0x0 }, { 0x12846 } },
+};
+DecisionTreeNonLeafNode D_800F9BD8_DKsJungleAdventure[2] = {
+    { 0x03000000, { (void*)0xF }, { 0x6446 } },
+    { 0x0, { (void*)0x0 }, { 0x283C } },
+};
+DecisionTreeNonLeafNode D_800F9BF0_DKsJungleAdventure[4] = {
+    { 0x01000000, { (void*)0x1E }, { 0x6450 } },
+    { 0x01000000, { (void*)0x14 }, { (PB_UPTR32)D_800F9BD8_DKsJungleAdventure } },
+    { 0x03000000, { (void*)0xF }, { 0x5A46 } },
+    { 0x0, { (void*)0x0 }, { 0x1E32 } },
+};
+DecisionTreeNonLeafNode D_800F9C20_DKsJungleAdventure[2] = {
+    { 0x03000000, { (void*)0x1FF }, { 0x514 } },
+    { 0x0, { (void*)0x0 }, { 0x3232 } },
+};
+DecisionTreeNonLeafNode D_800F9C38_DKsJungleAdventure[5] = {
+    { 0x02000000, { (void*)0x4 }, { (PB_UPTR32)D_800F9BA8_DKsJungleAdventure } },
+    { 0x02000000, { (void*)0x2 }, { (PB_UPTR32)D_800F9BF0_DKsJungleAdventure } },
+    { 0x02000000, { (void*)0x1 }, { (PB_UPTR32)D_800F9C20_DKsJungleAdventure } },
+    { 0x03000000, { (void*)0x118 }, { 0x5046 } },
+    { 0x0, { (void*)0x0 }, { 0x514 } },
+};
+DecisionTreeNonLeafNode D_800F9C74_DKsJungleAdventure[2] = {
+    { 0x04000000, { (void*)0x110000 }, { (PB_UPTR32)D_800F9B48_DKsJungleAdventure } },
+    { 0x0, { (void*)0x0 }, { (PB_UPTR32)D_800F9C38_DKsJungleAdventure } },
+};
+DecisionTreeNonLeafNode D_800F9C8C_DKsJungleAdventure[2] = {
+    { 0x03000000, { (void*)0x7F }, { 0x16450 } },
+    { 0x0, { (void*)0x0 }, { 0x11E32 } },
+};
+DecisionTreeNonLeafNode D_800F9CA4_DKsJungleAdventure[4] = {
+    { 0x01000000, { (void*)0x1E }, { 0x16450 } },
+    { 0x01000000, { (void*)0x14 }, { (PB_UPTR32)D_800F9C8C_DKsJungleAdventure } },
+    { 0x03000000, { (void*)0x7F }, { 0x16450 } },
+    { 0x0, { (void*)0x0 }, { 0x11428 } },
+};
+DecisionTreeNonLeafNode D_800F9CD4_DKsJungleAdventure[5] = {
+    { 0x02000000, { (void*)0x20 }, { 0x5F50 } },
+    { 0x02000000, { (void*)0x40 }, { (PB_UPTR32)D_800F9CA4_DKsJungleAdventure } },
+    { 0x01000000, { (void*)0x37 }, { 0x1463C } },
+    { 0x01000000, { (void*)0x1E }, { 0x13228 } },
+    { 0x0, { (void*)0x0 }, { 0x1141E } },
+};
+DecisionTreeNonLeafNode D_800F9D10_DKsJungleAdventure[2] = {
+    { 0x03000000, { (void*)0x3 }, { 0x6450 } },
+    { 0x0, { (void*)0x0 }, { 0x1428 } },
+};
+DecisionTreeNonLeafNode D_800F9D28_DKsJungleAdventure[4] = {
+    { 0x01000000, { (void*)0x1E }, { 0x6450 } },
+    { 0x01000000, { (void*)0x14 }, { (PB_UPTR32)D_800F9D10_DKsJungleAdventure } },
+    { 0x03000000, { (void*)0x3 }, { 0x5F50 } },
+    { 0x0, { (void*)0x0 }, { 0xA1E } },
+};
+DecisionTreeNonLeafNode D_800F9D58_DKsJungleAdventure[3] = {
+    { 0x02000000, { (void*)0x20 }, { (PB_UPTR32)D_800F9D28_DKsJungleAdventure } },
+    { 0x02000000, { (void*)0x40 }, { 0x15F50 } },
+    { 0x0, { (void*)0x0 }, { 0x1428 } },
+};
+DecisionTreeNonLeafNode D_800F9D7C_DKsJungleAdventure[2] = {
+    { 0x04000000, { (void*)0x200000 }, { (PB_UPTR32)D_800F9CD4_DKsJungleAdventure } },
+    { 0x0, { (void*)0x0 }, { (PB_UPTR32)D_800F9D58_DKsJungleAdventure } },
+};
+DecisionTreeNonLeafNode D_800F9D94_DKsJungleAdventure[2] = {
+    { 0x03000000, { (void*)0x4 }, { 0x2832 } },
+    { 0x0, { (void*)0x0 }, { 0x5A46 } },
+};
+DecisionTreeNonLeafNode D_800F9DAC_DKsJungleAdventure[3] = {
+    { 0x05000000, { (void*)0x1 }, { 0x5032 } },
+    { 0x05000000, { (void*)0x6 }, { 0x3232 } },
+    { 0x0, { (void*)0x0 }, { 0x1E28 } },
+};
+DecisionTreeNonLeafNode D_800F9DD0_DKsJungleAdventure[3] = {
+    { 0x05000000, { (void*)0x1 }, { 0x1E28 } },
+    { 0x05000000, { (void*)0x6 }, { 0x463C } },
+    { 0x0, { (void*)0x0 }, { 0x5046 } },
+};
+DecisionTreeNonLeafNode D_800F9DF4_DKsJungleAdventure[5] = {
+    { 0x03000000, { (void*)0x10 }, { (PB_UPTR32)D_800F9DAC_DKsJungleAdventure } },
+    { 0x03000000, { (void*)0x80 }, { (PB_UPTR32)D_800F9DD0_DKsJungleAdventure } },
+    { 0x05000000, { (void*)0x1 }, { 0x1E28 } },
+    { 0x05000000, { (void*)0x6 }, { 0x3C32 } },
+    { 0x0, { (void*)0x0 }, { 0x5A46 } },
+};
+DecisionTreeNonLeafNode D_800F9E30_DKsJungleAdventure[3] = {
+    { 0x02000000, { (void*)0x16 }, { (PB_UPTR32)D_800F9D94_DKsJungleAdventure } },
+    { 0x02000000, { (void*)0x68 }, { (PB_UPTR32)D_800F9DF4_DKsJungleAdventure } },
+    { 0x0, { (void*)0x0 }, { 0x6450 } },
+};
+DecisionTreeNonLeafNode D_800F9E54_DKsJungleAdventure[3] = {
+    { 0x05000000, { (void*)0x1 }, { 0x3C32 } },
+    { 0x05000000, { (void*)0x6 }, { 0x1428 } },
+    { 0x0, { (void*)0x0 }, { 0x514 } },
+};
+DecisionTreeNonLeafNode D_800F9E78_DKsJungleAdventure[2] = {
+    { 0x03000000, { (void*)0x30 }, { (PB_UPTR32)D_800F9E54_DKsJungleAdventure } },
+    { 0x0, { (void*)0x0 }, { 0x6450 } },
+};
+DecisionTreeNonLeafNode D_800F9E90_DKsJungleAdventure[3] = {
+    { 0x05000000, { (void*)0x1 }, { 0x2832 } },
+    { 0x05000000, { (void*)0x6 }, { 0x1428 } },
+    { 0x0, { (void*)0x0 }, { 0x514 } },
+};
+DecisionTreeNonLeafNode D_800F9EB4_DKsJungleAdventure[6] = {
+    { 0x01000000, { (void*)0x1E }, { (PB_UPTR32)D_800F9E78_DKsJungleAdventure } },
+    { 0x03000000, { (void*)0x4F }, { 0x5A46 } },
+    { 0x03000000, { (void*)0x30 }, { (PB_UPTR32)D_800F9E90_DKsJungleAdventure } },
+    { 0x05000000, { (void*)0x1 }, { 0x1E32 } },
+    { 0x05000000, { (void*)0x6 }, { 0xA1E } },
+    { 0x0, { (void*)0x0 }, { 0x14 } },
+};
+DecisionTreeNonLeafNode D_800F9EFC_DKsJungleAdventure[2] = {
+    { 0x03000000, { (void*)0x3F0 }, { 0x1E32 } },
+    { 0x0, { (void*)0x0 }, { 0x1428 } },
+};
+DecisionTreeNonLeafNode D_800F9F14_DKsJungleAdventure[3] = {
+    { 0x01000000, { (void*)0x1E }, { (PB_UPTR32)D_800F9EFC_DKsJungleAdventure } },
+    { 0x03000000, { (void*)0x3F0 }, { 0x1428 } },
+    { 0x0, { (void*)0x0 }, { 0xA1E } },
+};
+DecisionTreeNonLeafNode D_800F9F38_DKsJungleAdventure[3] = {
+    { 0x02000000, { (void*)0x10 }, { (PB_UPTR32)D_800F9EB4_DKsJungleAdventure } },
+    { 0x02000000, { (void*)0x7 }, { (PB_UPTR32)D_800F9F14_DKsJungleAdventure } },
+    { 0x0, { (void*)0x0 }, { 0x14 } },
+};
+s16 D_800F9F5C_DKsJungleAdventure[] = { 0x48, 0x45, -1, 0x0 };
+EventListEntry D_800F9F64_DKsJungleAdventure[] = {
+    { 1, 2, func_800F7A1C_DKsJungleAdventure },
+    { 2, 1, func_800F7C34_DKsJungleAdventure },
+    { 0, 0, NULL },
+};
+s16 D_800F9F7C_DKsJungleAdventure[] = { 0x42, 0x38, -1, 0x0 };
+EventListEntry D_800F9F84_DKsJungleAdventure[] = {
+    { 1, 2, func_800F7C6C_DKsJungleAdventure },
+    { 2, 1, func_800F7E88_DKsJungleAdventure },
+    { 0, 0, NULL },
+};
+s16 D_800F9F9C_DKsJungleAdventure[] = { 0x1A, 0x25, -1, 0x0 };
+EventListEntry D_800F9FA4_DKsJungleAdventure[] = {
+    { 1, 2, func_800F7EC0_DKsJungleAdventure },
+    { 2, 1, func_800F80DC_DKsJungleAdventure },
+    { 0, 0, NULL },
+};
+EventListEntry D_800F9FBC_DKsJungleAdventure[] = {
+    { 1, 2, func_800F8248_DKsJungleAdventure },
+    { 0, 0, NULL },
+};
+/* boulder path, -1 terminated; splat's D_800F9FCE is element 1 */
+s16 D_800F9FCC_DKsJungleAdventure[] = { 1, 2, 3, 4, 5, 6, 7, -1 };
+EventListEntry D_800F9FDC_DKsJungleAdventure[] = {
+    { 3, 2, func_800F8A00_DKsJungleAdventure },
+    { 0, 0, NULL },
+};
+s16 D_800F9FEC_DKsJungleAdventure[] = { 0x4D, 0x57, -1, 0x0 };
+EventListEntry D_800F9FF4_DKsJungleAdventure[] = {
+    { 1, 2, func_800F8FC4_DKsJungleAdventure },
+    { 0, 0, NULL },
+};
+s16 D_800FA004_DKsJungleAdventure[] = { 0x2A, 0x2E, -1, 0x0 };
+EventListEntry D_800FA00C_DKsJungleAdventure[] = {
+    { 1, 2, func_800F91B4_DKsJungleAdventure },
+    { 0, 0, NULL },
+};
+EventListEntry D_800FA01C_DKsJungleAdventure[] = {
+    { 1, 1, func_800F9398_DKsJungleAdventure },
+    { 0, 0, NULL },
+};
+EventListEntry D_800FA02C_DKsJungleAdventure[] = {
+    { 1, 1, func_800F93BC_DKsJungleAdventure },
+    { 0, 0, NULL },
+};
+EventListEntry D_800FA03C_DKsJungleAdventure[] = {
+    { 1, 1, func_800F93E0_DKsJungleAdventure },
+    { 0, 0, NULL },
+};
+EventListEntry D_800FA04C_DKsJungleAdventure[] = {
+    { 1, 1, func_800F9404_DKsJungleAdventure },
+    { 0, 0, NULL },
+};
+EventListEntry D_800FA05C_DKsJungleAdventure[] = {
+    { 1, 1, func_800F9428_DKsJungleAdventure },
+    { 0, 0, NULL },
+};
+EventListEntry D_800FA06C_DKsJungleAdventure[] = {
+    { 1, 1, func_800F944C_DKsJungleAdventure },
+    { 0, 0, NULL },
+};
+EventListEntry D_800FA07C_DKsJungleAdventure[] = {
+    { 1, 1, func_800F944C_DKsJungleAdventure },
+    { 1, 2, func_800F9674_DKsJungleAdventure },
+    { 0, 0, NULL },
+};
+EventListEntry D_800FA094_DKsJungleAdventure[] = {
+    { 1, 1, func_800F96A8_DKsJungleAdventure },
+    { 3, 1, func_800F970C_DKsJungleAdventure },
+    { 0, 0, NULL },
+};
+EventListEntry D_800FA0AC_DKsJungleAdventure[] = {
+    { 1, 1, func_800F9798_DKsJungleAdventure },
+    { 0, 0, NULL },
+};
+EventListEntry D_800FA0BC_DKsJungleAdventure[] = {
+    { 1, 1, func_800F9804_DKsJungleAdventure },
+    { 0, 0, NULL },
+};
+EventTableEntry D_800FA0CC_DKsJungleAdventure[] = {
+    { 0x77, D_800FA094_DKsJungleAdventure },
+    { 0x80, D_800FA094_DKsJungleAdventure },
+    { 0x7F, D_800FA094_DKsJungleAdventure },
+    { 0x84, D_800FA094_DKsJungleAdventure },
+    { 0x83, D_800FA094_DKsJungleAdventure },
+    { 0x75, D_800FA094_DKsJungleAdventure },
+    { 0x76, D_800FA094_DKsJungleAdventure },
+    { 0x74, D_800F9F64_DKsJungleAdventure },
+    { 0x45, D_800F9FBC_DKsJungleAdventure },
+    { 0x48, D_800F9FBC_DKsJungleAdventure },
+    { 0x38, D_800F9FBC_DKsJungleAdventure },
+    { 0x42, D_800F9FBC_DKsJungleAdventure },
+    { 0x1A, D_800F9FBC_DKsJungleAdventure },
+    { 0x25, D_800F9FBC_DKsJungleAdventure },
+    { 0x7E, D_800F9F84_DKsJungleAdventure },
+    { 0x85, D_800F9FA4_DKsJungleAdventure },
+    { 0x7A, D_800F9FF4_DKsJungleAdventure },
+    { 0x7B, D_800FA00C_DKsJungleAdventure },
+    { 0x2F, D_800F9FDC_DKsJungleAdventure },
+    { 0x33, D_800F9FDC_DKsJungleAdventure },
+    { 0x35, D_800F9FDC_DKsJungleAdventure },
+    { 0x22, D_800F9FDC_DKsJungleAdventure },
+    { 0x21, D_800F9FDC_DKsJungleAdventure },
+    { 0x59, D_800F9FDC_DKsJungleAdventure },
+    { 0x16, D_800F9FDC_DKsJungleAdventure },
+    { 0xD, D_800F9FDC_DKsJungleAdventure },
+    { 0xC, D_800F9FDC_DKsJungleAdventure },
+    { 0x79, D_800FA06C_DKsJungleAdventure },
+    { 0x56, D_800FA02C_DKsJungleAdventure },
+    { 0x5B, D_800FA01C_DKsJungleAdventure },
+    { 0x34, D_800FA02C_DKsJungleAdventure },
+    { 0x3A, D_800FA03C_DKsJungleAdventure },
+    { 0x30, D_800FA03C_DKsJungleAdventure },
+    { 0x9, D_800FA05C_DKsJungleAdventure },
+    { 0x15, D_800FA05C_DKsJungleAdventure },
+    { 0x54, D_800FA04C_DKsJungleAdventure },
+    { 0x1C, D_800FA04C_DKsJungleAdventure },
+    { -1, NULL },
+};
+EventTableEntry D_800FA1FC_DKsJungleAdventure[] = {
+    { 0x79, D_800FA07C_DKsJungleAdventure },
+    { -1, NULL },
+};
+EventTableEntry D_800FA20C_DKsJungleAdventure[] = {
+    { 0x81, D_800FA0AC_DKsJungleAdventure },
+    { 0xA, D_800FA0AC_DKsJungleAdventure },
+    { -1, NULL },
+};
+EventTableEntry D_800FA224_DKsJungleAdventure[] = {
+    { 0x82, D_800FA0BC_DKsJungleAdventure },
+    { -1, NULL },
+};
+
+
 // bss
 struct Object *D_800FA300_DKsJungleAdventure;
 struct Object *D_800FA304_DKsJungleAdventure;
