@@ -158,7 +158,9 @@ void func_800F7398_MinigameInstructions(void) {
     for (i = 0; i < 30; i++) {
         HuPrcVSleep();
         t = i;
-        func_800257E4(model, ((30.0f - t) / 40.0f) * -10.0f, (t /= 30.0f) * 31.0f + 149.0f, 0.0f);
+        u = ((30.0f - t) / 40.0f) * -10.0f;
+        t /= 30.0f;
+        func_800257E4(model, u, t * 31.0f + 149.0f, 0.0f);
         in.x = t * -130.0f + 290.0f;
         t = t * 66.0f + 54.0f;
         in.y = t;
