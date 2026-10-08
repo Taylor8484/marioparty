@@ -104,9 +104,7 @@ typedef struct KPWPlayerWork {
     /* 0xC2 */ char unk_C2[0x16];
     /* 0xD8 */ s16 (*unk_D8)[2]; /* one pair per motion */
     /* 0xDC */ s32 (*unk_DC)(omObjData*, omObjData*);
-#ifndef TARGET_PC
-    /* 0xE0 */ char unk_E0[4]; /* MgWork's unk_DC[8] is this and the callback: 8 bytes on both */
-#endif
+    /* 0xE0 */ char unk_E0[4]; /* PlayerWork's u16 unk_E0 (1130.c) */
     /* 0xE4 */ struct KPWPlayerExt* unk_E4;
 } KPWPlayerWork; /* size = 0xE8 */
 
