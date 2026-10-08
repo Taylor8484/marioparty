@@ -797,7 +797,106 @@ void func_800F8CA8_KeyPaWay(omObjData* arg0) {
     func_800F8CC4_KeyPaWay(arg0, 3);
 }
 
+// register allocation: chr/idx/mot in s0/s1/s6 instead of s1/s6/s0 (masked 0)
+#ifdef NON_MATCHING
+void func_800F8CC4_KeyPaWay(omObjData* obj, s32 player) {
+    u8 chr;
+    u16 idx;
+    u32 dir;
+    s32 file0;
+    s32 mot;
+    KPWPlayerWork* work;
+    KPWPlayerExt* ext;
+
+    chr = GwPlayer[(u16)player].character;
+    idx = D_800C59A8[chr].index;
+    dir = D_800C59AC[chr].unk_00;
+    file0 = D_800C59AC[chr].unk_04;
+    func_8000979C(obj, dir, file0, player, 0x20699, 0xA99);
+    work = KPW_PLAYER(obj);
+    work->unk_3C = 180.0f;
+    work->unk_DC = func_800FB748_KeyPaWay;
+    ext = work->unk_E4 = func_80023684(sizeof(KPWPlayerExt), 0x7918);
+    ext->unk_00 = 0;
+    ext->unk_30 = 1;
+    ext->unk_28 = 0;
+    ext->unk_14 = 0;
+    ext->unk_26 = 1;
+    if (D_800F2BC0 == 0) {
+        obj->model[3] = LoadFormFile(0x19, 0x69D);
+        obj->model[4] = LoadFormFile(0x1A, 0x69D);
+    } else {
+        obj->model[3] = func_80023FC8(D_800FF594_KeyPaWay[0]->model[3]);
+        obj->model[4] = func_80023FC8(D_800FF594_KeyPaWay[0]->model[4]);
+    }
+    obj->model[9] = LoadFormFile(D_800FF2F8_KeyPaWay[idx] | 0x400000, 0x69D);
+    switch (chr) {
+    case 0:
+    case 4:
+        mot = 0xF;
+        break;
+    case 1:
+    case 2:
+    case 3:
+    case 5:
+        mot = 0x38;
+        break;
+    }
+    func_800187D0(obj, 0xD, dir | mot, 1, 0x78);
+    func_800187D0(obj, 0, dir, 1, 0);
+    func_800187D0(obj, 1, dir | 1, 1, 0);
+    func_800187D0(obj, 2, dir | 3, 1, 0);
+    func_800187D0(obj, 6, dir | 5, 1, 0x13);
+    func_800187D0(obj, 9, dir | 0xA, 1, 0x27);
+    func_800187D0(obj, 0xE, dir | 0x10, 1, 0x78);
+    func_800187D0(obj, 0x11, dir | 0x18, 0, 0);
+    func_800187D0(obj, 0x12, dir | 0x1C, 0, 0);
+    func_800187D0(obj, 0x13, dir | 0x1D, 0, 0);
+    func_800187D0(obj, 0xA, dir | 0x1E, 1, 0x27);
+    func_800187D0(obj, 0x16, dir | 0x65, 1, 0);
+    func_800187D0(obj, 0x15, dir | 0x62, 0, 0);
+    func_800187D0(obj, 0x14, dir | 0x5F, 2, 0);
+    func_800187D0(obj, 0x20, dir | 0x67, 0, 0);
+    func_800187D0(obj, 0x21, dir | 0x68, 0, 0);
+    func_800187D0(obj, 0x22, dir | 0x69, 0, 0);
+    func_8001874C(obj, 0x23, dir | 0x6C, 2, 0);
+    obj->motion[36] = obj->motion[1];
+    work->unk_D8[36][0] = work->unk_D8[1][0];
+    work->unk_D8[36][1] = work->unk_D8[1][1];
+    func_800090C4(obj, 0, 2);
+    func_800090C4(obj, 1, 2);
+    if (dir >> 16 == 5) {
+        obj->scale.x = obj->scale.y = obj->scale.z = 0.95f;
+    }
+    if (dir >> 16 == 3) {
+        obj->scale.x = obj->scale.y = obj->scale.z = 1.1f;
+    }
+    if (GwPlayer[work->unk_58].group == 0) {
+        omSetTra(obj, D_800FF298_KeyPaWay[0].x, D_800FF298_KeyPaWay[0].y, D_800FF298_KeyPaWay[0].z);
+        func_80025798(obj->model[1], D_800FF298_KeyPaWay[0].x, D_800FF298_KeyPaWay[0].y, D_800FF298_KeyPaWay[0].z);
+        ext->unk_16 = 1;
+        ext->unk_18 = 1;
+        ext->unk_1C = D_800FF310_KeyPaWay[1][1][0];
+        ext->unk_20 = D_800FF310_KeyPaWay[1][1][1];
+        D_800FF50C_KeyPaWay[D_800F2BC0] = 0;
+    } else {
+        omSetTra(obj, D_800FF298_KeyPaWay[D_800FF374_KeyPaWay].x, D_800FF298_KeyPaWay[D_800FF374_KeyPaWay].y,
+                 D_800FF298_KeyPaWay[D_800FF374_KeyPaWay].z);
+        func_80025798(obj->model[1], D_800FF298_KeyPaWay[D_800FF374_KeyPaWay].x,
+                      D_800FF298_KeyPaWay[D_800FF374_KeyPaWay].y, D_800FF298_KeyPaWay[D_800FF374_KeyPaWay].z);
+        ext->unk_16 = D_800FF376_KeyPaWay - 1;
+        ext->unk_18 = 1;
+        ext->unk_1C = D_800FF310_KeyPaWay[D_800FF374_KeyPaWay - 1][1][0];
+        ext->unk_20 = D_800FF310_KeyPaWay[D_800FF374_KeyPaWay - 1][ext->unk_18][1];
+        D_800FF50C_KeyPaWay[D_800F2BC0] = D_800FF376_KeyPaWay;
+        D_800FF374_KeyPaWay++;
+    }
+    D_800F3FB0[D_800F2BC0++] = obj;
+    obj->func_ptr = func_800F92B8_KeyPaWay;
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F8CC4_KeyPaWay);
+#endif
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F92B8_KeyPaWay);
 
