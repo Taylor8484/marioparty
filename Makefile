@@ -121,6 +121,8 @@ build/src/3DEB0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 build/src/59E80.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # ovl_62 2A2500.c (board intro) also has the mul fix on: nop between cvt.d.s and mul.d (func_800F6854)
 build/src/overlays/ovl_62_BoardIntro/2A2500.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# ovl_47 285230.c also has the mul fix on: nop before a mult at a loop head (func_800F6924)
+build/src/overlays/ovl_47/285230.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # 29C90.c (collision grid) also has the mul fix on: nop before a mult at a loop head (func_80029174)
 build/src/29C90.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 
