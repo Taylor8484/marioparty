@@ -360,8 +360,75 @@ s16 func_800F8910_MinigameInstructions(s16 idx) {
     }
     return msg;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F8980_MinigameInstructions);
+// retail reaches unk_14 through its own label D_8010F424, so &D_8010F410 is not hoisted; registers differ (masked 27)
+#ifdef NON_MATCHING
+void func_800F8980_MinigameInstructions(s16 idx) {
+    s16 cnt[4];
+    s16 ids[4];
+    u8* text;
+    u8* start;
+    u8* p;
+    unkCommonStruct0* blk;
+    s16 lines;
+    s16 n;
+    s16 font;
+    s16 i;
+    s16 j;
+    s32 msg;
 
+    if ((D_8010F4E0_MinigameInstructions != 0) & (idx == 0x33)) {
+        msg = 0x35E;
+    } else {
+        msg = idx + 0x325;
+    }
+    lines = 0;
+    text = func_8005B7E8(msg);
+    start = text;
+    for (p = start; *p != 0; p++) {
+        if (*p == '\n') {
+            lines++;
+        }
+    }
+    D_8010F410_MinigameInstructions[0].unk_08 = D_8010F410_MinigameInstructions[1].unk_08 = -1;
+    n = 0;
+    cnt[0] = cnt[1] = 0;
+    for (p = start; *p != 0; p++) {
+        if (*p == '\n') {
+            if ((p[-1] == 0x10) | (p[-1] == 0x20)) {
+                p[-1] = 0;
+            }
+            *p = 0;
+            blk = &D_8010F410_MinigameInstructions[n];
+            ids[n] = font = blk->unk_08 = GMesFontCreate(blk, start, 0, -1, -1);
+            D_8010F410_MinigameInstructions[n].unk_54 = 82.0f;
+            D_8010F410_MinigameInstructions[n].unk_58 = 40.0f;
+            func_80066DC4(D_8010F410_MinigameInstructions[n].unk_14[font], 0, D_8010F410_MinigameInstructions[n].unk_54, 40);
+            cnt[n] = func_8006D93C(start);
+            n++;
+            start = p + 1;
+        }
+    }
+    blk = &D_8010F410_MinigameInstructions[n];
+    ids[n] = font = blk->unk_08 = GMesFontCreate(blk, start, 0, -1, -1);
+    D_8010F410_MinigameInstructions[n].unk_54 = 82.0f;
+    D_8010F410_MinigameInstructions[n].unk_58 = (lines != 0) ? 60.0f : 50.0f;
+    func_80066DC4(D_8010F410_MinigameInstructions[n].unk_14[font], 0, D_8010F410_MinigameInstructions[n].unk_54,
+                  D_8010F410_MinigameInstructions[n].unk_58);
+    func_8005B838(text);
+    cnt[n] = func_8006D93C(start);
+    n++;
+    if (cnt[0] >= 10 || cnt[1] >= 10) {
+        for (i = 0; i < n; i++) {
+            for (j = 0; j < cnt[i] + 1; j++) {
+                func_80067354(D_8010F410_MinigameInstructions[i].unk_14[ids[i]], j, 0.8f, 1.0f);
+            }
+        }
+    }
+    func_800F8DD0_MinigameInstructions();
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F8980_MinigameInstructions);
+#endif
 void func_800F8DD0_MinigameInstructions(void) {
     func_80066DC4(D_8010F410_MinigameInstructions[0].unk_14[D_8010F410_MinigameInstructions[0].unk_08], 0, 0, -200);
     if (D_8010F410_MinigameInstructions[1].unk_08 != -1) {
