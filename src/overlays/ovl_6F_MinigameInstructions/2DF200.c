@@ -113,11 +113,11 @@ void func_800FAC2C_MinigameInstructions(Ovl6FPlayerWork* work) {
 extern s8 ContStkY[4]; /* engine/pad.h */
 extern u16 ContBtn[4];
 
-// loop.c hoists 180.0f into $f28 (retail reloads it) and a port copy in a1; register allocation (masked 45)
+// loop.c hoists 180.0f into $f28 (retail reloads it each use); s4/s5 swapped (masked 47)
 #ifdef NON_MATCHING
 void func_800FADF4_MinigameInstructions(Ovl6FPlayerWork* work) {
     s16 prevState;
-    s32 port;
+    s16 port;
     f32 x;
     f32 y;
     f32 mag;
@@ -335,8 +335,64 @@ void func_800FBA14_MinigameInstructions(Ovl6FPlayerWork* work) {
     }
     func_800258EC(work->unk_4E, 4, 4);
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FBBA8_MinigameInstructions);
+void func_800FBBA8_MinigameInstructions(Ovl6FPlayerWork* work) {
+    s16 port;
+    f32 x;
+    f32 y;
+    f32 mag;
+    f32 a;
+    f32 d;
+    s16 id;
 
+    port = GwPlayer[work->unk_38].port;
+    x = (s8)(ContStkX[port] / 10);
+    y = (s8)(ContStkY[port] / 10);
+    mag = func_800B1750(x * x + y * y);
+    if (x != 0.0f || y != 0.0f) {
+        a = func_800B0CD8(x, -y);
+        if (work->unk_28 != a) {
+            d = a - work->unk_28;
+            d = d * d;
+            if (d < 324.0f || d > 116964.0f) {
+                work->unk_28 = a;
+            } else if (work->unk_28 < 180.0f) {
+                if (work->unk_28 < a && a < work->unk_28 + 180.0f) {
+                    work->unk_28 += 18.0f;
+                } else {
+                    work->unk_28 -= 18.0f;
+                }
+            } else {
+                if (work->unk_28 - 180.0f < a && a < work->unk_28) {
+                    work->unk_28 -= 18.0f;
+                } else {
+                    work->unk_28 += 18.0f;
+                }
+            }
+        }
+        func_800257E4(work->unk_4E, 90.0f, 0.0f, work->unk_28);
+    }
+    if (ContBtnTrg[port] & 0x8000) {
+        if ((work->unk_42++ & 1) == 0) {
+            func_800FA2C0_MinigameInstructions(0x1DD, work);
+        }
+        id = func_80021794(D_8010E960_MinigameInstructions, 0, func_800AEAC0(work->unk_28) * 15.0f + work->unk_0C,
+                           func_800AEFD0(work->unk_28 + 180.0f) * 15.0f + work->unk_10, work->unk_14, 4);
+        if (id != -1) {
+            func_800257E4(D_800ECDE0[D_8010E960_MinigameInstructions->unk_00[id].unk_1C].unk_00, 0.0f, 0.0f,
+                          work->unk_28 + 180.0f);
+        }
+        work->unk_B4 = 8;
+    }
+    if (work->unk_B4 != 0) {
+        work->unk_B4--;
+        D_800F2B7C[work->unk_4E].unk_4C = 2.0f;
+        if ((work->unk_4C++ & 0xF) == 0) {
+            func_80060F04(work->unk_38, 5, 0, 5);
+        }
+    } else {
+        D_800F2B7C[work->unk_4E].unk_4C = mag / 4.0f;
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FC008_MinigameInstructions);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FC190_MinigameInstructions);
