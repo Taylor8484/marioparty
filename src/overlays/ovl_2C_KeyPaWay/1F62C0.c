@@ -592,8 +592,209 @@ void func_800FCC6C_KeyPaWay(void) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FCCB0_KeyPaWay);
+void func_800FCCB0_KeyPaWay(omObjData* obj) {
+    omObjData* buf[6];
+    KPWPlayerWork* work;
+    KPWPlayerExt* ext;
+    KPWKeyExt* kext;
+    omObjData* target;
+    f32 nearDist;
+    f32 range;
+    f32 speed;
+    f32 v;
+    f32 a1;
+    f32 a2;
+    f32 d;
+    f32 a;
+    u16 port;
+    u16 row;
+    u16 col;
+    u16 n;
+    u16 diff;
 
+    row = rand8() % 3;
+    work = KPW_PLAYER(obj);
+    ext = work->unk_E4;
+    port = work->unk_56;
+    if (D_800FF57C_KeyPaWay == NULL) {
+        ext->unk_30 = 0;
+    } else if (D_800FF57C_KeyPaWay != obj) {
+        ext->unk_30 = 1;
+    }
+    diff = GwPlayer[work->unk_58].cpu_difficulty;
+    switch (diff) {
+    case 0:
+        speed = (u8)(rand8() % 11) + 35.0f;
+        nearDist = 200.0f;
+        range = 340.0f;
+        break;
+    case 1:
+        speed = (u8)(rand8() % 11) + 40.0f;
+        nearDist = 240.0f;
+        range = 310.0f;
+        break;
+    case 2:
+        speed = (u8)(rand8() % 11) + 45.0f;
+        nearDist = range = 280.0f;
+        break;
+    case 3:
+        speed = (u8)(rand8() % 11) + 50.0f;
+        nearDist = 320.0f;
+        range = 250.0f;
+        break;
+    }
+    switch (ext->unk_30) {
+    case 0:
+        kext = KPW_BODY(D_800FF590_KeyPaWay)->unk_68.key;
+        v = func_800B1750(SQ(kext->unk_18) + SQ(kext->unk_1C)) * 6.0f;
+        a1 = func_800B0CD8(obj->trans.z - D_800FF590_KeyPaWay->trans.z, obj->trans.x - D_800FF590_KeyPaWay->trans.x);
+        a2 = func_800B0CD8(kext->unk_14, kext->unk_0C);
+        d = func_800B1750(SQ(D_800FF590_KeyPaWay->trans.x - obj->trans.x) + SQ(D_800FF590_KeyPaWay->trans.z - obj->trans.z));
+        if (v / 2.0f < d && d < v && kext->unk_10 < 0.0f) {
+            if (D_800FF590_KeyPaWay->trans.y > 150.0f && D_800FF590_KeyPaWay->trans.y < 300.0f &&
+                func_800FE1F0_KeyPaWay(a1, a2) < 30.0f && diff >= 2) {
+                ContBtnTrg[port] |= 0x8000;
+            }
+        }
+        if (d < nearDist) {
+            a = func_800B0CD8(D_800FF590_KeyPaWay->trans.x - obj->trans.x, D_800FF590_KeyPaWay->trans.z - obj->trans.z);
+            ContStkX[port] = func_800AEAC0(a) * 80.0f;
+            ContStkY[port] = -func_800AEFD0(a) * 80.0f;
+        } else {
+            a = func_800FDA7C_KeyPaWay(obj, D_800FF590_KeyPaWay->trans.x, D_800FF590_KeyPaWay->trans.z, 50.0f, 250.0f);
+            ContStkX[port] = func_800AEAC0(a) * speed;
+            ContStkY[port] = -func_800AEFD0(a) * speed;
+        }
+        break;
+    case 1:
+        func_800B1750(SQ(D_800FF57C_KeyPaWay->trans.x - obj->trans.x) + SQ(D_800FF57C_KeyPaWay->trans.z - obj->trans.z));
+        if (obj->trans.x < -200.0f) {
+            col = 0;
+        } else if (obj->trans.x > 200.0f) {
+            col = 2;
+        } else {
+            col = 1;
+        }
+        if (col == ext->unk_16) {
+            if (obj->trans.z < 500.0f) {
+                if (obj->trans.z > -500.0f) {
+                    row = 1;
+                } else {
+                    row = 2;
+                }
+            } else {
+                row = 0;
+            }
+            ext->unk_16 = col;
+            ext->unk_1C = D_800FF310_KeyPaWay[col][ext->unk_18][0];
+        }
+        if (row == ext->unk_18) {
+            if (row == 2) {
+                if (D_800FF57C_KeyPaWay->trans.z > 0.0f) {
+                    ext->unk_18 = 0;
+                    ext->unk_20 = D_800FF310_KeyPaWay[ext->unk_16][0][1];
+                } else {
+                    ext->unk_18 = 1;
+                    ext->unk_20 = D_800FF310_KeyPaWay[ext->unk_16][1][1];
+                }
+            } else {
+                ext->unk_18 = row + 1;
+                ext->unk_20 = D_800FF310_KeyPaWay[ext->unk_16][ext->unk_18][1];
+            }
+        }
+        a = func_800FDA7C_KeyPaWay(obj, ext->unk_1C, ext->unk_20, 45.0f, range);
+        ContStkX[port] = func_800AEAC0(a) * speed;
+        ContStkY[port] = -func_800AEFD0(a) * speed;
+        break;
+    case 2:
+        d = func_800B1750(SQ(0.0f - obj->trans.x) + SQ(-850.0f - obj->trans.z));
+        a1 = func_800FE1F0_KeyPaWay(work->unk_3C, func_800B0CD8(0.0f - obj->trans.x, -850.0f - obj->trans.z));
+        if ((d < 250.0f && a1 <= 10.0f) || ext->unk_28 == 1) {
+            ext->unk_28 = 1;
+            a = func_800B0CD8(0.0f - obj->trans.x, -850.0f - obj->trans.z);
+            ContStkX[port] = func_800AEAC0(a) * 80.0f;
+            ContStkY[port] = -func_800AEFD0(a) * 80.0f;
+            ContBtn[port] |= 0x8000;
+            ContBtnTrg[port] |= 0x8000;
+            break;
+        }
+        ext->unk_28 = 0;
+        a = func_800FDA7C_KeyPaWay(obj, 0.0f, -850.0f, 60.0f, 300.0f);
+        n = func_800FDE64_KeyPaWay(obj->trans.x, obj->trans.z, range, buf);
+        if ((D_800FF522_KeyPaWay > 16 && n != 0 && D_800FF520_KeyPaWay < 250.0f && d >= 400.0f) ||
+            (D_800FF520_KeyPaWay <= 100.0f && n != 0 && d >= 400.0f)) {
+            target = func_800FE06C_KeyPaWay(obj);
+            if (func_800FDE64_KeyPaWay(target->trans.x, target->trans.z, 250.0f, buf) >= 2) {
+                target = func_800FDFAC_KeyPaWay(obj);
+            }
+            if (target == NULL) {
+                if (func_800FDE64_KeyPaWay(D_800FF560_KeyPaWay->trans.x, D_800FF560_KeyPaWay->trans.z, 350.0f, buf) < 2) {
+                    target = D_800FF560_KeyPaWay;
+                }
+                if (target == NULL) {
+                    a = func_800FDA7C_KeyPaWay(obj, 0.0f, -850.0f, 35.0f, range);
+                    ContStkX[port] = func_800AEAC0(a) * speed;
+                    ContStkY[port] = -func_800AEFD0(a) * speed;
+                    break;
+                }
+            }
+            a = func_800B0CD8(target->trans.x - obj->trans.x, target->trans.z - obj->trans.z);
+            ContStkX[port] = func_800AEAC0(a) * 20.0f;
+            ContStkY[port] = -func_800AEFD0(a) * 20.0f;
+            d = func_800B1750(SQ(target->trans.x - obj->trans.x) + SQ(target->trans.z - obj->trans.z));
+            if (d >= 300.0f) {
+                if (d < 500.0f && work->unk_38 != 1000.0f) {
+                    ext->unk_30 = 4;
+                    ext->unk_34 = a;
+                    ext->unk_38 = d;
+                    work->unk_BC = d / 100.0f + 1.0f;
+                    if (work->unk_BC > 3.6f) {
+                        work->unk_BC = 3.6f;
+                    }
+                } else {
+                    ext->unk_30 = 3;
+                    ext->unk_32 = 4;
+                    ext->unk_34 = a;
+                    work->unk_BC = d / 500.0f;
+                    if (work->unk_BC > 3.6f) {
+                        work->unk_BC = 3.6f;
+                    }
+                    if (work->unk_38 != 1000.0f) {
+                        work->unk_BC = work->unk_BC / 2.0f;
+                    }
+                }
+            }
+        } else {
+            ContStkX[port] = func_800AEAC0(a) * speed;
+            ContStkY[port] = -func_800AEFD0(a) * speed;
+        }
+        break;
+    case 3:
+        if (work->unk_3C != ext->unk_34) {
+            work->unk_3C = ext->unk_34;
+        } else if (work->unk_38 == 1000.0f) {
+            ext->unk_32 = 2;
+            ContBtnTrg[port] |= 0x8000;
+            ContBtn[port] |= 0x8000;
+        } else {
+            ext->unk_30 = 5;
+        }
+        break;
+    case 4:
+        if (work->unk_3C != ext->unk_34) {
+            work->unk_3C = ext->unk_34;
+        } else {
+            work->unk_BC = ext->unk_38 / 400.0f * 0.5f + 0.5f;
+            ContBtnTrg[port] |= 0x4000;
+        }
+        break;
+    case 5:
+        if (--ext->unk_32 == 0) {
+            ContBtnTrg[port] |= 0x4000;
+        }
+        break;
+    }
+}
 // register allocation and float load order in the retry test (masked 14)
 #ifdef NON_MATCHING
 f32 func_800FDA7C_KeyPaWay(omObjData* obj, f32 x, f32 z, f32 angle, f32 range) {
