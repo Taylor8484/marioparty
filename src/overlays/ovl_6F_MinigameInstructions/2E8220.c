@@ -561,8 +561,78 @@ void func_8010BB04_MinigameInstructions(Ovl6FPlayerWork* work) {
             break;
     }
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010BF20_MinigameInstructions);
+// register allocation: group copy takes s5, frame 0x48+pad vs 0x60 (masked 48)
+#ifdef NON_MATCHING
+void func_8010BF20_MinigameInstructions(Ovl6FPlayerWork* work) {
+    Vec2f pos;
+    Vec3f out;
+    s32 ch;
+    s16 group;
+    s32 other;
+    s16* count;
+    u16 m0;
+    u16 m1;
+    s16 i;
+    s32 pad[8]; /* unused: retail's frame is 0x60 */
 
+    ch = GwPlayer[work->unk_38].character;
+    group = GwPlayer[work->unk_38].group;
+    work->unk_3E = group;
+    work->unk_4E = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 0x9F, 0x299);
+    work->unk_50 = func_80023FC8(work->unk_4E);
+    func_800258EC(work->unk_50, 4, 4);
+    work->unk_52 = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 3, 0x1D);
+    work->unk_54 = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 1, 0x1D);
+    work->unk_56 = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 0x2E, 0x1D);
+    count = &D_8010F76A_MinigameInstructions[group];
+    work->unk_08 = D_8010EF58_MinigameInstructions[(s16)(*count + group * 2)];
+    func_80025830(work->unk_4E, 0.28f, 0.28f, 0.28f);
+    pos.x = work->unk_00 = -50.0f;
+    pos.y = work->unk_04 = 150.0f;
+    out.z = 0.0f;
+    func_8001DD24(0, CZoom, (Vec3f*)&pos, &out);
+    func_80025798(work->unk_4E, out.x, out.y, -180.0f);
+    if (*count == 0) {
+        other = group ^ 1;
+        if (D_8010EF60_MinigameInstructions == 0) {
+            m0 = LoadFormFile(0x430003, 0x299);
+            D_8010F50C_MinigameInstructions[group].unk_00 = m0;
+            m1 = LoadFormFile(0x430004, 0x299);
+            D_8010F50C_MinigameInstructions[group].unk_02 = m1;
+            D_8010EF60_MinigameInstructions = 1;
+        } else {
+            m0 = func_80023FC8(D_8010F50C_MinigameInstructions[other].unk_00);
+            D_8010F50C_MinigameInstructions[group].unk_00 = m0;
+            m1 = func_80023FC8(D_8010F50C_MinigameInstructions[other].unk_02);
+            D_8010F50C_MinigameInstructions[group].unk_02 = m1;
+        }
+        func_80025830(m0, 0.0f, 0.0f, 0.0f);
+        func_80025830(m1, 0.0f, 0.0f, 0.0f);
+        func_800257E4(m0, 0.0f, 270.0f, 0.0f);
+        func_800257E4(m1, 0.0f, 270.0f, 0.0f);
+        pos.x = group * 70 + 42;
+        pos.y = work->unk_04 = 150.0f;
+        func_8001DD24(0, CZoom, (Vec3f*)&pos, &out);
+        func_80025798(m0, out.x, out.y, -180.0f);
+        func_80025798(m1, out.x, out.y, -180.0f);
+        D_8010F524_MinigameInstructions[group] = 1.0f;
+        D_8010F530_MinigameInstructions[group] = 0.0f;
+        D_8010F52C_MinigameInstructions = func_80025D40(D_8010F50C_MinigameInstructions[group].unk_02);
+    }
+    /* retail indexes the model pairs as an s16 array here (group 1 reads pair 0's second model) */
+    work->unk_2C = D_800F2B7C[work->unk_4E].unk_24 - D_800F2B7C[(&D_8010F50C_MinigameInstructions[0].unk_00)[group]].unk_24;
+    work->unk_30 = D_800F2B7C[work->unk_4E].unk_2C - D_800F2B7C[(&D_8010F50C_MinigameInstructions[0].unk_00)[group]].unk_2C;
+    for (i = 0; i < 4; i++) {
+        if (work->unk_38 != i && group == GwPlayer[i].group) {
+            break;
+        }
+    }
+    work->unk_B6 = i;
+    D_8010F76A_MinigameInstructions[group]++;
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010BF20_MinigameInstructions);
+#endif
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010C3A4_MinigameInstructions);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010C8CC_MinigameInstructions);
