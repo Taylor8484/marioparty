@@ -236,8 +236,59 @@ f32 func_800FB38C_KeyPaWay(KPWBodyWork* work, f32 angle) {
     work->unk_3C = cur;
     return cur;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FB498_KeyPaWay);
+u16 func_800FB498_KeyPaWay(omObjData* obj, f32 x, f32 z, f32* out) {
+    KPWBodyWork* work = KPW_BODY(obj);
+    KPWEnemyExt* ext = work->unk_68.enemy;
+    f32 r = work->unk_48;
+    omObjData* p;
+    f32 r2;
+    f32 dist;
+    f32 lim;
+    s32 i;
 
+    if (D_800FF57C_KeyPaWay == NULL) {
+        p = D_800FF590_KeyPaWay;
+        r2 = KPW_BODY(p)->unk_48;
+        dist = func_800B1750(SQ(x - p->trans.x) + SQ(obj->trans.y - p->trans.y) + SQ(z - p->trans.z));
+        if (dist < func_800B1750((r + r2) * (r + r2))) {
+            return 3;
+        }
+    }
+    if ((u16)func_800FE134_KeyPaWay(x, obj->trans.y, z, r) == 1) {
+        dist = func_800B1750(SQ(x - 0.0f) + SQ(z - -850.0f));
+        *out = func_800B1750((r + 115.0f) * (r + 115.0f)) - dist;
+        return 2;
+    }
+    if (x < -655.0f) {
+        obj->trans.x += -655.0f - x;
+        return 4;
+    } else if (x > 655.0f) {
+        obj->trans.x += 655.0f - x;
+        return 4;
+    }
+    if (z < -955.0f) {
+        obj->trans.z += -955.0f - z;
+        return 4;
+    } else if (z > 955.0f) {
+        obj->trans.z += 955.0f - z;
+        return 4;
+    }
+    r = ext->unk_24;
+    for (i = 0; i < 5; i++) {
+        if (D_800FF548_KeyPaWay[i] == obj) {
+            continue;
+        }
+        p = D_800FF548_KeyPaWay[i];
+        r2 = KPW_BODY(p)->unk_68.enemy->unk_24;
+        dist = func_800B1750(SQ(x - p->trans.x) + SQ(z - p->trans.z));
+        lim = func_800B1750((r + r2) * (r + r2));
+        if (dist < lim) {
+            *out = lim - dist;
+            return 1;
+        }
+    }
+    return 0;
+}
 s32 func_800FB748_KeyPaWay(omObjData* obj, omObjData* other) {
     KPWPlayerWork* work = KPW_PLAYER(obj);
     KPWPlayerExt* ext = work->unk_E4;
