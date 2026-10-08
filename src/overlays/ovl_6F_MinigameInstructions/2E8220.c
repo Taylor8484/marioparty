@@ -1,5 +1,7 @@
 #include "ovl6f.h"
 
+
+
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_80103560_MinigameInstructions);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_80103788_MinigameInstructions);
@@ -369,8 +371,149 @@ void func_801075B8_MinigameInstructions(Ovl6FPlayerWork* work) {
         HuPrcVSleep();
     }
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_801077C8_MinigameInstructions);
+extern u16 ContBtn[];  /* engine/pad.h */
+extern s8 ContStkY[];
 
+void func_801077C8_MinigameInstructions(Ovl6FPlayerWork* work) {
+    f32 sx;
+    f32 sy;
+    f32 mag;
+    f32 angle;
+    f32 step;
+    f32 amp;
+    f32 y;
+    s32 flags;
+    s16 motion;
+    s16 prev;
+    s16 frame;
+    s32 pressed;
+    s16 port;
+
+    port = GwPlayer[work->unk_38].port;
+    sx = (s8)(ContStkX[port] / 10);
+    sy = (s8)(ContStkY[port] / 10);
+    mag = sx * sx + sy * sy;
+    flags = D_8010E970_MinigameInstructions[(s16)D_8010F766_MinigameInstructions].flags;
+    motion = 0;
+    if (mag != 0.0f && (flags & 3)) {
+        func_800257E4(work->unk_4E, 0.0f, func_800B0CD8(sx, -sy), 0.0f);
+    }
+    prev = work->unk_3C;
+    if ((ContBtnTrg[port] & 0x8000) && (flags & 4)) {
+        work->unk_3C = 3;
+        func_80025C20(work->unk_4E, func_80025E48(work->unk_56), 0, 8, 0);
+        func_800FA300_MinigameInstructions(0x127, work);
+        if (work->unk_3E == 0) {
+            func_800258EC(work->unk_70, 0x4000, 0x4000);
+        }
+        angle = 0.0f;
+        step = 10.0f;
+        amp = 100.0f;
+        y = func_800AEAC0(angle) * amp;
+        pressed = 0;
+        do {
+            angle += step;
+            if (angle == 40.0f && !(ContBtn[port] & 0x8000)) {
+                angle = 90.0f;
+                amp = y;
+            }
+            if (((ContBtnTrg[port] >> 14) & 1 & (pressed ^ 1)) && work->unk_3E == 0) {
+                func_800FA300_MinigameInstructions(0x13C, work);
+                if (flags & 0x20) {
+                    func_80025BB8(work->unk_4E, work->unk_5E);
+                } else {
+                    func_80025BB8(work->unk_4E, work->unk_5C);
+                }
+                if (work->unk_3E == 0) {
+                    while (1) {
+                        HuPrcVSleep();
+                        frame = func_80025D18(work->unk_4E);
+                        if (frame == 28) {
+                            func_800258EC(work->unk_70, 0x4000, 0);
+                        }
+                        if (frame == func_80025D40(work->unk_4E)) break;
+                    }
+                } else {
+                    func_800FB4DC_MinigameInstructions(work->unk_4E);
+                }
+                step = 20.0f;
+                angle = 90.0f;
+                amp = y;
+                pressed = 1;
+            }
+            if (angle > 180.0f) {
+                angle = 180.0f;
+            }
+            y = func_800AEAC0(angle) * amp;
+            func_80025798(work->unk_4E, work->unk_0C, y + work->unk_10, work->unk_14);
+            HuPrcVSleep();
+        } while (angle < 180.0f);
+        func_800FA300_MinigameInstructions(0x12E, work);
+        func_80025C20(work->unk_4E, func_80025E48(work->unk_50), 0, 8, 2);
+        mag = 0.0f;
+    }
+    if (mag == 0.0f) {
+        work->unk_3C = 0;
+        motion = func_80025E48(work->unk_50);
+        if (work->unk_3E == 0) {
+            frame = func_80025D18(work->unk_4E);
+            if (frame == 12 || frame == 34 || frame == 56) {
+                func_800FA2C0_MinigameInstructions(0x30C, work);
+            }
+        }
+    } else if (mag <= 16.0f && (flags & 1)) {
+        work->unk_3C = 1;
+        motion = func_80025E48(work->unk_54);
+        func_800FB590_MinigameInstructions(work, motion);
+        if (work->unk_3E == 0) {
+            frame = func_80025D18(work->unk_4E);
+            if (frame == 12 || frame == 45) {
+                func_800FA2C0_MinigameInstructions(0x30C, work);
+            }
+        }
+    } else if (mag > 16.0f && (flags & 2)) {
+        work->unk_3C = 2;
+        motion = func_80025E48(work->unk_52);
+        func_800FB60C_MinigameInstructions(work, motion);
+        if (work->unk_3E == 0) {
+            frame = func_80025D18(work->unk_4E);
+            if (frame == 12) {
+                func_800FA2C0_MinigameInstructions(0x30C, work);
+            }
+        }
+    }
+    if (ContBtnTrg[port] & 0x4000) {
+        func_800FA300_MinigameInstructions(0x135, work);
+        func_80025BB8(work->unk_4E, work->unk_5C);
+        D_800F2B7C[work->unk_4E].unk_0C = -1;
+        if (work->unk_3E == 0) {
+            func_800258EC(work->unk_70, 0x4000, 0x4000);
+            do {
+                HuPrcVSleep();
+                frame = func_80025D18(work->unk_4E);
+                if (frame == 28) {
+                    func_800258EC(work->unk_70, 0x4000, 0);
+                }
+            } while (frame != func_80025D40(work->unk_4E));
+        } else {
+            func_800FB4DC_MinigameInstructions(work->unk_4E);
+        }
+        work->unk_3C = 0;
+        prev = -1;
+        motion = func_80025E48(work->unk_50);
+        if (work->unk_3E == 0) {
+            func_80025C20(work->unk_4E, motion, 0, 8, 2);
+            HuPrcSleep(8);
+            func_800258EC(work->unk_70, 0x4000, 0x4000);
+        }
+    }
+    if (prev != work->unk_3C) {
+        func_80025C20(work->unk_4E, motion, 0, 8, 2);
+    }
+    if (D_800F2B7C[work->unk_4E].unk_0C == -1 && work->unk_3E == 0) {
+        func_800258EC(work->unk_70, 0x4000, 0x4000);
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_80107F4C_MinigameInstructions);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_801080E4_MinigameInstructions);
