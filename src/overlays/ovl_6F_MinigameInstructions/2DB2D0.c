@@ -106,8 +106,70 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F7398_MinigameInstructions);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F785C_MinigameInstructions);
+void func_800F785C_MinigameInstructions(void) {
+    s16 mot[3];
+    Vec2f in;
+    Vec3f out;
+    u16 model;
+    s16 i;
+    f32 t;
+    f32 rot;
+    unk2C0C0Struct50* part;
 
+    model = LoadFormFile(0x7000A, 0x2B9);
+    mot[0] = func_80023FC8(model);
+    func_800258EC(mot[0], 4, 4);
+    mot[1] = LoadFormFile(0x70008, 0x19);
+    mot[2] = LoadFormFile(0x70009, 0x19);
+    func_80025BB8(model, mot[2]);
+    func_80025EB4(model, 2, 2);
+    func_80025830(model, 0.0f, 0.0f, 0.0f);
+    D_8010E950_MinigameInstructions = 0;
+    HuPrcSleep(3);
+    PlaySound(0x466);
+    HuPrcSleep(2);
+    PlaySound(0x50);
+    for (i = 0; i < 15; i++) {
+        HuPrcVSleep();
+        in.x = 64.0f;
+        in.y = 224.0f;
+        func_8001DD24(0, CZoom, (Vec3f*) &in, &out);
+        t = i / 15.0f;
+        out.x = t * out.x;
+        out.y = t * out.y;
+        func_80025798(model, out.x, func_800AEAC0(t * 180.0f) * 50.0f + out.y, 0.0f);
+        t *= 0.8f;
+        func_80025830(model, t, t, t);
+    }
+    func_80025BB8(model, mot[1]);
+    for (i = 0; i < 11; i++) {
+        HuPrcVSleep();
+        in.x = 64.0f;
+        in.y = 224.0f;
+        func_8001DD24(0, CZoom, (Vec3f*) &in, &out);
+        func_80025798(model, out.x, func_800AEAC0((i / 10.0f) * 180.0f) * 50.0f + out.y, 0.0f);
+    }
+    func_80025BB8(model, mot[0]);
+    func_80025EB4(model, 2, 2);
+    D_8010F4E8_MinigameInstructions++;
+    while (D_8010F4E8_MinigameInstructions < 2) {
+        HuPrcVSleep();
+    }
+    rot = 0.0f;
+    do {
+        HuPrcVSleep();
+        rot += 30.0f;
+        func_800257E4(model, 10.0f, -rot, 0.0f);
+    } while (rot < 360.0);
+    part = func_80026A0C(model, "c100_1-atama");
+    part->unk_44.x = -5.0f;
+    part->unk_44.y = 5.0f;
+    D_8010E950_MinigameInstructions = 1;
+    HuPrcSleep(3);
+    while (1) {
+        HuPrcVSleep();
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F7C58_MinigameInstructions);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F84B0_MinigameInstructions);
