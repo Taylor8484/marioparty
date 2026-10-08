@@ -1030,7 +1030,165 @@ void func_800F9620_KeyPaWay(omObjData* arg0) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F9A90_KeyPaWay);
+void func_800F9A90_KeyPaWay(omObjData* arg0) {
+    KPWPlayerWork* work;
+    KPWPlayerExt* ext;
+    f32 t;
+    u8 port;
+    u8 stkX;
+    u8 stkY;
+    u16 btnTrg;
+    u16 btn;
+    s16 i;
+    s16 n;
+
+    work = KPW_PLAYER(arg0);
+    port = work->unk_56;
+    stkX = ContStkX[port];
+    stkY = ContStkY[port];
+    btnTrg = ContBtnTrg[port];
+    btn = ContBtn[port];
+    ContBtnTrg[port] = ContBtn[port] = ContStkX[port] = ContStkY[port] = 0;
+    if (D_800FF578_KeyPaWay == 4) {
+        D_800FF578_KeyPaWay = 5;
+    }
+    ext = work->unk_E4;
+    if (arg0 == D_800FF54C_KeyPaWay && D_800FF578_KeyPaWay != 15) {
+        if (D_800FF578_KeyPaWay == 6) {
+            if (ext->unk_24 != 0) {
+                func_80005A28(arg0);
+                work->unk_3C += ext->unk_08;
+                omSetTra(arg0, arg0->trans.x + ext->unk_0C, 200.0f, arg0->trans.z + ext->unk_10);
+                ext->unk_24--;
+                goto restore;
+            }
+            for (i = 0; i < 5; i++) {
+            }
+            if (i == 5) {
+                D_800FF578_KeyPaWay = 7;
+                work->unk_3C = 180.0f;
+                D_800FF378_KeyPaWay = 20;
+                func_800FE744_KeyPaWay(20, 0.0f, 250.0f, 800.0f, 0.0f, 250.0f, -700.0f);
+            }
+            func_80005A28(arg0);
+        } else if (D_800FF578_KeyPaWay == 5) {
+            D_800FF37A_KeyPaWay++;
+            func_80005A28(arg0);
+            omSetTra(arg0, D_800FF528_KeyPaWay, 200.0f, D_800FF52C_KeyPaWay);
+        } else if (D_800FF578_KeyPaWay == 7) {
+            if (--D_800FF378_KeyPaWay == 0) {
+                D_800FF578_KeyPaWay = 8;
+                func_8000A6F4(arg0);
+                func_80025BB8(arg0->model[0], arg0->motion[35] & 0x3FFF);
+            }
+        } else if (D_800FF578_KeyPaWay == 8) {
+            t = func_80025D18(arg0->model[0]);
+            if (func_80025D40(arg0->model[0]) <= t) {
+                D_800FF578_KeyPaWay = 9;
+                for (i = 0; i < 5; i++) {
+                    func_80025BB8(D_800FF548_KeyPaWay[i]->model[0], D_800FF548_KeyPaWay[i]->motion[2]);
+                }
+                func_800184BC(arg0, 0);
+            } else if (func_80025D18(arg0->model[0]) > 50.0f && ext->unk_14 == 0) {
+                PlaySound(0x320);
+                ext->unk_14 = 1;
+                func_8000A534(arg0, 0.0f);
+                omSetTra(D_800FF590_KeyPaWay, arg0->trans.x, arg0->trans.y + 90.0f, arg0->trans.z - 30.0f);
+                omSetRot(D_800FF590_KeyPaWay, 270.0f, 0.0f, 0.0f);
+                KPW_BODY(D_800FF590_KeyPaWay)->unk_50 &= 0xFFDF;
+                func_80009E20(arg0);
+            }
+            func_8009ECB0(D_800F2B7C[arg0->model[0]].unk7C, 0.0f, work->unk_3C, 0.0f);
+        } else {
+            func_80005A28(arg0);
+            if (ext->unk_26 == 0) {
+                func_800258EC(arg0->model[1], 4, 4);
+            }
+        }
+    } else if (D_800FF578_KeyPaWay == 5 || D_800FF578_KeyPaWay == 14) {
+        if ((D_800FF578_KeyPaWay == 5 && arg0->trans.y > 0.0f) ||
+            (D_800FF578_KeyPaWay == 14 && work->unk_38 != 1000.0f)) {
+            if (arg0->trans.x <= 0.0f) {
+                if (arg0->trans.x <= -550.0f) {
+                    ContStkX[port] = 80;
+                } else {
+                    ContStkX[port] = -80;
+                }
+            } else if (arg0->trans.x >= 550.0f) {
+                ContStkX[port] = -80;
+            } else {
+                ContStkX[port] = 80;
+            }
+                        if (arg0->trans.z <= 0.0f) {
+                if (arg0->trans.z <= -750.0f) {
+                    ContStkY[port] = -80;
+                } else {
+                    ContStkY[port] = 80;
+                }
+            } else if (arg0->trans.z >= 750.0f) {
+                ContStkY[port] = 80;
+            } else {
+                ContStkY[port] = -80;
+            }
+                        ContBtn[port] |= 0x8000;
+            ContBtnTrg[port] |= 0x8000;
+        } else {
+            func_800F6F10_KeyPaWay(arg0, port);
+        }
+        func_80005A28(arg0);
+        if (D_800FF578_KeyPaWay == 14 && work->unk_58 == 0) {
+            D_800FF37A_KeyPaWay++;
+        }
+    } else {
+        if (D_800FF578_KeyPaWay == 6 && ext->unk_24 != 0) {
+            work->unk_3C += ext->unk_08;
+            if (--ext->unk_24 == 0) {
+                func_800184BC(arg0, 0);
+            }
+        }
+        func_80005A28(arg0);
+        if (ext->unk_26 == 0) {
+            func_800258EC(arg0->model[1], 4, 4);
+        }
+    }
+restore:
+    ContStkX[port] = stkX;
+    ContStkY[port] = stkY;
+    ContBtnTrg[port] = btnTrg;
+    ContBtn[port] = btn;
+    if ((D_800FF578_KeyPaWay == 5 && arg0 == D_800FF54C_KeyPaWay) || D_800FF37A_KeyPaWay == 150) {
+        n = 0;
+        for (i = 0; i < 4; i++) {
+            if (D_800FF594_KeyPaWay[i] == D_800FF54C_KeyPaWay) {
+                n++;
+            } else if (D_800FF594_KeyPaWay[i]->trans.y <= 0.0f) {
+                n++;
+            }
+        }
+        if (n == 4 || D_800FF37A_KeyPaWay == 150) {
+            D_800ED430 = 2;
+            if (D_800FF578_KeyPaWay != 14) {
+                for (i = 0; i < 4; i++) {
+                    work = KPW_PLAYER(D_800FF594_KeyPaWay[i]);
+                    work->unk_AE = 0;
+                    work->unk_9C = 0;
+                    work->unk_50 &= 0xFFF8;
+                    omSetSca(D_800FF594_KeyPaWay[i], 1.0f, 1.0f, 1.0f);
+                    ext = work->unk_E4;
+                    func_80009E20(D_800FF594_KeyPaWay[i]);
+                    func_800185A4(D_800FF594_KeyPaWay[i], 0x24);
+                    work->unk_40 = 0.0f;
+                    ext->unk_08 = (180.0 - fabs(work->unk_3C)) / 5.0;
+                    if (work->unk_3C < 0.0f) {
+                        ext->unk_08 = -ext->unk_08;
+                    }
+                    ext->unk_24 = 5;
+                }
+                D_800FF578_KeyPaWay = 6;
+            }
+        }
+    }
+}
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FA3B0_KeyPaWay);
 
