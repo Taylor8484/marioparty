@@ -561,7 +561,7 @@ void func_8010BB04_MinigameInstructions(Ovl6FPlayerWork* work) {
             break;
     }
 }
-// register allocation: group copy takes s5, frame 0x48+pad vs 0x60 (masked 48)
+// register allocation: a copy of group takes s5 (one extra saved register), store/move order (masked 20)
 #ifdef NON_MATCHING
 void func_8010BF20_MinigameInstructions(Ovl6FPlayerWork* work) {
     Vec2f pos;
