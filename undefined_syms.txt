@@ -248,3 +248,12 @@ D_8010E4FC_MinigameInstructions = D_8010E4F0_MinigameInstructions + 0xC;
 D_8010E500_MinigameInstructions = D_8010E4F0_MinigameInstructions + 0x10;
 D_8010E980_MinigameInstructions = D_8010E970_MinigameInstructions + 0x10;
 D_8010EF14_MinigameInstructions = D_8010EF10_MinigameInstructions + 0x4;
+/* ovl_2C KeyPaWay: labels splat split out of C .data objects (1F62C0) */
+D_800FF274_KeyPaWay = D_800FF270_KeyPaWay + 0x4;
+D_800FF29C_KeyPaWay = D_800FF298_KeyPaWay + 0x4;
+D_800FF2A0_KeyPaWay = D_800FF298_KeyPaWay + 0x8;
+D_800FF314_KeyPaWay = D_800FF310_KeyPaWay + 0x4;
+D_800FF318_KeyPaWay = D_800FF310_KeyPaWay + 0x8;
+D_800FF31C_KeyPaWay = D_800FF310_KeyPaWay + 0xC;
+D_800FF330_KeyPaWay = D_800FF310_KeyPaWay + 0x20;
+D_800FF376_KeyPaWay = D_800FF374_KeyPaWay + 0x2;

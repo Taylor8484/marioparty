@@ -130,6 +130,8 @@ build/src/overlays/ovl_6F_MinigameInstructions/2DB2D0.c.o: CFLAGS = -G0 -mips3 -
 # ovl_6F 2DF200.c and 2E8220.c also have the mul fix on: nop between back-to-back mul.s (func_800FADF4, func_801077C8)
 build/src/overlays/ovl_6F_MinigameInstructions/2DF200.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 build/src/overlays/ovl_6F_MinigameInstructions/2E8220.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# ovl_2C 1F62C0.c (Key-pa-Way) also has the mul fix on: nop between dependent mul.s (func_800FDA7C)
+build/src/overlays/ovl_2C_KeyPaWay/1F62C0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 
 #build/src/libultra/os/%.o: CFLAGS := -O2 $(CFLAGSCOMMON)
 #build/src/libultra/libc/%.o: CFLAGS := -O2 $(CFLAGSCOMMON)
@@ -254,7 +256,8 @@ $(BUILD_DIR)/src/%.c.o: src/%.c
 # ovl_61 29B410.c too (func_800F7E50, func_800FB670: mul.s right after a call's return).
 # ovl_62 2A2500.c too (func_800F6854: mul.s right after sinf's return).
 # ovl_6F 2DB2D0.c too (func_800F92D4: mul.s right after sinf/cosf's return); 2DF200.c and 2E8220.c too (func_800FADF4, func_80104988).
-$(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o $(BUILD_DIR)/src/1B800.c.o $(BUILD_DIR)/src/3DEB0.c.o $(BUILD_DIR)/src/59E80.c.o $(BUILD_DIR)/src/overlays/ovl_61_OpeningScene/29B410.c.o $(BUILD_DIR)/src/overlays/ovl_62_BoardIntro/2A2500.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2DB2D0.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2DF200.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2E8220.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
+# ovl_2C 1F62C0.c too (func_800F7840: mul.s right after func_800AEAC0's return).
+$(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o $(BUILD_DIR)/src/1B800.c.o $(BUILD_DIR)/src/3DEB0.c.o $(BUILD_DIR)/src/59E80.c.o $(BUILD_DIR)/src/overlays/ovl_61_OpeningScene/29B410.c.o $(BUILD_DIR)/src/overlays/ovl_62_BoardIntro/2A2500.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2DB2D0.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2DF200.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2E8220.c.o $(BUILD_DIR)/src/overlays/ovl_2C_KeyPaWay/1F62C0.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
 	@$(PRINT)$(GREEN)Compiling C file: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
 	@mkdir -p $(shell dirname $@)
 	@$(CC_HOST) $(CFLAGS_CHECK) $(CPPFLAGS) -MMD -MP -MT $@ -MF $@.d $<
