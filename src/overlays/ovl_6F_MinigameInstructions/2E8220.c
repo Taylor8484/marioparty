@@ -1095,4 +1095,79 @@ void func_8010DF34_MinigameInstructions(Ovl6FPlayerWork* work) {
         func_800FA2C0_MinigameInstructions(0x361, work);
     }
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010E090_MinigameInstructions);
+void func_8010E090_MinigameInstructions(s16 idx) {
+    s16 chars[4];
+    Ovl6FTeamEntry* entry;
+    s16 noTeam;
+    s16 i;
+    s16 n;
+    s16 tmp;
+    s16 a;
+    s16 b;
+
+    ClearBoardFeatureFlag(0x2F);
+    noTeam = (s8)(u8)GwQuest.charNoTeam;
+    entry = &D_8010EF70_MinigameInstructions[idx];
+    GwPlayer[0].group = entry->group;
+    if (idx == 0x25) {
+        func_800593AC(_CheckFlag(0x2D) ? 8 : 6);
+    }
+    for (i = 0; i < 4; i++) {
+        GwPlayer[i].cpu_difficulty = entry->unk_03;
+    }
+    n = 0;
+    for (i = 0; i < 6; i++) {
+        if (((i == GwPlayer[0].character) | (i == noTeam)) == 0) {
+            chars[n++] = i;
+        }
+    }
+    for (i = 0; i < 20; i++) {
+        a = rand8() & 3;
+        b = rand8() & 3;
+        tmp = chars[a];
+        chars[a] = chars[b];
+        chars[b] = tmp;
+    }
+    for (i = 1; i < 4; i++) {
+        GwPlayer[i].flags |= 1;
+        GwPlayer[i].coins = 60;
+    }
+    if (entry->unk_01 == -1) {
+        if (D_8010F760_MinigameInstructions == 2) {
+            GwPlayer[1].group = 0;
+            GwPlayer[2].group = GwPlayer[3].group = 1;
+        } else if (D_8010F760_MinigameInstructions == 3) {
+            GwPlayer[1].group = GwPlayer[2].group = GwPlayer[3].group = 1;
+        } else {
+            for (i = 1; i < 4; i++) {
+                GwPlayer[i].group = i;
+            }
+        }
+        for (i = 1; i < 4; i++) {
+            GwPlayer[i].character = chars[i];
+        }
+        return;
+    }
+    GwPlayer[1].cpu_difficulty = entry->unk_02;
+    GwPlayer[1].character = noTeam;
+    if (D_8010F760_MinigameInstructions == 2) {
+        if (idx == 0x31) {
+            GwPlayer[0].group = 1;
+            GwPlayer[1].group = 0;
+            GwPlayer[2].group = 2;
+            GwPlayer[3].group = 3;
+        } else {
+            GwPlayer[1].group = entry->unk_01;
+            GwPlayer[2].group = GwPlayer[3].group = 1;
+        }
+    } else if (D_8010F760_MinigameInstructions == 3) {
+        GwPlayer[1].group = GwPlayer[2].group = GwPlayer[3].group = 1;
+    } else {
+        for (i = 1; i < 4; i++) {
+            GwPlayer[i].group = i;
+        }
+    }
+    for (i = 2; i < 4; i++) {
+        GwPlayer[i].character = chars[i];
+    }
+}
