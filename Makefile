@@ -187,6 +187,7 @@ build/src/A19A0.c.o: OPTFLAGS = -O0
 build/src/A1A80.c.o: OPTFLAGS = -O0
 build/src/A1B00.c.o: OPTFLAGS = -O0
 build/src/A1E50.c.o: OPTFLAGS = -O0
+build/src/A4CD0.c.o: OPTFLAGS = -O0
 build/src/ABCD0.c.o: OPTFLAGS = -O0
 build/src/ACA90.c.o: OPTFLAGS = -O0
 build/src/ACCB0.c.o: OPTFLAGS = -O0

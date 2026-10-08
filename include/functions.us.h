@@ -245,7 +245,7 @@ void LoadStringIntoWindow(s16 win_id, void* string_id, s16 a, s16 b);
 void func_800427D4(void* );
 void func_800A0D50(Vec3f* ptr, Vec3f* ptr2);
 void* func_80042728(Object* ptr, s16 num);
-void func_800A40D0(void* ptr, f32 unk);
+void func_800A40D0(Matrix4f, f32);
 void func_8004CDCC(Object* unk);
 void func_8004F2EC(void);
 void func_8004F5F0(void);
@@ -282,7 +282,7 @@ void func_8004F044(Object*);
 void func_8004F4D4(void*, s32, s32);
 s16 func_80060468(s16, u8);
 void MBMotionSet(Object*, s16, u16);
-void func_800A40D0(void*, f32);
+void func_800A40D0(Matrix4f, f32);
 u16 MBMotionCheck(Object*);
 omObjData* func_8004E3E0(s32, Vec3f*, s32, void*); //arg2 should be Vec3f*
 void func_80055960(s32, s32);
