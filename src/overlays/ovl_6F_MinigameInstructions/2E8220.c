@@ -2907,3 +2907,18 @@ void func_8010E090_MinigameInstructions(s16 idx) {
         GwPlayer[i].character = chars[i];
     }
 }
+
+/* .data */
+s32 D_8010EEE0_MinigameInstructions[6] = { 0x390000, 0x390001, 0x390002, 0x390003, 0x390004, 0x390005 };
+u8* D_8010EEF8_MinigameInstructions[6] = { (u8*)D_8010F3F4_MinigameInstructions, (u8*)D_8010F3E8_MinigameInstructions, (u8*)D_8010F3DC_MinigameInstructions, (u8*)D_8010F3D0_MinigameInstructions, (u8*)D_8010F3C4_MinigameInstructions, (u8*)D_8010F3B8_MinigameInstructions };
+s32 D_8010EF10_MinigameInstructions[6][2] = { { 0x30000C, 0x300012 }, { 0x30000D, 0x300017 }, { 0x30000E, 0x30001C }, { 0x30000F, 0x300021 }, { 0x300010, 0x300026 }, { 0x300011, 0x30002B } };
+u16 D_8010EF40_MinigameInstructions[4] = { 0x28, 0x3C, 0x6E, 0x7D };
+s32 D_8010EF48_MinigameInstructions[4] = { 0x3A000B, 0x3A0002, 0x3A000A, 0x3A0005 };
+u16 D_8010EF58_MinigameInstructions[4] = { 0x10, 0x44, 0x56, 0x8A };
+u8 D_8010EF60_MinigameInstructions = 0;
+/* zero filler to 0x8010EF70 (retail pads D_8010EF60 to 16 bytes): scalars to the word, then words */
+u8 D_8010EF61_MinigameInstructions = 0;
+u8 D_8010EF62_MinigameInstructions = 0;
+u8 D_8010EF63_MinigameInstructions = 0;
+s32 D_8010EF64_MinigameInstructions[3] = { 0, 0, 0 };
+Ovl6FTeamEntry D_8010EF70_MinigameInstructions[56] = { { 0, -1, -1, 0 }, { 255, -1, -1, 0 }, { 0, -1, -1, 0 }, { 0, -1, -1, 3 }, { 0, -1, -1, 1 }, { 0, -1, -1, 0 }, { 0, -1, -1, 0 }, { 0, -1, -1, 3 }, { 0, -1, -1, 0 }, { 0, -1, -1, 1 }, { 0, -1, -1, 0 }, { 0, -1, -1, 0 }, { 0, -1, -1, 0 }, { 0, -1, -1, 1 }, { 0, -1, -1, 2 }, { 0, -1, -1, 0 }, { 0, -1, -1, 0 }, { 0, -1, -1, 1 }, { 0, -1, -1, 0 }, { 0, -1, -1, 2 }, { 0, -1, -1, 0 }, { 0, -1, -1, 0 }, { 0, -1, -1, 1 }, { 0, -1, -1, 1 }, { 0, -1, -1, 0 }, { 0, -1, -1, 3 }, { 0, -1, -1, 3 }, { 0, -1, -1, 0 }, { 0, -1, -1, 1 }, { 0, 0, 3, 3 }, { 0, -1, -1, 3 }, { 0, -1, -1, 1 }, { 0, -1, -1, 0 }, { 0, -1, -1, 2 }, { 0, -1, -1, 3 }, { 0, -1, -1, 3 }, { 0, -1, -1, 0 }, { 0, -1, -1, 3 }, { 0, -1, -1, 1 }, { 0, 0, 2, 3 }, { 0, -1, -1, 3 }, { 0, -1, -1, 0 }, { 0, 0, 2, 2 }, { 0, -1, -1, 1 }, { 0, 1, 1, 0 }, { 0, 1, 1, 0 }, { 0, -1, -1, 3 }, { 0, 0, 1, 1 }, { 0, -1, -1, 0 }, { 0, 1, 1, 1 }, { 0, -1, -1, 1 }, { 0, -1, -1, 0 }, { 0, -1, -1, 1 }, { 0, -1, -1, 0 }, { 0, -1, -1, 1 }, { 0, -1, -1, 1 } };

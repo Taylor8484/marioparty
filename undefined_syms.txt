@@ -242,5 +242,9 @@ D_80101ADE_AdventureModeSetup = D_80101ADC_AdventureModeSetup + 0x2;
 D_800FCD76_BoardIntro = D_800FCD74_BoardIntro + 0x2;
 D_800FCD7A_BoardIntro = D_800FCD78_BoardIntro + 0x2;
 D_800FCD9C_BoardIntro = D_800FCD98_BoardIntro + 0x4;
-/* ovl_6F MinigameInstructions: D_8010EF10 has no splat label (2E8220 .data; retail addresses it as D_8010EF14 - 4) */
-D_8010EF10_MinigameInstructions = D_8010EF14_MinigameInstructions - 0x4;
+/* ovl_6F MinigameInstructions: labels splat split out of C .data objects, named by asm fallbacks */
+D_8010E4F8_MinigameInstructions = D_8010E4F0_MinigameInstructions + 0x8;
+D_8010E4FC_MinigameInstructions = D_8010E4F0_MinigameInstructions + 0xC;
+D_8010E500_MinigameInstructions = D_8010E4F0_MinigameInstructions + 0x10;
+D_8010E980_MinigameInstructions = D_8010E970_MinigameInstructions + 0x10;
+D_8010EF14_MinigameInstructions = D_8010EF10_MinigameInstructions + 0x4;

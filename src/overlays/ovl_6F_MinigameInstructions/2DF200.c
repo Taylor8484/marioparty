@@ -2407,3 +2407,75 @@ const char D_8010F338_MinigameInstructions[] __attribute__((section(".rodata")))
 
 const char D_8010F34C_MinigameInstructions[] __attribute__((section(".rodata"))) = "karada_2_1_1_1";
 const char D_8010F35C_MinigameInstructions[] __attribute__((section(".rodata"))) = "";
+
+
+/* .data */
+unk1EA70Struct1C* D_8010E960_MinigameInstructions = NULL;
+s16 D_8010E964_MinigameInstructions[6] = { 1, 2, 6, 3, 4, 5 };
+Ovl6FMinigameFuncs D_8010E970_MinigameInstructions[56] = {
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 0xF },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 7 },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 7 },
+    { { func_800FB688_MinigameInstructions, func_800FB7D8_MinigameInstructions, func_800FBBA8_MinigameInstructions, func_800FBA14_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_800FC008_MinigameInstructions, func_800FC190_MinigameInstructions, func_800FC558_MinigameInstructions, func_800FC3B0_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 0x3F },
+    { { func_80105984_MinigameInstructions, func_80105B24_MinigameInstructions, func_80105E64_MinigameInstructions, func_80105D08_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_800FFA08_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FFB88_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_80105984_MinigameInstructions, func_80105B24_MinigameInstructions, func_80105E64_MinigameInstructions, func_80105D08_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_80109BFC_MinigameInstructions, func_80109DB0_MinigameInstructions, func_8010A0D4_MinigameInstructions, func_80109F68_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 0x3F },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 0x1F },
+    { { func_800FF23C_MinigameInstructions, func_800FF3CC_MinigameInstructions, func_800FF884_MinigameInstructions, func_800FF68C_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_800FFCD0_MinigameInstructions, func_800FFECC_MinigameInstructions, func_801001B0_MinigameInstructions, func_80100090_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_800FC9F8_MinigameInstructions, func_800FCB50_MinigameInstructions, func_800FCD20_MinigameInstructions, func_800FCC54_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 7 },
+    { { func_801001D0_MinigameInstructions, func_801004EC_MinigameInstructions, func_801009B4_MinigameInstructions, func_8010078C_MinigameInstructions }, 5 },
+    { { func_800FD954_MinigameInstructions, func_800FDBF8_MinigameInstructions, func_800FE0E8_MinigameInstructions, func_800FDEA4_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 0xF },
+    { { func_800FCED0_MinigameInstructions, func_800FD130_MinigameInstructions, func_800FD674_MinigameInstructions, func_800FD408_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 7 },
+    { { func_80102048_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_801024FC_MinigameInstructions, func_80102334_MinigameInstructions }, 0x17 },
+    { { func_801064A4_MinigameInstructions, func_801066C4_MinigameInstructions, func_80106B2C_MinigameInstructions, func_80106948_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 0x3F },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 7 },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 7 },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 0xF },
+    { { func_800FE924_MinigameInstructions, func_800FEB5C_MinigameInstructions, func_800FF010_MinigameInstructions, func_800FEE08_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_801027CC_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 0x17 },
+    { { func_80108624_MinigameInstructions, func_80108A90_MinigameInstructions, func_80109600_MinigameInstructions, func_80108FE4_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_800FE924_MinigameInstructions, func_800FEB5C_MinigameInstructions, func_800FF010_MinigameInstructions, func_800FEE08_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_801040AC_MinigameInstructions, func_80104320_MinigameInstructions, func_80104988_MinigameInstructions, func_80104688_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 0x57 },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 7 },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 7 },
+    { { func_801029BC_MinigameInstructions, func_80102C9C_MinigameInstructions, func_801031BC_MinigameInstructions, func_80102FC4_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_800FE924_MinigameInstructions, func_800FEB5C_MinigameInstructions, func_800FF010_MinigameInstructions, func_800FEE08_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_80105984_MinigameInstructions, func_80105B24_MinigameInstructions, func_80105E64_MinigameInstructions, func_80105D08_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_8010AEA0_MinigameInstructions, func_8010B44C_MinigameInstructions, func_8010BB04_MinigameInstructions, func_8010B7EC_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_8010A43C_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_8010A5D4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_80100F6C_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_80101304_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_80107F4C_MinigameInstructions, func_801080E4_MinigameInstructions, func_801083DC_MinigameInstructions, func_80108280_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_80107088_MinigameInstructions, func_8010732C_MinigameInstructions, func_801077C8_MinigameInstructions, func_801075B8_MinigameInstructions }, 0x17 },
+    { { func_8010143C_MinigameInstructions, func_8010165C_MinigameInstructions, func_80101A90_MinigameInstructions, func_801018BC_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_80103560_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_80103788_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 7 },
+    { { func_80103E48_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 0x37 },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 4 },
+    { { func_8010BF20_MinigameInstructions, func_8010C3A4_MinigameInstructions, func_8010CC54_MinigameInstructions, func_8010C8CC_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_8010A75C_MinigameInstructions, func_8010A938_MinigameInstructions, func_8010AD60_MinigameInstructions, func_8010ABA4_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_80106F90_MinigameInstructions, func_80106FE0_MinigameInstructions, func_80107050_MinigameInstructions, func_80107018_MinigameInstructions }, 0xF },
+    { { func_801060DC_MinigameInstructions, func_801004EC_MinigameInstructions, func_80106358_MinigameInstructions, func_8010078C_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_8010D200_MinigameInstructions, func_8010D5E4_MinigameInstructions, func_8010DF34_MinigameInstructions, func_8010DB24_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_800FE924_MinigameInstructions, func_800FEB5C_MinigameInstructions, func_800FF010_MinigameInstructions, func_800FEE08_MinigameInstructions }, 0xFFFFFFFF },
+    { { func_80104DF0_MinigameInstructions, func_80105148_MinigameInstructions, func_8010574C_MinigameInstructions, func_80105464_MinigameInstructions }, 7 },
+    { { func_800FA7F8_MinigameInstructions, func_800FA9EC_MinigameInstructions, func_800FADF4_MinigameInstructions, func_800FAC2C_MinigameInstructions }, 0xF },
+};
+s32 D_8010EDD0_MinigameInstructions[6] = { 0x200005, 0x200006, 0x200007, 0x200008, 0x200009, 0x20000A };
+s32 D_8010EDE8_MinigameInstructions[6] = { 0x230009, 0x23000A, 0x23000B, 0x23000C, 0x23000D, 0x23000E };
+u8* D_8010EE00_MinigameInstructions[6][2] = { { (u8*)D_8010F260_MinigameInstructions, (u8*)D_8010F24C_MinigameInstructions }, { (u8*)D_8010F23C_MinigameInstructions, (u8*)D_8010F228_MinigameInstructions }, { (u8*)D_8010F210_MinigameInstructions, (u8*)D_8010F1FC_MinigameInstructions }, { (u8*)D_8010F1EC_MinigameInstructions, (u8*)D_8010F1D8_MinigameInstructions }, { (u8*)D_8010F1C8_MinigameInstructions, (u8*)D_8010F1B4_MinigameInstructions }, { (u8*)D_8010F1A0_MinigameInstructions, (u8*)D_8010F18C_MinigameInstructions } };
+u8* D_8010EE30_MinigameInstructions[6] = { (u8*)D_8010F2B0_MinigameInstructions, (u8*)D_8010F2A4_MinigameInstructions, (u8*)D_8010F298_MinigameInstructions, (u8*)D_8010F28C_MinigameInstructions, (u8*)D_8010F280_MinigameInstructions, (u8*)D_8010F274_MinigameInstructions };
+s16 D_8010EE48_MinigameInstructions[6][2] = { { 9, 12 }, { 9, 12 }, { 5, 8 }, { 4, 7 }, { 9, 11 }, { 5, 8 } };
+s32 D_8010EE60_MinigameInstructions[6][2] = { { 0x3C000B, 0x3C0011 }, { 0x3C000C, 0x3C0012 }, { 0x3C000D, 0x3C0013 }, { 0x3C000E, 0x3C0014 }, { 0x3C000F, 0x3C0015 }, { 0x3C0010, 0x3C0016 } };
+s32 D_8010EE90_MinigameInstructions[6] = { 0x2F0000, 0x2F0002, 0x2F0004, 0x2F0006, 0x2F0008, 0x2F000A };
+char* D_8010EEA8_MinigameInstructions[6] = { (char*)D_8010F34C_MinigameInstructions, (char*)D_8010F338_MinigameInstructions, (char*)D_8010F320_MinigameInstructions, (char*)D_8010F308_MinigameInstructions, (char*)D_8010F2F4_MinigameInstructions, (char*)D_8010F2E0_MinigameInstructions };
+s32 D_8010EEC0_MinigameInstructions[8] = { 0x360002, 0x360003, 0x360004, 0x360005, 0x360006, 0x360007, 0, 0 };
