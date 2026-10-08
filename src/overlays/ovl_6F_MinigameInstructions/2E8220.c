@@ -259,8 +259,97 @@ void func_8010AD60_MinigameInstructions(Ovl6FPlayerWork* work) {
         }
     }
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010AEA0_MinigameInstructions);
+void func_8010AEA0_MinigameInstructions(Ovl6FPlayerWork* work) {
+    Vec2f pos;
+    Vec3f out;
+    f32 scale;
+    s32 ch;
+    s16 group;
+    u16 model;
+    s16 model2;
 
+    ch = GwPlayer[work->unk_38].character;
+    group = GwPlayer[work->unk_38].group;
+    work->unk_3E = group;
+    work->unk_4E = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 0x9F, 0x299);
+    work->unk_50 = func_80023FC8(work->unk_4E);
+    func_800258EC(work->unk_50, 4, 4);
+    work->unk_52 = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 3, 0x1D);
+    work->unk_54 = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 1, 0x1D);
+    scale = 1.0f;
+    work->unk_1C = scale;
+    switch (group) {
+        case 0:
+            work->unk_56 = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 0x83, 0x1D);
+            work->unk_58 = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 0x84, 0x1D);
+            work->unk_5A = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 0x85, 0x1D);
+            work->unk_5C = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 0x86, 0x1D);
+            work->unk_5E = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 0x9D, 0x1D);
+            break;
+        case 1:
+            work->unk_56 = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 0x8B, 0x1D);
+            work->unk_58 = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 0x91, 0x1D);
+            work->unk_5E = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 0x8C, 0x1D);
+            break;
+        case 2:
+            work->unk_56 = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 0x88, 0x1D);
+            work->unk_5E = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 0x89, 0x1D);
+            break;
+        case 3:
+            work->unk_56 = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 0x8E, 0x1D);
+            work->unk_5E = LoadFormFile((D_8010E964_MinigameInstructions[ch] << 16) | 0x8F, 0x1D);
+            break;
+    }
+    work->unk_08 = (work->unk_38 * 0x23) + 0x19;
+    func_80025830(work->unk_4E, scale * 0.4f, scale * 0.4f, scale * 0.4f);
+    pos.x = work->unk_00 = -50.0f;
+    pos.y = work->unk_04 = 150.0f;
+    out.z = 0.0f;
+    func_8001DD24(0, CZoom, (Vec3f*)&pos, &out);
+    func_80025798(work->unk_4E, out.x, out.y, -180.0f);
+    pos.x = work->unk_08;
+    func_8001DD24(0, CZoom, (Vec3f*)&pos, &out);
+    out.z = -180.0f;
+    model = LoadFormFile(D_8010EF48_MinigameInstructions[group], 0x299);
+    work->unk_70 = model;
+    func_80025798(model, out.x, out.y, out.z);
+    func_80025830(model, 0.0f, 0.0f, 0.0f);
+    work->unk_72 = work->unk_74 = work->unk_76 = -1;
+    switch (group) {
+        case 0:
+            func_8002859C(model, work->unk_4E, D_8010F360_MinigameInstructions);
+            func_800258EC(model, 0x4000, 0x4000);
+            break;
+        case 1:
+            func_80025798(model, out.x, out.y, scale * 28.0f + out.z);
+            model = LoadFormFile(0x3A0007, 0x299);
+            work->unk_72 = model;
+            func_80025830(model, 0.0f, 0.0f, 0.0f);
+            func_80025798(model, out.x, out.y, out.z);
+            model2 = func_80023FC8(model);
+            work->unk_74 = model2;
+            func_80025830(model2, 0.0f, 0.0f, 0.0f);
+            func_8002859C(model2, work->unk_4E, D_8010F360_MinigameInstructions);
+            func_800258EC(model2, 0x4000, 0x4000);
+            work->unk_60 = LoadFormFile(0x3A0008, 0x1D);
+            work->unk_62 = LoadFormFile(0x3A0009, 0x1D);
+            func_80025BB8(work->unk_72, work->unk_60);
+            break;
+        case 2:
+            func_8002859C(model, work->unk_4E, D_8010F360_MinigameInstructions);
+            func_800258EC(model, 0x4000, 0x4000);
+            model = LoadFormFile(0x3A0004, 0x299);
+            work->unk_72 = model;
+            func_80025EB4(model, 2, 2);
+            func_80025798(model, out.x, out.y, out.z);
+            func_80025830(model, 0.0f, 0.0f, 0.0f);
+            break;
+        case 3:
+            func_8002859C(model, work->unk_4E, D_8010F360_MinigameInstructions);
+            func_800258EC(model, 0x4000, 0x4000);
+            break;
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010B44C_MinigameInstructions);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", func_8010B7EC_MinigameInstructions);
