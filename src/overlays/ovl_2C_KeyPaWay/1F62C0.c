@@ -278,8 +278,125 @@ void func_800FAAF4_KeyPaWay(omObjData* obj, omObjData* target) {
 #else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FAAF4_KeyPaWay);
 #endif
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FAF28_KeyPaWay);
+void func_800FAF28_KeyPaWay(omObjData* obj) {
+    f32 dummy;
+    KPWBodyWork* work = KPW_BODY(obj);
+    KPWEnemyExt* ext = work->unk_68.enemy;
+    f32 dx;
+    f32 dz;
+    f32 angle;
+    u16 count;
+    u16 done;
+    u16 t;
 
+    if (D_800FF580_KeyPaWay == 2) {
+        return;
+    }
+    if (D_800FF580_KeyPaWay != 1) {
+        return;
+    }
+    dz = 0.0f;
+    angle = work->unk_3C;
+    dx = dz;
+    switch (ext->unk_04) {
+    case 0:
+        break;
+    case 1:
+    case 2:
+        if (ext->unk_28 == 0) {
+            goto calc;
+        }
+        goto dec;
+    case 3:
+        if (ext->unk_28 != 0) {
+            goto dec;
+        }
+    calc:
+        angle = func_800FB38C_KeyPaWay(work, func_800B0CD8(ext->unk_10 - obj->trans.x, ext->unk_14 - obj->trans.z));
+        goto move;
+    dec:
+        ext->unk_28--;
+    move:
+        dx = func_800AEAC0(angle) * ext->unk_18;
+        dz = func_800AEFD0(angle) * ext->unk_18;
+        break;
+    case 4:
+        func_800FB38C_KeyPaWay(work, func_800B0CD8(ext->unk_10 - obj->trans.x, ext->unk_14 - obj->trans.z));
+        break;
+    case 5:
+        func_800FB38C_KeyPaWay(work, ext->unk_30);
+        break;
+    }
+    if (work->unk_3C < 0.0f) {
+        work->unk_3C += 360.0f;
+    }
+    count = 0;
+    if (work->unk_3C >= 360.0f) {
+        work->unk_3C -= 360.0f;
+    }
+    done = 0;
+    angle = work->unk_3C;
+    do {
+        switch (func_800FB498_KeyPaWay(obj, dx + obj->trans.x, dz + obj->trans.z, &dummy)) {
+        case 1:
+        case 2:
+            angle += 45.0f;
+            if (angle >= 360.0f) {
+                angle -= 360.0f;
+            }
+            dx = func_800AEAC0(angle) * ext->unk_18;
+            dz = func_800AEFD0(angle) * ext->unk_18;
+            if (++count == 8) {
+                angle -= 180.0f;
+                done = 1;
+                if (angle < 0.0f) {
+                    angle += 360.0f;
+                }
+                dz = 0.0f;
+                dx = dz;
+            }
+            ext->unk_04 = 5;
+            ext->unk_30 = angle;
+            ext->unk_28 = 300;
+            break;
+        case 3:
+            KPW_BODY(D_800FF590_KeyPaWay)->unk_50 |= 0x20;
+            func_8005DC18(D_800FF590_KeyPaWay, 1);
+            if (ext->unk_02 != 4) {
+                t = D_800FF548_KeyPaWay[4]->model[0];
+                D_800FF548_KeyPaWay[4]->model[0] = D_800FF548_KeyPaWay[ext->unk_02]->model[0];
+                D_800FF548_KeyPaWay[ext->unk_02]->model[0] = t;
+            }
+            done = 1;
+            func_80025BB8(obj->model[0], obj->motion[0]);
+            func_80025EB4(obj->model[0], 2, 2);
+            func_8002859C(D_800FF590_KeyPaWay->model[0], obj->model[0], "c110_4_2-item");
+            func_800258EC(D_800FF590_KeyPaWay->model[0], 0x4000, 0x4000);
+            break;
+        case 4:
+            ext->unk_28 = 0;
+            break;
+        case 5:
+            ext->unk_04 = 4;
+            dz = 0.0f;
+            dx = dz;
+            done = 1;
+            break;
+        default:
+            if (angle == work->unk_3C) {
+                done = 1;
+            } else if (ext->unk_04 == 5) {
+                done = 1;
+            } else {
+                work->unk_3C = angle;
+                done = 1;
+            }
+            break;
+        }
+    } while (done == 0);
+    omSetRot(obj, 0.0f, work->unk_3C, 0.0f);
+    omSetTra(obj, dx + obj->trans.x, obj->trans.y, dz + obj->trans.z);
+}
 f32 func_800FB38C_KeyPaWay(KPWBodyWork* work, f32 angle) {
     f32 cur;
     f32 d;
