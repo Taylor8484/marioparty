@@ -306,7 +306,142 @@ void func_800F949C_MinigameInstructions(omObjData* obj) {
         omOvlReturnEx(1);
     }
 }
+// loop-invariant hoisting: retail keeps 32.0f, 255 and the 2^31 conversion constant inside the outer loop (masked 82)
+#ifdef NON_MATCHING
+void func_800F94E8_MinigameInstructions(s16 model, s16 idx) {
+    Gfx* gfx;
+    void* data;
+    u16* img;
+    unk2C0C0StructC0* mdl;
+    unk2C0C0Struct30* mesh;
+    Vtx* vtx;
+    Vtx* vtxStart;
+    s16 n;
+    s16 i;
+    s16 j;
+    s16 k;
+    s32 w;
+    s16 h;
+    f32 minX;
+    f32 maxX;
+    f32 minY;
+    f32 maxY;
+    f32 rangeX;
+    f32 rangeY;
+    f32 baseX;
+    f32 baseY;
+    f32 x;
+    f32 y;
+    f32 sLo;
+    f32 sHi;
+    f32 tLo;
+    f32 tHi;
+    s32 id;
+
+    if (idx == 0x35) {
+        if (_CheckFlag(0x33) != 0) {
+            id = 0xB0051;
+        } else {
+            id = _CheckFlag(0x34) ? 0xB0052 : 0xB0053;
+        }
+    } else {
+        id = D_8010E4F0_MinigameInstructions[idx].unk_08;
+    }
+    w = 160;
+    data = DataRead(id);
+    h = 128;
+    img = func_80023684(0xA000, 0x7918);
+    func_8007F54C(data, img, 160, D_8010F4E4_MinigameInstructions);
+    DataClose(data);
+    mdl = D_800F2B7C[model].unk_6C;
+    n = func_80033718(mdl, "00s_012-tv");
+    mesh = &mdl->unk_80[n];
+    vtx = func_80023684(0x500, 0x7918);
+    gfx = func_80023684(0x200 * sizeof(Gfx), 0x7918); /* 0x1000 on N64; host Gfx is 16 bytes */
+    mdl->unk_00[n] = gfx;
+    gDPSetCombineMode(gfx++, G_CC_DECALRGBA, G_CC_DECALRGBA);
+    gDPSetRenderMode(gfx++, G_RM_AA_ZB_OPA_SURF, G_RM_AA_ZB_OPA_SURF2);
+    gSPClearGeometryMode(gfx++, G_LIGHTING);
+    gDPSetTextureFilter(gfx++, G_TF_BILERP);
+    gSPTexture(gfx++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
+
+    maxY = maxX = -100000.0f;
+    minY = minX = 100000.0f;
+    for (i = 0; i < (s16) mesh->unk_04; i++) {
+        for (j = 0; j < mesh->unk_34[i].unk_00; j++) {
+            k = mesh->unk_34[i].unk_04[j];
+            x = mdl->unk_78[k].unk_00;
+            if (x < minX) {
+                minX = x;
+            }
+            x = mdl->unk_78[k].unk_00;
+            if (maxX < x) {
+                maxX = x;
+            }
+            y = mdl->unk_78[k].unk_02;
+            if (y < minY) {
+                minY = y;
+            }
+            y = mdl->unk_78[k].unk_02;
+            if (maxY < y) {
+                maxY = y;
+            }
+        }
+    }
+    rangeX = maxX - minX;
+    rangeY = maxY - minY;
+    baseX = minX;
+    baseY = minY;
+    vtxStart = vtx;
+    for (i = 0; i < (s16) mesh->unk_04; i++) {
+        maxY = maxX = -100000.0f;
+        minY = minX = 100000.0f;
+        for (j = 0; j < mesh->unk_34[i].unk_00; j++) {
+            k = mesh->unk_34[i].unk_04[j];
+            x = (vtx->v.ob[0] = mdl->unk_78[k].unk_00);
+            y = (vtx->v.ob[1] = mdl->unk_78[k].unk_02);
+            vtx->v.ob[2] = mdl->unk_78[k].unk_04;
+            if (x < minX) {
+                minX = x;
+            }
+            if (maxX < x) {
+                maxX = x;
+            }
+            if (y < minY) {
+                minY = y;
+            }
+            if (maxY < y) {
+                maxY = y;
+            }
+            vtx->v.cn[0] = vtx->v.cn[1] = vtx->v.cn[2] = -1;
+            vtx->v.tc[0] = w * ((-x - baseX) / rangeX) * 32.0f;
+            vtx->v.tc[1] = h * ((-y - baseY) / rangeY) * 32.0f;
+            vtx->v.cn[3] = 0xFF;
+            vtx++;
+        }
+        sLo = w - ((minX - baseX) / rangeX) * w;
+        sHi = w - ((maxX - baseX) / rangeX) * w;
+        tLo = h - ((minY - baseY) / rangeY) * h;
+        if (tLo == h) {
+            tLo = h - 0.1f;
+        }
+        tHi = h - ((maxY - baseY) / rangeY) * h;
+        gDPSetTextureLUT(gfx++, G_TT_NONE);
+        func_8003A060(&gfx, (PB_PTR32) img, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, h, (u32) sHi, (u32) tHi, (u32) sLo,
+                      (u32) tLo, 0, 2, 2, 0, 0, 0, 0);
+        gSPVertex(gfx++, vtxStart, mesh->unk_34[i].unk_00, 0);
+        if (mesh->unk_34[i].unk_00 == 3) {
+            gSP1Triangle(gfx++, 0, 1, 2, 0);
+        } else {
+            gSP1Quadrangle(gfx++, 0, 1, 2, 3, 0);
+        }
+        vtxStart = vtx;
+    }
+    gSPEndDisplayList(gfx++);
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F94E8_MinigameInstructions);
+#endif
 
 void func_800F9E64_MinigameInstructions(s16 idx) {
     s16 order[4] = { 0, 1, 2, 3 };
