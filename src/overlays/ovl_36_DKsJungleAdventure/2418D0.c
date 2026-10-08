@@ -114,7 +114,7 @@ void func_800F6830_DKsJungleAdventure(void) { //ov054_func_800F6830
     ClearBoardFeatureFlag(D_800F98F0_DKsJungleAdventure[ed5c0->starSpaces[ed5c0->chosenStarSpaceIndex]]);
 }
 
-s32 func_800F6958_DKsJungleAdventure(s32 current_space_index) {
+s16 func_800F6958_DKsJungleAdventure(s32 current_space_index) {
     s32 i;
     s32 j;
     s16* ov054_star_space_indicesptr;
@@ -994,44 +994,326 @@ void func_800F8978_DKsJungleAdventure(void) {
     func_80056E30(saved);
     EndProcess(NULL);
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F8A00_DKsJungleAdventure);
+void func_800F8A00_DKsJungleAdventure(void) {
+    Vec3f sp10;
+    Process* proc;
+    GW_PLAYER* player;
+    Object* obj;
+    Vec3f* target;
+    s16 win;
+    s16 chainSpace;
+    s32 i;
+    s32 count;
+    s32 sfx;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F8DC8_DKsJungleAdventure);
+    i = 0;
+    proc = HuPrcCurrentGet();
+    count = 0;
+    for (; i < 4; i++) {
+        player = GetPlayerStruct(i);
+        chainSpace = GetChainSpaceIndexFromAbsSpaceIndex(GetAbsSpaceIndexFromChainSpaceIndex(player->cur_chain, player->cur_space), 17);
+        if (chainSpace >= 0) {
+            player->cur_chain = 17;
+            player->cur_space = chainSpace;
+            player->next_chain = 17;
+            player->next_space = chainSpace + 1;
+            omAddPrcObj(func_800F869C_DKsJungleAdventure, 0x4800, 0, 0)->user_data = player;
+            count++;
+        }
+    }
+    if (count == 0) {
+        obj = GetPlayerStruct(-1)->player_obj;
+        func_8004CD84(&sp10);
+        func_8003D514(&sp10, 0.0f);
+        HuPrcChildLink(proc, func_8004D1EC(&obj->unk_18, &sp10, &obj->unk_18, 6));
+        HuPrcChildWatch();
+        win = CreateTextWindow(0x4B, 0x40, 0xE, 1);
+        LoadStringIntoWindow(win, (void*)0x194, -1, -1);
+        func_8006E070(win, 0);
+        ShowTextWindow(win);
+        func_8004DBD4(win, GetCurrentPlayerIndex());
+        HideTextWindow(win);
+        EndProcess(NULL);
+    }
+    D_800FA36C_DKsJungleAdventure = 0;
+    D_800FA370_DKsJungleAdventure = NULL;
+    omAddPrcObj(func_800F8978_DKsJungleAdventure, 0x1003, 0, 0);
+    obj = MBModelCreate(0x26, NULL);
+    D_800FA370_DKsJungleAdventure = obj;
+    func_800A0D50(&obj->coords, &BoardSpaceGet(0)->coords);
+    func_800A0D00(&obj->xScale, 0.8f, 0.8f, 0.8f);
+    HuPrcSleep(30);
+    sfx = PlaySound(0x8B);
+    for (i = 0; D_800F9FCC_DKsJungleAdventure[i] >= 0; i++) {
+        target = &BoardSpaceGet(D_800F9FCC_DKsJungleAdventure[i])->coords;
+        func_8004CCD0(&obj->coords, target, &obj->unk_18);
+        HuPrcChildLink(proc, func_8004D648(&obj->coords, target, &obj->coords, 20.0f));
+        HuPrcChildWatch();
+        if (D_800F9FCC_DKsJungleAdventure[i] == 6) {
+            func_800A0E80(&sp10, &BoardSpaceGet(D_800F9FCC_DKsJungleAdventure[i + 1])->coords, &obj->coords);
+            func_8004D1EC(&obj->unk_18, &sp10, &obj->unk_18, 20);
+            obj->unk_34 = 38.0f;
+            obj->unk_38 = -2.0f;
+            PlaySound(0x8D);
+            func_80060758(0x8B);
+            while (obj->unk_38 != 0.0) {
+                HuPrcVSleep();
+            }
+            PlaySound(0x8D);
+            sfx = PlaySound(0x8B);
+        }
+    }
+    func_80060BC8(sfx, 30);
+    MBModelKill(obj);
+    D_800FA370_DKsJungleAdventure = NULL;
+    HuPrcSleep(30);
+    D_800FA36C_DKsJungleAdventure = 1;
+    EndProcess(NULL);
+}
+void func_800F8DC8_DKsJungleAdventure(void) {
+    Object* obj;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F8E80_DKsJungleAdventure);
+    obj = HuPrcCurrentGet()->user_data;
+    HuPrcSleep(5);
+    PlaySound(0x92);
+    while (obj->yScale < 1.0f) {
+        HuPrcVSleep();
+        obj->yScale += 0.05f;
+    }
+    obj->yScale = 1.0f;
+    PlaySound(0x93);
+    EndProcess(NULL);
+}
+Process* func_800F8E80_DKsJungleAdventure(Object* arg0) {
+    Process* proc;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F8EBC_DKsJungleAdventure);
+    proc = omAddPrcObj(func_800F8DC8_DKsJungleAdventure, 0x4800, 0, 0);
+    proc->user_data = arg0;
+    return proc;
+}
+void func_800F8EBC_DKsJungleAdventure(void) {
+    Object* obj;
+    void* rumble;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F8F88_DKsJungleAdventure);
+    obj = HuPrcCurrentGet()->user_data;
+    HuPrcSleep(5);
+    rumble = func_80058A4C(-1, 0, 10);
+    PlaySound(0x92);
+    while (obj->yScale > 0.0f) {
+        HuPrcVSleep();
+        obj->yScale -= 0.05f;
+    }
+    obj->yScale = 0.0f;
+    PlaySound(0x93);
+    func_80058AD0(rumble);
+    EndProcess(NULL);
+}
+Process* func_800F8F88_DKsJungleAdventure(Object* arg0) {
+    Process* proc;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F8FC4_DKsJungleAdventure);
+    proc = omAddPrcObj(func_800F8EBC_DKsJungleAdventure, 0x4800, 0, 0);
+    proc->user_data = arg0;
+    return proc;
+}
+void func_800F8FC4_DKsJungleAdventure(void) {
+    GW_PLAYER* player;
+    unk_8003B8D4Struct* prompt;
+    s32 dir;
+    s32 i;
+    s32 count;
+    s16 win;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F91B4_DKsJungleAdventure);
+    player = GetPlayerStruct(-1);
+    SetPlayerAnimation(-1, -1, 2);
+    if (player->coins < 20) {
+        while (func_8004B850() != 0) {
+            HuPrcVSleep();
+        }
+        HuPrcVSleep();
+        win = CreateTextWindow(0x3C, 0x3C, 0x11, 2);
+        LoadStringIntoWindow(win, (void*)0x186, -1, -1);
+        func_8006E070(win, 0);
+        ShowTextWindow(win);
+        func_8004DBD4(win, player->player_index);
+        HideTextWindow(win);
+        SetNextChainAndSpace(player->player_index, 10, 0);
+    } else {
+        HuPrcChildLink(HuPrcCurrentGet(), func_800F8F88_DKsJungleAdventure(D_800FA34C_DKsJungleAdventure[0]));
+        HuPrcChildWatch();
+        func_800F7920_DKsJungleAdventure();
+        prompt = func_8003C218(-1, D_800F9FEC_DKsJungleAdventure);
+        func_8003C060(prompt, -1, 0);
+        if (PlayerIsCPU(-1) != 0) {
+            count = RunDecisionTree(D_800F9E30_DKsJungleAdventure);
+            for (i = 0; i < count; i++) {
+                func_8003BE84(prompt, -2);
+            }
+            func_8003BE84(prompt, -4);
+        }
+        dir = DirectionPrompt(prompt);
+        func_8003B908(prompt);
+        func_800F79D0_DKsJungleAdventure();
+        if (dir == 0) {
+            SetNextChainAndSpace(player->player_index, 11, 0);
+        } else {
+            SetNextChainAndSpace(player->player_index, 10, 0);
+        }
+        func_800F8E80_DKsJungleAdventure(D_800FA34C_DKsJungleAdventure[0]);
+    }
+    EndProcess(NULL);
+}
+void func_800F91B4_DKsJungleAdventure(void) {
+    GW_PLAYER* player;
+    unk_8003B8D4Struct* prompt;
+    s32 dir;
+    s32 i;
+    s32 count;
+    s16 win;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F9398_DKsJungleAdventure);
+    player = GetPlayerStruct(-1);
+    SetPlayerAnimation(-1, -1, 2);
+    if (player->coins < 20) {
+        while (func_8004B850() != 0) {
+            HuPrcVSleep();
+        }
+        HuPrcVSleep();
+        win = CreateTextWindow(0x3C, 0x3C, 0x11, 2);
+        LoadStringIntoWindow(win, (void*)0x186, -1, -1);
+        func_8006E070(win, 0);
+        ShowTextWindow(win);
+        func_8004DBD4(win, player->player_index);
+        HideTextWindow(win);
+        SetNextChainAndSpace(-1, 16, 0);
+    } else {
+        HuPrcChildLink(HuPrcCurrentGet(), func_800F8F88_DKsJungleAdventure(D_800FA34C_DKsJungleAdventure[1]));
+        HuPrcChildWatch();
+        func_800F7920_DKsJungleAdventure();
+        prompt = func_8003C218(-1, D_800FA004_DKsJungleAdventure);
+        func_8003C060(prompt, -1, 0);
+        if (PlayerIsCPU(-1) != 0) {
+            count = RunDecisionTree(D_800F9F38_DKsJungleAdventure);
+            for (i = 0; i < count; i++) {
+                func_8003BE84(prompt, -2);
+            }
+            func_8003BE84(prompt, -4);
+        }
+        dir = DirectionPrompt(prompt);
+        func_8003B908(prompt);
+        func_800F79D0_DKsJungleAdventure();
+        if (dir == 0) {
+            SetNextChainAndSpace(-1, 8, 0);
+        } else {
+            SetNextChainAndSpace(-1, 16, 0);
+        }
+        func_800F8E80_DKsJungleAdventure(D_800FA34C_DKsJungleAdventure[1]);
+    }
+    EndProcess(NULL);
+}
+void func_800F9398_DKsJungleAdventure(void) {
+    SetNextChainAndSpace(-1, 9, 1);
+}
+void func_800F93BC_DKsJungleAdventure(void) {
+    SetNextChainAndSpace(-1, 2, 0);
+}
+void func_800F93E0_DKsJungleAdventure(void) {
+    SetNextChainAndSpace(-1, 4, 0);
+}
+void func_800F9404_DKsJungleAdventure(void) {
+    SetNextChainAndSpace(-1, 9, 0);
+}
+void func_800F9428_DKsJungleAdventure(void) {
+    SetNextChainAndSpace(-1, 7, 0);
+}
+void func_800F944C_DKsJungleAdventure(void) {
+    SetNextChainAndSpace(-1, 0, 1);
+}
+// register allocation: retail copies the coin amount into a second callee-saved register before the coin calls (one extra move; masked 1)
+#ifdef NON_MATCHING
+void func_800F9470_DKsJungleAdventure(void) {
+    s16 player;
+    s16 win;
+    s32 coins;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F93BC_DKsJungleAdventure);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F93E0_DKsJungleAdventure);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F9404_DKsJungleAdventure);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F9428_DKsJungleAdventure);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F944C_DKsJungleAdventure);
-
+    player = GetCurrentPlayerIndex();
+    func_800405DC(player);
+    SetPlayerAnimation(-1, -1, 2);
+    if (_CheckFlag(0x42) == 0) {
+        win = CreateTextWindow(0x48, 0x3C, 0x10, 3);
+        LoadStringIntoWindow(win, (void*)0x239, -1, -1);
+        coins = 10;
+    } else {
+        win = CreateTextWindow(0x41, 0x3C, 0x11, 3);
+        LoadStringIntoWindow(win, (void*)0x23A, -1, -1);
+        coins = 20;
+    }
+    func_8006E070(win, 0);
+    ShowTextWindow(win);
+    PlaySound(0x432);
+    func_8004DBD4(win, player);
+    HideTextWindow(win);
+    func_80055960(player, coins);
+    ShowPlayerCoinChange(player, coins);
+    HuPrcSleep(30);
+    func_8003FEFC(player);
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F9470_DKsJungleAdventure);
+#endif
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F95A4_DKsJungleAdventure);
+void func_800F95A4_DKsJungleAdventure(void) {
+    GwCommon.boardWork[31]++;
+    if (_CheckFlag(0x42) == 0 && (GwCommon.boardWork[31] % 10 == 0 || _CheckFlag(0x4D) == 0)) {
+        if (_CheckFlag(0x4D) != 0) {
+            func_80058910(-1, 1);
+        }
+        SetBoardFeatureFlag(0x4D);
+        func_800587EC(0x5F, 0, 1);
+        return;
+    }
+    func_800F9470_DKsJungleAdventure();
+}
+void func_800F9674_DKsJungleAdventure(void) {
+    func_8004D2A4(-1, 8, 0x5D);
+    func_800F95A4_DKsJungleAdventure();
+    EndProcess(NULL);
+}
+void func_800F96A8_DKsJungleAdventure(void) {
+    if (func_800F6958_DKsJungleAdventure(GetCurrentSpaceIndex()) == 1) {
+        func_800587EC(0x44, 0, 2);
+        func_8004D2A4(-1, 8, func_800F6610_DKsJungleAdventure());
+    }
+}
+void func_800F970C_DKsJungleAdventure(void) {
+    GW_PLAYER* player;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F9674_DKsJungleAdventure);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F96A8_DKsJungleAdventure);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F970C_DKsJungleAdventure);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F9798_DKsJungleAdventure);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F9804_DKsJungleAdventure);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_36_DKsJungleAdventure/2418D0", func_800F983C_DKsJungleAdventure);
+    if (func_800F6958_DKsJungleAdventure(GetCurrentSpaceIndex()) == 2) {
+        for (i = 0; i < 4; i++) {
+            player = GetPlayerStruct(i);
+            player->group = i != GetCurrentPlayerIndex();
+        }
+        func_800587BC(1, 0, 5, 1);
+    }
+}
+void func_800F9798_DKsJungleAdventure(void) {
+    switch (GetCurrentSpaceIndex()) {
+    case 0x81:
+        func_8004D2A4(-1, 8, 0x6F);
+        break;
+    case 0xA:
+        func_8004D2A4(-1, 8, 0x62);
+        break;
+    }
+    func_800587EC(0x65, 0, 1);
+}
+void func_800F9804_DKsJungleAdventure(void) {
+    func_8004D2A4(-1, 8, 0x70);
+    func_800587BC(0x48, 0, 3, 1);
+}
+void func_800F983C_DKsJungleAdventure(void) {
+    InitCameras(2);
+    func_8001D4D4(1, &D_800F98C0_DKsJungleAdventure);
+    func_800F7024_DKsJungleAdventure();
+    func_800584F0(2);
+    omAddPrcObj(func_800F6CD8_DKsJungleAdventure, 0x1005, 0, 0);
+}

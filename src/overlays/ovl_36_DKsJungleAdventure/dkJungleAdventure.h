@@ -162,6 +162,6 @@ void func_800F8EBC_DKsJungleAdventure(void);
 Process* func_800F8F88_DKsJungleAdventure(Object*);
 void func_800F9470_DKsJungleAdventure(void);
 void func_800F95A4_DKsJungleAdventure(void);
-s32 func_800F6958_DKsJungleAdventure(s32);
+s16 func_800F6958_DKsJungleAdventure(s32);
 s16 func_800F6610_DKsJungleAdventure(void);
 void func_800F6CD8_DKsJungleAdventure(void);
