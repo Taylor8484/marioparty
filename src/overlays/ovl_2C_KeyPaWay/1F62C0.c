@@ -619,25 +619,183 @@ void func_800F7AE0_KeyPaWay(omObjData* arg0) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F842C_KeyPaWay);
+void func_800F842C_KeyPaWay(omObjData* arg0) {
+    KPWFxSlots* slots;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F8514_KeyPaWay);
+    slots = arg0->unk_50 = func_80023684(sizeof(KPWFxSlots), 0x7918);
+    arg0->model[0] = -1;
+    for (i = 1; i < 10; i++) {
+        if (i == 1) {
+            arg0->model[1] = LoadFormFile(3, 0x699);
+        } else {
+            arg0->model[i] = func_80023FC8(arg0->model[1]);
+        }
+        func_800258EC(arg0->model[i], 4, 4);
+    }
+    for (i = 0; i < 3; i++) {
+        slots->busy[i] = 0;
+    }
+    arg0->func_ptr = NULL;
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F8678_KeyPaWay);
+void func_800F8514_KeyPaWay(s16 mode, s16 count, f32 scale, f32 x, f32 y, f32 z) {
+    omObjData* obj;
+    KPWFxWork* fx;
+    KPWFxSlots* slots;
+    s16* mdl;
+    s32 i;
+    u16 slot;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F8918_KeyPaWay);
+    slots = D_800FF550_KeyPaWay->unk_50;
+    for (i = 0; i < 3; i++) {
+        if (slots->busy[i] == 0) {
+            slot = i;
+            slots->busy[i] = 1;
+            break;
+        }
+    }
+    if (i != 3) {
+        obj = omAddObj(40, 0, 0, -1, func_800F8678_KeyPaWay);
+        fx = obj->unk_50 = func_80023684(sizeof(KPWFxWork), 0x7918);
+        omSetTra(obj, x, y, z);
+        fx->slot = slot;
+        fx->timer = 5;
+        fx->count = count;
+        fx->mode = mode;
+        fx->radius = 50.0f;
+        fx->scale = scale;
+        mdl = &D_800FF550_KeyPaWay->model[slot * 3 + 1];
+        for (i = 0; i < 3; i++) {
+            func_800258EC(*mdl++, 4, 0);
+        }
+    }
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F8A28_KeyPaWay);
+void func_800F8678_KeyPaWay(omObjData* arg0) {
+    KPWFxSlots* slots;
+    KPWFxWork* fx;
+    s16* mdl;
+    f32 dx, dy, dz;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F8B94_KeyPaWay);
+    slots = D_800FF550_KeyPaWay->unk_50;
+    fx = arg0->unk_50;
+    mdl = &D_800FF550_KeyPaWay->model[fx->slot * 3 + 1];
+    if (--fx->timer == 0) {
+        for (i = 0; i < 3; i++) {
+            func_800258EC(*mdl++, 4, 4);
+        }
+        slots->busy[fx->slot] = 0;
+        omDelObj(arg0);
+        return;
+    }
+    dz = 0.0f;
+    dy = 0.0f;
+    dx = 0.0f;
+    for (i = 0; i < fx->count; i++) {
+        switch (fx->mode) {
+        case 0:
+            dx = func_800AEFD0((360.0f / fx->count) * i) * fx->radius;
+            dz = func_800AEAC0((360.0f / fx->count) * i) * fx->radius;
+            break;
+        case 1:
+            dx = func_800AEFD0((360.0f / fx->count) * i) * fx->radius;
+            dy = func_800AEAC0((360.0f / fx->count) * i) * fx->radius;
+            break;
+        case 2:
+            dz = func_800AEFD0((360.0f / fx->count) * i) * fx->radius;
+            dy = func_800AEAC0((360.0f / fx->count) * i) * fx->radius;
+            break;
+        }
+        func_80025798(*mdl, dx + arg0->trans.x, dy + arg0->trans.y, dz + arg0->trans.z);
+        func_80025830(*mdl, fx->scale, fx->scale, fx->scale);
+        mdl++;
+    }
+    fx->radius += 40.0f;
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F8C54_KeyPaWay);
+void func_800F8918_KeyPaWay(omObjData* arg0) {
+    KPWSparkSlots* slots;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F8C70_KeyPaWay);
+    slots = arg0->unk_50 = func_80023684(sizeof(KPWSparkSlots), 0x7918);
+    arg0->model[0] = -1;
+    for (i = 0; i < 10; i++) {
+        slots->busy[i] = 0;
+        slots->sprite[i] = func_8001E00C((void*)-1, 0x69D, 8);
+        D_800ECDE0[slots->sprite[i]].unk_02 = D_800FF534_KeyPaWay;
+        func_80025930(D_800ECDE0[slots->sprite[i]].unk_00, 0x40000000, 0x40000000);
+        func_8001E268(slots->sprite[i], 4, 4);
+        func_8001E2F8(slots->sprite[i], 0xE0);
+        func_8001E360(slots->sprite[i], 0xFF, 0xFF, 0xBE);
+    }
+    arg0->func_ptr = NULL;
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F8C8C_KeyPaWay);
+void func_800F8A28_KeyPaWay(f32 vy, f32 x, f32 y, f32 z) {
+    KPWSparkSlots* slots;
+    KPWSparkWork* sp;
+    omObjData* obj;
+    s32 i;
+    u16 slot;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F8CA8_KeyPaWay);
+    slots = D_800FF554_KeyPaWay->unk_50;
+    for (i = 0; i < 10; i++) {
+        if (slots->busy[i] == 0) {
+            slot = i;
+            slots->busy[i] = 1;
+            break;
+        }
+    }
+    if (i != 10) {
+        obj = omAddObj(40, 1, 0, -1, func_800F8B94_KeyPaWay);
+        obj->unk_50 = func_80023684(sizeof(KPWSparkWork), 0x7918);
+        omSetTra(obj, x, y, z);
+        omSetSca(obj, 3.0f, 3.0f, 3.0f);
+        sp = obj->unk_50;
+        sp->timer = 30;
+        sp->vy = vy;
+        sp->slot = slot;
+        obj->model[0] = D_800ECDE0[slots->sprite[slot]].unk_00;
+        func_800258EC(obj->model[0], 4, 0);
+        func_8001E2A8(slots->sprite[slot], 0);
+    }
+}
+
+void func_800F8B94_KeyPaWay(omObjData* arg0) {
+    KPWSparkSlots* slots;
+    KPWSparkWork* sp;
+
+    slots = D_800FF554_KeyPaWay->unk_50;
+    sp = arg0->unk_50;
+    arg0->trans.y += sp->vy;
+    if (arg0->trans.y < 0.0f) {
+        arg0->trans.y = 0.0f;
+    }
+    omSetTra(arg0, arg0->trans.x, arg0->trans.y, arg0->trans.z);
+    if (--sp->timer == 0) {
+        func_800258EC(arg0->model[0], 4, 4);
+        slots->busy[sp->slot] = 0;
+        omDelObj(arg0);
+    }
+}
+
+void func_800F8C54_KeyPaWay(omObjData* arg0) {
+    func_800F8CC4_KeyPaWay(arg0, 0);
+}
+
+void func_800F8C70_KeyPaWay(omObjData* arg0) {
+    func_800F8CC4_KeyPaWay(arg0, 1);
+}
+
+void func_800F8C8C_KeyPaWay(omObjData* arg0) {
+    func_800F8CC4_KeyPaWay(arg0, 2);
+}
+
+void func_800F8CA8_KeyPaWay(omObjData* arg0) {
+    func_800F8CC4_KeyPaWay(arg0, 3);
+}
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F8CC4_KeyPaWay);
 
