@@ -98,7 +98,33 @@ void func_800F6BD8_KeyPaWay(omObjData* arg0) {
 }
 
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F6C58_KeyPaWay);
+void func_800F6C58_KeyPaWay(omObjData* arg0) {
+    func_80079078(D_800FF532_KeyPaWay);
+    switch (D_800FF580_KeyPaWay) {
+    case 0:
+        if (D_800FF540_KeyPaWay == NULL) {
+            D_800FF540_KeyPaWay = omAddObj(4, 0, 0, -1, func_800FBAD4_KeyPaWay);
+        }
+        break;
+    case 1:
+        D_800FF530_KeyPaWay--;
+        if (D_800FF530_KeyPaWay == 0) {
+            D_800FF532_KeyPaWay--;
+            D_800FF530_KeyPaWay = 30;
+        }
+        if (*(u16*)&D_800FF532_KeyPaWay == 0) {
+            D_800FF580_KeyPaWay = 2;
+            D_800FF578_KeyPaWay = 15;
+            D_800FF524_KeyPaWay = 16;
+        }
+        break;
+    case 2:
+        if (D_800FF544_KeyPaWay == NULL) {
+            D_800FF544_KeyPaWay = omAddObj(4, 0, 0, -1, func_800FBC98_KeyPaWay);
+        }
+        break;
+    }
+}
 
 void func_800F6D98_KeyPaWay(omObjData* arg0) {
     unkKeyPaWayStruct* temp_v0;
@@ -141,9 +167,166 @@ void func_800F6E6C_KeyPaWay(omObjData* arg0) {
     func_80026174(arg0->model[0], arg0->model[1], temp_s0->unk_04);
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F6F10_KeyPaWay);
+// float constant register allocation; the 0.0f arguments come from a hoisted register (masked 14)
+#ifdef NON_MATCHING
+void func_800F6F10_KeyPaWay(omObjData* obj, u8 port) {
+    KPWPlayerWork* work;
+    KPWPlayerWork* ow;
+    omObjData* other;
+    f32 dx, dz, dist, x, z, angle, r;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F7134_KeyPaWay);
+    work = KPW_PLAYER(obj);
+    for (i = 0; i < 4; i++) {
+        other = D_800FF594_KeyPaWay[i];
+        if (other == D_800FF54C_KeyPaWay) {
+            continue;
+        }
+        ow = KPW_PLAYER(other);
+        if (ow->unk_38 == 1000.0f) {
+            continue;
+        }
+        dx = obj->trans.x - other->trans.x;
+        dx *= dx;
+        dz = obj->trans.z - other->trans.z;
+        dz *= dz;
+        dist = func_800B1750(dx + dz);
+        r = work->unk_48 + ow->unk_48;
+        if (dist <= func_800B1750(r * r)) {
+            if (func_800B1750(obj->trans.x * obj->trans.x + obj->trans.z * obj->trans.z) <= 400.0f) {
+                x = 700.0f;
+                if (obj->trans.x <= 0.0f) {
+                    x = -700.0f;
+                }
+                z = 1000.0f;
+                if (obj->trans.z <= 0.0f) {
+                    z = -1000.0f;
+                }
+                angle = func_800F7134_KeyPaWay(obj, x, z, 45.0f, 220.0f);
+            } else {
+                angle = func_800F7134_KeyPaWay(obj, 0, 0, 45.0f, 220.0f);
+            }
+            ContStkX[port] = func_800AEAC0(angle) * 80.0f;
+            ContStkY[port] = -func_800AEFD0(angle) * 80.0f;
+            return;
+        }
+    }
+}
+#else
+// float constant register allocation; the 0.0f arguments come from a hoisted register (masked 14)
+#ifdef NON_MATCHING
+void func_800F6F10_KeyPaWay(omObjData* obj, u8 port) {
+    KPWPlayerWork* work;
+    KPWPlayerWork* ow;
+    omObjData* other;
+    f32 dx, dz, dist, x, z, angle, r;
+    s32 i;
+
+    work = KPW_PLAYER(obj);
+    for (i = 0; i < 4; i++) {
+        other = D_800FF594_KeyPaWay[i];
+        if (other == D_800FF54C_KeyPaWay) {
+            continue;
+        }
+        ow = KPW_PLAYER(other);
+        if (ow->unk_38 == 1000.0f) {
+            continue;
+        }
+        dx = obj->trans.x - other->trans.x;
+        dx *= dx;
+        dz = obj->trans.z - other->trans.z;
+        dz *= dz;
+        dist = func_800B1750(dx + dz);
+        r = work->unk_48 + ow->unk_48;
+        if (dist <= func_800B1750(r * r)) {
+            if (func_800B1750(obj->trans.x * obj->trans.x + obj->trans.z * obj->trans.z) <= 400.0f) {
+                x = 700.0f;
+                if (obj->trans.x <= 0.0f) {
+                    x = -700.0f;
+                }
+                z = 1000.0f;
+                if (obj->trans.z <= 0.0f) {
+                    z = -1000.0f;
+                }
+                angle = func_800F7134_KeyPaWay(obj, x, z, 45.0f, 220.0f);
+            } else {
+                angle = func_800F7134_KeyPaWay(obj, 0, 0, 45.0f, 220.0f);
+            }
+            ContStkX[port] = func_800AEAC0(angle) * 80.0f;
+            ContStkY[port] = -func_800AEFD0(angle) * 80.0f;
+            return;
+        }
+    }
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F6F10_KeyPaWay);
+#endif
+#endif
+
+f32 func_800F7134_KeyPaWay(omObjData* obj, f32 x, f32 z, f32 angle, f32 dist) {
+    f32 dists[4];
+    f32 angs[4];
+    KPWPlayerWork* work;
+    omObjData* other;
+    f32 dir, ox, oz, dx, dz;
+    s32 i;
+    u16 n;
+    u16 tries;
+
+    dir = func_800B0CD8(x - obj->trans.x, z - obj->trans.z);
+    n = 0;
+    for (i = 0; i < 4; i++) {
+        other = D_800FF594_KeyPaWay[i];
+        if (other == obj || other == D_800FF54C_KeyPaWay) {
+            continue;
+        }
+        ox = other->trans.x;
+        oz = other->trans.z;
+        dx = ox - obj->trans.x;
+        dx *= dx;
+        dz = oz - obj->trans.z;
+        dz *= dz;
+        dists[n] = func_800B1750(dx + dz);
+        angs[n] = func_800B0CD8(ox - obj->trans.x, oz - obj->trans.z);
+        n++;
+    }
+    tries = 0;
+    if (n != 0) {
+        D_800FF51E_KeyPaWay = 0;
+        D_800FF522_KeyPaWay = 0;
+        work = KPW_PLAYER(obj);
+        while (1) {
+            for (i = 0; i < n; i++) {
+                if (func_800FE1F0_KeyPaWay(angs[i], dir) <= angle && dists[i] <= dist) {
+                    break;
+                }
+            }
+            if (i == n) {
+                ox = func_800AEAC0(dir) * work->unk_40 + obj->trans.x;
+                oz = func_800AEFD0(dir) * work->unk_40 + obj->trans.z;
+                if (work->unk_48 + -700.0f <= ox && ox <= 700.0f - work->unk_48 && work->unk_48 + -1000.0f <= oz && oz <= 1000.0f - work->unk_48) {
+                    break;
+                }
+            }
+            D_800FF522_KeyPaWay++;
+            if (++tries == 36) {
+                D_800FF51E_KeyPaWay = 1;
+                break;
+            }
+            dir += 10.0f;
+            if (dir > 180.0f) {
+                dir -= 360.0f;
+            }
+        }
+        if (dir < 0.0f) {
+            dir += 360.0f;
+        }
+        if (dir >= 360.0f) {
+            dir -= 360.0f;
+        }
+    }
+    return dir;
+}
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", D_800FF3B0_KeyPaWay);
 
