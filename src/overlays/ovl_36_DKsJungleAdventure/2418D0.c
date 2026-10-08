@@ -383,8 +383,8 @@ EventTableEntry D_800FA224_DKsJungleAdventure[] = {
 
 
 // bss
-struct Object *D_800FA300_DKsJungleAdventure;
-struct Object *D_800FA304_DKsJungleAdventure;
+extern struct Object *D_800FA300_DKsJungleAdventure;
+extern struct Object *D_800FA304_DKsJungleAdventure;
 // struct mpSource_object *bss_toad_model;
 // struct mpSource_object *bss_toad_instances[DK_STAR_COUNT];
 // struct mpSource_object *bss_thwomp_model;
