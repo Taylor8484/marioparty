@@ -254,7 +254,7 @@ const char D_8010F058_MinigameInstructions[] __attribute__((section(".rodata")))
     "\x82\xA9\x82\xA2\x82\xCD\x82\xC2\x82\xBF\x82\xE3\x82\xA4";
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F6B14_MinigameInstructions);
 #endif
-// loop-invariant order: (s16)model is hoisted before the float constants (masked 6)
+// loop-invariant order: (s16)model is hoisted before the float constants (masked 2)
 #ifdef NON_MATCHING
 void func_800F7398_MinigameInstructions(void) {
     Vec2f in;
@@ -903,7 +903,7 @@ void func_800F949C_MinigameInstructions(omObjData* obj) {
         omOvlReturnEx(1);
     }
 }
-// loop-invariant hoisting: retail keeps 32.0f, 255 and the 2^31 conversion constant inside the outer loop (masked 82)
+// loop-invariant hoisting: retail keeps 32.0f, 255 and the 2^31 conversion constant inside the outer loop (masked 86)
 #ifdef NON_MATCHING
 void func_800F94E8_MinigameInstructions(s16 model, s16 idx) {
     Gfx* gfx;
