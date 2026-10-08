@@ -383,8 +383,8 @@ EventTableEntry D_800FA224_DKsJungleAdventure[] = {
 
 
 // bss
-struct Object *D_800FA300_DKsJungleAdventure;
-struct Object *D_800FA304_DKsJungleAdventure;
+extern struct Object *D_800FA300_DKsJungleAdventure;
+extern struct Object *D_800FA304_DKsJungleAdventure;
 // struct mpSource_object *bss_toad_model;
 // struct mpSource_object *bss_toad_instances[DK_STAR_COUNT];
 // struct mpSource_object *bss_thwomp_model;
@@ -639,7 +639,7 @@ void func_800F6CD8_DKsJungleAdventure(void) {
         string_id = 1258;
     }
 
-    LoadStringIntoWindow(str->unk8, (void*)string_id, -1, -1);
+    LoadStringIntoWindow(str->unk8, (void*)(PB_PTR32)string_id, -1, -1);
     func_80071C8C(str->unk8, 1);
     PlaySound(1125);
     WaitForTextConfirmation(str->unk8);
@@ -668,7 +668,7 @@ void func_800F6CD8_DKsJungleAdventure(void) {
         string_id = 1259;
     }
 
-    LoadStringIntoWindow(str->unk8, (void*)string_id, -1, -1);
+    LoadStringIntoWindow(str->unk8, (void*)(PB_PTR32)string_id, -1, -1);
     func_80071C8C(str->unk8, 1);
     WaitForTextConfirmation(str->unk8);
     func_80071E80(str->unk8, 1);
