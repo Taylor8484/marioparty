@@ -110,14 +110,150 @@ void func_800FAC2C_MinigameInstructions(Ovl6FPlayerWork* work) {
         HuPrcVSleep();
     }
 }
+extern s8 ContStkY[4]; /* engine/pad.h */
+extern u16 ContBtn[4];
+
+// loop.c hoists 180.0f into $f28 (retail reloads it) and a port copy in a1; register allocation (masked 45)
+#ifdef NON_MATCHING
+void func_800FADF4_MinigameInstructions(Ovl6FPlayerWork* work) {
+    s16 prevState;
+    s32 port;
+    f32 x;
+    f32 y;
+    f32 mag;
+    u32 flags;
+    s16 motion;
+    s32 used;
+    f32 t;
+    f32 step;
+    f32 amp;
+    f32 h;
+
+    port = GwPlayer[work->unk_38].port;
+    x = (s8)(ContStkX[port] / 10);
+    y = (s8)(ContStkY[port] / 10);
+    mag = x * x + y * y;
+    flags = D_8010E970_MinigameInstructions[(s16)D_8010F766_MinigameInstructions].flags;
+    motion = 0;
+    if (mag != 0.0f && (flags & 3)) {
+        func_800257E4(work->unk_4E, 0.0f, func_800B0CD8(x, -y), 0.0f);
+    }
+    prevState = work->unk_3C;
+    if ((ContBtnTrg[port] & 0x8000) && (flags & 4) && work->unk_56 != -1) {
+        work->unk_3C = 3;
+        used = 0;
+        func_80025C20(work->unk_4E, func_80025E48(work->unk_56), 0, 8, 0);
+        func_800FA300_MinigameInstructions(0x127, work);
+        t = 0.0f;
+        step = 10.0f;
+        amp = 100.0f;
+        h = func_800AEAC0(t) * amp;
+        do {
+            t += step;
+            if ((ContBtnTrg[port] & 0x2000) && work->unk_3C != 4 && (flags & 8) && (used ^ 1) && work->unk_58 != -1) {
+                work->unk_3C = 4;
+                step = 20.0f;
+                t = 90.0f;
+                D_800F2B7C[work->unk_4E].unk_0C = -1;
+                amp = h;
+                func_80025BB8(work->unk_4E, work->unk_58);
+                func_800FA300_MinigameInstructions(0x147, work);
+                func_800FB4DC_MinigameInstructions(work->unk_4E);
+            } else if (work->unk_3C != 4 && t == 40.0f && !(ContBtn[port] & 0x8000)) {
+                t = 90.0f;
+                amp = h;
+            }
+            if (ContBtnTrg[port] & 0x4000) {
+                if ((flags & 0x60) && t > 20.0f && work->unk_3C != 4 && (used ^ 1) && work->unk_5C != -1) {
+                    func_800FA300_MinigameInstructions(0x13C, work);
+                    D_800F2B7C[work->unk_4E].unk_0C = -1;
+                    if (flags & 0x20) {
+                        func_80025BB8(work->unk_4E, work->unk_5E);
+                    } else {
+                        func_80025BB8(work->unk_4E, work->unk_5C);
+                    }
+                    amp = h;
+                    used = 1;
+                    func_800FB4DC_MinigameInstructions(work->unk_4E);
+                    step = 20.0f;
+                    t = 90.0f;
+                }
+            }
+            if (t > 180.0f) {
+                t = 180.0f;
+            }
+            h = func_800AEAC0(t) * amp;
+            func_80025798(work->unk_4E, work->unk_0C, h + work->unk_10, work->unk_14);
+            HuPrcVSleep();
+        } while (t < 180.0f);
+        if (work->unk_3C == 4) {
+            func_800FA300_MinigameInstructions(0x14E, work);
+            func_800FA3AC_MinigameInstructions(2, work);
+            t = 0.0f;
+            do {
+                t += 20.0f;
+                h = func_800AEAC0(t) * 20.0f;
+                func_80025798(work->unk_4E, work->unk_0C, h + work->unk_10, work->unk_14);
+                HuPrcVSleep();
+            } while (t < 180.0f);
+            func_80025BB8(work->unk_4E, work->unk_5A);
+            func_800FB4DC_MinigameInstructions(work->unk_4E);
+        } else {
+            func_800FA300_MinigameInstructions(0x12E, work);
+            func_80025C20(work->unk_4E, func_80025E48(work->unk_50), 0, 8, 2);
+        }
+        mag = 0.0f;
+    }
+    if (mag == 0.0f) {
+        work->unk_3C = 0;
+        motion = func_80025E48(work->unk_50);
+    } else if (mag <= 16.0f && (flags & 1)) {
+        work->unk_3C = 1;
+        motion = func_80025E48(work->unk_54);
+        func_800FB590_MinigameInstructions(work, motion);
+    } else if (mag > 16.0f && (flags & 2)) {
+        work->unk_3C = 2;
+        motion = func_80025E48(work->unk_52);
+        func_800FB60C_MinigameInstructions(work, motion);
+    }
+    if ((ContBtnTrg[port] & 0x4000) && (flags & 0x10) && work->unk_5C != -1) {
+        func_800FA300_MinigameInstructions(0x135, work);
+        func_80025BB8(work->unk_4E, work->unk_5C);
+        D_800F2B7C[work->unk_4E].unk_0C = -1;
+        func_800FB4DC_MinigameInstructions(work->unk_4E);
+        prevState = -1;
+        work->unk_3C = 0;
+        motion = func_80025E48(work->unk_50);
+    }
+    if (prevState != work->unk_3C) {
+        func_80025C20(work->unk_4E, motion, 0, 8, 2);
+    }
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FADF4_MinigameInstructions);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FB4DC_MinigameInstructions);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FB590_MinigameInstructions);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FB60C_MinigameInstructions);
-
+#endif
+void func_800FB4DC_MinigameInstructions(s16 model) {
+    do {
+        HuPrcVSleep();
+        if (D_800F2B7C[model].unk_0A & 4) {
+            if (func_80025D18(model) <= 0.0f) {
+                break;
+            }
+        } else if (func_80025D18(model) == func_80025D40(model)) {
+            break;
+        }
+    } while (1);
+}
+void func_800FB590_MinigameInstructions(Ovl6FPlayerWork* work, s16 motion) {
+    if (func_80025D18(work->unk_4E) == 0.0f || func_80025E48(work->unk_4E) != motion) {
+        func_800FA300_MinigameInstructions(0x112, work);
+    }
+}
+void func_800FB60C_MinigameInstructions(Ovl6FPlayerWork* work, s16 motion) {
+    if (func_80025D18(work->unk_4E) == 0.0f || func_80025E48(work->unk_4E) != motion) {
+        func_800FA300_MinigameInstructions(0x119, work);
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FB688_MinigameInstructions);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", func_800FB7D8_MinigameInstructions);
