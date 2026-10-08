@@ -412,6 +412,9 @@ extern u16 D_800FF370_1 __asm__("D_800FF370_KeyPaWay+2");
 extern u16 D_800FF370_0 __asm__("D_800FF370_KeyPaWay");
 extern u16 D_800FF370_1 __asm__("D_800FF370_KeyPaWay+2");
 #endif
+// matches once 1F62C0.c.o is in the Makefile's blank-line-strip rule: KMC as adds a nop before the
+// mul.s after func_800AEAC0's return (masked 5, only that nop and the shift it causes)
+#ifdef NON_MATCHING
 void func_800F7840_KeyPaWay(omObjData* arg0) {
     f32 s, c;
 
@@ -451,6 +454,9 @@ void func_800F7840_KeyPaWay(omObjData* arg0) {
     }
     omSetRot(arg0, arg0->rot.x, D_800FF358_KeyPaWay, arg0->rot.z);
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800F7840_KeyPaWay);
+#endif
 
 void func_800F7AE0_KeyPaWay(omObjData* arg0) {
     KPWBodyWork* work;
@@ -1062,7 +1068,7 @@ void func_800F9A90_KeyPaWay(omObjData* arg0) {
                 ext->unk_24--;
                 goto restore;
             }
-            for (i = 0; i < 5; i++) {
+            for (i = 0; i < 5; i++) { /* retail's loop has an empty body */
             }
             if (i == 5) {
                 D_800FF578_KeyPaWay = 7;
@@ -1310,14 +1316,16 @@ void func_800FA7F4_KeyPaWay(omObjData* arg0) {
                 }
                 if (min <= 300.0f) {
                     func_800FAAF4_KeyPaWay(best, D_800FF590_KeyPaWay);
-                    en = ((KPWBodyWork*)(en = best->unk_50))->unk_68.enemy;
+                    en = best->unk_50;
+                    en = ((KPWBodyWork*)en)->unk_68.enemy;
                     en->unk_04 = 2;
                     en->unk_0C = D_800FF590_KeyPaWay;
                     en->unk_10 = D_800FF590_KeyPaWay->trans.x;
                     en->unk_14 = D_800FF590_KeyPaWay->trans.z;
                 } else {
                     for (i = 0; i < 5; i++) {
-                        en = ((KPWBodyWork*)(en = D_800FF548_KeyPaWay[i]->unk_50))->unk_68.enemy;
+                        en = D_800FF548_KeyPaWay[i]->unk_50;
+                        en = ((KPWBodyWork*)en)->unk_68.enemy;
                         en->unk_04 = 2;
                         en->unk_0C = D_800FF590_KeyPaWay;
                         en->unk_10 = D_800FF590_KeyPaWay->trans.x;
@@ -1338,7 +1346,8 @@ void func_800FA7F4_KeyPaWay(omObjData* arg0) {
             }
         }
         func_800FAAF4_KeyPaWay(best, D_800FF57C_KeyPaWay);
-        en = ((KPWBodyWork*)(en = best->unk_50))->unk_68.enemy;
+        en = best->unk_50;
+        en = ((KPWBodyWork*)en)->unk_68.enemy;
         en->unk_04 = 3;
         en->unk_0C = D_800FF57C_KeyPaWay;
         en->unk_10 = D_800FF57C_KeyPaWay->trans.x;
