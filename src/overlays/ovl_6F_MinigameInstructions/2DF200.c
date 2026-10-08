@@ -1,6 +1,5 @@
 #include "ovl6f.h"
 
-extern char D_8010F268_MinigameInstructions[]; /* "item_hook" (still INCLUDE_RODATA) */
 
 extern s8 ContStkY[];
 
@@ -1101,41 +1100,41 @@ f32 func_800FE8D8_MinigameInstructions(s16 port) {
 
     return x * x + y * y;
 }
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F18C_MinigameInstructions);
+const char D_8010F18C_MinigameInstructions[] __attribute__((section(".rodata"))) = "c030_000-kaodamy";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F1A0_MinigameInstructions);
+const char D_8010F1A0_MinigameInstructions[] __attribute__((section(".rodata"))) = "c005_000-bmerge1";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F1B4_MinigameInstructions);
+const char D_8010F1B4_MinigameInstructions[] __attribute__((section(".rodata"))) = "c029_000-kaodamy";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F1C8_MinigameInstructions);
+const char D_8010F1C8_MinigameInstructions[] __attribute__((section(".rodata"))) = "Luigi1-atama_1";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F1D8_MinigameInstructions);
+const char D_8010F1D8_MinigameInstructions[] __attribute__((section(".rodata"))) = "c028_000-kaodamy";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F1EC_MinigameInstructions);
+const char D_8010F1EC_MinigameInstructions[] __attribute__((section(".rodata"))) = "c003_000-head_1";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F1FC_MinigameInstructions);
+const char D_8010F1FC_MinigameInstructions[] __attribute__((section(".rodata"))) = "c027_000-kaodamy";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F210_MinigameInstructions);
+const char D_8010F210_MinigameInstructions[] __attribute__((section(".rodata"))) = "C002_000b-bmerge10_1";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F228_MinigameInstructions);
+const char D_8010F228_MinigameInstructions[] __attribute__((section(".rodata"))) = "c026_000-kaodamy";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F23C_MinigameInstructions);
+const char D_8010F23C_MinigameInstructions[] __attribute__((section(".rodata"))) = "Luigi1-atama_2";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F24C_MinigameInstructions);
+const char D_8010F24C_MinigameInstructions[] __attribute__((section(".rodata"))) = "c025_000-kaodamy";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F260_MinigameInstructions);
+const char D_8010F260_MinigameInstructions[] __attribute__((section(".rodata"))) = "atama_2";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F268_MinigameInstructions);
+const char D_8010F268_MinigameInstructions[] __attribute__((section(".rodata"))) = "item_hook";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F274_MinigameInstructions);
+const char D_8010F274_MinigameInstructions[] __attribute__((section(".rodata"))) = "38mt006_DEF";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F280_MinigameInstructions);
+const char D_8010F280_MinigameInstructions[] __attribute__((section(".rodata"))) = "38mt005_DEF";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F28C_MinigameInstructions);
+const char D_8010F28C_MinigameInstructions[] __attribute__((section(".rodata"))) = "38mt004_DEF";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F298_MinigameInstructions);
+const char D_8010F298_MinigameInstructions[] __attribute__((section(".rodata"))) = "38mt003_DEF";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F2A4_MinigameInstructions);
+const char D_8010F2A4_MinigameInstructions[] __attribute__((section(".rodata"))) = "38mt002_DEF";
 
 /* D_8010EE30[0] points at this string too, so it keeps its label. */
 const char D_8010F2B0_MinigameInstructions[] __attribute__((section(".rodata"))) = "38mt001_DEF";
@@ -1535,7 +1534,6 @@ void func_801001B0_MinigameInstructions(Ovl6FPlayerWork* work) {
     }
     work->unk_4C--;
 }
-extern char D_8010F268_MinigameInstructions[]; /* INCLUDE_RODATA string */
 
 // the -180.0f for CZoom - unk_14 is rematerialised in retail, CSE'd here (masked 2)
 #ifdef NON_MATCHING
@@ -2397,14 +2395,15 @@ void func_801031BC_MinigameInstructions(Ovl6FPlayerWork* work) {
         func_80025EB4(work->unk_4E, 1, 1);
     }
 }
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F2E0_MinigameInstructions);
+const char D_8010F2E0_MinigameInstructions[] __attribute__((section(".rodata"))) = "c005_000-cyl1_1_3";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F2F4_MinigameInstructions);
+const char D_8010F2F4_MinigameInstructions[] __attribute__((section(".rodata"))) = "Luigi1-karada_2_1_1";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F308_MinigameInstructions);
+const char D_8010F308_MinigameInstructions[] __attribute__((section(".rodata"))) = "c003_000-yoshi_body_2";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F320_MinigameInstructions);
+const char D_8010F320_MinigameInstructions[] __attribute__((section(".rodata"))) = "C002_000b-cone7_1_1_1_1";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F338_MinigameInstructions);
+const char D_8010F338_MinigameInstructions[] __attribute__((section(".rodata"))) = "Luigi1-karada_1_2_1";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DF200", D_8010F34C_MinigameInstructions);
+const char D_8010F34C_MinigameInstructions[] __attribute__((section(".rodata"))) = "karada_2_1_1_1";
+const char D_8010F35C_MinigameInstructions[] __attribute__((section(".rodata"))) = "";

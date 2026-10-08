@@ -226,7 +226,9 @@ extern u8 D_8010EF60_MinigameInstructions;
 extern Ovl6FTeamEntry D_8010EF70_MinigameInstructions[56];
 
 /* .rodata referenced as objects (string/array templates stay INCLUDE_RODATA) */
-extern u8 D_8010F050_MinigameInstructions; /* SJIS string passed to func_8007B168 */
+extern const u8 D_8010F050_MinigameInstructions[]; /* SJIS string passed to func_8007B168 */
+extern const char D_8010F268_MinigameInstructions[]; /* "item_hook" (2DF200 rodata) */
+extern const char D_8010F360_MinigameInstructions[]; /* "item_hook" (2E8220 rodata) */
 
 /* ---------------------------------------------------------------------------------------------
    .bss (ovl_6F_bss.bss.s, 0x8010F400..0x8010F780). Inner labels of one object are #define views

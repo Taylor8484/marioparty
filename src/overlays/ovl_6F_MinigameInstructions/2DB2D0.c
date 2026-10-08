@@ -56,7 +56,7 @@ void func_800F6610_MinigameInstructions(void) {
     }
     D_8010F772_MinigameInstructions = i;
     omAddPrcObj(func_800F9110_MinigameInstructions, 0x3F00, 0x800, 0);
-    func_8007B168(&D_8010F050_MinigameInstructions, 0);
+    func_8007B168(D_8010F050_MinigameInstructions, 0);
     func_8007FAC0();
     D_8010F4E4_MinigameInstructions = func_80023684(0x1040, 0x7918);
 }
@@ -98,7 +98,7 @@ void func_800F6990_MinigameInstructions(void) {
     }
     omOvlGotoEx(D_8010E4F0_MinigameInstructions[(s16) D_8010F766_MinigameInstructions].overlay, 0, 0x14);
 }
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", D_8010F050_MinigameInstructions);
+const u8 D_8010F050_MinigameInstructions[] __attribute__((section(".rodata"))) = { 0x82, 0xA0, 0x83, 0x41, 0x81, 0x49, 0x00 };
 
 // one delay slot: retail's branch to count = 37 is bnez, this is bnezl (masked 1)
 #ifdef NON_MATCHING

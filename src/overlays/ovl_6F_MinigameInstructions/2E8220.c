@@ -4,7 +4,6 @@ extern u16 ContBtn[];
 
 extern s8 ContStkY[];
 
-extern char D_8010F360_MinigameInstructions[]; /* "item_hook", still INCLUDE_RODATA (shared with later ranges) */
 
 void func_80103560_MinigameInstructions(Ovl6FPlayerWork* work) {
     Vec2f pos;
@@ -412,7 +411,8 @@ void func_80104988_MinigameInstructions(Ovl6FPlayerWork* work) {
         }
     }
 }
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", D_8010F360_MinigameInstructions);
+const char D_8010F360_MinigameInstructions[] __attribute__((section(".rodata"))) = "item_hook";
+const char D_8010F36C_MinigameInstructions[] __attribute__((section(".rodata"))) = "";
 
 void func_80104DF0_MinigameInstructions(Ovl6FPlayerWork* work) {
     Vec2f pos;
@@ -804,15 +804,15 @@ void func_80106358_MinigameInstructions(Ovl6FPlayerWork* work) {
     }
 }
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", D_8010F3B8_MinigameInstructions);
+const char D_8010F3B8_MinigameInstructions[] __attribute__((section(".rodata"))) = "27mt008_DEF";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", D_8010F3C4_MinigameInstructions);
+const char D_8010F3C4_MinigameInstructions[] __attribute__((section(".rodata"))) = "27mt007_DEF";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", D_8010F3D0_MinigameInstructions);
+const char D_8010F3D0_MinigameInstructions[] __attribute__((section(".rodata"))) = "27mt006_DEF";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", D_8010F3DC_MinigameInstructions);
+const char D_8010F3DC_MinigameInstructions[] __attribute__((section(".rodata"))) = "27mt005_DEF";
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2E8220", D_8010F3E8_MinigameInstructions);
+const char D_8010F3E8_MinigameInstructions[] __attribute__((section(".rodata"))) = "27mt004_DEF";
 
 const char D_8010F3F4_MinigameInstructions[] = "27mt003_DEF";
 
@@ -1017,7 +1017,6 @@ void func_80107050_MinigameInstructions(Ovl6FPlayerWork* work) {
         func_800FADF4_MinigameInstructions(work);
     }
 }
-extern char D_8010F360_MinigameInstructions[]; /* "item_hook" (INCLUDE_RODATA above) */
 
 void func_80107088_MinigameInstructions(Ovl6FPlayerWork* work) {
     Vec2f in;
@@ -1856,7 +1855,6 @@ void func_8010A5D4_MinigameInstructions(Ovl6FPlayerWork* work) {
     } while (D_800F2B7C[work->unk_4E].unk_0C != -1);
     func_800FB4DC_MinigameInstructions(work->unk_4E);
 }
-extern char D_8010F360_MinigameInstructions[];
 
 void func_8010A75C_MinigameInstructions(Ovl6FPlayerWork* work) {
     Vec2f pos;
