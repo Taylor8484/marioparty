@@ -104,8 +104,87 @@ INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", D
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F6B14_MinigameInstructions);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F7398_MinigameInstructions);
+// loop-invariant order: (s16)model is hoisted before the float constants (masked 6)
+#ifdef NON_MATCHING
+void func_800F7398_MinigameInstructions(void) {
+    Vec2f in;
+    Vec3f out;
+    u16 model;
+    s16 i;
+    s16 j;
+    f32 t;
+    f32 u;
+    f32 z;
 
+    model = LoadFormFile(0xB0008, 0x289);
+    func_80025830(model, 0.0f, 0.0f, 0.0f);
+    func_80025EB4(model, 2, 2);
+    func_800F94E8_MinigameInstructions(model, D_8010F766_MinigameInstructions);
+    HuPrcSleep(13);
+    for (i = 0; i < 16; i++) {
+        HuPrcVSleep();
+        func_800211BC(model, 0xFF);
+        in.x = 290.0f;
+        in.y = 54.0f;
+        func_8001DD24(0, CZoom - 300.0f, (Vec3f*) &in, &out);
+        t = i;
+        t /= 15.0f;
+        out.x = t * out.x;
+        out.y = t * out.y;
+        func_80025798(model, out.x, out.y, -300.0f);
+        z = t * 0.8f;
+        func_80025830(model, z, z, z);
+    }
+    D_8010F4E8_MinigameInstructions++;
+    while (D_8010F4E8_MinigameInstructions < 2) {
+        HuPrcVSleep();
+    }
+    for (i = 0; i < 11; i++) {
+        HuPrcVSleep();
+        u = i / 10.0f;
+        func_800257E4(model, u * -10.0f, u * 149.0f, 0.0f);
+    }
+    do {
+        HuPrcVSleep();
+    } while (D_8010F764_MinigameInstructions != 0);
+    if (D_8010F760_MinigameInstructions == 0) {
+        func_80060F04(D_8010F772_MinigameInstructions, 10, 0, 10);
+    } else {
+        for (j = 0; j < 4; j++) {
+            func_80060F04(j, 10, 0, 10);
+        }
+    }
+    z = -300.0f;
+    for (i = 0; i < 30; i++) {
+        HuPrcVSleep();
+        t = i;
+        func_800257E4(model, ((30.0f - t) / 40.0f) * -10.0f, (t /= 30.0f) * 31.0f + 149.0f, 0.0f);
+        in.x = t * -130.0f + 290.0f;
+        t = t * 66.0f + 54.0f;
+        in.y = t;
+        func_8001DD24(0, CZoom - 300.0f, (Vec3f*) &in, &out);
+        z += 20.0f;
+        func_80025798(model, out.x, out.y, z);
+        if (i == 10) {
+            func_80060398(20);
+        }
+    }
+    func_800726AC(0, 20);
+    func_80072724(0xFF, 0xFF, 0xFF);
+    func_800601D4(40);
+    while (func_80072718() != 0) {
+        z += 20.0f;
+        func_80025798(model, out.x, out.y, z);
+        HuPrcVSleep();
+    }
+    D_8010F400_MinigameInstructions = 1;
+    while (1) {
+        HuPrcVSleep();
+    }
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F7398_MinigameInstructions);
+#endif
 void func_800F785C_MinigameInstructions(void) {
     s16 mot[3];
     Vec2f in;
@@ -172,8 +251,66 @@ void func_800F785C_MinigameInstructions(void) {
 }
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F7C58_MinigameInstructions);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6F_MinigameInstructions/2DB2D0", func_800F84B0_MinigameInstructions);
+void func_800F84B0_MinigameInstructions(void) {
+    s16 ids[4];
+    s32 pad[2]; /* retail frame is 8 bytes larger */
+    TextWindow* win;
+    f32 scale;
+    f32 angle;
+    f32 ofs;
+    s16 i;
+    s16 prev;
+    s16 state;
 
+    scale = 1.0f;
+    win = &D_800ED4B0[D_8010F408_MinigameInstructions];
+    ids[0] = func_8006DB3C(D_8010F408_MinigameInstructions, 0xB0055, 0x74, -0x2F, 0);
+    ids[1] = func_8006DB3C(D_8010F408_MinigameInstructions, 0xB0056, 0x36, -0x2F, 0);
+    ids[2] = func_8006DB3C(D_8010F408_MinigameInstructions, 0xB0056, 0xB2, -0x2F, 1);
+    ids[3] = func_8006DB3C(D_8010F408_MinigameInstructions, 0xB0057, 0x74, -0x2F, 1);
+    func_800674BC(win->unk_44, ids[3], 0x1000);
+    func_8006752C(win->unk_44, ids[3], 0x100);
+    func_800674F4(win->unk_44, ids[3], 0x20, 0xE, 0x71);
+    for (i = 0; i < 4; i++) {
+        func_80067354(win->unk_44, ids[i], win->unk_EC, win->unk_F0);
+    }
+    angle = 0.0f;
+    while (1) {
+        prev = D_8010F4EA_MinigameInstructions;
+        HuPrcVSleep();
+        for (i = 0; i < 4; i++) {
+            func_80067354(win->unk_44, ids[i], win->unk_EC, win->unk_F0);
+        }
+        if (D_8010F764_MinigameInstructions == 0) {
+            break;
+        }
+        if (prev != D_8010F4EA_MinigameInstructions) {
+            state = D_8010F4EA_MinigameInstructions;
+            if (state >= 3) {
+                state = 2;
+            }
+            func_800672DC(win->unk_44, ids[3], state, 0);
+            func_800672B0(win->unk_44, ids[3], 1);
+        }
+        angle += 15.0f;
+        ofs = 2.0f * func_800AEAC0(angle);
+        func_80066DC4(win->unk_44, ids[1], ofs + 54.0f, -0x2F);
+        func_80066DC4(win->unk_44, ids[2], 180.0f - ofs, -0x2F);
+    }
+    while (scale >= 0.0f) {
+        for (i = 0; i < 4; i++) {
+            func_80067354(win->unk_44, ids[i], scale, scale);
+        }
+        scale -= 0.1f;
+        HuPrcVSleep();
+    }
+    for (i = 0; i < 4; i++) {
+        func_80067354(win->unk_44, ids[i], 0.0f, 0.0f);
+    }
+    while (1) {
+        HuPrcVSleep();
+    }
+}
 s16 func_800F885C_MinigameInstructions(s16 idx) {
     s16 msg;
 
