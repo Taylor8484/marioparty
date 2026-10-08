@@ -204,8 +204,80 @@ void func_800FA7E0_KeyPaWay(omObjData* arg0) {
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FA7F4_KeyPaWay);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FAAF4_KeyPaWay);
+// register allocation: v0/v1 swapped for the key/carrier pointer (masked 0)
+#ifdef NON_MATCHING
+void func_800FAAF4_KeyPaWay(omObjData* obj, omObjData* target) {
+    f32 dist[4];
+    f32 tx[4];
+    f32 tz[4];
+    u16 idx[4];
+    omObjData* e;
+    omObjData* p;
+    omObjData* ref;
+    KPWEnemyExt* ext;
+    f32 dSelf;
+    f32 dRef;
+    f32 aSelf;
+    f32 aRef;
+    u16 t;
+    s32 i;
+    s32 n;
 
+    for (i = 0; i < 4; i++) {
+        D_800FF516_KeyPaWay[i] = 0;
+    }
+    for (n = 0; n < 5; n++) {
+        e = D_800FF548_KeyPaWay[n];
+        if (e == obj) {
+            continue;
+        }
+        ext = KPW_BODY(e)->unk_68.enemy;
+        for (i = 0; i < 4; i++) {
+            p = D_800FF594_KeyPaWay[i];
+            tx[i] = (target->trans.x - p->trans.x) * 0.75f + p->trans.x;
+            tz[i] = (target->trans.z - p->trans.z) * 0.75f + p->trans.z;
+            dist[i] = func_800B1750(SQ(tx[i] - e->trans.x) + SQ(tz[i] - e->trans.z));
+            idx[i] = i;
+        }
+        for (i = 0; i < 3; i++) {
+            if (dist[idx[i]] > dist[idx[i + 1]]) {
+                t = idx[i + 1];
+                idx[i + 1] = idx[i];
+                idx[i] = t;
+            }
+        }
+        for (i = 0; i < 4; i++) {
+            if (D_800FF516_KeyPaWay[idx[i]] != 1) {
+                ext->unk_0C = D_800FF594_KeyPaWay[idx[i]];
+                ext->unk_10 = tx[idx[i]];
+                ext->unk_14 = tz[idx[i]];
+                D_800FF516_KeyPaWay[idx[i]] = 1;
+                dSelf = func_800B1750(SQ(ext->unk_0C->trans.x - e->trans.x) + SQ(ext->unk_0C->trans.z - e->trans.z));
+                if (D_800FF57C_KeyPaWay == NULL) {
+                    aSelf = func_800B0CD8(e->trans.z - D_800FF590_KeyPaWay->trans.z, e->trans.x - D_800FF590_KeyPaWay->trans.x);
+                    dRef = func_800B1750(SQ(ext->unk_0C->trans.x - D_800FF590_KeyPaWay->trans.x) +
+                                         SQ(ext->unk_0C->trans.z - D_800FF590_KeyPaWay->trans.z));
+                    ref = D_800FF590_KeyPaWay;
+                } else {
+                    aSelf = func_800B0CD8(e->trans.z - ext->unk_0C->trans.z, e->trans.x - ext->unk_0C->trans.x);
+                    dRef = func_800B1750(SQ(ext->unk_0C->trans.x - D_800FF57C_KeyPaWay->trans.x) +
+                                         SQ(ext->unk_0C->trans.z - D_800FF57C_KeyPaWay->trans.z));
+                    ref = D_800FF57C_KeyPaWay;
+                }
+                aRef = func_800B0CD8(ref->trans.z - ext->unk_0C->trans.z, ref->trans.x - ext->unk_0C->trans.x);
+                if ((u8)(rand8() % 10) < 3 || (func_800FE1F0_KeyPaWay(aSelf, aRef) < 20.0f && dSelf < dRef)) {
+                    ext->unk_04 = 4;
+                } else {
+                    ext->unk_04 = 1;
+                }
+                break;
+            }
+        }
+    }
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FAAF4_KeyPaWay);
+#endif
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2C_KeyPaWay/1F62C0", func_800FAF28_KeyPaWay);
 
 f32 func_800FB38C_KeyPaWay(KPWBodyWork* work, f32 angle) {
