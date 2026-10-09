@@ -960,6 +960,10 @@ void func_8007F54C(void* code, u16* outbuf, u32 outbufWidth, u16* workbuf) {
     func_8007CA90();
     func_8007CE28((u8*) &D_800E6EB8[header->nest_start_x + (header->nest_start_y * D_800E7A3C)]);
     func_8007F2FC(outbuf);
+#ifdef TARGET_PC
+    /* The decoder stores host-endian u16 RGBA5551 texels: tell the graphics bridge to swap them. */
+    pb_gfx_native16(outbuf, (size_t)outbufWidth * header->height * sizeof(u16));
+#endif
 }
 
 
