@@ -137,7 +137,7 @@ extern s16 D_800FA15C_GameModeOverworld[][2];
 
 
 void func_80025F10(s16, s32);
-Object* func_80026A0C(s16, void*);
+unk2C0C0Struct50* func_80026A0C(s16, char*); /* a model node (24740.c), not an Object */
 void func_800F731C_GameModeOverworld(void);
 void func_800F86EC_GameModeOverworld(void);
 extern char D_800FA180_GameModeOverworld[];
@@ -367,7 +367,7 @@ void func_800F7214_GameModeOverworld(void) {
     func_80025830(temp_s0, 3.0f, 3.0f, 3.0f);
     func_800257E4(temp_s0, 0.0f, 45.0f, 0.0f);
     omAddPrcObj(func_800F731C_GameModeOverworld, 0x3F00, 0x1000, 0);
-    func_80026A0C(temp_s0, "c100_1-atama")->unk_44 = -20.0f;
+    func_80026A0C(temp_s0, "c100_1-atama")->unk_44.x = -20.0f; /* the head's rotation x */
     while (1) {
         HuPrcVSleep();
     }
