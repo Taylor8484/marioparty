@@ -444,4 +444,241 @@ void func_800FD420_SlotMachine(void) {
         }
     }
 }
+// one 0.2 constant hoisted out of the loop (breaks a cross-jump), D_800FEDBC row-base form, FP register
+// numbering (n64chkf masked 143, mostly shifted branch targets; ~10 instructions after masking those)
+#ifdef NON_MATCHING
+void func_800FD590_SlotMachine(void) {
+    f32 pos[3][2];
+    SlotFx* fx;
+    s32 i;
+    s32 burst;
+    s32 done;
+    s32 b;
+    SlotFx* e;
+    s32 k;
+    s16 sym;
+    s16 kind;
+    u8 frame;
+    f32 a;
+
+    func_800FCA34_SlotMachine(0, &D_800FED68_SlotMachine, pos[0]);
+    func_800FCA34_SlotMachine(0, &D_800FED74_SlotMachine, pos[1]);
+    func_800FCA34_SlotMachine(0, &D_800FED80_SlotMachine, pos[2]);
+    burst = 0;
+    if (D_800FFC90_SlotMachine != D_800FFC8C_SlotMachine) {
+        D_800FFC8C_SlotMachine = D_800FFC90_SlotMachine;
+        switch (D_800FFC90_SlotMachine) {
+            case 3:
+                D_800FFCA0_SlotMachine = 0;
+                break;
+            case 1:
+            case 2:
+                D_800FFC98_SlotMachine = 0;
+                break;
+            case 0:
+                if (D_800FFC94_SlotMachine < 0) {
+                    D_800FFCA0_SlotMachine = -1;
+                } else {
+                    if (D_800FFC98_SlotMachine == 0) {
+                        D_800FFC96_SlotMachine = D_800FFC94_SlotMachine;
+                    }
+                    D_800FFC9A_SlotMachine = D_800FFC94_SlotMachine;
+                    D_800FFC9C_SlotMachine = 20;
+                }
+                break;
+        }
+    }
+    if (D_800FFC96_SlotMachine >= 0 && D_800FFC98_SlotMachine == 0) {
+        sym = D_800FFC96_SlotMachine;
+        kind = D_800FED8C_SlotMachine[sym].unk_00;
+        frame = D_800FED8C_SlotMachine[sym].unk_03;
+        for (fx = D_800FFAD8_SlotMachine, i = 0; i < D_800FEDAC_SlotMachine[kind].unk_00; fx++, i++) {
+            k = i % 3;
+            fx->unk_00 = 0xC0;
+            fx->unk_01 = kind;
+            fx->unk_03 = frame;
+            fx->unk_02 = 0;
+            fx->unk_38 = sym;
+            if (D_800FEDBC_SlotMachine[kind][0][0] == 0x7F) {
+                fx->unk_28 = fx->unk_10 = pos[k][0];
+                fx->unk_2C = fx->unk_14 = pos[k][1];
+            } else {
+                fx->unk_28 = fx->unk_10 = (D_800FEDBC_SlotMachine + kind)[0][k][0] * 10.0;
+                fx->unk_2C = fx->unk_14 = (D_800FEDBC_SlotMachine + kind)[0][k][1] * 10.0;
+            }
+            fx->unk_24 = D_800FEDAC_SlotMachine[kind].unk_01 * 0.1;
+            fx->unk_30 = fx->unk_18 = D_800FEDAC_SlotMachine[kind].unk_02 * 0.1;
+            fx->unk_34 = fx->unk_1C = D_800FEDAC_SlotMachine[kind].unk_03 * 0.1;
+            fx->unk_20 = 0.0f;
+            fx->unk_3A = fx->unk_3C = 0;
+            fx->unk_3E = fx->unk_40 = fx->unk_42 = fx->unk_44 = 0;
+        }
+        for (; i < 6; i++) {
+            D_800FFAD8_SlotMachine[i].unk_00 = 0;
+        }
+        burst = 1;
+        D_800FFC9E_SlotMachine = -1;
+        D_800FFC98_SlotMachine = burst;
+        PlaySound(0x1D6);
+    } else if (D_800FFC9C_SlotMachine != 0) {
+        for (i = 0; i < 3; i++) {
+            if (D_800FFAD8_SlotMachine[i].unk_02 != 1) {
+                break;
+            }
+        }
+        if (i >= 3 && --D_800FFC9C_SlotMachine == 0) {
+            if (D_800FFC9E_SlotMachine & 0x1F) {
+                D_800FFC9C_SlotMachine++;
+            } else {
+                for (fx = D_800FFAD8_SlotMachine, i = 0; i < 3; fx++, i++) {
+                    fx->unk_02 = 2;
+                    fx->unk_3A = fx->unk_3C = 0;
+                }
+                for (; i < 6; i++) {
+                    D_800FFAD8_SlotMachine[i].unk_00 = 0;
+                }
+                D_800FFC9A_SlotMachine = -1;
+            }
+        }
+    }
+    if (D_800FFC9E_SlotMachine >= 0) {
+        D_800FFC9E_SlotMachine = (D_800FFC9E_SlotMachine + 1) & 0x7FFF;
+    }
+    b = burst;
+    fx = D_800FFAD8_SlotMachine;
+    for (i = 0; i < 6; i++) {
+        e = &fx[i];
+        if (e->unk_00 == 0) {
+            continue;
+        }
+        e->unk_3A++;
+        if (e->unk_02 == 0) {
+            done = 0;
+            if ((e->unk_40 == 0 || e->unk_3E != 0) && D_800FFCA0_SlotMachine < 0) {
+                e->unk_00 = 0;
+                continue;
+            }
+            if (!b) {
+                if (e->unk_40 == 0) {
+                    if (D_800FFA70_SlotMachine[i % 3].unk_00 == 0) {
+                        e->unk_40++;
+                    }
+                    continue;
+                }
+                if (e->unk_3E != 0) {
+                    e->unk_3E--;
+                    continue;
+                }
+                a = e->unk_24 + 0.1;
+                if (a >= 1.0) {
+                    a = 1.0f;
+                    e->unk_3C++;
+                    done = 1;
+                }
+                e->unk_24 = a;
+            }
+            a = e->unk_24;
+            switch (e->unk_01) {
+                case 0:
+                case 1:
+                    if (b) {
+                        if (i >= 3) {
+                            e->unk_3E = 5;
+                        } else {
+                            e->unk_3E = 0;
+                        }
+                        continue;
+                    }
+                    e->unk_10 = (pos[i % 3][0] - e->unk_28) * a + e->unk_28;
+                    e->unk_14 = (pos[i % 3][1] - e->unk_2C) * a + e->unk_2C;
+                case 2:
+                case 3:
+                    e->unk_18 = e->unk_30 + (1.0 - e->unk_30) * a;
+                    e->unk_1C = e->unk_34 + (1.0 - e->unk_34) * a;
+                    break;
+            }
+            if (done) {
+                e->unk_02 = 1;
+                if (i < 3) {
+                    e->unk_01 = D_800FED8C_SlotMachine[e->unk_38].unk_01;
+                } else {
+                    e->unk_01 = 0;
+                }
+                if (D_800FFC9E_SlotMachine < 0) {
+                    D_800FFC9E_SlotMachine = 0;
+                }
+                e->unk_3A = D_800FFC9E_SlotMachine;
+                e->unk_3C = 0;
+            }
+        } else if (e->unk_02 == 1) {
+            if (e->unk_3C == 0) {
+                e->unk_24 = 0.8f;
+                e->unk_3C++;
+                e->unk_18 = e->unk_1C = 1.0f;
+            }
+            switch (e->unk_01) {
+                case 0:
+                    e->unk_24 = (f32)(D_800FFC9E_SlotMachine & 0xF) / 16.0 * 0.6 + 0.2;
+                    e->unk_20 = func_800AEAC0((D_800FFC9E_SlotMachine & 0x1F) * 360.0 / 32.0) * 15.0;
+                    break;
+                case 1:
+                    e->unk_18 = e->unk_1C = func_800AEAC0((D_800FFC9E_SlotMachine & 0xF) * 90.0 / 16.0) * 0.6 + 1.0;
+                    e->unk_24 = (1.0 - (f32)(D_800FFC9E_SlotMachine & 0xF) / 16.0) * 0.8;
+                    e->unk_20 = func_800AEAC0((D_800FFC9E_SlotMachine & 0x1F) * 360.0 / 32.0) * 15.0;
+                    break;
+                case 2:
+                    e->unk_20 = func_800AEAC0((D_800FFC9E_SlotMachine & 0xF) * 360.0 / 16.0) * 30.0;
+                    break;
+                case 4:
+                    e->unk_20 = func_800AEAC0((D_800FFC9E_SlotMachine & 0x1F) * 360.0 / 32.0) * 30.0;
+                case 3:
+                    e->unk_1C = (func_800AEFD0((D_800FFC9E_SlotMachine & 0xF) * 360.0 / 16.0 - 90.0) + 1.0) * 0.15 + 1.0;
+                    break;
+            }
+            if (D_800FFCA0_SlotMachine < 0) {
+                e->unk_02 = 3;
+                e->unk_3C = 0;
+            }
+        } else if (e->unk_02 == 2) {
+            if (e->unk_3C == 0) {
+                if (i >= 3) {
+                    e->unk_00 = 0;
+                }
+                e->unk_3C++;
+                e->unk_24 = 0.8f;
+                e->unk_18 = e->unk_1C = 1.0f;
+                e->unk_20 = 0.0f;
+                e->unk_28 = e->unk_2C = 1.0f;
+                e->unk_3A = 0;
+            }
+            if (e->unk_3A >= i * 2) {
+                e->unk_18 = e->unk_1C = e->unk_2C;
+                e->unk_2C += 0.2;
+                e->unk_24 = e->unk_28 * 0.8;
+                if ((e->unk_28 -= 0.1) <= 0.0f) {
+                    e->unk_00 = 0;
+                }
+            }
+        } else if (e->unk_02 == 3) {
+            if (e->unk_3C == 0) {
+                if (i >= 3) {
+                    e->unk_00 = 0;
+                }
+                e->unk_3C++;
+                e->unk_24 = 0.8f;
+                e->unk_18 = e->unk_1C = 1.0f;
+                e->unk_20 = 0.0f;
+                e->unk_28 = 1.0f;
+            }
+            e->unk_24 = e->unk_28 * 0.8;
+            e->unk_1C = e->unk_28;
+            if ((e->unk_28 -= 0.2) <= 0.0f) {
+                e->unk_00 = 0;
+            }
+        }
+    }
+    func_800FD420_SlotMachine();
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E5DA0", func_800FD590_SlotMachine);
+#endif
