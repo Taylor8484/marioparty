@@ -55,7 +55,7 @@ typedef struct CTPlayerWork {
    (lbu 0xD + 2i) as a u8 argument (func_8003967C): write (u8)r->unk_0A / (u8)r->unk_0C[i],
    never a byte field at +1. */
 typedef struct CTReel {
-    /* 0x00 */ u8 unk_00;      /* face shown, 0..3 (& 3) */
+    /* 0x00 */ s8 unk_00;      /* face shown, 0..3 (& 3); read with lb as an index */
     /* 0x01 */ char unk_01;
     /* 0x02 */ s16 unk_02[4];  /* sprite (model part) per face */
     /* 0x0A */ s16 unk_0A;     /* current entry of unk_0C */
