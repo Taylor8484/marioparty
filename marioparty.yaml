@@ -2018,7 +2018,8 @@ segments:
     bss_size: 0x20
     subsegments:
       - [0x293A70, c]
-      - [0x295350, .rodata, 293A70]
+      - [0x295350, .data, 293A70]
+      - [0x295420, .rodata, 293A70]
       - {0x295450, type: bss, vram: 0x800F7FC0, name: ovl_57_bss}
   - type: code
     start: 0x295450
