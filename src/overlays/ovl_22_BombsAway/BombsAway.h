@@ -409,7 +409,7 @@ void func_800F8538_BombsAway(omObjData*);
 void func_800F8D48_BombsAway(omObjData*);
 void func_800F9824_BombsAway(omObjData*);
 void func_800F997C_BombsAway(omObjData*);
-void func_800FA47C_BombsAway(Vec*);
+f32 func_800FA47C_BombsAway(Vec*);
 f32 func_800FA4B4_BombsAway(Vec*);
 s32 func_800FA514_BombsAway(Vec*, Vec*);
 s32 func_800FA5D8_BombsAway(Vec*);
@@ -443,7 +443,7 @@ void func_800FC16C_BombsAway(Vec*, Vec*);
 void func_800FC1F4_BombsAway(Matrix4f, Vec*);
 void func_800FC39C_BombsAway(s16);
 void func_800FC478_BombsAway(Vec*, Vec*);
-void func_800FC530_BombsAway(s32, Vec*);
+void func_800FC530_BombsAway(s16, Vec*);
 
 /* 1B02A0.c */
 void func_800FC5E0_BombsAway(void);
