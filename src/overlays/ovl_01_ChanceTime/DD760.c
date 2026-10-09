@@ -289,4 +289,82 @@ void func_800FF354_ChanceTime(void) {
     
 }
 
+// register allocation: case 7 compares the copy of the coin count (masked 0)
+#ifdef NON_MATCHING
+void func_800FF3F0_ChanceTime(void) {
+    char unused[0x18]; /* retail's frame has 0x18 unreferenced bytes */
+    s32 max;
+    s16 win;
+    s16 n;
+    s32 c;
+
+    max = 0;
+    D_80101320_ChanceTime = 0;
+    win = CreateTextWindow(30, 60, 18, 4);
+    ShowTextWindow(win);
+    n = 0;
+    switch (D_801012E2_ChanceTime) {
+    case 2:
+        if (GwPlayer[D_801012E0_ChanceTime].coins != 0) {
+            c = GwPlayer[D_801012E0_ChanceTime].coins;
+            n = 10;
+            if (c < 10) {
+                n = c;
+            }
+        }
+        max = 10;
+        D_80101324_ChanceTime[0] -= n;
+        break;
+    case 5:
+        if (GwPlayer[D_801012E0_ChanceTime].coins != 0) {
+            c = GwPlayer[D_801012E0_ChanceTime].coins;
+            n = 20;
+            if (c < 20) {
+                n = c;
+            }
+        }
+        max = 20;
+        D_80101324_ChanceTime[0] -= n;
+        break;
+    case 7:
+        if (GwPlayer[D_801012E0_ChanceTime].coins != 0) {
+            c = GwPlayer[D_801012E0_ChanceTime].coins;
+            n = 30;
+            if (c < 30) {
+                n = c;
+            }
+        }
+        max = 30;
+        D_80101324_ChanceTime[0] -= n;
+        break;
+    }
+    func_8006DA5C(win, D_80101330_ChanceTime[GwPlayer[D_801012E0_ChanceTime].character], 0);
+    sprintf(D_80101780_ChanceTime, "%d", n);
+    func_8006DA5C(win, D_80101780_ChanceTime, 1);
+    func_8006E070(win, 0);
+    if (n >= max) {
+        LoadStringIntoWindow(win, (void*)0xD1, -1, -1);
+    } else {
+        LoadStringIntoWindow(win, (void*)0xD2, -1, -1);
+    }
+    WaitForTextConfirmation(win);
+    func_80055960(D_801012E0_ChanceTime, -n);
+    if (n != 0 && D_801012E0_ChanceTime == D_80101AAE_ChanceTime[0]) {
+        func_800184BC(D_800F3FB0[0], 0x24);
+    }
+    func_8006EB40(win);
+    LoadStringIntoWindow(win, (void*)0xD3, -1, -1);
+    WaitForTextConfirmation(win);
+    D_80101320_ChanceTime = 1;
+    HideTextWindow(win);
+    while (1) {
+        HuPrcVSleep();
+    }
+}
+
+/* unreferenced, after the "%d" above (the asm carries them otherwise) */
+const char D_801016A8_ChanceTime[] = "";
+const char D_801016AC_ChanceTime[] = "";
+#else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_01_ChanceTime/DD760", func_800FF3F0_ChanceTime);
+#endif
