@@ -20,7 +20,8 @@ f32 D_800FFB24_BombsAway = 0.0f;
 f32 D_800FFB28_BombsAway = 0.0f;
 /* Random seed (func_800FE1EC); retail returns its low half through D_800FFB2E. */
 s32 D_800FFB2C_BombsAway = 0x19971204;
-u16 D_800FFB30_BombsAway[8] = { 0, 180 };
+u16 D_800FFB30_BombsAway = 0;
+u16 D_800FFB32_BombsAway = 180;
 
 void func_800FC5E0_BombsAway(void) {
     void* file;
@@ -250,8 +251,98 @@ void func_800FE254_BombsAway(omObjData* obj) {
     D_800FFAC0_BombsAway = 0;
     D_800FFAC2_BombsAway = 0;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FE4A4_BombsAway);
+void func_800FE4A4_BombsAway(omObjData* obj) {
+    BaBomb* p;
+    unk2C0C0Struct50* n;
+    f32(*m)[4];
+    u16 model;
+    u16 i;
 
+    model = obj->model[1];
+    func_800FC8F8_BombsAway(obj);
+    if ((D_800FFB30_BombsAway += 2) >= 360) {
+        D_800FFB30_BombsAway -= 360;
+    }
+    if ((D_800FFB32_BombsAway += 4) >= 360) {
+        D_800FFB32_BombsAway -= 360;
+    }
+    D_80100790_BombsAway.unk_00.y = func_800AEAC0(D_800FFB30_BombsAway) * 10.0;
+    D_80100790_BombsAway.unk_0C.z = func_800AEAC0(D_800FFB30_BombsAway) * 3.0f;
+    if (D_800FFAC0_BombsAway != 0 && D_800FFAC0_BombsAway < 4) {
+        if (D_80100790_BombsAway.unk_00.x > 300.0) {
+            if (D_80100790_BombsAway.unk_00.x < 450.0) {
+                D_80100790_BombsAway.unk_18 += 0.05;
+            }
+            if (D_80100790_BombsAway.unk_18 < 0.0f) {
+                D_80100790_BombsAway.unk_00.x += D_80100790_BombsAway.unk_18;
+            }
+        }
+    }
+    omSetRot(obj, D_80100790_BombsAway.unk_0C.x, D_80100790_BombsAway.unk_0C.y, D_80100790_BombsAway.unk_0C.z);
+    omSetTra(obj, D_80100790_BombsAway.unk_00.x, D_80100790_BombsAway.unk_00.y - 75.0,
+             D_80100790_BombsAway.unk_00.z);
+    func_800257E4(model, D_80100790_BombsAway.unk_0C.x, D_80100790_BombsAway.unk_0C.y,
+                  D_80100790_BombsAway.unk_0C.z);
+    func_80025798(model, D_80100790_BombsAway.unk_00.x, D_80100790_BombsAway.unk_00.y - 75.0,
+                  D_80100790_BombsAway.unk_00.z);
+    for (i = 0; i < 4; i++) {
+        p = &D_801007E0_BombsAway[i];
+        if (p->unk_08 == NULL) {
+            continue;
+        }
+        switch (p->unk_00) {
+            case 0:
+                p->unk_08->x -= 2.0f;
+                if (p->unk_08->x <= -30.0f) {
+                    p->unk_08->x = -30.0f;
+                    if (p->unk_04 == 0) {
+                        if (p->unk_02 == 0) {
+                            func_800FEA0C_BombsAway(i, p->unk_14, p->unk_1C, p->unk_10, 0);
+                        }
+                        p->unk_0C->z -= 0.1;
+                        if (p->unk_02++ >= 3) {
+                            p->unk_02 = 0;
+                            p->unk_00 = 1;
+                        }
+                    } else {
+                        p->unk_00 = 1;
+                    }
+                }
+                break;
+            case 1:
+                if (p->unk_04 == 0) {
+                    if (p->unk_0C->z < 1.0f) {
+                        p->unk_0C->z += 0.1;
+                    } else {
+                        p->unk_00 = 2;
+                        p->unk_02 = 0;
+                    }
+                } else {
+                    func_800FEA0C_BombsAway(i, p->unk_14, p->unk_1C, p->unk_10, p->unk_04);
+                    p->unk_08->x = -45.0f;
+                    p->unk_00 = 2;
+                }
+                break;
+            case 2:
+                if ((p->unk_08->x += 2.0f) >= 0.0f) {
+                    p->unk_08->x = 0.0f;
+                    p->unk_00 = 3;
+                }
+                break;
+            default:
+                p->unk_02 = 0;
+                break;
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        n = D_801007E0_BombsAway[i].unk_20;
+        m = n->unk_64;
+        func_800A2A50(m);
+        func_8009EA40(m, n->unk_08.x, n->unk_08.y, n->unk_08.z);
+        MtxRotate(m, n->unk_44.x, n->unk_44.y, n->unk_44.z);
+        MtxScale(m, n->unk_50.x, n->unk_50.y, n->unk_50.z);
+    }
+}
 s32 func_800FE948_BombsAway(f32 x, f32 z, f32 y, u16 kind) {
     BaBomb* p;
     u16 i;

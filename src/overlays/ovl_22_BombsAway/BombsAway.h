@@ -251,7 +251,8 @@ extern u16 D_800FFB22_BombsAway;
 extern f32 D_800FFB24_BombsAway;
 extern f32 D_800FFB28_BombsAway;
 extern s32 D_800FFB2C_BombsAway; /* random seed; retail returns its low half (lhu D_800FFB2E) */
-extern u16 D_800FFB30_BombsAway[8];
+extern u16 D_800FFB30_BombsAway;
+extern u16 D_800FFB32_BombsAway;
 
 /* ---------------------------------------------------------------------------------------------
    Overlay bss (ovl_22_bss, 0x80100140..0x80100C80)
