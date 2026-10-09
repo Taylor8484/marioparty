@@ -1,5 +1,8 @@
 #include "ChanceTime.h"
 
+void func_80055810(s32, s32, s32);
+
+
 void func_80025BB8(s16, s16);
 void func_80055B50(s32, s32);
 void func_80055B64(void);
@@ -855,8 +858,86 @@ void func_800F9E74_ChanceTime(omObjData* obj) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", func_800F9F30_ChanceTime);
+s32 func_800F9F30_ChanceTime(omObjData* obj, s8 dir, s16 count) {
+    s16 i;
+    u8 player;
+    s32 ret;
 
+    ret = 0;
+    if (D_8010128C_ChanceTime == 0) {
+        func_800F9E74_ChanceTime(obj);
+        D_80101742_ChanceTime = count;
+        D_80101744_ChanceTime = 0;
+        D_80101746_ChanceTime = 0;
+        D_80101748_ChanceTime = 0.0f;
+        D_80101740_ChanceTime = dir;
+        D_80101741_ChanceTime = 0;
+        if (dir == 0) {
+            player = D_801012E0_ChanceTime;
+        } else {
+            player = D_801012E1_ChanceTime;
+        }
+        if (D_80101742_ChanceTime >= 30) {
+            func_80060F04(player, 2, 2, 20);
+        } else if (D_80101742_ChanceTime >= 20) {
+            func_80060F04(player, 20, 0, 20);
+        } else {
+            func_80060F04(player, 10, 0, 10);
+        }
+        D_8010128C_ChanceTime = 1;
+        return ret;
+    }
+    if (D_80101741_ChanceTime == 0 && D_80101744_ChanceTime < (s32)D_80101748_ChanceTime) {
+        func_800F9D60_ChanceTime(D_80101740_ChanceTime);
+        if (++D_80101744_ChanceTime >= D_80101742_ChanceTime) {
+            D_80101741_ChanceTime = 1;
+        }
+    }
+    for (i = 0; i < 20; i++) {
+        if (D_80101868_ChanceTime[i].unk_19 != 0 || D_80101868_ChanceTime[i].unk_18 != 1) {
+            continue;
+        }
+        func_800258EC(D_80101868_ChanceTime[i].unk_00, 4, 0);
+        if (D_80101740_ChanceTime == 0) {
+            D_80101868_ChanceTime[i].unk_04 += 13.0f;
+            if (D_800F3FB0[D_80101AA5_ChanceTime]->trans.x < D_80101868_ChanceTime[i].unk_04) {
+                D_80101868_ChanceTime[i].unk_19 = 1;
+                D_80101868_ChanceTime[i].unk_18 = 0;
+                func_80055810(D_801012E0_ChanceTime, -1, 0);
+                func_80055960(D_801012E1_ChanceTime, 1);
+                func_800258EC(D_80101868_ChanceTime[i].unk_00, 4, 4);
+                D_80101746_ChanceTime++;
+            }
+        } else {
+            D_80101868_ChanceTime[i].unk_04 -= 13.0f;
+            if (D_80101868_ChanceTime[i].unk_04 < D_800F3FB0[D_80101AA4_ChanceTime[0]]->trans.x) {
+                D_80101868_ChanceTime[i].unk_19 = 1;
+                D_80101868_ChanceTime[i].unk_18 = 0;
+                func_80055960(D_801012E0_ChanceTime, 1);
+                func_80055810(D_801012E1_ChanceTime, -1, 0);
+                func_800258EC(D_80101868_ChanceTime[i].unk_00, 4, 4);
+                D_80101746_ChanceTime++;
+            }
+        }
+        D_80101868_ChanceTime[i].unk_10 = func_800AEAC0(D_80101868_ChanceTime[i].unk_14) * 100.0f * 0.9;
+        D_80101868_ChanceTime[i].unk_14 += 13.0;
+        func_800257E4(D_80101868_ChanceTime[i].unk_00, 0.0f, D_80101290_ChanceTime, 0.0f);
+        func_80025798(D_80101868_ChanceTime[i].unk_00, D_80101868_ChanceTime[i].unk_04,
+                      D_80101868_ChanceTime[i].unk_08 + D_80101868_ChanceTime[i].unk_10, D_80101868_ChanceTime[i].unk_0C);
+    }
+    D_80101290_ChanceTime += 50.0f;
+    if (D_80101290_ChanceTime >= 360.0f) {
+        D_80101290_ChanceTime -= 360.0f;
+    }
+    D_80101748_ChanceTime += 0.2;
+    if ((s32)D_80101748_ChanceTime >= D_80101742_ChanceTime) {
+        D_80101748_ChanceTime = D_80101742_ChanceTime;
+    }
+    if (D_80101746_ChanceTime >= D_80101742_ChanceTime) {
+        ret = 1;
+    }
+    return ret;
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", func_800FA458_ChanceTime);
 
 s8 func_800FAE60_ChanceTime(omObjData* obj) {

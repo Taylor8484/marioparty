@@ -131,7 +131,7 @@ void func_800F99D8_ChanceTime(omObjData* obj);
 void func_800F9B50_ChanceTime(void); /* process (message) */
 s16 func_800F9D60_ChanceTime(s8 side); /* launch a coin at D_80101AA4[side]; -1 none free */
 void func_800F9E74_ChanceTime(omObjData* obj);
-s32 func_800F9F30_ChanceTime(omObjData* obj, s32 dir, s16 count);
+s32 func_800F9F30_ChanceTime(omObjData* obj, s8 dir, s16 count); /* dir 0: D_801012E0 to D_801012E1, 1: back */
 s32 func_800FA458_ChanceTime(omObjData* obj, s16 a, s16 b);
 s8 func_800FAE60_ChanceTime(omObjData* obj);
 void func_800FB00C_ChanceTime(omObjData* obj);
