@@ -163,12 +163,123 @@ void func_800F65E0_ChanceTime(void) {
 }
 
 
+
+
+// delay-slot residue: retail hoists the else call's `li v0,1` (last GMesCreate argument) into the
+// branch delay slot (one instruction longer); the rest is identical (masked 42 from the shift)
+#ifdef NON_MATCHING
+void func_800F6B00_ChanceTime(omObjData* obj) {
+    CTPlayerWork* work;
+
+    func_80009468();
+    work = CT_PWORK(D_800F3FB0[0]);
+    switch (D_800ED430) {
+    case 0:
+        if (D_80101250_ChanceTime == 0) {
+            func_80060128(0x24);
+            D_801011F2_ChanceTime = 1;
+            D_801011F7_ChanceTime = 1;
+            D_80101250_ChanceTime++;
+        }
+        if (D_801011F3_ChanceTime != 1) {
+            break;
+        }
+        if (D_80101250_ChanceTime == 10) {
+            /* "ＣＨＡＮＣＥ　ＴＩＭＥ" / "ＣＨＡＮＣＥ　ＴＩＭＥ♪" */
+            if (D_801011F0_ChanceTime == 0) {
+                D_801016F0_ChanceTime = GMesCreate(7, "\x82\x62\x82\x67\x82\x60\x82\x6D\x82\x62\x82\x64\x81\x40\x82\x73\x82\x68\x82\x6C\x82\x64",
+                                                   0xA0, 0x64, 0, 0, 0, 0, 1);
+            } else {
+                D_801016F0_ChanceTime = GMesCreate(7, "\x82\x62\x82\x67\x82\x60\x82\x6D\x82\x62\x82\x64\x81\x40\x82\x73\x82\x68\x82\x6C\x82\x64\x81\xF3",
+                                                   0xA0, 0x64, 0, 0, 0, 0, 1);
+            }
+            D_80101260_ChanceTime = 0.0f;
+        }
+        if (D_80101250_ChanceTime >= 11) {
+            if (GMesStatAllGet() == 0 || (GMesStatAllGet() & 2)) {
+                D_801012B6_ChanceTime = 1;
+                func_80009458();
+            } else {
+                if (D_8010125B_ChanceTime == 0) {
+                    PlaySound(0x43B);
+                    D_8010125B_ChanceTime = 1;
+                }
+                if (GMesData[D_801016F0_ChanceTime].unk_04 + 40 < GMesData[D_801016F0_ChanceTime].unk_06) {
+                    if (D_8010125C_ChanceTime == 0) {
+                        GMesData[D_801016F0_ChanceTime].unk_5C += 0.3f;
+                        GMesData[D_801016F0_ChanceTime].unk_60 += 0.3f;
+                        if (GMesData[D_801016F0_ChanceTime].unk_5C > 1.2) {
+                            GMesData[D_801016F0_ChanceTime].unk_5C += 1.0f;
+                            GMesData[D_801016F0_ChanceTime].unk_60 += 1.0f;
+                            D_8010125C_ChanceTime = 1;
+                        }
+                    } else {
+                        GMesData[D_801016F0_ChanceTime].unk_5C = func_800AEFD0(D_80101260_ChanceTime) * 0.3f + 1.0f;
+                        GMesData[D_801016F0_ChanceTime].unk_60 = func_800AEFD0(D_80101260_ChanceTime) * 0.3f + 1.0f;
+                        D_80101260_ChanceTime += 60.0f;
+                    }
+                } else if (GMesData[D_801016F0_ChanceTime].unk_04 + 20 > GMesData[D_801016F0_ChanceTime].unk_06) {
+                    GMesData[D_801016F0_ChanceTime].unk_5C = 1.0f;
+                    GMesData[D_801016F0_ChanceTime].unk_60 = 1.0f;
+                    GMesData[D_801016F0_ChanceTime].unk_03 = D_80101265_ChanceTime;
+                    D_80101264_ChanceTime -= 12;
+                    if (D_80101264_ChanceTime < 0) {
+                        D_80101264_ChanceTime = 0;
+                    }
+                } else {
+                    GMesData[D_801016F0_ChanceTime].unk_5C = 1.0f;
+                    GMesData[D_801016F0_ChanceTime].unk_60 = 1.0f;
+                }
+            }
+        }
+        D_80101250_ChanceTime++;
+        break;
+    case 1:
+        if ((u16)D_801012B0_ChanceTime[0] != 0 && (u16)D_801012B0_ChanceTime[1] != 0 && (u16)D_801012B0_ChanceTime[2] != 0 &&
+            D_80101258_ChanceTime == 0) {
+            if (work->unk_38 == 1000.0f && (work->unk_5C & 6) && D_80101254_ChanceTime == 0) {
+                D_801011F8_ChanceTime = 1;
+                func_80009730();
+                work->unk_3C = 0.0f;
+                work->unk_40 = 0.0f;
+                D_80101254_ChanceTime = 1;
+            }
+            if (D_80101254_ChanceTime != 0) {
+                D_801011F2_ChanceTime = 2;
+                D_801011F7_ChanceTime = 2;
+                D_80101258_ChanceTime = 1;
+            }
+        }
+        break;
+    case 2:
+        func_80009448();
+        break;
+    case 3:
+        func_80009730();
+        if (D_8010125A_ChanceTime == 0) {
+            D_8010125A_ChanceTime = 1;
+        } else if (D_80101259_ChanceTime == 0) {
+            func_800726AC(D_801011F0_ChanceTime == 0 ? 5 : 3, 0x10);
+            func_800601D4(0x28);
+            D_80101259_ChanceTime = 1;
+        } else if (func_80072718() == 0) {
+            func_80054654();
+            func_8004A140();
+            func_80049F0C();
+            GMesSprClose();
+            func_80070ED4();
+            omOvlReturnEx(1);
+        }
+        break;
+    }
+}
+#else
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", D_801013B0_ChanceTime);
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", D_801013C8_ChanceTime);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", func_800F6B00_ChanceTime);
-
+#endif
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", func_800F7108_ChanceTime);
 
 void func_800F7818_ChanceTime(omObjData* arg0) {
