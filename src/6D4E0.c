@@ -61,7 +61,12 @@ typedef struct RumbleState {
 extern OSPfs D_800E4140[4];
 extern RumbleState D_800E42E0[4];
 /* splat label for &D_800E42E0[0].unk2; func_8006CC18 addresses that field through it */
+#ifdef TARGET_PC
+/* Host view: a split label inside the object before it (one host object, not two). */
+#define D_800E42E2 ((RumbleState*)((u8*)D_800E42E0 + 2))
+#else
 extern RumbleState D_800E42E2[];
+#endif
 extern functionListEntry D_800E4310;
 extern functionListEntry D_800E431C;
 extern s16 D_800E4328;
@@ -174,12 +179,22 @@ extern TWColor D_800C603E[];
 #endif
 
 /* splat labels for D_800F2CF0[1..3] and ContDStkTrg[1..3] */
+#ifdef TARGET_PC
+/* Host views: controller ports 1..3 read through these labels, which must alias the arrays. */
+#define D_800F2CF2 (((u16*)D_800F2CF0)[1])
+#define D_800F2CF4 (((u16*)D_800F2CF0)[2])
+#define D_800F2CF6 (((u16*)D_800F2CF0)[3])
+#define D_800EC6EC (ContDStkTrg[1])
+#define D_800EC6EE (ContDStkTrg[2])
+#define D_800EC6F0 (ContDStkTrg[3])
+#else
 extern u16 D_800F2CF2;
 extern u16 D_800F2CF4;
 extern u16 D_800F2CF6;
 extern u16 D_800EC6EC;
 extern u16 D_800EC6EE;
 extern u16 D_800EC6F0;
+#endif
 
 typedef struct TWInput {
     /* 0x00 */ s16 v[4];

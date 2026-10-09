@@ -23,7 +23,12 @@ extern s16 D_800D645A;
 extern s16 D_800D645C;
 extern s16 D_800D645E;
 extern s16 D_800D6460;
+#ifdef TARGET_PC
+/* Host view: a split label inside the object before it (one host object, not two). */
+#define D_800D6404 (*(u16*)((u8*)D_800D6400 + 4))
+#else
 extern u16 D_800D6404;
+#endif
 extern s8 D_800D6459;
 extern s8 D_800D6438[4][5];
 extern s8 D_800D644C[4];

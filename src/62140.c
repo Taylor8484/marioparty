@@ -126,7 +126,12 @@ typedef struct unkStruct_zz {
     char unk_04[0x44];
 } unkStruct_zz;
 
+#ifdef TARGET_PC
+/* Host view: a split label inside the object before it (one host object, not two). */
+#define D_800D9378 ((unkStruct_zz*)((u8*)D_800D9370 + 8))
+#else
 extern unkStruct_zz D_800D9378[];
+#endif
 
 s32 RequestSIFunction(unkMesg * siMessg, HuSiFunc func, void * arg, s32 type);
 void func_800618A4(OSPfs* arg0);
