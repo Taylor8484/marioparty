@@ -14,15 +14,21 @@ u8 D_800FFAAC_BombsAway[10][2] = {
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F65E0_BombsAway);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F6B28_BombsAway);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F6B88_BombsAway);
-
+void func_800F6B88_BombsAway(omObjData* obj) {
+    obj->func_ptr = func_800F6B98_BombsAway;
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F6B98_BombsAway);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F71E4_BombsAway);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F7218_BombsAway);
-
+void func_800F71E4_BombsAway(omObjData* obj) {
+    if (func_80072718() == 0) {
+        func_800F7218_BombsAway();
+        omOvlReturnEx(1);
+    }
+}
+void func_800F7218_BombsAway(void) {
+    func_80060198();
+    func_800FC7F4_BombsAway();
+}
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", D_800FFB40_BombsAway);
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", D_800FFB4C_BombsAway);
@@ -33,22 +39,39 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F7604_B
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F7850_BombsAway);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F78D4_BombsAway);
+BaPlayer* func_800F78D4_BombsAway(omObjData* obj) {
+    BaPlayer* p = D_80100150_BombsAway;
+    s32 i;
 
+    for (i = 0; i < D_80100310_BombsAway; i++, p++) {
+        if (p->unk_48 == obj) {
+            break;
+        }
+    }
+    return p;
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F791C_BombsAway);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F7A14_BombsAway);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F7B00_BombsAway);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F7C24_BombsAway);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F7C40_BombsAway);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F7C5C_BombsAway);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F7C78_BombsAway);
-
+void func_800F7B00_BombsAway(void) {
+    D_800F3FB0[D_800F2BC0++] = omAddObj(4, 9, 0x3C, -1, func_800F7C24_BombsAway);
+    D_800F3FB0[D_800F2BC0++] = omAddObj(5, 9, 0x3C, -1, func_800F7C40_BombsAway);
+    D_800F3FB0[D_800F2BC0++] = omAddObj(6, 9, 0x3C, -1, func_800F7C5C_BombsAway);
+    D_800F3FB0[D_800F2BC0++] = omAddObj(7, 9, 0x3C, -1, func_800F7C78_BombsAway);
+}
+void func_800F7C24_BombsAway(omObjData* obj) {
+    func_800F8100_BombsAway(obj, 0);
+}
+void func_800F7C40_BombsAway(omObjData* obj) {
+    func_800F8100_BombsAway(obj, 1);
+}
+void func_800F7C5C_BombsAway(omObjData* obj) {
+    func_800F8100_BombsAway(obj, 2);
+}
+void func_800F7C78_BombsAway(omObjData* obj) {
+    func_800F8100_BombsAway(obj, 3);
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F7C94_BombsAway);
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", D_800FFB68_BombsAway);
@@ -65,10 +88,10 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F9824_B
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F997C_BombsAway);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800FA47C_BombsAway);
-
+void func_800FA47C_BombsAway(Vec* pos) {
+    func_800FC0EC_BombsAway(pos->x - D_80100328_BombsAway.unk_38.x, pos->z - D_80100328_BombsAway.unk_38.z);
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800FA4B4_BombsAway);
-
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800FA514_BombsAway);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800FA5D8_BombsAway);
@@ -82,7 +105,6 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800FA7E8_B
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800FAB74_BombsAway);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800FADA8_BombsAway);
-
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800FADF4_BombsAway);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800FAFB4_BombsAway);
@@ -92,11 +114,12 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800FB0D0_B
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800FB120_BombsAway);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800FB19C_BombsAway);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800FB1C4_BombsAway);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800FB1E0_BombsAway);
-
+void func_800FB1C4_BombsAway(omObjData* obj) {
+    func_800FB1FC_BombsAway(obj, 0);
+}
+void func_800FB1E0_BombsAway(omObjData* obj) {
+    func_800FB1FC_BombsAway(obj, 1);
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800FB1FC_BombsAway);
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", D_800FFE38_BombsAway);

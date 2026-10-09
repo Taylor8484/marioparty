@@ -104,6 +104,14 @@ typedef struct BaStage {
     /* 0x134 */ BaWeight unk_134[8];
 } BaStage; /* size = 0x194 */
 
+/* D_801004E0: bomb-carrier slots (func_800FB0D0/func_800FB120/func_800FB19C). unk_00[i]: NULL
+   free, (omObjData*)1 taken, else the player waiting; unk_10[i] (splat's D_801004F0): the player
+   holding it. func_800FB19C addresses unk_10 from D_801004E0's base. */
+typedef struct BaSlots {
+    /* 0x00 */ omObjData* unk_00[4];
+    /* 0x10 */ omObjData* unk_10[4];
+} BaSlots; /* size = 0x20 (N64) */
+
 /* D_80100500[8]: shock waves (func_800F7850 adds, func_800F7604 ages). */
 typedef struct BaShock {
     /* 0x00 */ s16 unk_00; /* frames left, 0 = free */
@@ -262,8 +270,7 @@ extern BaStage D_80100328_BombsAway;
 extern s16 D_801004BC_BombsAway;
 extern s16 D_801004BE_BombsAway[6]; /* corner slots, bits 1/2 */
 extern s16 D_801004D0_BombsAway[8]; /* models (func_800FAFB4) */
-extern omObjData* D_801004E0_BombsAway[4]; /* NULL free, (omObjData*)1 taken, else a player */
-extern omObjData* D_801004F0_BombsAway[4];
+extern BaSlots D_801004E0_BombsAway;
 extern BaShock D_80100500_BombsAway[8];
 extern BaSparkle D_801005A0_BombsAway[12];
 extern s16 D_80100690_BombsAway;
@@ -301,8 +308,36 @@ extern s16 D_80100B6A_BombsAway;
 extern void* D_80100B6C_BombsAway; /* DataRead(0x35000E) */
 extern BaSplash D_80100B70_BombsAway[6];
 
-#ifdef TARGET_PC
-/* Splat labels inside the objects above (the asm's spellings), as views on the host. */
+/* Splat labels inside the objects above. Retail addresses these scalars with their own lui/%lo
+   (no shared base register), which field access through the block may not reproduce: the N64
+   build declares the labels (splat defines them in the bss), the host views the block. Record
+   fields (D_80100152, D_80100504, ...) have no N64 declaration: index the record arrays. */
+#ifndef TARGET_PC
+extern s16 D_80100144_BombsAway;
+extern s16 D_80100146_BombsAway;
+extern f32 D_80100344_BombsAway;
+extern s16 D_80100354_BombsAway;
+extern f32 D_80100358_BombsAway;
+extern f32 D_8010035C_BombsAway;
+extern Vec D_80100360_BombsAway;
+extern f32 D_80100364_BombsAway;
+extern f32 D_80100368_BombsAway;
+extern Vec D_8010036C_BombsAway;
+extern Matrix4f D_801003B8_BombsAway;
+extern f32 D_80100438_BombsAway;
+extern f32 D_8010043C_BombsAway;
+extern f32 D_80100440_BombsAway;
+extern f32 D_80100444_BombsAway;
+extern s32 D_80100458_BombsAway;
+extern omObjData* D_801004F0_BombsAway[4];
+extern s16 D_80100706_BombsAway[3];
+extern f32 D_80100794_BombsAway;
+extern f32 D_80100798_BombsAway;
+extern Vec D_8010079C_BombsAway;
+extern f32 D_801007A8_BombsAway;
+extern f32 D_801007B8_BombsAway;
+extern s16 D_80100B12_BombsAway;
+#else
 #define D_80100144_BombsAway (D_80100140_BombsAway.unk_04)
 #define D_80100146_BombsAway (D_80100140_BombsAway.unk_06)
 #define D_80100152_BombsAway (D_80100150_BombsAway[0].unk_02)
@@ -321,6 +356,7 @@ extern BaSplash D_80100B70_BombsAway[6];
 #define D_80100440_BombsAway (D_80100328_BombsAway.unk_110[2])
 #define D_80100444_BombsAway (D_80100328_BombsAway.unk_110[3])
 #define D_80100458_BombsAway (D_80100328_BombsAway.unk_130)
+#define D_801004F0_BombsAway (D_801004E0_BombsAway.unk_10)
 #define D_80100504_BombsAway (D_80100500_BombsAway[0].unk_04)
 #define D_80100508_BombsAway (D_80100500_BombsAway[0].unk_08)
 #define D_8010050C_BombsAway (D_80100500_BombsAway[0].unk_0C)
