@@ -267,3 +267,9 @@ D_800FED8F_SlotMachine = D_800FED8C_SlotMachine + 0x3;
 D_800FEDAD_SlotMachine = D_800FEDAC_SlotMachine + 0x1;
 D_800FEDAE_SlotMachine = D_800FEDAC_SlotMachine + 0x2;
 D_800FEDAF_SlotMachine = D_800FEDAC_SlotMachine + 0x3;
+/* ovl_65 UnknownBooStealScene: asm (NON_MATCHING) users of labels inside its C .data arrays */
+D_800F9404_UnknownBooStealScene = D_800F9400_UnknownBooStealScene + 0x4;
+D_800F9408_UnknownBooStealScene = D_800F9400_UnknownBooStealScene + 0x8;
+D_800F9468_UnknownBooStealScene = D_800F9460_UnknownBooStealScene + 0x8;
+D_800F94D0_UnknownBooStealScene = D_800F94CC_UnknownBooStealScene + 0x4;
+D_800F94F0_UnknownBooStealScene = D_800F94EC_UnknownBooStealScene + 0x4;
