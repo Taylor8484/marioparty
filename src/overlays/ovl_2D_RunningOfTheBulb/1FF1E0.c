@@ -1,5 +1,42 @@
 #include "RunningOfTheBulb.h"
 
+/* Shadow scale per character (x, z) and shadow offset/height (func_800F7B5C). */
+f32 D_800FE240_RunningOfTheBulb[6][2] = {
+    { 1.06f, 1.0f }, { 1.06f, 1.0f }, { 1.12f, 1.0f }, { 1.06f, 1.0f }, { 1.1f, 1.0f }, { 1.4f, 1.45f },
+};
+f32 D_800FE270_RunningOfTheBulb[6][2] = {
+    { 120.0f, 70.0f }, { 120.0f, 70.0f }, { 120.0f, 60.0f }, { 120.0f, 70.0f }, { 120.0f, 50.0f }, { 130.0f, 30.0f },
+};
+/* Start positions: [0] the leading team, then the others in turn (D_800FE35C). */
+Vec D_800FE2A0_RunningOfTheBulb[4] = {
+    { 0.0f, 0.0f, 1900.0f }, { -150.0f, 0.0f, 2100.0f }, { 0.0f, 0.0f, 2100.0f }, { 150.0f, 0.0f, 2100.0f },
+};
+RotbDrop D_800FE2D0_RunningOfTheBulb[5] = {
+    { 1700.0f, 1200.0f, 0.0f, 400.0f, 1100.0f, 400.0f, 0 },
+    { 1300.0f, 800.0f, -200.0f, 400.0f, 200.0f, 400.0f, 0 },
+    { 200.0f, -550.0f, 0.0f, 400.0f, -600.0f, 400.0f, 0 },
+    { 200.0f, -550.0f, 160.0f, 400.0f, -600.0f, 400.0f, 0 },
+    { -10000.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0 },
+};
+/* Next start position; retail reads its low half (lhu D_800FE35E) as well. */
+s32 D_800FE35C_RunningOfTheBulb = 1;
+s32 D_800FE360_RunningOfTheBulb = 0;
+/* Goal points (x, z) per player at the end. */
+f32 D_800FE364_RunningOfTheBulb[4][2] = {
+    { -240.0f, -1640.0f }, { -80.0f, -1640.0f }, { 80.0f, -1640.0f }, { 240.0f, -1640.0f },
+};
+u16 D_800FE384_RunningOfTheBulb = 0;
+f32 D_800FE388_RunningOfTheBulb = 0.0f;
+f32 D_800FE38C_RunningOfTheBulb = 1.0f;
+u16 D_800FE390_RunningOfTheBulb = 0;
+f32 D_800FE394_RunningOfTheBulb = 0.0f;
+f32 D_800FE398_RunningOfTheBulb = 1.0f;
+u16 D_800FE39C_RunningOfTheBulb = 0;
+u16 D_800FE3A0_RunningOfTheBulb[8] = { 0 };
+char D_800FE3B0_RunningOfTheBulb[] = "00mt001s_IA44";
+char D_800FE3C0_RunningOfTheBulb[] = "aura2_IA44";
+char D_800FE3CC_RunningOfTheBulb[] = "";
+
 void func_800F65E0_RunningOfTheBulb(void) {
     void* temp_s0;
 
@@ -90,8 +127,8 @@ void func_800F6B28_RunningOfTheBulb(void) {
 }
 
 void func_800F6BE4_RunningOfTheBulb(omObjData* arg0) {
-    unkGlobalStruct_02* temp_s0_2;
-    unkGlobalStruct_02* temp_s0_3;
+    RotbFloorWork* temp_s0_2;
+    RotbFloorWork* temp_s0_3;
     void* temp_s0;
     
     arg0->model[0] = LoadFormFile(0x410001, 0x289);
@@ -104,16 +141,16 @@ void func_800F6BE4_RunningOfTheBulb(omObjData* arg0) {
     func_80025798(arg0->model[3], 0.0f, 1.0f, 0.0f);
     func_800090B8(D_800ED440);
     D_800F2AF8[D_800ED440++] = D_800FE4A8_RunningOfTheBulb;
-    temp_s0_2 = func_80023684(sizeof(unkGlobalStruct_02), 0x7918);
+    temp_s0_2 = func_80023684(sizeof(RotbFloorWork), 0x7918);
     D_800FE4A8_RunningOfTheBulb->unk_50 = temp_s0_2;
-    func_8009B770(temp_s0_2, 0, sizeof(unkGlobalStruct_02));
+    func_8009B770(temp_s0_2, 0, sizeof(RotbFloorWork));
     temp_s0_2->unk_04 = 1;
     temp_s0_2->unk_05 = 1;
     func_80009000(D_800FE4A8_RunningOfTheBulb, 2, -1000.0f);
     D_800F2AF8[D_800ED440++] = arg0;
-    temp_s0_3 = func_80023684(sizeof(unkGlobalStruct_02), 0x7918);
+    temp_s0_3 = func_80023684(sizeof(RotbFloorWork), 0x7918);
     arg0->unk_50 = temp_s0_3;
-    func_8009B770(temp_s0_3, 0, sizeof(unkGlobalStruct_02));
+    func_8009B770(temp_s0_3, 0, sizeof(RotbFloorWork));
     temp_s0_3->unk_04 = 1;
     temp_s0_3->unk_05 = 0;
     func_80009028(arg0, 0, -400.0f, -2500.0f, 400.0f, 2500.0f);
@@ -150,12 +187,12 @@ void func_800F6E80_RunningOfTheBulb(omObjData* arg0) {
 }
 
 void func_800F6F04_RunningOfTheBulb(omObjData* arg0) {
-    unkGlobalStruct_02* temp_s0;
+    RotbFloorWork* temp_s0;
 
     arg0->model[0] = func_800174C0(0x41000A, 0x419);
-    temp_s0 = func_80023684(sizeof(unkGlobalStruct_02), 0x7918);
+    temp_s0 = func_80023684(sizeof(RotbFloorWork), 0x7918);
     arg0->unk_50 = temp_s0;
-    func_8009B770(temp_s0, 0, sizeof(unkGlobalStruct_02));
+    func_8009B770(temp_s0, 0, sizeof(RotbFloorWork));
     temp_s0->unk_04 = 1;
     temp_s0->unk_05 = 2;
     D_800F2AF8[D_800ED440++] = arg0;
@@ -169,60 +206,355 @@ void func_800F6FF4_RunningOfTheBulb(omObjData* arg0) {
     omSetTra(arg0, 0.0f, 0.0f, Center.z + -935.0f);
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F7034_RunningOfTheBulb);
+void func_800F7034_RunningOfTheBulb(omObjData* arg0) {
+    RotbBlockList* list;
+    RotbFloorWork* work;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F7278_RunningOfTheBulb);
+    list = arg0->unk_50 = func_80023684(sizeof(RotbBlockList), 0x7918);
+    for (i = 0; i < 6; i++) {
+        list->unk_04[i] = omAddObj(0x23, 2, 0, 2, NULL);
+        D_800F2AF8[D_800ED440++] = list->unk_04[i];
+        work = func_80023684(sizeof(RotbFloorWork), 0x7918);
+        list->unk_04[i]->unk_50 = work;
+        func_8009B770(list->unk_04[i]->unk_50, 0, sizeof(RotbFloorWork));
+        work->unk_04 = 1;
+        work->unk_05 = i + 4;
+        func_80009058(list->unk_04[i], 160.0f, 160.0f, -80.0f, -80.0f, 80.0f, 80.0f);
+        work->unk_08 = 0.5f;
+        work->unk_28 = func_80023684(sizeof(RotbBlockExt), 0x7918);
+        if (i == 0) {
+            list->unk_04[0]->model[0] = LoadFormFile(0x410000, 0x20699);
+            list->unk_04[0]->model[1] = LoadFormFile(0x10, 0x699);
+        } else {
+            list->unk_04[i]->model[0] = func_80023FC8(list->unk_04[0]->model[0]);
+            list->unk_04[i]->model[1] = func_80023FC8(list->unk_04[0]->model[1]);
+        }
+        func_800258EC(list->unk_04[i]->model[0], 4, 4);
+        func_800258EC(list->unk_04[i]->model[1], 4, 4);
+        omSetTra(list->unk_04[i], 0.0f, 0.0f, 5000.0f);
+    }
+    list->unk_00 = 0;
+    arg0->func_ptr = &func_800F7278_RunningOfTheBulb;
+}
+void func_800F7278_RunningOfTheBulb(omObjData* arg0) {
+    RotbBlockList* list = D_800FE47C_RunningOfTheBulb->unk_50;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F7364_RunningOfTheBulb);
+    while (Center.z <= D_800FE2D0_RunningOfTheBulb[list->unk_00].unk_00) {
+        for (i = 0; i < 6; i++) {
+            if (list->unk_04[i]->func_ptr == NULL) {
+                break;
+            }
+        }
+        if (i != 6) {
+            func_800F7364_RunningOfTheBulb(list->unk_00, i);
+        }
+        list->unk_00++;
+    }
+}
+void func_800F7364_RunningOfTheBulb(u16 arg0, u16 arg1) {
+    RotbDrop* drop = &D_800FE2D0_RunningOfTheBulb[arg0];
+    omObjData* obj = ((RotbBlockList*)D_800FE47C_RunningOfTheBulb->unk_50)->unk_04[arg1];
+    RotbBlockExt* ext = ROTB_FLOOR(obj)->unk_28;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F7478_RunningOfTheBulb);
+    ext->unk_02 = drop->unk_18;
+    ext->unk_06 = 50;
+    ext->unk_08 = 7;
+    ext->unk_04 = ext->unk_06;
+    ext->unk_00 = arg1;
+    ext->unk_10 = drop->unk_14;
+    ext->unk_0C = 0.0f;
+    ext->unk_14 = drop->unk_04;
+    omSetTra(obj, drop->unk_08, drop->unk_0C, drop->unk_10);
+    func_800258EC(obj->model[0], 4, 0);
+    func_80025798(obj->model[1], drop->unk_08, 1.0f, drop->unk_10);
+    func_80025830(obj->model[1], 1.0f, 1.0f, 1.0f);
+    func_800258EC(obj->model[1], 4, 0);
+    obj->func_ptr = &func_800F7478_RunningOfTheBulb;
+}
+void func_800F7478_RunningOfTheBulb(omObjData* arg0) {
+    Vec pos;
+    Vec2f scr;
+    RotbBlockExt* ext;
+    RotbPlayerExt* pext;
+    omObjData* player;
+    f32 oldY;
+    f32 scale;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F77B4_RunningOfTheBulb);
+    ext = ROTB_FLOOR(arg0)->unk_28;
+    switch (ext->unk_02) {
+    case 0:
+        if (--ext->unk_04 == 0 && D_800FE464_RunningOfTheBulb != 2) {
+            if (Center.z <= ext->unk_14) {
+                ext->unk_02 = 1;
+                ext->unk_0C = -40.0f;
+            } else {
+                ext->unk_04++;
+            }
+        }
+        break;
+    case 1:
+        if (arg0->trans.y + ext->unk_0C <= 0.0f && Center.z != 0.0f) {
+            omSetTra(arg0, arg0->trans.x, 0.0f, arg0->trans.z);
+            ext->unk_02 = 2;
+            ext->unk_04 = ext->unk_08;
+            PlaySound(0x32C);
+        } else {
+            omSetTra(arg0, arg0->trans.x, arg0->trans.y + ext->unk_0C, arg0->trans.z);
+        }
+        break;
+    case 2:
+        if (--ext->unk_04 == 0) {
+            ext->unk_02 = 3;
+            ext->unk_0C = 15.0f;
+        }
+        break;
+    case 3:
+        oldY = arg0->trans.y;
+        if (ext->unk_10 <= oldY + ext->unk_0C) {
+            omSetTra(arg0, arg0->trans.x, ext->unk_10, arg0->trans.z);
+            ext->unk_02 = 0;
+            ext->unk_04 = ext->unk_06;
+        } else {
+            omSetTra(arg0, arg0->trans.x, arg0->trans.y + ext->unk_0C, arg0->trans.z);
+        }
+        for (i = 0; i < 4; i++) {
+            player = D_800FE460_RunningOfTheBulb[i];
+            pext = ROTB_PLAYER(player)->unk_E4;
+            if (!(pext->unk_00 & 0x30) && pext->unk_28 == arg0) {
+                player->trans.y = (arg0->trans.y - oldY) + player->trans.y;
+            }
+        }
+        break;
+    }
+    scale = 1.0f - arg0->trans.y / 1000.0f;
+    func_80025830(arg0->model[1], scale, 1.0f, scale);
+    pos.x = arg0->trans.x;
+    pos.y = arg0->trans.y;
+    pos.z = arg0->trans.z;
+    Convert3DTo2D(0, (Vec3f*)&pos, &scr);
+    if (scr.x < -16.0f) {
+        func_800258EC(arg0->model[0], 4, 4);
+        func_800258EC(arg0->model[1], 4, 4);
+        omSetTra(arg0, 0.0f, 0.0f, 5000.0f);
+        arg0->func_ptr = NULL;
+    }
+}
+omObjData* func_800F77B4_RunningOfTheBulb(omObjData* arg0) {
+    Vec p0;
+    Vec p1;
+    Vec p2;
+    Vec n;
+    RotbPlayerWork* work;
+    RotbPlayerExt* ext;
+    RotbFloorWork* fw;
+    RotbBlockExt* bext;
+    omObjData* blk;
+    f32 px;
+    f32 py;
+    f32 pz;
+    f32 minX;
+    f32 maxX;
+    f32 minZ;
+    f32 maxZ;
+    f32 top;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 d;
+    f32 ad;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F7A0C_RunningOfTheBulb);
+    work = arg0->unk_50;
+    ext = work->unk_E4;
+    px = arg0->trans.x;
+    py = arg0->trans.y + work->unk_48;
+    pz = arg0->trans.z;
+    for (i = 0; i < 6; i++) {
+        blk = D_800FE480_RunningOfTheBulb[i];
+        if (blk->func_ptr != NULL) {
+            fw = blk->unk_50;
+            bext = fw->unk_28;
+            minX = blk->trans.x + fw->unk_18;
+            maxX = blk->trans.x + fw->unk_20;
+            minZ = blk->trans.z + fw->unk_1C;
+            maxZ = blk->trans.z + fw->unk_24;
+            p0.x = minX;
+            p0.y = top = (blk->trans.y + fw->unk_10) - fw->unk_14;
+            p1.y = top;
+            p2.y = top;
+            p0.z = minZ;
+            p1.x = maxX;
+            p1.z = maxZ;
+            p2.x = minX;
+            p2.z = maxZ;
+            func_800F7A0C_RunningOfTheBulb(&p0, &p1, &p2, &n);
+            dx = p0.x - px;
+            dy = p0.y - py;
+            dz = p0.z - pz;
+            d = dx * n.x + dy * n.y + dz * n.z;
+            ad = fabsf(d);
+            p1.x = px + d * n.x;
+            p1.y = py + d * n.y;
+            p1.z = pz + d * n.z;
+            if (minX <= p1.x && p1.x <= maxX && minZ <= p1.z && p1.z <= maxZ && ad <= work->unk_48) {
+                if (!(ext->unk_00 & 2)) {
+                    arg0->trans.y -= ad;
+                    if (bext->unk_0C < 0.0f) {
+                        arg0->trans.y += bext->unk_0C;
+                    }
+                }
+                return blk;
+            }
+        }
+    }
+    return NULL;
+}
+void func_800F7A0C_RunningOfTheBulb(Vec* arg0, Vec* arg1, Vec* arg2, Vec* arg3) {
+    f32 temp_f10;
+    f32 temp_f12;
+    f32 temp_f14;
+    f32 temp_f4;
+    f32 temp_f6;
+    f32 temp_f8;
 
-// void func_800F7A0C_RunningOfTheBulb(Vec3f* arg0, Vec3f* arg1, Vec3f* arg2, Vec3f* arg3) { //matches with mulmul fix on
-//     f32 temp_f10;
-//     f32 temp_f12;
-//     f32 temp_f14;
-//     f32 temp_f4;
-//     f32 temp_f6;
-//     f32 temp_f8;
-
-//     temp_f14 = arg1->x - arg0->x;
-//     temp_f12 = arg1->y - arg0->y;
-//     temp_f8 = arg1->z - arg0->z;
-//     temp_f10 = arg2->x - arg0->x;
-//     temp_f4 = arg2->y - arg0->y;
-//     temp_f6 = arg2->z - arg0->z;
-//     arg3->x = (temp_f12 * temp_f6) - (temp_f8 * temp_f4);
-//     arg3->y = (temp_f8 * temp_f10) - (temp_f14 * temp_f6);
-//     arg3->z = (temp_f14 * temp_f4) - (temp_f12 * temp_f10);
-//     temp_f14 = func_800B1750((arg3->x * arg3->x) + (arg3->y * arg3->y) + (arg3->z * arg3->z));
-//     arg3->x /= temp_f14;
-//     arg3->y /= temp_f14;
-//     arg3->z /= temp_f14;
-// }
-
-
-void func_800F7AEC_RunningOfTheBulb(s32 arg0) {
+    temp_f14 = arg1->x - arg0->x;
+    temp_f12 = arg1->y - arg0->y;
+    temp_f8 = arg1->z - arg0->z;
+    temp_f10 = arg2->x - arg0->x;
+    temp_f4 = arg2->y - arg0->y;
+    temp_f6 = arg2->z - arg0->z;
+    arg3->x = (temp_f12 * temp_f6) - (temp_f8 * temp_f4);
+    arg3->y = (temp_f8 * temp_f10) - (temp_f14 * temp_f6);
+    arg3->z = (temp_f14 * temp_f4) - (temp_f12 * temp_f10);
+    temp_f14 = func_800B1750((arg3->x * arg3->x) + (arg3->y * arg3->y) + (arg3->z * arg3->z));
+    arg3->x /= temp_f14;
+    arg3->y /= temp_f14;
+    arg3->z /= temp_f14;
+}
+void func_800F7AEC_RunningOfTheBulb(omObjData* arg0) {
     func_800F7B5C_RunningOfTheBulb(arg0, 0);
 }
 
-void func_800F7B08_RunningOfTheBulb(s32 arg0) {
+void func_800F7B08_RunningOfTheBulb(omObjData* arg0) {
     func_800F7B5C_RunningOfTheBulb(arg0, 1);
 }
 
-void func_800F7B24_RunningOfTheBulb(s32 arg0) {
+void func_800F7B24_RunningOfTheBulb(omObjData* arg0) {
     func_800F7B5C_RunningOfTheBulb(arg0, 2);
 }
 
-void func_800F7B40_RunningOfTheBulb(s32 arg0) {
+void func_800F7B40_RunningOfTheBulb(omObjData* arg0) {
     func_800F7B5C_RunningOfTheBulb(arg0, 3);
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F7B5C_RunningOfTheBulb);
+void func_800F7B5C_RunningOfTheBulb(omObjData* arg0, s32 arg1) {
+    RotbPlayerWork* work;
+    RotbPlayerExt* ext;
+    s32 dir;
+    s32 file0;
+    u8 chr;
+    s32 i;
 
+    chr = GwPlayer[(u16)arg1].character;
+    dir = D_800C59AC[chr].unk_00;
+    file0 = D_800C59AC[chr].unk_04;
+    func_8000979C(arg0, dir, file0, arg1, 0x20699, 0xA99);
+    func_80008FF4(arg0, 40.0f);
+    work = arg0->unk_50;
+    work->unk_3C = 180.0f;
+    work->unk_60 = 45.0f;
+    work->unk_DC = func_800FB8EC_RunningOfTheBulb;
+    work->unk_E4 = func_80023684(sizeof(RotbPlayerExt), 0x7918);
+    work->unk_50 |= 0x200;
+    ext = work->unk_E4;
+    ext->unk_00 = 1;
+    ext->unk_02 = arg1;
+    ext->unk_28 = NULL;
+    ext->unk_30 = NULL;
+    ext->unk_2C = NULL;
+    ext->unk_54 = 0;
+    ext->unk_58 = 1.0f;
+    if (D_800FE360_RunningOfTheBulb == 0) {
+        arg0->model[3] = LoadFormFile(0x19, 0x68D);
+        arg0->model[4] = LoadFormFile(0x1A, 0xA8D);
+    } else {
+        arg0->model[3] = func_80023FC8(D_800FE460_RunningOfTheBulb[0]->model[3]);
+        arg0->model[4] = func_80023FC8(D_800FE460_RunningOfTheBulb[0]->model[4]);
+    }
+    func_800187D0(arg0, 0, dir, 1, 0);
+    func_800187D0(arg0, 1, dir | 1, 1, 0);
+    func_800187D0(arg0, 2, dir | 3, 1, 0);
+    func_800187D0(arg0, 5, dir | 4, 0, 0);
+    func_800187D0(arg0, 7, dir | 6, 1, 0x22);
+    func_800187D0(arg0, 6, dir | 5, 1, 0x13);
+    if (rand8() & 1) {
+        func_800187D0(arg0, 0xD, dir | 0xF, 2, 0x18);
+    } else {
+        func_800187D0(arg0, 0xD, dir | 0x38, 2, 0x18);
+    }
+    if (rand8() & 1) {
+        func_800187D0(arg0, 0xE, dir | 0x10, 1, 0x78);
+    } else {
+        func_800187D0(arg0, 0xE, dir | 0x3C, 1, 0x78);
+    }
+    func_800187D0(arg0, 0x11, dir | 0x18, 0, 0);
+    func_800187D0(arg0, 0x16, dir | 0x24, 1, 0);
+    func_800187D0(arg0, 0x15, dir | 0x62, 0, 0);
+    func_800187D0(arg0, 0x20, dir | 0x67, 0, 0);
+    func_800187D0(arg0, 0x23, dir | 0x52, 1, 0);
+    func_800187D0(arg0, 0x24, dir | 0x5F, 2, 0);
+    arg0->motion[0x25] = arg0->motion[1];
+    work->unk_D8[0x25][0] = work->unk_D8[1][0];
+    work->unk_D8[0x25][1] = work->unk_D8[1][1];
+    func_800090C4(arg0, 0, 2);
+    func_800090C4(arg0, 1, 2);
+    func_800090C4(arg0, 2, 2);
+    func_800090C4(arg0, 3, 2);
+    for (i = 0; i < 6; i++) {
+        func_800090C4(arg0, i + 4, 2);
+    }
+    if ((u32)dir >> 16 == 5) {
+        arg0->scale.x = arg0->scale.y = arg0->scale.z = 0.95f;
+    }
+    if ((u32)dir >> 16 == 3) {
+        arg0->scale.x = arg0->scale.y = arg0->scale.z = 1.1f;
+    }
+    D_800F3FB0[D_800F2BC0++] = arg0;
+    arg0->model[9] = LoadFormFile(0x41000C, 0xA8D);
+    if (D_800FE360_RunningOfTheBulb == 0) {
+        D_800FE444_RunningOfTheBulb = DataRead(0x41000B);
+    }
+    ext->unk_36 = D_800FE440_RunningOfTheBulb = func_80038A9C(D_800F2B7C[arg0->model[9]].unk_6C, D_800FE444_RunningOfTheBulb, 0, D_800FE3C0_RunningOfTheBulb);
+    func_80025930(arg0->model[9], 0x60000000, 0x20000000);
+    func_80025AD4(arg0->model[9]);
+    func_80025B34(arg0->model[9]);
+    func_8003967C(D_800FE440_RunningOfTheBulb, 1);
+    if (D_800FE360_RunningOfTheBulb == 3) {
+        HuMemDirectFree(D_800FE444_RunningOfTheBulb);
+    }
+    D_800FE360_RunningOfTheBulb++;
+    ext->unk_3C = D_800FE240_RunningOfTheBulb[chr][0];
+    ext->unk_40 = D_800FE240_RunningOfTheBulb[chr][1];
+    ext->unk_44 = D_800FE270_RunningOfTheBulb[chr][0];
+    ext->unk_48 = D_800FE270_RunningOfTheBulb[chr][1];
+    if (GwPlayer[(u16)arg1].group == 0) {
+        omSetTra(arg0, D_800FE2A0_RunningOfTheBulb[0].x, D_800FE2A0_RunningOfTheBulb[0].y, D_800FE2A0_RunningOfTheBulb[0].z);
+        func_80025798(arg0->model[1], D_800FE2A0_RunningOfTheBulb[0].x, D_800FE2A0_RunningOfTheBulb[0].y, D_800FE2A0_RunningOfTheBulb[0].z);
+        ext->unk_14 = 1;
+        ext->unk_16 = 1;
+        D_800FE4A0_RunningOfTheBulb = arg0;
+    } else {
+        omSetTra(arg0, D_800FE2A0_RunningOfTheBulb[D_800FE35C_RunningOfTheBulb].x, D_800FE2A0_RunningOfTheBulb[D_800FE35C_RunningOfTheBulb].y, D_800FE2A0_RunningOfTheBulb[D_800FE35C_RunningOfTheBulb].z);
+        func_80025798(arg0->model[1], D_800FE2A0_RunningOfTheBulb[D_800FE35C_RunningOfTheBulb].x, D_800FE2A0_RunningOfTheBulb[D_800FE35C_RunningOfTheBulb].y, D_800FE2A0_RunningOfTheBulb[D_800FE35C_RunningOfTheBulb].z);
+        ext->unk_14 = (u16)D_800FE35C_RunningOfTheBulb - 1;
+        ext->unk_16 = 1;
+        D_800FE35C_RunningOfTheBulb++;
+    }
+    arg0->func_ptr = &func_800F8210_RunningOfTheBulb;
+}
 void func_800F8210_RunningOfTheBulb(omObjData* arg0) {
     u16 temp_s0;
     s32 temp_s1;
@@ -239,7 +571,7 @@ void func_800F8210_RunningOfTheBulb(omObjData* arg0) {
         return;
     }
     
-    temp_s0 = ((unkGlobalStruct_00*) arg0->unk_50)->unk_56;
+    temp_s0 = ROTB_PLAYER(arg0)->unk_56;
     temp_s5 = ContStkX[temp_s0];
     temp_s6 = ContStkY[temp_s0];
     temp = ContBtnTrg;
@@ -258,9 +590,9 @@ void func_800F8210_RunningOfTheBulb(omObjData* arg0) {
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F82F4_RunningOfTheBulb);
 
 void func_800F8D80_RunningOfTheBulb(omObjData* arg0) {
-    unk_Struct01* temp_s0;
+    RotbPlayerExt* temp_s0;
 
-    temp_s0 = ((unkGlobalStruct_00*) arg0->unk_50)->unk_E4;
+    temp_s0 = ROTB_PLAYER(arg0)->unk_E4;
     temp_s0->unk_58 -= 0.05f;
     omSetSca(arg0, temp_s0->unk_58, temp_s0->unk_58, temp_s0->unk_58);
     omSetTra(arg0, arg0->trans.x + temp_s0->unk_5C, arg0->trans.y + temp_s0->unk_60, arg0->trans.z + temp_s0->unk_64);
@@ -286,7 +618,7 @@ void func_800F8EA0_RunningOfTheBulb(omObjData* arg0) {
     u8 temp_s4;
     u16 temp_s5;
     u16 temp_s6;
-    unkGlobalStruct_00* temp_a1;
+    RotbPlayerWork* temp_a1;
     s16* temp;
 
     temp_a1 = arg0->unk_50;
@@ -320,7 +652,7 @@ void func_800F8EA0_RunningOfTheBulb(omObjData* arg0) {
     ContBtnTrg[temp_s0] = temp_s6;
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F9094_RunningOfTheBulb); //https://decomp.me/scratch/eJF8g
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F9094_RunningOfTheBulb);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F947C_RunningOfTheBulb);
 
@@ -340,10 +672,10 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F9C2C_RunningOfTheBulb);
 
 void func_800FA2B8_RunningOfTheBulb(omObjData* arg0) {
-    unkGlobalStruct_00* temp = ((unkGlobalStruct_00*) arg0->unk_50)->unk_68;
+    RotbBulbExt* temp = ROTB_BODY(arg0)->unk_68.bulb;
 
     if (arg0->trans.z > -1600.0f) {
-        temp->unk_20.floatingPoint = 180.0f;
+        temp->unk_20 = 180.0f;
         func_8009ECB0(&D_800F2B7C[arg0->model[0]].unk7C, 0.0f, 180.0f, 0.0f);
         arg0->trans.z += -13.116001f;
         return;
@@ -363,9 +695,9 @@ void func_800FA36C_RunningOfTheBulb(omObjData* arg0) {
 }
 
 void func_800FA41C_RunningOfTheBulb(omObjData* arg0) {
-    unkGlobalStruct_00* temp_v1;
+    RotbBulbExt* temp_v1;
 
-    temp_v1 = ((unkGlobalStruct_00*) arg0->unk_50)->unk_68;
+    temp_v1 = ROTB_BODY(arg0)->unk_68.bulb;
     temp_v1->unk_00 |= 0x0A;
     temp_v1->unk_02 = 0xA;
     temp_v1->unk_18 = 1.0f;
@@ -373,10 +705,10 @@ void func_800FA41C_RunningOfTheBulb(omObjData* arg0) {
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FA44C_RunningOfTheBulb);
 
-void func_800FA5B8_RunningOfTheBulb(heapThing* arg0) {
+void func_800FA5B8_RunningOfTheBulb(RotbBulbExt* arg0) {
     if (arg0->unk_08 != NULL) {
         arg0->unk_00 = (u16) (arg0->unk_00 & 0xFFFB);
-        ((unkGlobalStruct_00*) arg0->unk_08->unk_50)->unk_E4->unk_30 = 0;
+        ROTB_PLAYER(arg0->unk_08)->unk_E4->unk_30 = NULL;
         arg0->unk_08 = NULL;
     }
 }
@@ -405,23 +737,23 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800
 
 void func_800FB738_RunningOfTheBulb(omObjData* arg0) {
     u16 temp_v0;
-    unkGlobalStruct_00* temp_s0;
-    unkGlobalStruct_00* temp_v0_2;
+    RotbJumpExt* temp_s0;
+    RotbBulbExt* temp_v0_2;
     s32 i;
 
-    temp_s0 = ((unkGlobalStruct_00*) arg0->unk_50)->unk_68;
+    temp_s0 = ROTB_BODY(arg0)->unk_68.jump;
     temp_s0->unk_14 = temp_s0->unk_14 - 1.0f;
     
     if (temp_s0->unk_14 != 0.0f) {
         temp_v0 = D_800FE39C_RunningOfTheBulb ^ 1;
         D_800FE39C_RunningOfTheBulb = D_800FE39C_RunningOfTheBulb ^ 1;
         if (temp_v0 != 0) {
-            temp_s0->unk_20.floatingPoint = temp_s0->unk_20.floatingPoint + 0.15f;
+            temp_s0->unk_20 = temp_s0->unk_20 + 0.15f;
         } else {
-            temp_s0->unk_20.floatingPoint = temp_s0->unk_20.floatingPoint - 0.09f;
+            temp_s0->unk_20 = temp_s0->unk_20 - 0.09f;
         }
-        func_80025798(arg0->model[1], (temp_s0->unk_20.floatingPoint * -270.0f) + arg0->trans.x, (temp_s0->unk_20.floatingPoint * -90.0f) + arg0->trans.y, (temp_s0->unk_20.floatingPoint * 200.0f) + arg0->trans.z);
-        func_80025830(arg0->model[1], temp_s0->unk_20.floatingPoint, temp_s0->unk_20.floatingPoint, temp_s0->unk_20.floatingPoint);
+        func_80025798(arg0->model[1], (temp_s0->unk_20 * -270.0f) + arg0->trans.x, (temp_s0->unk_20 * -90.0f) + arg0->trans.y, (temp_s0->unk_20 * 200.0f) + arg0->trans.z);
+        func_80025830(arg0->model[1], temp_s0->unk_20, temp_s0->unk_20, temp_s0->unk_20);
         return;
     }
     
@@ -431,7 +763,7 @@ void func_800FB738_RunningOfTheBulb(omObjData* arg0) {
     D_800FE478_RunningOfTheBulb->func_ptr = &func_800FAE18_RunningOfTheBulb;
     
     for (i = 0; i < 4; i++) {
-        temp_v0_2 = ((unkGlobalStruct_00*) D_800FE49C_RunningOfTheBulb[i]->unk_50)->unk_68;
+        temp_v0_2 = ROTB_BODY(D_800FE49C_RunningOfTheBulb[i])->unk_68.bulb;
         temp_v0_2->unk_02 = 0;
         temp_v0_2->unk_38 = 1.0f;
         temp_v0_2->unk_3C = 0;
@@ -465,7 +797,7 @@ void func_800FBAA4_RunningOfTheBulb(omObjData* arg0) {
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FBB5C_RunningOfTheBulb);
 
 void func_800FBF30_RunningOfTheBulb(void) {
-    if ((D_800FE3A0_RunningOfTheBulb != 0) || (D_800F5144 != 0)) {
+    if ((D_800FE3A0_RunningOfTheBulb[0] != 0) || (D_800F5144 != 0)) {
         func_800FE178_RunningOfTheBulb(0x83);
         func_800601D4(0x28);
     }
@@ -478,19 +810,19 @@ void func_800FBF74_RunningOfTheBulb(omObjData* arg0) {
     f32 var_f4;
     u16 temp_s0;
 
-    temp_s0 = ((unkGlobalStruct_00*) arg0->unk_50)->unk_56;
+    temp_s0 = ROTB_PLAYER(arg0)->unk_56;
     
     if (arg0 == D_800FE4A0_RunningOfTheBulb) {
-        var_f4 = D_800FE478_ovl2D->trans.x;
-        var_f2 = D_800FE478_ovl2D->trans.z;
+        var_f4 = D_800FE478_RunningOfTheBulb->trans.x;
+        var_f2 = D_800FE478_RunningOfTheBulb->trans.z;
         temp_f22 = func_800FCEA0_RunningOfTheBulb(arg0, NULL, var_f4, var_f2, 40.0f, 250.0f);
     } else {
-        if (!(((unkGlobalStruct_00*) D_800FE4A0_RunningOfTheBulb->unk_50)->unk_E4->unk0 & 4)) {
+        if (!(ROTB_PLAYER(D_800FE4A0_RunningOfTheBulb)->unk_E4->unk_00 & 4)) {
             var_f4 = D_800FE4A0_RunningOfTheBulb->trans.x;
             var_f2 = D_800FE4A0_RunningOfTheBulb->trans.z;
         } else {
-            var_f4 = D_800FE478_ovl2D->trans.x;
-            var_f2 = D_800FE478_ovl2D->trans.z;
+            var_f4 = D_800FE478_RunningOfTheBulb->trans.x;
+            var_f2 = D_800FE478_RunningOfTheBulb->trans.z;
         }
         temp_f22 = func_800FCEA0_RunningOfTheBulb(arg0, D_800FE4A0_RunningOfTheBulb, var_f4, var_f2, 40.0f, 250.0f);
     }
@@ -608,7 +940,7 @@ omObjData* func_800FDCAC_RunningOfTheBulb(omObjData* arg0, f32* arg1) {
     temp_f20 = arg0->trans.z;
     for (i = 0; i < 4; i++) {
         temp_s0 = D_800FE460_RunningOfTheBulb[i];
-        if (((unkGlobalStruct_00*) temp_s0->unk_50)->unk_E4->unk0 & 0x36) {
+        if (ROTB_PLAYER(temp_s0)->unk_E4->unk_00 & 0x36) {
             continue;
         } else {
             temp_f2 = (temp_s0->trans.x - temp_f24) * (temp_s0->trans.x - temp_f24);
@@ -628,9 +960,9 @@ omObjData* func_800FDCAC_RunningOfTheBulb(omObjData* arg0, f32* arg1) {
 }
 
 s32 func_800FDDC0_RunningOfTheBulb(omObjData* arg0) {
-    unkGlobalStruct_00* temp_s0;
-    unkGlobalStruct_00* temp_s1;
-    unk_Struct01* temp_s3;
+    RotbPlayerWork* temp_s0;
+    RotbBulbExt* temp_s1;
+    RotbPlayerExt* temp_s3;
     omObjData* temp_v0;
     omObjData* temp_v1;
     s32 i;
@@ -644,7 +976,7 @@ s32 func_800FDDC0_RunningOfTheBulb(omObjData* arg0) {
                 temp_v1 = D_800FE460_RunningOfTheBulb[i];
                 temp_s0 = temp_v1->unk_50;
                 temp_s3 = temp_s0->unk_E4;
-                if (!(temp_s3->unk0 & 0x30)) {
+                if (!(temp_s3->unk_00 & 0x30)) {
                     temp_v1->func_ptr = &func_800F8EA0_RunningOfTheBulb;
                     temp_s0->unk_40 = 0.0f;
                     temp_v0 = D_800FE460_RunningOfTheBulb[i];
@@ -652,7 +984,7 @@ s32 func_800FDDC0_RunningOfTheBulb(omObjData* arg0) {
                     func_80009E20(D_800FE460_RunningOfTheBulb[i]);
                     GwPlayer[i].coins_mg += 10;
                 }
-                if (temp_s3->unk0 & 0x40) {
+                if (temp_s3->unk_00 & 0x40) {
                     func_800186E4(D_800FE460_RunningOfTheBulb[i], 1, 0x23);
                 }                
             }
@@ -663,7 +995,7 @@ s32 func_800FDDC0_RunningOfTheBulb(omObjData* arg0) {
 
 
             for (i = 0; i < 4; i++) {
-                temp_s1 = ((unkGlobalStruct_00*) D_800FE49C_RunningOfTheBulb[i]->unk_50)->unk_68;
+                temp_s1 = ROTB_BODY(D_800FE49C_RunningOfTheBulb[i])->unk_68.bulb;
                 if (temp_s1->unk_00 & 8) {
                     temp_s1->unk_00 &= ~0x8;
                     if (temp_s1->unk_02 < 5) {
