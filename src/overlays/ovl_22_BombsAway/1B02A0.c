@@ -279,8 +279,76 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FD4B8_B
 void func_800FD530_BombsAway(void) {
     D_80100782_BombsAway = 1;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FD540_BombsAway);
+void func_800FD540_BombsAway(void) {
+    s32 x;
+    s32 x2;
 
+    if (D_80100782_BombsAway == 1) {
+        if (D_800FFAC0_BombsAway == 0) {
+            return;
+        }
+        D_80100786_BombsAway = func_800FDE38_BombsAway(3, 0.0f, 1200.0f, 0.0f, 0.5f, -1, 0.5f);
+        D_80100788_BombsAway = func_800FDE38_BombsAway(3, -500.0f, 1000.0f, 0.0f, 0.5f, -1, 0.5f);
+        D_80100774_BombsAway = 90;
+        D_80100776_BombsAway = 270;
+        D_80100778_BombsAway = func_800FE1EC_BombsAway(360);
+        D_8010077A_BombsAway = func_800FE1EC_BombsAway(360);
+        if (D_80100776_BombsAway < 180) {
+            D_8010077C_BombsAway = -1;
+        } else {
+            D_8010077C_BombsAway = 1;
+        }
+        if (D_80100774_BombsAway < 180) {
+            D_8010077E_BombsAway = -1;
+        } else {
+            D_8010077E_BombsAway = 1;
+        }
+        D_80100770_BombsAway = 0.0f;
+        D_80100782_BombsAway = 0;
+    }
+    if (D_800FFAC0_BombsAway == 1) {
+        D_80100770_BombsAway += 0.5;
+    } else {
+        if ((D_80100774_BombsAway += func_800FE1EC_BombsAway(5)) > 360) {
+            D_80100774_BombsAway -= 360;
+        }
+        if ((D_80100776_BombsAway += func_800FE1EC_BombsAway(5)) > 360) {
+            D_80100776_BombsAway -= 360;
+        }
+        if ((D_80100778_BombsAway += func_800FE1EC_BombsAway(2)) > 360) {
+            D_80100778_BombsAway -= 360;
+        }
+        if ((D_8010077A_BombsAway += func_800FE1EC_BombsAway(2)) > 360) {
+            D_8010077A_BombsAway -= 360;
+        }
+    }
+    if (D_8010077C_BombsAway > 0 && D_80100776_BombsAway < 180) {
+        D_8010077C_BombsAway = -1;
+        func_800672B0(D_80100786_BombsAway, 0, 0);
+        func_800671DC(D_80100786_BombsAway, 0, 3);
+    } else if (D_8010077C_BombsAway < 0 && D_80100776_BombsAway > 180) {
+        D_8010077C_BombsAway = 1;
+        func_800672B0(D_80100786_BombsAway, 0, 3);
+    }
+    if (D_8010077E_BombsAway > 0 && D_80100774_BombsAway < 180) {
+        D_8010077E_BombsAway = -1;
+        func_800672B0(D_80100788_BombsAway, 0, 0);
+        func_800671DC(D_80100788_BombsAway, 0, 3);
+    } else if (D_8010077E_BombsAway < 0 && D_80100774_BombsAway > 180) {
+        D_8010077E_BombsAway = 1;
+        func_800672B0(D_80100788_BombsAway, 0, 3);
+    }
+    x = (s16)(func_800AEAC0(D_80100774_BombsAway * 2) * 10.0f + 100.0f);
+    func_80066DC4(D_80100786_BombsAway, 0, x,
+                  (0.0f - func_800AEFD0(D_80100776_BombsAway) * 6.0f) + D_80100770_BombsAway);
+    x2 = (s16)(func_800AEAC0(D_80100776_BombsAway * 2) * 10.0f + 140.0f);
+    func_80066DC4(D_80100788_BombsAway, 0, x2,
+                  (10.0f - func_800AEFD0(D_80100774_BombsAway) * 6.0f) + D_80100770_BombsAway);
+    func_80067354(D_80100786_BombsAway, 0, func_800AEAC0(D_80100778_BombsAway) / 8.0f + 0.625,
+                  func_800AEAC0(D_80100778_BombsAway) / 8.0f + 0.625);
+    func_80067354(D_80100788_BombsAway, 0, func_800AEAC0(D_8010077A_BombsAway) / 8.0f + 0.625,
+                  func_800AEAC0(D_8010077A_BombsAway) / 8.0f + 0.625);
+}
 void func_800FDB0C_BombsAway(omObjData* obj) {
     obj->func_ptr = func_800FDB78_BombsAway;
     *obj->model = func_800174C0(0x350001, 0x99);
@@ -333,7 +401,7 @@ void func_800FDD58_BombsAway(void) {
 }
 // register allocation at entry: the kind test and the life argument (masked 3)
 #ifdef NON_MATCHING
-s16 func_800FDE38_BombsAway(s16 kind, f32 x, f32 y, f32 z, f32 scale, u16 life, f32 alpha) {
+s16 func_800FDE38_BombsAway(s16 kind, f32 x, f32 y, f32 z, f32 scale, s16 life, f32 alpha) {
     u16 i;
 
     if ((u16)kind >= 33) {
