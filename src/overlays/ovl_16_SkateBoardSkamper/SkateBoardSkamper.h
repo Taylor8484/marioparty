@@ -138,7 +138,7 @@ extern s32 D_800FDB04_SkateBoardSkamper;
 extern u8 D_800FDB08_SkateBoardSkamper;
 extern char* D_800FDB0C_SkateBoardSkamper[6];
 extern s32 D_800FDB24_SkateBoardSkamper;
-extern u32 D_800FDB28_SkateBoardSkamper;
+extern s32 D_800FDB28_SkateBoardSkamper;
 extern s32 D_800FDB2C_SkateBoardSkamper;
 extern u8 D_800FDB30_SkateBoardSkamper[4];
 

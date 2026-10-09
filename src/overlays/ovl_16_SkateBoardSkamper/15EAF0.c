@@ -791,7 +791,7 @@ char* D_800FDB0C_SkateBoardSkamper[6] = {
     "27mt003_DEF", "27mt004_DEF", "27mt005_DEF", "27mt006_DEF", "27mt007_DEF", "27mt008_DEF",
 };
 s32 D_800FDB24_SkateBoardSkamper = 10;
-u32 D_800FDB28_SkateBoardSkamper = 1;
+s32 D_800FDB28_SkateBoardSkamper = 1;
 s32 D_800FDB2C_SkateBoardSkamper = 0;
 u8 D_800FDB30_SkateBoardSkamper[4] = { 1, 1, 0, 0 };
 /* func_800FA498's log row: fall speeds, heights, tilts, next position. */
@@ -832,13 +832,11 @@ f32 D_800FDBB0_SkateBoardSkamper = 0.0f;
 s32 D_800FDBB4_SkateBoardSkamper = 1;
 
 /* Sets up a player: motions, the skateboard (model 9) and the character's voice. */
-#ifdef NON_MATCHING
 void func_800F92D0_SkateBoardSkamper(omObjData* obj, s32 dir, s32 file, s32 arg3, u16 player, f32 x, f32 y, f32 z) {
     SbsPlayerWork* w;
     s32 idle;
     s32 win;
     s32 i;
-    s16 voice;
 
     func_8000979C(obj, dir, file, player, 0x20A99, 0x20A99);
     w = obj->unk_50;
@@ -866,36 +864,32 @@ void func_800F92D0_SkateBoardSkamper(omObjData* obj, s32 dir, s32 file, s32 arg3
     switch ((u32)dir >> 16) {
         case 1:
             i = 0;
-            voice = 0x451;
+            D_800FDD22_SkateBoardSkamper[player] = 0x451;
             break;
         case 2:
             i = 1;
-            voice = 0x452;
+            D_800FDD22_SkateBoardSkamper[player] = 0x452;
             break;
         case 6:
             i = 2;
-            voice = 0x453;
+            D_800FDD22_SkateBoardSkamper[player] = 0x453;
             break;
         case 3:
             i = 3;
-            voice = 0x454;
+            D_800FDD22_SkateBoardSkamper[player] = 0x454;
             break;
         case 4:
             i = 4;
-            voice = 0x455;
+            D_800FDD22_SkateBoardSkamper[player] = 0x455;
             break;
         default:
             i = 5;
-            voice = 0x456;
+            D_800FDD22_SkateBoardSkamper[player] = 0x456;
             break;
     }
-    D_800FDD22_SkateBoardSkamper[player] = voice;
     func_80027AC8(obj->model[9], (u8*)D_800FDB0C_SkateBoardSkamper[0], (u8*)D_800FDB0C_SkateBoardSkamper[i]);
     func_80025AD4(obj->model[9]);
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_16_SkateBoardSkamper/15EAF0", func_800F92D0_SkateBoardSkamper);
-#endif
 
 void func_800F95B0_SkateBoardSkamper(omObjData* obj) {
     s32 file = D_800C59AC[GwPlayer[0].character].unk_04;
@@ -1037,21 +1031,21 @@ static f32 SbsTileZ(f32* row, f32* next, s32 i) {
 
 /* The moving course tile: rises out of the ground in front of the boulder (D_800FDA10) and, once
    fully up, hands over to the next tile slot and moves to its next z. */
-#ifdef NON_MATCHING
 void func_800F9DC4_SkateBoardSkamper(omObjData* obj) {
     SbsFloorWork* w = obj->unk_50;
     s32 done = 0;
     s32 n;
     u8 next;
     u8 i;
-    s16 dust;
+    s32 dust;
     f32 z;
 
     if (obj->trans.z + 500.0f < D_800FDA10_SkateBoardSkamper) {
         func_800FBC38_SkateBoardSkamper(obj->model[0], 10);
         return;
     }
-    n = 10 - (s32)(obj->trans.z + 500.0f - D_800FDA10_SkateBoardSkamper) / 100;
+    n = obj->trans.z + 500.0f - D_800FDA10_SkateBoardSkamper;
+    n = 10 - n / 100;
     if (n <= 0) {
         next = w->unk_05 + 1;
         if (next >= 12) {
@@ -1084,6 +1078,7 @@ void func_800F9DC4_SkateBoardSkamper(omObjData* obj) {
             case 4:
                 dust = D_800FDD1A_SkateBoardSkamper;
                 break;
+            case 5:
             default:
                 dust = D_800FDD14_SkateBoardSkamper;
                 break;
@@ -1122,6 +1117,7 @@ void func_800F9DC4_SkateBoardSkamper(omObjData* obj) {
             case 10:
                 z = SBS_TILE_Z(D_800FDA64_SkateBoardSkamper, D_800FDA74_SkateBoardSkamper, D_800FDB2C_SkateBoardSkamper);
                 break;
+            case 11:
             default:
                 z = SBS_TILE_Z(D_800FDA74_SkateBoardSkamper, D_800FDA84_SkateBoardSkamper, D_800FDB2C_SkateBoardSkamper);
                 break;
@@ -1137,18 +1133,15 @@ void func_800F9DC4_SkateBoardSkamper(omObjData* obj) {
     }
     D_800FDB24_SkateBoardSkamper = n;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_16_SkateBoardSkamper/15EAF0", func_800F9DC4_SkateBoardSkamper);
-#endif
 
 /* The start ramp: becomes solid once the race starts, and drops away behind the boulder. */
-#ifdef NON_MATCHING
 void func_800FA2B8_SkateBoardSkamper(omObjData* obj) {
     s32 i;
+    s32 state = D_800ED430;
 
-    if (D_800ED430 == 1) {
+    if (state == 1) {
         func_80008FC4(obj, 20.0f);
-        if (D_800FDB30_SkateBoardSkamper[0] == D_800ED430 && D_800FDA10_SkateBoardSkamper < obj->trans.z - 2000.0f) {
+        if (D_800FDB30_SkateBoardSkamper[0] == state && D_800FDA10_SkateBoardSkamper < obj->trans.z - 2000.0f) {
             for (i = 0; i < D_800F2BC0; i++) {
                 func_800090C4(D_800F3FB0[i], 1, 1);
             }
@@ -1159,9 +1152,6 @@ void func_800FA2B8_SkateBoardSkamper(omObjData* obj) {
         func_80008FC4(obj, 0.0f);
     }
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_16_SkateBoardSkamper/15EAF0", func_800FA2B8_SkateBoardSkamper);
-#endif
 
 /* The goal: shown when the boulder comes within 3000. */
 void func_800FA3B4_SkateBoardSkamper(omObjData* obj) {
@@ -1178,7 +1168,6 @@ void func_800FA3B4_SkateBoardSkamper(omObjData* obj) {
 }
 
 /* Log row 1: the four logs fall in turn, then the row moves to its next z (D_800FDA84). */
-#ifdef NON_MATCHING
 void func_800FA498_SkateBoardSkamper(omObjData* obj) {
     SbsFloorWork* w;
     f32 d;
@@ -1186,7 +1175,7 @@ void func_800FA498_SkateBoardSkamper(omObjData* obj) {
     s32 more;
 
     if (D_800FDA10_SkateBoardSkamper + 50.0f < obj->trans.z) {
-        if (D_800B8994 < D_800FDB34_SkateBoardSkamper) {
+        if (D_800FDB34_SkateBoardSkamper > D_800B8994) {
             D_800FDB34_SkateBoardSkamper = D_800B8994;
         }
         w = obj->unk_50;
@@ -1194,7 +1183,7 @@ void func_800FA498_SkateBoardSkamper(omObjData* obj) {
         obj->trans.y = d + obj->trans.y;
         obj->rot.x = obj->rot.x - d * 0.05f;
         if (D_800B8968 < (D_800FDB34_SkateBoardSkamper = D_800B8968 * 0.5f + D_800FDB34_SkateBoardSkamper)) {
-            if (D_800B8994 < D_800FDB38_SkateBoardSkamper) {
+            if (D_800FDB38_SkateBoardSkamper > D_800B8994) {
                 D_800FDB38_SkateBoardSkamper = D_800B8994;
             }
             d = D_800FDB38_SkateBoardSkamper * D_800FDB38_SkateBoardSkamper * -35.0f;
@@ -1204,8 +1193,8 @@ void func_800FA498_SkateBoardSkamper(omObjData* obj) {
             func_80025798(obj->model[1], obj->trans.x - 150.0f, D_800FDB44_SkateBoardSkamper, obj->trans.z);
             func_800257E4(obj->model[1], D_800FDB50_SkateBoardSkamper, D_800FDB50_SkateBoardSkamper, obj->rot.z);
         }
-        if (D_800B8968 < D_800FDB38_SkateBoardSkamper) {
-            if (D_800B8994 < D_800FDB3C_SkateBoardSkamper) {
+        if (D_800FDB38_SkateBoardSkamper > D_800B8968) {
+            if (D_800FDB3C_SkateBoardSkamper > D_800B8994) {
                 D_800FDB3C_SkateBoardSkamper = D_800B8994;
             }
             d = D_800FDB3C_SkateBoardSkamper * D_800FDB3C_SkateBoardSkamper * -35.0f;
@@ -1215,8 +1204,8 @@ void func_800FA498_SkateBoardSkamper(omObjData* obj) {
             func_80025798(obj->model[2], obj->trans.x - 300.0f, D_800FDB48_SkateBoardSkamper, obj->trans.z);
             func_800257E4(obj->model[2], D_800FDB54_SkateBoardSkamper, -D_800FDB54_SkateBoardSkamper, obj->rot.z);
         }
-        if (D_800B8968 < D_800FDB3C_SkateBoardSkamper) {
-            if (D_800B8994 < D_800FDB40_SkateBoardSkamper) {
+        if (D_800FDB3C_SkateBoardSkamper > D_800B8968) {
+            if (D_800FDB40_SkateBoardSkamper > D_800B8994) {
                 D_800FDB40_SkateBoardSkamper = D_800B8994;
             }
             d = D_800FDB40_SkateBoardSkamper * D_800FDB40_SkateBoardSkamper * -35.0f;
@@ -1256,10 +1245,9 @@ void func_800FA498_SkateBoardSkamper(omObjData* obj) {
                 obj->trans.z = D_800FDA84_SkateBoardSkamper[D_800FDB5C_SkateBoardSkamper++];
             }
             if (more == 1) {
-                obj->trans.y = D_800FDB44_SkateBoardSkamper = D_800FDB48_SkateBoardSkamper = D_800FDB4C_SkateBoardSkamper = 300.0f;
-                obj->rot.x = D_800FDB50_SkateBoardSkamper = D_800FDB54_SkateBoardSkamper = D_800FDB58_SkateBoardSkamper = 0.0f;
-                D_800FDB34_SkateBoardSkamper = D_800FDB38_SkateBoardSkamper = D_800FDB3C_SkateBoardSkamper = D_800FDB40_SkateBoardSkamper = 0.0f;
-                func_80025798(obj->model[1], obj->trans.x - 150.0f, D_800FDB44_SkateBoardSkamper, obj->trans.z);
+                D_800FDB44_SkateBoardSkamper = D_800FDB48_SkateBoardSkamper = D_800FDB4C_SkateBoardSkamper = obj->trans.y = 300.0f;
+                D_800FDB38_SkateBoardSkamper = D_800FDB3C_SkateBoardSkamper = D_800FDB40_SkateBoardSkamper = D_800FDB34_SkateBoardSkamper = D_800FDB50_SkateBoardSkamper = D_800FDB54_SkateBoardSkamper = D_800FDB58_SkateBoardSkamper = obj->rot.x = 0.0f;
+                func_80025798(obj->model[1], obj->trans.x - 150.0f, 300.0f, obj->trans.z);
                 func_800257E4(obj->model[1], D_800FDB50_SkateBoardSkamper, obj->rot.y, obj->rot.z);
                 func_80025798(obj->model[2], obj->trans.x - 300.0f, D_800FDB48_SkateBoardSkamper, obj->trans.z);
                 func_800257E4(obj->model[2], D_800FDB54_SkateBoardSkamper, obj->rot.y, obj->rot.z);
@@ -1272,12 +1260,8 @@ void func_800FA498_SkateBoardSkamper(omObjData* obj) {
         }
     }
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_16_SkateBoardSkamper/15EAF0", func_800FA498_SkateBoardSkamper);
-#endif
 
 /* Log row 2 (D_800FDA94). */
-#ifdef NON_MATCHING
 void func_800FAC0C_SkateBoardSkamper(omObjData* obj) {
     SbsFloorWork* w;
     f32 d;
@@ -1285,7 +1269,7 @@ void func_800FAC0C_SkateBoardSkamper(omObjData* obj) {
     s32 more;
 
     if (D_800FDA10_SkateBoardSkamper + 50.0f < obj->trans.z) {
-        if (D_800B8994 < D_800FDB60_SkateBoardSkamper) {
+        if (D_800FDB60_SkateBoardSkamper > D_800B8994) {
             D_800FDB60_SkateBoardSkamper = D_800B8994;
         }
         w = obj->unk_50;
@@ -1293,7 +1277,7 @@ void func_800FAC0C_SkateBoardSkamper(omObjData* obj) {
         obj->trans.y = d + obj->trans.y;
         obj->rot.x = obj->rot.x - d * 0.05f;
         if (D_800B8968 < (D_800FDB60_SkateBoardSkamper = D_800B8968 * 0.5f + D_800FDB60_SkateBoardSkamper)) {
-            if (D_800B8994 < D_800FDB64_SkateBoardSkamper) {
+            if (D_800FDB64_SkateBoardSkamper > D_800B8994) {
                 D_800FDB64_SkateBoardSkamper = D_800B8994;
             }
             d = D_800FDB64_SkateBoardSkamper * D_800FDB64_SkateBoardSkamper * -35.0f;
@@ -1303,8 +1287,8 @@ void func_800FAC0C_SkateBoardSkamper(omObjData* obj) {
             func_80025798(obj->model[1], obj->trans.x - 150.0f, D_800FDB70_SkateBoardSkamper, obj->trans.z);
             func_800257E4(obj->model[1], D_800FDB7C_SkateBoardSkamper, D_800FDB7C_SkateBoardSkamper, obj->rot.z);
         }
-        if (D_800B8968 < D_800FDB64_SkateBoardSkamper) {
-            if (D_800B8994 < D_800FDB68_SkateBoardSkamper) {
+        if (D_800FDB64_SkateBoardSkamper > D_800B8968) {
+            if (D_800FDB68_SkateBoardSkamper > D_800B8994) {
                 D_800FDB68_SkateBoardSkamper = D_800B8994;
             }
             d = D_800FDB68_SkateBoardSkamper * D_800FDB68_SkateBoardSkamper * -35.0f;
@@ -1314,8 +1298,8 @@ void func_800FAC0C_SkateBoardSkamper(omObjData* obj) {
             func_80025798(obj->model[2], obj->trans.x - 300.0f, D_800FDB74_SkateBoardSkamper, obj->trans.z);
             func_800257E4(obj->model[2], D_800FDB80_SkateBoardSkamper, -D_800FDB80_SkateBoardSkamper, obj->rot.z);
         }
-        if (D_800B8968 < D_800FDB68_SkateBoardSkamper) {
-            if (D_800B8994 < D_800FDB6C_SkateBoardSkamper) {
+        if (D_800FDB68_SkateBoardSkamper > D_800B8968) {
+            if (D_800FDB6C_SkateBoardSkamper > D_800B8994) {
                 D_800FDB6C_SkateBoardSkamper = D_800B8994;
             }
             d = D_800FDB6C_SkateBoardSkamper * D_800FDB6C_SkateBoardSkamper * -35.0f;
@@ -1355,10 +1339,9 @@ void func_800FAC0C_SkateBoardSkamper(omObjData* obj) {
                 obj->trans.z = D_800FDA94_SkateBoardSkamper[D_800FDB88_SkateBoardSkamper++];
             }
             if (more == 1) {
-                obj->trans.y = D_800FDB70_SkateBoardSkamper = D_800FDB74_SkateBoardSkamper = D_800FDB78_SkateBoardSkamper = 300.0f;
-                obj->rot.x = D_800FDB7C_SkateBoardSkamper = D_800FDB80_SkateBoardSkamper = D_800FDB84_SkateBoardSkamper = 0.0f;
-                D_800FDB60_SkateBoardSkamper = D_800FDB64_SkateBoardSkamper = D_800FDB68_SkateBoardSkamper = D_800FDB6C_SkateBoardSkamper = 0.0f;
-                func_80025798(obj->model[1], obj->trans.x - 150.0f, D_800FDB70_SkateBoardSkamper, obj->trans.z);
+                D_800FDB70_SkateBoardSkamper = D_800FDB74_SkateBoardSkamper = D_800FDB78_SkateBoardSkamper = obj->trans.y = 300.0f;
+                D_800FDB64_SkateBoardSkamper = D_800FDB68_SkateBoardSkamper = D_800FDB6C_SkateBoardSkamper = D_800FDB60_SkateBoardSkamper = D_800FDB7C_SkateBoardSkamper = D_800FDB80_SkateBoardSkamper = D_800FDB84_SkateBoardSkamper = obj->rot.x = 0.0f;
+                func_80025798(obj->model[1], obj->trans.x - 150.0f, 300.0f, obj->trans.z);
                 func_800257E4(obj->model[1], D_800FDB7C_SkateBoardSkamper, obj->rot.y, obj->rot.z);
                 func_80025798(obj->model[2], obj->trans.x - 300.0f, D_800FDB74_SkateBoardSkamper, obj->trans.z);
                 func_800257E4(obj->model[2], D_800FDB80_SkateBoardSkamper, obj->rot.y, obj->rot.z);
@@ -1371,25 +1354,21 @@ void func_800FAC0C_SkateBoardSkamper(omObjData* obj) {
         }
     }
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_16_SkateBoardSkamper/15EAF0", func_800FAC0C_SkateBoardSkamper);
-#endif
 
-/* Log row 3 (D_800FDAA0): never stops; once past its table the logs are hidden. */
-#ifdef NON_MATCHING
+/* Log row 3 (D_800FDAA0): hidden once past its table. */
 void func_800FB380_SkateBoardSkamper(omObjData* obj) {
     f32 d;
     s32 i;
 
     if (D_800FDA10_SkateBoardSkamper + 50.0f < obj->trans.z) {
-        if (D_800B8994 < D_800FDB8C_SkateBoardSkamper) {
+        if (D_800FDB8C_SkateBoardSkamper > D_800B8994) {
             D_800FDB8C_SkateBoardSkamper = D_800B8994;
         }
         d = D_800FDB8C_SkateBoardSkamper * D_800FDB8C_SkateBoardSkamper * -35.0f;
         obj->trans.y = d + obj->trans.y;
         obj->rot.x = obj->rot.x - d * 0.05f;
         if (D_800B8968 < (D_800FDB8C_SkateBoardSkamper = D_800B8968 * 0.5f + D_800FDB8C_SkateBoardSkamper)) {
-            if (D_800B8994 < D_800FDB90_SkateBoardSkamper) {
+            if (D_800FDB90_SkateBoardSkamper > D_800B8994) {
                 D_800FDB90_SkateBoardSkamper = D_800B8994;
             }
             d = D_800FDB90_SkateBoardSkamper * D_800FDB90_SkateBoardSkamper * -35.0f;
@@ -1399,8 +1378,8 @@ void func_800FB380_SkateBoardSkamper(omObjData* obj) {
             func_80025798(obj->model[1], obj->trans.x - 150.0f, D_800FDB9C_SkateBoardSkamper, obj->trans.z);
             func_800257E4(obj->model[1], D_800FDBA8_SkateBoardSkamper, D_800FDBA8_SkateBoardSkamper, obj->rot.z);
         }
-        if (D_800B8968 < D_800FDB90_SkateBoardSkamper) {
-            if (D_800B8994 < D_800FDB94_SkateBoardSkamper) {
+        if (D_800FDB90_SkateBoardSkamper > D_800B8968) {
+            if (D_800FDB94_SkateBoardSkamper > D_800B8994) {
                 D_800FDB94_SkateBoardSkamper = D_800B8994;
             }
             d = D_800FDB94_SkateBoardSkamper * D_800FDB94_SkateBoardSkamper * -35.0f;
@@ -1410,8 +1389,8 @@ void func_800FB380_SkateBoardSkamper(omObjData* obj) {
             func_80025798(obj->model[2], obj->trans.x - 300.0f, D_800FDBA0_SkateBoardSkamper, obj->trans.z);
             func_800257E4(obj->model[2], D_800FDBAC_SkateBoardSkamper, -D_800FDBAC_SkateBoardSkamper, obj->rot.z);
         }
-        if (D_800B8968 < D_800FDB94_SkateBoardSkamper) {
-            if (D_800B8994 < D_800FDB98_SkateBoardSkamper) {
+        if (D_800FDB94_SkateBoardSkamper > D_800B8968) {
+            if (D_800FDB98_SkateBoardSkamper > D_800B8994) {
                 D_800FDB98_SkateBoardSkamper = D_800B8994;
             }
             d = D_800FDB98_SkateBoardSkamper * D_800FDB98_SkateBoardSkamper * -35.0f;
@@ -1444,35 +1423,24 @@ void func_800FB380_SkateBoardSkamper(omObjData* obj) {
                 func_800258EC(obj->model[1], 4, 4);
                 func_800258EC(obj->model[2], 4, 4);
                 func_800258EC(obj->model[3], 4, 4);
-            }
-#ifdef TARGET_PC
-            /* Retail reads past D_800FDAA0 here (D_800FDAB0's ranks as floats: about 0); the row
-               is hidden by then, so the host keeps its z. */
-            if (D_800FDBB4_SkateBoardSkamper < 4) {
+            } else {
                 obj->trans.z = D_800FDAA0_SkateBoardSkamper[D_800FDBB4_SkateBoardSkamper];
-            }
-            D_800FDBB4_SkateBoardSkamper++;
-#else
-            obj->trans.z = D_800FDAA0_SkateBoardSkamper[D_800FDBB4_SkateBoardSkamper++];
-#endif
-            obj->trans.y = D_800FDB9C_SkateBoardSkamper = D_800FDBA0_SkateBoardSkamper = D_800FDBA4_SkateBoardSkamper = 200.0f;
-            obj->rot.x = D_800FDBA8_SkateBoardSkamper = D_800FDBAC_SkateBoardSkamper = D_800FDBB0_SkateBoardSkamper = 0.0f;
-            D_800FDB8C_SkateBoardSkamper = D_800FDB90_SkateBoardSkamper = D_800FDB94_SkateBoardSkamper = D_800FDB98_SkateBoardSkamper = 0.0f;
-            func_80025798(obj->model[1], obj->trans.x - 150.0f, 200.0f, obj->trans.z);
-            func_800257E4(obj->model[1], D_800FDBA8_SkateBoardSkamper, obj->rot.y, obj->rot.z);
-            func_80025798(obj->model[2], obj->trans.x - 300.0f, D_800FDBA0_SkateBoardSkamper, obj->trans.z);
-            func_800257E4(obj->model[2], D_800FDBAC_SkateBoardSkamper, obj->rot.y, obj->rot.z);
-            func_80025798(obj->model[3], obj->trans.x - 450.0f, D_800FDBA4_SkateBoardSkamper, obj->trans.z);
-            func_800257E4(obj->model[3], D_800FDBB0_SkateBoardSkamper, obj->rot.y, obj->rot.z);
-            for (i = 0; i < D_800F2BC0; i++) {
-                func_800090C4(D_800F3FB0[i], 5, 2);
+                D_800FDBB4_SkateBoardSkamper++;
+                D_800FDB9C_SkateBoardSkamper = D_800FDBA0_SkateBoardSkamper = D_800FDBA4_SkateBoardSkamper = obj->trans.y = 200.0f;
+                D_800FDB90_SkateBoardSkamper = D_800FDB94_SkateBoardSkamper = D_800FDB98_SkateBoardSkamper = D_800FDB8C_SkateBoardSkamper = D_800FDBA8_SkateBoardSkamper = D_800FDBAC_SkateBoardSkamper = D_800FDBB0_SkateBoardSkamper = obj->rot.x = 0.0f;
+                func_80025798(obj->model[1], obj->trans.x - 150.0f, 200.0f, obj->trans.z);
+                func_800257E4(obj->model[1], D_800FDBA8_SkateBoardSkamper, obj->rot.y, obj->rot.z);
+                func_80025798(obj->model[2], obj->trans.x - 300.0f, D_800FDBA0_SkateBoardSkamper, obj->trans.z);
+                func_800257E4(obj->model[2], D_800FDBAC_SkateBoardSkamper, obj->rot.y, obj->rot.z);
+                func_80025798(obj->model[3], obj->trans.x - 450.0f, D_800FDBA4_SkateBoardSkamper, obj->trans.z);
+                func_800257E4(obj->model[3], D_800FDBB0_SkateBoardSkamper, obj->rot.y, obj->rot.z);
+                for (i = 0; i < D_800F2BC0; i++) {
+                    func_800090C4(D_800F3FB0[i], 5, 2);
+                }
             }
         }
     }
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_16_SkateBoardSkamper/15EAF0", func_800FB380_SkateBoardSkamper);
-#endif
 
 /* A player object. */
 #ifdef NON_MATCHING
@@ -1523,10 +1491,13 @@ void func_800FBC38_SkateBoardSkamper(s16 model, s16 n) {
             dst = &m->unk_08[D_800F37F0][idx];
             if (m->unk_04[idx].unk_04 > 400) {
                 dst->unk_04 = n * 100 - 500;
-                if (i == 0) {
-                    dst->unk_0A = (10 - n) << 9;
-                } else if (i == 2) {
-                    dst->unk_08 = (10 - n) << 10;
+                switch (i) {
+                    case 0:
+                        dst->unk_0A = (10 - n) << 9;
+                        break;
+                    case 2:
+                        dst->unk_08 = (10 - n) << 10;
+                        break;
                 }
             }
         }
@@ -1581,30 +1552,27 @@ void func_800FBDA0_SkateBoardSkamper(omObjData* obj) {
 }
 
 /* Tilts a player toward the floor normal n, 4 degrees a frame. */
-#ifdef NON_MATCHING
 void func_800FBEE0_SkateBoardSkamper(omObjData* obj, Vec3f* n) {
     SbsPlayerWork* w = obj->unk_50;
     f32 ax = -(func_800B0CD8(n->y, n->z) - 90.0f);
+    f32 az = func_800B0CD8(n->y, n->x) - 90.0f;
     f32 tx = w->unk_90;
     f32 tz = w->unk_98;
-    f32 az = func_800B0CD8(n->y, n->x) - 90.0f;
 
     if (tx < ax) {
         if ((w->unk_90 = tx + 4.0f) > ax) {
             w->unk_90 = ax;
         }
-    }
-    if (ax < tx) {
+    } else if (ax < tx) {
         if ((w->unk_90 -= 4.0f) < ax) {
             w->unk_90 = ax;
         }
     }
     if (tz < az) {
-        if ((w->unk_98 = tz + 4.0f) > az) {
+        if ((w->unk_98 += 4.0f) > az) {
             w->unk_98 = az;
         }
-    }
-    if (az < tz) {
+    } else if (az < tz) {
         if ((w->unk_98 -= 4.0f) < az) {
             w->unk_98 = az;
         }
@@ -1612,24 +1580,23 @@ void func_800FBEE0_SkateBoardSkamper(omObjData* obj, Vec3f* n) {
     obj->rot.x = w->unk_90;
     obj->rot.z = w->unk_98;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_16_SkateBoardSkamper/15EAF0", func_800FBEE0_SkateBoardSkamper);
-#endif
 
 /* Ground check of a rolling player (1130.c's func_80004578 for a board): returns the floor height
    when the board is on a floor, else starts the fall and returns 65536.0f. */
-#ifdef NON_MATCHING
 f32 func_800FC054_SkateBoardSkamper(omObjData* obj, f32 angle, f32 x, f32 y, f32 z) {
     Vec4f probe;
     Vec3f n;
     Vec3f n2;
     SbsPlayerWork* w;
     SbsFloorWork* gw;
+    SbsFloorWork* g;
     SbsColVtx* verts;
     SbsColTri* tri;
     Vec3f* normal;
     s16 mdl;
     s8 floor;
+    f32 sa;
+    f32 sc;
     f32 speed;
     f32 floorY;
     f32 shadowY;
@@ -1650,10 +1617,12 @@ f32 func_800FC054_SkateBoardSkamper(omObjData* obj, f32 angle, f32 x, f32 y, f32
     func_800AEAC0(angle);
     func_800AEFD0(angle);
     floorY = shadowY = -65536.0f;
+    sa = w->unk_40;
+    sc = w->unk_A4;
     if (w->unk_50 & 6) {
-        speed = w->unk_40 * 0.6f * w->unk_A4;
+        speed = sa * 0.6f * sc;
     } else {
-        speed = w->unk_40 * w->unk_A4;
+        speed = sa * sc;
     }
     nx = x + func_800AEAC0(angle) * speed;
     nz = z + func_800AEFD0(angle) * speed;
@@ -1749,19 +1718,17 @@ f32 func_800FC054_SkateBoardSkamper(omObjData* obj, f32 angle, f32 x, f32 y, f32
         }
     }
     if (w->unk_53 >= 0) {
-        gw = D_800F2AF8[w->unk_53]->unk_50;
-        w->unk_84 = normal->x * gw->unk_0C;
+        g = D_800F2AF8[w->unk_53]->unk_50;
+        w->unk_84 = normal->x * g->unk_0C;
         w->unk_88 = normal->y;
-        w->unk_8C = normal->z * gw->unk_0C;
+        w->unk_8C = normal->z * g->unk_0C;
         func_800FBEE0_SkateBoardSkamper(obj, normal);
     } else {
-        w->unk_84 = w->unk_88 = w->unk_8C = w->unk_90 = w->unk_98 = obj->rot.x = obj->rot.z = 0.0f;
+        w->unk_90 = w->unk_98 = w->unk_84 = w->unk_88 = w->unk_8C = 0.0f;
+        obj->rot.x = obj->rot.z = 0.0f;
     }
     return y;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_16_SkateBoardSkamper/15EAF0", func_800FC054_SkateBoardSkamper);
-#endif
 
 /* A player's movement: stick steering, B (0x4000) to push, A (0x8000) to jump, falls into the
    gaps and off the course, and the finish line at z -9600. */
@@ -2070,7 +2037,6 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_16_SkateBoardSkamper/15EAF0", func_80
 #endif
 
 /* CPU input: push (B) at random, jump (A) over a log row 0-250 ahead or the body in front. */
-#ifdef NON_MATCHING
 void func_800FD764_SkateBoardSkamper(omObjData* obj) {
     SbsPlayerWork* w = obj->unk_50;
     u8 port = w->unk_56;
@@ -2105,7 +2071,7 @@ void func_800FD764_SkateBoardSkamper(omObjData* obj) {
             o = D_800F2AF8[i];
             g = o->unk_50;
             d = obj->trans.z - o->trans.z;
-            if ((u32)(g->unk_05 - 3) < 2 || g->unk_05 == 5) {
+            if (g->unk_05 == 3 || g->unk_05 == 4 || g->unk_05 == 5) {
                 if (((d < 250.0f) & (d > 0.0f)) && th < r) {
                     ContBtnTrg[port] |= 0x8000;
                 }
@@ -2122,6 +2088,3 @@ void func_800FD764_SkateBoardSkamper(omObjData* obj) {
         }
     }
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_16_SkateBoardSkamper/15EAF0", func_800FD764_SkateBoardSkamper);
-#endif
