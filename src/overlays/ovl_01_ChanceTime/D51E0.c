@@ -1,5 +1,9 @@
 #include "ChanceTime.h"
 
+void func_80055B64(void);
+void func_80055B80(void);
+
+
 f32 func_80025D18(s16);
 f32 func_80025D40(s16);
 
@@ -10,14 +14,13 @@ void func_80055810(s32, s32, s32);
 void func_80025BB8(s16, s16);
 void func_80055B50(s32, s32);
 void func_80055B64(void);
-/* The board's path: retail reads D_801011FC (start) as D_80101208[-1] (adjacent .data objects,
-   one base register); the host names the object. */
+/* The camera paths: retail reads the start Vec as the end Vec's [-1] (adjacent .data objects, one
+   base register: D_801011FC/D_80101208, D_80101214/D_80101220); the host names the object. */
 #ifdef TARGET_PC
-#define CT_CAM_FROM D_801011FC_ChanceTime
+#define CT_PREV(cur, prev) (prev)
 #else
-#define CT_CAM_FROM ((&D_80101208_ChanceTime)[-1])
+#define CT_PREV(cur, prev) ((&(cur))[-1])
 #endif
-#define CT_CAM_TO D_80101208_ChanceTime
 
 
 void func_8005049C(void);
@@ -732,8 +735,326 @@ void func_800F87CC_ChanceTime(void) {
         HuPrcVSleep();
     }
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", func_800F8A6C_ChanceTime);
+void func_800F8A6C_ChanceTime(omObjData* obj) {
+    CTPlayerWork* work;
+    f32 dx;
+    f32 dz;
+    f32 angle;
 
+    switch (D_801011F2_ChanceTime) {
+    case 1:
+        switch (D_8010127C_ChanceTime) {
+        case 0:
+            func_800258EC(obj->model[0], 4, 0);
+            func_800258EC(obj->model[1], 4, 0);
+            func_80025BB8(obj->model[0], obj->motion[2]);
+            func_80025EB4(obj->model[0], 2, 2);
+            D_8010170C_ChanceTime = PlaySound(0x55);
+            obj->rot.y = 170.0f;
+            D_8010127C_ChanceTime++;
+            break;
+        case 1:
+            if (D_80101278_ChanceTime < 16) {
+                D_80101278_ChanceTime++;
+                obj->trans.x += (D_80101220_ChanceTime.x - CT_PREV(D_80101220_ChanceTime, D_80101214_ChanceTime).x) / 16.0f;
+                obj->trans.y += (D_80101220_ChanceTime.y - CT_PREV(D_80101220_ChanceTime, D_80101214_ChanceTime).y) / 16.0f;
+                obj->trans.z += (D_80101220_ChanceTime.z - CT_PREV(D_80101220_ChanceTime, D_80101214_ChanceTime).z) / 16.0f;
+            } else {
+                D_8010127C_ChanceTime++;
+            }
+            break;
+        case 2:
+            if (obj->rot.y > 14.0f) {
+                obj->rot.y -= 6.0f;
+            } else {
+                obj->rot.y = 14.0f;
+                D_8010127C_ChanceTime++;
+            }
+            break;
+        case 3:
+            func_8006071C(D_8010170C_ChanceTime);
+            func_80025BB8(obj->model[0], obj->motion[0]);
+            func_80025EB4(obj->model[0], 2, 2);
+            obj->rot.y = 14.0f;
+            D_8010127C_ChanceTime++;
+            break;
+        case 4:
+            omAddPrcObj(func_800FF2B8_ChanceTime, 0x3F00, 0x800, 0);
+            D_8010127C_ChanceTime++;
+            break;
+        case 5:
+            if (D_80101320_ChanceTime == 1) {
+                D_8010170C_ChanceTime = PlaySound(0x55);
+                D_8010127C_ChanceTime++;
+                D_80101278_ChanceTime = 0;
+            }
+            break;
+        case 6:
+            if (obj->rot.y < 350.0f) {
+                obj->rot.y -= 6.0f;
+                if (obj->rot.y < 0.0f) {
+                    obj->rot.y += 360.0f;
+                }
+            } else {
+                obj->rot.y = 350.0f;
+                D_8010127C_ChanceTime++;
+            }
+            break;
+        case 7:
+            D_801011F3_ChanceTime = 1;
+            func_80025BB8(obj->model[0], obj->motion[2]);
+            func_80025EB4(obj->model[0], 2, 2);
+            obj->rot.y = 350.0f;
+            D_8010127C_ChanceTime++;
+            break;
+        case 8:
+            if (D_80101278_ChanceTime < 16) {
+                D_80101278_ChanceTime++;
+                obj->trans.x -= (D_80101220_ChanceTime.x - CT_PREV(D_80101220_ChanceTime, D_80101214_ChanceTime).x) / 16.0f;
+                obj->trans.y -= (D_80101220_ChanceTime.y - CT_PREV(D_80101220_ChanceTime, D_80101214_ChanceTime).y) / 16.0f;
+                obj->trans.z -= (D_80101220_ChanceTime.z - CT_PREV(D_80101220_ChanceTime, D_80101214_ChanceTime).z) / 16.0f;
+            } else {
+                func_8006071C(D_8010170C_ChanceTime);
+                func_800258EC(obj->model[0], 4, 4);
+                func_800258EC(obj->model[1], 4, 4);
+                D_8010127C_ChanceTime++;
+            }
+            break;
+        case 9:
+            D_801011F2_ChanceTime = 0;
+            D_80101278_ChanceTime = 0;
+            D_8010127C_ChanceTime = 0;
+            break;
+        }
+        break;
+    case 2:
+        switch (D_8010127C_ChanceTime) {
+        case 0:
+            D_8010170C_ChanceTime = PlaySound(0x55);
+            func_800258EC(obj->model[0], 4, 0);
+            func_800258EC(obj->model[1], 4, 0);
+            func_80025BB8(obj->model[0], obj->motion[2]);
+            func_80025EB4(obj->model[0], 2, 2);
+            obj->rot.y = 170.0f;
+            omAddPrcObj(func_800F8288_ChanceTime, 0x3F00, 0x800, 0);
+            D_80101278_ChanceTime = 0;
+            D_8010127C_ChanceTime++;
+            break;
+        case 1:
+            if (D_80101278_ChanceTime < 16) {
+                D_80101278_ChanceTime++;
+                obj->trans.x += (D_80101220_ChanceTime.x - CT_PREV(D_80101220_ChanceTime, D_80101214_ChanceTime).x) / 16.0f;
+                obj->trans.y += (D_80101220_ChanceTime.y - CT_PREV(D_80101220_ChanceTime, D_80101214_ChanceTime).y) / 16.0f;
+                obj->trans.z += (D_80101220_ChanceTime.z - CT_PREV(D_80101220_ChanceTime, D_80101214_ChanceTime).z) / 16.0f;
+            } else {
+                D_8010127C_ChanceTime++;
+            }
+            break;
+        case 2:
+            if (obj->rot.y > 14.0f) {
+                obj->rot.y -= 6.0f;
+            } else {
+                obj->rot.y = 14.0f;
+                D_8010127C_ChanceTime++;
+            }
+            break;
+        case 3:
+            func_8006071C(D_8010170C_ChanceTime);
+            func_80025BB8(obj->model[0], obj->motion[0]);
+            func_80025EB4(obj->model[0], 2, 2);
+            obj->rot.y = 14.0f;
+            D_8010127C_ChanceTime++;
+            break;
+        case 4:
+            omAddPrcObj(func_800FED28_ChanceTime, 0x3F00, 0x800, 0);
+            D_8010127C_ChanceTime++;
+            break;
+        case 5:
+            if (D_80101320_ChanceTime == 1) {
+                D_8010127C_ChanceTime++;
+                D_80101278_ChanceTime = 0;
+                if (D_801012E2_ChanceTime == 9) {
+                    D_801011F2_ChanceTime = 0;
+                    D_8010127C_ChanceTime = 0;
+                    func_80009438();
+                } else {
+                    D_8010170C_ChanceTime = PlaySound(0x55);
+                }
+            }
+            break;
+        case 6:
+            if (D_801012E0_ChanceTime != D_80101AAE_ChanceTime[0] && D_801012E1_ChanceTime != D_80101AAE_ChanceTime[0]) {
+                omAddPrcObj(func_800F84B4_ChanceTime, 0x3F00, 0x800, 0);
+            }
+            D_8010127C_ChanceTime++;
+            break;
+        case 7:
+            if (obj->rot.y < 350.0f) {
+                obj->rot.y -= 6.0f;
+                if (obj->rot.y < 0.0f) {
+                    obj->rot.y += 360.0f;
+                }
+            } else {
+                obj->rot.y = 350.0f;
+                D_8010127C_ChanceTime++;
+            }
+            break;
+        case 8:
+            func_80025BB8(obj->model[0], obj->motion[2]);
+            func_80025EB4(obj->model[0], 2, 2);
+            obj->rot.y = 350.0f;
+            D_80101278_ChanceTime = 0;
+            D_8010127C_ChanceTime++;
+            break;
+        case 9:
+            if (D_80101278_ChanceTime < 16) {
+                D_80101278_ChanceTime++;
+                obj->trans.x -= (D_80101220_ChanceTime.x - CT_PREV(D_80101220_ChanceTime, D_80101214_ChanceTime).x) / 16.0f;
+                obj->trans.y -= (D_80101220_ChanceTime.y - CT_PREV(D_80101220_ChanceTime, D_80101214_ChanceTime).y) / 16.0f;
+                obj->trans.z -= (D_80101220_ChanceTime.z - CT_PREV(D_80101220_ChanceTime, D_80101214_ChanceTime).z) / 16.0f;
+            } else {
+                func_8006071C(D_8010170C_ChanceTime);
+                func_800258EC(obj->model[0], 4, 4);
+                func_800258EC(obj->model[1], 4, 4);
+                if (D_801012E0_ChanceTime != D_80101AAE_ChanceTime[0] && D_801012E1_ChanceTime != D_80101AAE_ChanceTime[0]) {
+                    D_80101278_ChanceTime = 0;
+                } else {
+                    D_80101278_ChanceTime = 30;
+                }
+                D_8010127C_ChanceTime++;
+            }
+            break;
+        case 10:
+            if (++D_80101278_ChanceTime >= 31) {
+                if (D_80101AA4_ChanceTime[0] != 0) {
+                    func_800F8700_ChanceTime(D_80101AA4_ChanceTime[0]);
+                }
+                D_8010127C_ChanceTime++;
+            }
+            break;
+        case 11:
+            if (++D_80101278_ChanceTime >= 9) {
+                D_8010127C_ChanceTime++;
+            }
+            break;
+        case 12:
+            if (D_80101AA4_ChanceTime[1] != 0) {
+                func_800F8700_ChanceTime(D_80101AA4_ChanceTime[1]);
+            }
+            D_80101278_ChanceTime = 0;
+            D_8010127C_ChanceTime++;
+            break;
+        case 13:
+            if (++D_80101278_ChanceTime >= 9) {
+                func_80055B50(D_801012E0_ChanceTime, D_801012E1_ChanceTime);
+                func_800559F8();
+                if (D_80101AA4_ChanceTime[0] != 0) {
+                    D_800F3FB0[D_80101AA4_ChanceTime[0]]->trans.x = D_8010122C_ChanceTime.x;
+                    D_800F3FB0[D_80101AA4_ChanceTime[0]]->trans.y = D_8010122C_ChanceTime.y;
+                    D_800F3FB0[D_80101AA4_ChanceTime[0]]->trans.z = D_8010122C_ChanceTime.z;
+                    func_800090C4(D_800F3FB0[D_80101AA4_ChanceTime[0]], 0, 2);
+                    func_800090C4(D_800F3FB0[D_80101AA4_ChanceTime[0]], 1, 1);
+                    func_800258EC(D_800F3FB0[D_80101AA4_ChanceTime[0]]->model[0], 4, 0);
+                }
+                if (D_80101AA4_ChanceTime[1] != 0) {
+                    D_800F3FB0[D_80101AA4_ChanceTime[1]]->trans.x = -D_8010122C_ChanceTime.x;
+                    D_800F3FB0[D_80101AA4_ChanceTime[1]]->trans.y = D_8010122C_ChanceTime.y;
+                    D_800F3FB0[D_80101AA4_ChanceTime[1]]->trans.z = D_8010122C_ChanceTime.z;
+                    func_800090C4(D_800F3FB0[D_80101AA4_ChanceTime[1]], 0, 2);
+                    func_800090C4(D_800F3FB0[D_80101AA4_ChanceTime[1]], 1, 1);
+                    func_800258EC(D_800F3FB0[D_80101AA4_ChanceTime[1]]->model[0], 4, 0);
+                }
+                D_8010127C_ChanceTime++;
+            }
+            break;
+        case 14:
+            work = CT_PWORK(D_800F3FB0[D_80101AA4_ChanceTime[0]]);
+            dx = D_80101238_ChanceTime.x - D_800F3FB0[D_80101AA4_ChanceTime[0]]->trans.x;
+            dz = D_80101238_ChanceTime.z - D_800F3FB0[D_80101AA4_ChanceTime[0]]->trans.z;
+            if (dx * dx + dz * dz > 400.0f) {
+                angle = func_800B0CD8(dz, dx);
+                D_80101AB8_ChanceTime[work->unk_56] = (s32)(func_800AEFD0(angle) * 40.0f);
+                D_80101AB2_ChanceTime[work->unk_56] = (s32)(-func_800AEAC0(angle) * 40.0f);
+                D_80101A9C_ChanceTime[work->unk_56] = 0;
+                D_80101ACE_ChanceTime[work->unk_56] = 0;
+            } else {
+                D_80101AB8_ChanceTime[work->unk_56] = 0;
+                D_80101AB2_ChanceTime[work->unk_56] = 0;
+                D_80101A9C_ChanceTime[work->unk_56] = 0;
+                D_80101ACE_ChanceTime[work->unk_56] = 0;
+                work->unk_40 = 0.0f;
+                work->unk_3C = 30.0f;
+                if (D_80101280_ChanceTime == 0) {
+                    func_80055B64();
+                    D_80101280_ChanceTime = 1;
+                }
+            }
+            work = CT_PWORK(D_800F3FB0[D_80101AA4_ChanceTime[1]]);
+            dx = -D_80101238_ChanceTime.x - D_800F3FB0[D_80101AA4_ChanceTime[1]]->trans.x;
+            dz = D_80101238_ChanceTime.z - D_800F3FB0[D_80101AA4_ChanceTime[1]]->trans.z;
+            if (dx * dx + dz * dz > 400.0f) {
+                angle = func_800B0CD8(dz, dx);
+                D_80101AB8_ChanceTime[work->unk_56] = (s32)(func_800AEFD0(angle) * 40.0f);
+                D_80101AB2_ChanceTime[work->unk_56] = (s32)(-func_800AEAC0(angle) * 40.0f);
+                D_80101A9C_ChanceTime[work->unk_56] = 0;
+                D_80101ACE_ChanceTime[work->unk_56] = 0;
+            } else {
+                D_80101AB8_ChanceTime[work->unk_56] = 0;
+                D_80101AB2_ChanceTime[work->unk_56] = 0;
+                D_80101A9C_ChanceTime[work->unk_56] = 0;
+                D_80101ACE_ChanceTime[work->unk_56] = 0;
+                work->unk_40 = 0.0f;
+                work->unk_3C = 330.0f;
+                if (D_80101281_ChanceTime == 0) {
+                    func_80055B80();
+                    D_80101281_ChanceTime = 1;
+                }
+            }
+            if (D_80101280_ChanceTime == 1 && D_80101281_ChanceTime == D_80101280_ChanceTime) {
+                D_80101278_ChanceTime = 0;
+                D_8010127C_ChanceTime++;
+            }
+            break;
+        case 15:
+            work = CT_PWORK(D_800F3FB0[D_80101AA4_ChanceTime[0]]);
+            D_80101AB8_ChanceTime[work->unk_56] = 0;
+            D_80101AB2_ChanceTime[work->unk_56] = 0;
+            D_80101A9C_ChanceTime[work->unk_56] = 0;
+            D_80101ACE_ChanceTime[work->unk_56] = 0;
+            work->unk_3C = 30.0f;
+            work->unk_40 = 0.0f;
+            work = CT_PWORK(D_800F3FB0[D_80101AA4_ChanceTime[1]]);
+            D_80101AB8_ChanceTime[work->unk_56] = 0;
+            D_80101AB2_ChanceTime[work->unk_56] = 0;
+            D_80101A9C_ChanceTime[work->unk_56] = 0;
+            D_80101ACE_ChanceTime[work->unk_56] = 0;
+            work->unk_3C = 330.0f;
+            work->unk_40 = 0.0f;
+            if (D_80101278_ChanceTime++ >= 21) {
+                D_80101278_ChanceTime = 0;
+                D_8010127C_ChanceTime++;
+            }
+            break;
+        case 16:
+            D_801011F4_ChanceTime = 1;
+            D_8010127C_ChanceTime++;
+            break;
+        case 17:
+            if (D_801011F5_ChanceTime == 1) {
+                D_8010127C_ChanceTime++;
+            }
+            break;
+        case 18:
+            D_801011F2_ChanceTime = 0;
+            D_80101278_ChanceTime = 0;
+            D_8010127C_ChanceTime = 0;
+            func_80009438();
+            break;
+        }
+        break;
+    }
+    func_80025798(obj->model[1], obj->trans.x, 0.0f, obj->trans.z);
+}
 void func_800F988C_ChanceTime(omObjData* arg0) {
     func_800264F8(arg0->mdlcnt, arg0->mtncnt, (sinf(arg0->trans.x * (M_PI/180)) / 2.0f) + 0.5f, "030-hata1", "hata2", 0);
     arg0->trans.x += 20.0f;
@@ -1405,9 +1726,9 @@ void func_800FBBC4_ChanceTime(omObjData* obj) {
         case 8:
             if (D_801012A8_ChanceTime < 30) {
                 D_801012A8_ChanceTime++;
-                obj->trans.x -= (CT_CAM_TO.x - CT_CAM_FROM.x) / 30.0f;
-                obj->trans.y -= (CT_CAM_TO.y - CT_CAM_FROM.y) / 30.0f;
-                obj->trans.z -= (CT_CAM_TO.z - CT_CAM_FROM.z) / 30.0f;
+                obj->trans.x -= (D_80101208_ChanceTime.x - CT_PREV(D_80101208_ChanceTime, D_801011FC_ChanceTime).x) / 30.0f;
+                obj->trans.y -= (D_80101208_ChanceTime.y - CT_PREV(D_80101208_ChanceTime, D_801011FC_ChanceTime).y) / 30.0f;
+                obj->trans.z -= (D_80101208_ChanceTime.z - CT_PREV(D_80101208_ChanceTime, D_801011FC_ChanceTime).z) / 30.0f;
             } else {
                 func_800258EC(obj->model[0], 4, 4);
                 func_800258EC(obj->model[1], 4, 4);
@@ -1445,9 +1766,9 @@ void func_800FBBC4_ChanceTime(omObjData* obj) {
         case 2:
             if (D_801012A8_ChanceTime < 30) {
                 D_801012A8_ChanceTime++;
-                obj->trans.x += (CT_CAM_TO.x - CT_CAM_FROM.x) / 30.0f;
-                obj->trans.y += (CT_CAM_TO.y - CT_CAM_FROM.y) / 30.0f;
-                obj->trans.z += (CT_CAM_TO.z - CT_CAM_FROM.z) / 30.0f;
+                obj->trans.x += (D_80101208_ChanceTime.x - CT_PREV(D_80101208_ChanceTime, D_801011FC_ChanceTime).x) / 30.0f;
+                obj->trans.y += (D_80101208_ChanceTime.y - CT_PREV(D_80101208_ChanceTime, D_801011FC_ChanceTime).y) / 30.0f;
+                obj->trans.z += (D_80101208_ChanceTime.z - CT_PREV(D_80101208_ChanceTime, D_801011FC_ChanceTime).z) / 30.0f;
             } else {
                 D_801012AC_ChanceTime++;
             }
