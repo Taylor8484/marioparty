@@ -4,6 +4,10 @@
 extern omObjData* D_800F2AF8[];
 extern u8 D_800F64F8;
 extern u16 D_800EE984;
+extern u16 ContBtn[4];
+extern u16 D_800F2CE2[4];
+extern s16 D_800F33CC[4];
+extern s8 ContStkY[4];
 
 /* A player's work (obj->unk_50): MgWork's layout (src/99E0.c); no pointers below 0x60. */
 typedef struct BaPlayerWork {
@@ -684,8 +688,108 @@ void func_800F8100_BombsAway(omObjData* obj, s16 player) {
     p->unk_42 = 12;
     p->unk_44 = -1;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F8538_BombsAway);
+void func_800F8538_BombsAway(omObjData* obj) {
+    BaPlayer* p;
+    s32 port;
+    s16 move;
+    s32 diff;
+    f32 dx;
+    f32 dz;
+    f32 ang;
+    f32 r;
+    s32 stick;
+    s32 pad;
 
+    p = func_800F78D4_BombsAway(obj);
+    port = GwPlayer[p->unk_06].port;
+    diff = GwPlayer[p->unk_06].cpu_difficulty;
+    move = 0;
+    if (D_80100328_BombsAway.unk_1C != 0.0) {
+        move = 1;
+    }
+    if (D_80100328_BombsAway.unk_1C > 0.75) {
+        if (!(D_80100144_BombsAway & 7)) {
+            p->unk_58 = (s32)((u32)(((rand8() << 8) | rand8()) * 25) >> 13) + D_80100328_BombsAway.unk_38.x;
+            p->unk_60 = (s32)((u32)(((rand8() << 8) | rand8()) * 25) >> 13) + D_80100328_BombsAway.unk_38.z;
+        }
+    } else if (D_801006F8_BombsAway >= 0) {
+        move = 1;
+        dx = D_80100328_BombsAway.unk_38.x - D_80100698_BombsAway[D_801006F8_BombsAway].unk_04;
+        dz = D_80100328_BombsAway.unk_38.z - D_80100698_BombsAway[D_801006F8_BombsAway].unk_08;
+        if (D_80100698_BombsAway[D_801006F8_BombsAway].unk_02 < 2) {
+            if ((s32)((u32)(((rand8() << 8) | rand8()) * 25) >> 14) < 18 - diff * 5) {
+                p->unk_54 = 1;
+            } else if (dx * dx + dz * dz < 160000.0 &&
+                       (s32)((u32)(((rand8() << 8) | rand8()) * 25) >> 14) < diff * 20) {
+                p->unk_54 = 1;
+            }
+        }
+        if (!((D_80100698_BombsAway[D_801006F8_BombsAway].unk_00 + p->unk_3E) & 0xF)) {
+            ang = func_800FC0EC_BombsAway(dx, dz);
+            ang += (((((rand8() << 8) | rand8()) * 15) >> 13) - 60);
+            if (ang >= 360.0f) {
+                ang -= 360.0f;
+            } else if (ang < 0.0f) {
+                ang += 360.0f;
+            }
+            dx = D_80100328_BombsAway.unk_38.x + func_800AEFD0(ang) * 2.0 * 100.0;
+            dz = D_80100328_BombsAway.unk_38.z + func_800AEAC0(ang) * 1.5 * 100.0;
+            ang = (((rand8() << 8) | rand8()) * 45) >> 13;
+            r = ((((rand8() << 8) | rand8()) * (s32)((2.5 - diff * 0.5) * 100.0)) >> 16) + 30.0;
+            p->unk_58 = dx + func_800AEFD0(ang) * r;
+            p->unk_60 = dz + func_800AEAC0(ang) * r * 0.8;
+        }
+    }
+    if (D_80100354_BombsAway != 0) {
+        if ((s32)((u32)(((rand8() << 8) | rand8()) * 25) >> 14) < diff * 10 + 60) {
+            p->unk_54 = 1;
+        }
+    }
+    if (p->unk_6A != 0) {
+        move = 1;
+        p->unk_58 = D_80100328_BombsAway.unk_38.x + D_800FFA7C_BombsAway[p->unk_68][0];
+        p->unk_60 = D_80100328_BombsAway.unk_38.z + D_800FFA7C_BombsAway[p->unk_68][1];
+    }
+    if (move != 0) {
+        dx = p->unk_58 - obj->trans.x;
+        dz = p->unk_60 - obj->trans.z;
+        p->unk_4C = func_800FC0EC_BombsAway(dx, -dz) + 90.0;
+        if (p->unk_4C >= 360.0) {
+            p->unk_4C -= 360.0;
+        }
+        p->unk_50 = sqrtf(dx * dx + dz * dz) / 150.0;
+        if (p->unk_50 < 0.2) {
+            p->unk_50 = 0.0f;
+        }
+        if (p->unk_50 > 1.0) {
+            p->unk_50 = 1.0f;
+        }
+    } else {
+        p->unk_50 = 0.0f;
+    }
+    ContBtn[port] &= 0x1030;
+    ContBtnTrg[port] &= 0x1030;
+    if (D_80100140_BombsAway.unk_00 == 1 || p->unk_6A != 0) {
+        if (p->unk_54 != 0) {
+            ContBtnTrg[port] |= 0x8000;
+        }
+        pad = port;
+        ContBtn[pad] = ContBtnTrg[pad];
+        stick = func_800AEAC0(p->unk_4C) * p->unk_50 * 64.0f;
+        D_800F2CE2[pad] = stick;
+        ContStkX[pad] = stick;
+        stick = -func_800AEFD0(p->unk_4C) * p->unk_50 * 64.0f;
+        D_800F33CC[pad] = stick;
+        ContStkY[pad] = stick;
+    } else {
+        pad = port;
+        D_800F2CE2[pad] = 0;
+        ContStkX[pad] = 0;
+        D_800F33CC[pad] = 0;
+        ContStkY[pad] = 0;
+    }
+    p->unk_54 = 0;
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F8D48_BombsAway);
 
 void func_800F9824_BombsAway(omObjData* obj) {
