@@ -76,7 +76,12 @@ void func_800396B0(s16, u8);
 extern s16 D_800F384C;
 extern Vec3f* D_800ED610;
 extern Vec3f* D_800ED72C;
+#ifdef TARGET_PC
+extern s16 D_800F3B70[];
+#define D_800F3B74 (D_800F3B70[2]) /* splat label inside 72D90.c's s16 array */
+#else
 extern s16 D_800F3B74;
+#endif
 extern u8 D_800C4E14[], D_800C4E24[], D_800C4E2C[], D_800C4E38[];
 
 /* .data */
