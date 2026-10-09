@@ -1637,7 +1637,7 @@ segments:
       - [0x2518D0, c]
       - [0x251900, c]
       - [0x253A50, .data, 2518D0]
-      - [0x253A80, data, 251900]
+      - [0x253A80, .data, 251900]
       - {0x254450, type: bss, vram: 0x800F9160, name: ovl_3C_bss}
   - type: code
     start: 0x254450
@@ -2031,7 +2031,7 @@ segments:
     bss_size: 0x10
     subsegments:
       - [0x295450, c]
-      - [0x295D40, data, 295450]
+      - [0x295D40, .data, 295450]
       - {0x295E40, type: bss, vram: 0x800F6FD0, name: ovl_59_bss}
   - type: code
     start: 0x295E40
