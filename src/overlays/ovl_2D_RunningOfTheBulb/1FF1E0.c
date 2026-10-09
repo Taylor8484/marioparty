@@ -587,6 +587,8 @@ void func_800F8210_RunningOfTheBulb(omObjData* arg0) {
 }
 
 
+// port read lb vs retail lbu+sign-extend, register allocation
+#ifdef NON_MATCHING
 void func_800F82F4_RunningOfTheBulb(omObjData* arg0) {
     RotbPlayerWork* work;
     RotbPlayerExt* ext;
@@ -781,6 +783,9 @@ void func_800F82F4_RunningOfTheBulb(omObjData* arg0) {
     ContBtnTrg[(u16)port] = trg;
     ContBtn[(u16)port] = btn;
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F82F4_RunningOfTheBulb);
+#endif
 void func_800F8D80_RunningOfTheBulb(omObjData* arg0) {
     RotbPlayerExt* temp_s0;
 
@@ -844,6 +849,8 @@ void func_800F8EA0_RunningOfTheBulb(omObjData* arg0) {
     ContBtnTrg[temp_s0] = temp_s6;
 }
 
+// port read lb vs retail lbu+sign-extend, register allocation
+#ifdef NON_MATCHING
 void func_800F9094_RunningOfTheBulb(omObjData* arg0) {
     RotbPlayerWork* work;
     omObjData* other;
@@ -920,6 +927,9 @@ void func_800F9094_RunningOfTheBulb(omObjData* arg0) {
     ContBtn[(u16)port] = btn;
     ContBtnTrg[(u16)port] = trg;
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F9094_RunningOfTheBulb);
+#endif
 void func_800F947C_RunningOfTheBulb(omObjData* arg0, f32 arg1) {
     RotbPlayerWork* work = arg0->unk_50;
     RotbPlayerExt* ext = work->unk_E4;
@@ -933,7 +943,8 @@ void func_800F947C_RunningOfTheBulb(omObjData* arg0, f32 arg1) {
     if (!(arg1 < 180.0f)) {
         arg1 = -(360.0f - arg1);
     }
-    ext->unk_50 = arg1 / 10.0f;
+    arg1 /= 10.0f;
+    ext->unk_50 = arg1;
     arg0->func_ptr = &func_800F9550_RunningOfTheBulb;
 }
 void func_800F9550_RunningOfTheBulb(omObjData* arg0) {
@@ -957,6 +968,8 @@ void func_800F960C_RunningOfTheBulb(omObjData* arg0) {
 void func_800F9648_RunningOfTheBulb(omObjData* arg0) {
 }
 
+// retail reloads the player pointer and flags; branch shape of the count
+#ifdef NON_MATCHING
 u16 func_800F9650_RunningOfTheBulb(void) {
     RotbPlayerWork* work;
     RotbPlayerExt* ext;
@@ -975,6 +988,9 @@ u16 func_800F9650_RunningOfTheBulb(void) {
     }
     return (u16)n == 4;
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F9650_RunningOfTheBulb);
+#endif
 void func_800F9724_RunningOfTheBulb(omObjData* arg0) {
     RotbBodyWork* body;
     RotbBulbExt* ext;
@@ -1009,6 +1025,8 @@ void func_800F9724_RunningOfTheBulb(omObjData* arg0) {
     D_800EDE70[D_800EE984++] = arg0;
     arg0->func_ptr = &func_800F9C2C_RunningOfTheBulb;
 }
+// mul.s operand order (masked 0)
+#ifdef NON_MATCHING
 void func_800F98F0_RunningOfTheBulb(omObjData* arg0) {
     RotbBulbExt* ext;
     f32 z;
@@ -1064,6 +1082,11 @@ void func_800F98F0_RunningOfTheBulb(omObjData* arg0) {
     func_800258EC(arg0->model[2], 4, 0);
     func_8009ECB0(D_800F2B7C[arg0->model[0]].unk7C, 0.0f, ext->unk_20, 0.0f);
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F98F0_RunningOfTheBulb);
+#endif
+// CSE of 360-d and fabs register allocation
+#ifdef NON_MATCHING
 void func_800F9C2C_RunningOfTheBulb(omObjData* arg0) {
     f32 dist;
     RotbBodyWork* body;
@@ -1194,12 +1217,15 @@ void func_800F9C2C_RunningOfTheBulb(omObjData* arg0) {
         ext->unk_02--;
     }
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F9C2C_RunningOfTheBulb);
+#endif
 void func_800FA2B8_RunningOfTheBulb(omObjData* arg0) {
     RotbBulbExt* temp = ROTB_BODY(arg0)->unk_68.bulb;
 
     if (arg0->trans.z > -1600.0f) {
         temp->unk_20 = 180.0f;
-        func_8009ECB0(&D_800F2B7C[arg0->model[0]].unk7C, 0.0f, 180.0f, 0.0f);
+        func_8009ECB0(D_800F2B7C[arg0->model[0]].unk7C, 0.0f, 180.0f, 0.0f);
         arg0->trans.z += -13.116001f;
         return;
     }
@@ -1590,6 +1616,8 @@ void func_800FB738_RunningOfTheBulb(omObjData* arg0) {
     }
 }
 
+// register allocation (masked 0)
+#ifdef NON_MATCHING
 s32 func_800FB8EC_RunningOfTheBulb(omObjData* arg0, omObjData* arg1) {
     RotbPlayerWork* work;
     RotbPlayerExt* ext;
@@ -1634,6 +1662,9 @@ s32 func_800FB8EC_RunningOfTheBulb(omObjData* arg0, omObjData* arg1) {
     }
     return 1;
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FB8EC_RunningOfTheBulb);
+#endif
 void func_800FBAA4_RunningOfTheBulb(omObjData* arg0) {
     switch (D_800FE4B4_RunningOfTheBulb) {
     case 0:
@@ -1655,6 +1686,8 @@ void func_800FBAA4_RunningOfTheBulb(omObjData* arg0) {
     }
 }
 
+// register allocation (masked 0)
+#ifdef NON_MATCHING
 void func_800FBB5C_RunningOfTheBulb(omObjData* arg0) {
     RotbPlayerWork* work;
     RotbPlayerExt* ext;
@@ -1772,6 +1805,9 @@ void func_800FBB5C_RunningOfTheBulb(omObjData* arg0) {
         break;
     }
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FBB5C_RunningOfTheBulb);
+#endif
 void func_800FBF30_RunningOfTheBulb(void) {
     if ((D_800FE3A0_RunningOfTheBulb[0] != 0) || (D_800F5144 != 0)) {
         func_800FE178_RunningOfTheBulb(0x83);
@@ -1811,8 +1847,256 @@ void func_800FBF74_RunningOfTheBulb(omObjData* arg0) {
     ContBtnTrg[temp_s0] = 0;
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FC0F4_RunningOfTheBulb);
+// register allocation and branch layout
+#ifdef NON_MATCHING
+void func_800FC0F4_RunningOfTheBulb(omObjData* arg0) {
+    struct {
+        omObjData* obj[4];
+        f32 dist[4];
+        f32 angle[4];
+    } near;
+    RotbPlayerWork* work;
+    RotbPlayerExt* ext;
+    RotbBulbExt* bulb;
+    omObjData* target;
+    omObjData* obj;
+    f32 speed;
+    f32 maxA;
+    f32 range;
+    f32 mult;
+    f32 nearDist;
+    f32 jitterX;
+    f32 jitterZ;
+    f32 best;
+    f32 tx;
+    f32 tz;
+    f32 y;
+    f32 lim;
+    f32 dir;
+    s32 i;
+    u16 diff;
+    u16 port;
+    u16 chance;
+    u16 track;
+    s32 cnt;
+    u16 n;
+    u16 useLeader;
+    u16 visible;
+    u16 flags;
 
+    track = 0;
+    work = arg0->unk_50;
+    ext = work->unk_E4;
+    diff = GwPlayer[work->unk_58].cpu_difficulty;
+    port = work->unk_56;
+    target = NULL;
+    switch (diff) {
+    case 0:
+        speed = (u8)(rand8() % 5) + 35;
+        maxA = 30.0f;
+        range = 300.0f;
+        mult = 0.4f;
+        chance = 3;
+        nearDist = 200.0f;
+        jitterZ = 32.0f;
+        jitterX = jitterZ;
+        break;
+    case 1:
+        speed = (u8)(rand8() % 5) + 45;
+        maxA = 35.0f;
+        range = 350.0f;
+        mult = 0.6f;
+        chance = 5;
+        nearDist = 220.0f;
+        jitterZ = 16.0f;
+        jitterX = jitterZ;
+        break;
+    case 2:
+        speed = (u8)(rand8() % 5) + 50;
+        maxA = 40.0f;
+        range = 400.0f;
+        mult = 0.8f;
+        chance = 7;
+        nearDist = 240.0f;
+        jitterZ = 8.0f;
+        jitterX = jitterZ;
+        break;
+    case 3:
+        speed = 60.0f;
+        maxA = 45.0f;
+        range = 400.0f;
+        mult = 1.0f;
+        chance = 10;
+        nearDist = 260.0f;
+        jitterZ = 0.0f;
+        jitterX = jitterZ;
+        break;
+    }
+    useLeader = 0;
+    if (arg0 == D_800FE4A0_RunningOfTheBulb) {
+        /* Retail computes the distance and angle to the goal and drops both. */
+        func_800B1750((0.0f - arg0->trans.x) * (0.0f - arg0->trans.x) + (-2350.0f - arg0->trans.z) * (-2350.0f - arg0->trans.z));
+        func_800B0CD8(0.0f - arg0->trans.x, -2350.0f - arg0->trans.z);
+        cnt = func_800FDAC4_RunningOfTheBulb(arg0, near.obj, near.dist);
+        n = 0;
+        for (i = 0; i < (u16)cnt; i++) {
+            if (near.dist[i] < 400.0f && near.obj[i]->trans.y < 300.0f) {
+                near.angle[n] = func_800B0CD8(near.obj[i]->trans.x - arg0->trans.x, near.obj[i]->trans.z - arg0->trans.z);
+                n++;
+            }
+        }
+        if (n == 0) {
+            dir = func_800FD394_RunningOfTheBulb(arg0, NULL, 180.0f - CRot.y, maxA, range);
+        } else {
+            dir = func_800FD9BC_RunningOfTheBulb(n, near.angle);
+        }
+    } else {
+        cnt = func_800FDAC4_RunningOfTheBulb(arg0, near.obj, near.dist);
+        if (ext->unk_30 == NULL) {
+            if (target == NULL) {
+                best = 100000.0f;
+                for (i = 0; i < (u16)cnt; i++) {
+                    if (func_800FAA40_RunningOfTheBulb(near.obj[i]) == 0) {
+                        continue;
+                    }
+                    obj = near.obj[i];
+                    if (300.0f <= obj->trans.y) {
+                        continue;
+                    }
+                    if (ROTB_BODY(obj)->unk_68.bulb->unk_00 & 0x14) {
+                        continue;
+                    }
+                    /* Retail keeps the last distance checked, not the smallest (the store sits
+                       in the branch delay slot), while the target is the first nearer one. */
+                    if (near.dist[i] < best) {
+                        target = obj;
+                    }
+                    best = near.dist[i];
+                }
+                if (target == NULL) {
+                    target = D_800FE4A0_RunningOfTheBulb;
+                    useLeader = 1;
+                }
+            }
+            if (!useLeader) {
+                bulb = ROTB_BODY(target)->unk_68.bulb;
+                bulb->unk_00 |= 4;
+                bulb->unk_08 = arg0;
+                ext->unk_30 = target;
+            }
+        } else if (!useLeader) {
+            target = ext->unk_30;
+        }
+        if ((ROTB_PLAYER(D_800FE4A0_RunningOfTheBulb)->unk_E4->unk_00 & 4) && D_800FE4A0_RunningOfTheBulb->trans.y < 30.0f) {
+            target = D_800FE4A0_RunningOfTheBulb;
+            best = func_800B1750((target->trans.x - arg0->trans.x) * (target->trans.x - arg0->trans.x) + (target->trans.z - arg0->trans.z) * (target->trans.z - arg0->trans.z));
+            track = 1;
+        } else {
+            for (i = 0; i < 4; i++) {
+                if ((u8)(rand8() % 10) >= chance) {
+                    continue;
+                }
+                obj = D_800FE460_RunningOfTheBulb[i];
+                if (obj == D_800FE4A0_RunningOfTheBulb) {
+                    continue;
+                }
+                if (GwPlayer[i].flags & 1) {
+                    continue;
+                }
+                flags = ROTB_PLAYER(obj)->unk_E4->unk_00;
+                if (flags & 0x30) {
+                    continue;
+                }
+                if ((flags & 4) && obj->trans.y < 30.0f) {
+                    target = obj;
+                }
+                best = func_800B1750((target->trans.x - arg0->trans.x) * (target->trans.x - arg0->trans.x) + (target->trans.z - arg0->trans.z) * (target->trans.z - arg0->trans.z));
+                track = 1;
+            }
+        }
+        tx = target->trans.x;
+        tz = target->trans.z;
+        if (track == 0) {
+            best = 100000.0f;
+            for (i = 0; i < (u16)cnt; i++) {
+                if (near.dist[i] < best) {
+                    best = near.dist[i];
+                    target = near.obj[i];
+                }
+            }
+            if (func_800FAA40_RunningOfTheBulb(target) == 0) {
+                best = 100000.0f;
+            }
+            if ((visible = (best != 100000.0f)) | (useLeader ^ 1)) {
+                bulb = ROTB_BODY(target)->unk_68.bulb;
+                if (bulb->unk_14 != NULL && bulb->unk_14->trans.y < 30.0f) {
+                    track = 1;
+                }
+            }
+            bulb = ROTB_BODY(target)->unk_68.bulb;
+            if (bulb->unk_14 == NULL) {
+                goto aim;
+            }
+            y = bulb->unk_14->trans.y;
+        } else {
+            y = target->trans.y;
+        }
+        if (y >= 30.0f) {
+            tz -= 200.0f;
+            best = func_800B1750((target->trans.x - arg0->trans.x) * (target->trans.x - arg0->trans.x) + (target->trans.z - 200.0f - arg0->trans.z) * (target->trans.z - 200.0f - arg0->trans.z));
+        }
+    aim:
+        if (((useLeader ^ 1) & (visible = (best < nearDist))) && target->trans.y < 300.0f && (u8)(rand8() % 10) < chance) {
+            tx = target->trans.x;
+            tz = target->trans.z;
+            dir = func_800B0CD8(tx - arg0->trans.x, tz - arg0->trans.z);
+            if (work->unk_38 == 1000.0f) {
+                if (((target->trans.y > 180.0f) & (best > 150.0f)) && func_800FDB84_RunningOfTheBulb(dir, work->unk_3C) < 17.0f && diff >= 2) {
+                    ContBtnTrg[port] |= 0x8000;
+                }
+            }
+            if (best < work->unk_40 + 180.0f && func_800FDB84_RunningOfTheBulb(dir, work->unk_3C) < 17.0f && fabs(target->trans.y - arg0->trans.y) < 140.0) {
+                ContBtnTrg[port] |= 0x4000;
+            }
+            if (best < 120.0f && ((fabs(target->trans.y - arg0->trans.y) < 120.0) & (diff >= 2))) {
+                ContBtnTrg[port] |= 0x4000;
+            }
+        }
+        best = func_800B1750((tx - arg0->trans.x) * (tx - arg0->trans.x) + (tz - arg0->trans.z) * (tz - arg0->trans.z));
+        if (best < 160.0f) {
+            speed = 30.0f;
+        } else {
+            speed = 80.0f;
+            if (best < 500.0f) {
+                speed = 40.0f;
+            }
+        }
+        speed = mult * speed;
+        if (jitterX != 0.0f) {
+            tx += func_8009B618((f32)rand8(), jitterX) - jitterX / 2.0f;
+        }
+        if (jitterZ != 0.0f) {
+            tz += func_8009B618((f32)rand8(), jitterZ) - jitterZ / 2.0f;
+        }
+        dir = func_800FCEA0_RunningOfTheBulb(arg0, NULL, tx, tz, maxA, 250.0f);
+    }
+    lim = D_800FE478_RunningOfTheBulb->trans.z - 150.0f;
+    if (lim - 240.0f < arg0->trans.z) {
+        if (track == 0 || arg0->trans.z < lim - 60.0f) {
+            ContStkX[port] = 0;
+            ContStkY[port] = 80;
+            ContBtnTrg[port] &= 0x3FFF;
+        }
+    } else {
+        ContStkX[port] = func_800AEAC0(dir) * speed;
+        ContStkY[port] = -func_800AEFD0(dir) * speed;
+    }
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FC0F4_RunningOfTheBulb);
+#endif
+// register allocation (retail keeps the count live across the retry loop)
+#ifdef NON_MATCHING
 f32 func_800FCEA0_RunningOfTheBulb(omObjData* arg0, omObjData* arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5) {
     struct {
         f32 dist[10];
@@ -1909,6 +2193,11 @@ done:
     }
     return angle;
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FCEA0_RunningOfTheBulb);
+#endif
+// register allocation (retail keeps the count live across the retry loop)
+#ifdef NON_MATCHING
 f32 func_800FD394_RunningOfTheBulb(omObjData* arg0, omObjData* arg1, f32 arg2, f32 arg3, f32 arg4) {
     struct {
         f32 dist[14];
@@ -2026,6 +2315,9 @@ done:
     }
     return arg2;
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FD394_RunningOfTheBulb);
+#endif
 f32 func_800FD9BC_RunningOfTheBulb(u16 arg0, f32* arg1) {
     f32 temp_f0;
     f32 var_f12;

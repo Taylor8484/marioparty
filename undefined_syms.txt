@@ -297,9 +297,4 @@ D_80100F7C_SlotCarDerby = D_80100F70_SlotCarDerby + 0xC;
 D_80100F80_SlotCarDerby = D_80100F70_SlotCarDerby + 0x10;
 /* ovl_25 .bss: D_8010247C (between splat labels D_8010247A and D_8010247E) for the C users */
 D_8010247C_SlotCarDerby = 0x8010247C;
-D_800FE244_RunningOfTheBulb = D_800FE240_RunningOfTheBulb + 0x4;
-D_800FE274_RunningOfTheBulb = D_800FE270_RunningOfTheBulb + 0x4;
-D_800FE2A4_RunningOfTheBulb = D_800FE2A0_RunningOfTheBulb + 0x4;
-D_800FE2A8_RunningOfTheBulb = D_800FE2A0_RunningOfTheBulb + 0x8;
-D_800FE35E_RunningOfTheBulb = D_800FE35C_RunningOfTheBulb + 0x2;
 D_800FE368_RunningOfTheBulb = D_800FE364_RunningOfTheBulb + 0x4;
