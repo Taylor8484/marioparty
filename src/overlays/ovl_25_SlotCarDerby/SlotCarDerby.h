@@ -202,8 +202,15 @@ typedef struct SCDPlayerWork {
 void func_80020EA0(s16, char*, s16, char*);
 void func_80021E58(void);
 void func_80021EC0(s16 arg0, f32 arg1, f32 arg2, f32 arg3);
-s16 func_80024198(u32, Gfx*, s32); /* arg1 is a Gfx* slot array here: pass (Gfx*)D_80102490 */
+/* Defined s16 (src/24740.c); retail's caller here uses the whole v0 (a call without the s16
+   prototype), so the N64 build declares it s32 as src/1EA70.c does. */
+#ifdef TARGET_PC
+s16 func_80024198(u32, Gfx*, s32);
+#else
+s32 func_80024198(u32, Gfx*, s32);
+#endif
 unk2C0C0Struct50* func_80026A0C(s16, char*);
+void func_80023A38(void* src, void* dst, s32 size); /* copy (engine/mallocblock.h) */
 void func_800343C8(s16);
 void func_800594E4(s16, u16);
 void func_8006035C(s16, s8);
