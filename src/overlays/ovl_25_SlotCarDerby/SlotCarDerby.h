@@ -231,7 +231,7 @@ void func_800F6ED4_SlotCarDerby(SCDCar* car, s16 sound);
 void func_800F6F38_SlotCarDerby(omObjData* obj);
 void func_800F7084_SlotCarDerby(omObjData* obj);
 SCDCar* func_800F70C4_SlotCarDerby(omObjData* obj);
-s16 func_800F70DC_SlotCarDerby(void);
+s32 func_800F70DC_SlotCarDerby(void);
 void func_800F744C_SlotCarDerby(s16 kind, SCDCar* car);
 void func_800F7650_SlotCarDerby(s16 model, f32 speed);
 void func_800F7678_SlotCarDerby(omObjData* obj);

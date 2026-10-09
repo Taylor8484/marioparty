@@ -99,14 +99,114 @@ void func_800F7084_SlotCarDerby(omObjData* obj) {
 SCDCar* func_800F70C4_SlotCarDerby(omObjData* obj) {
     return &D_80101DF8_SlotCarDerby[obj->work[1]];
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800F70DC_SlotCarDerby);
+s32 func_800F70DC_SlotCarDerby(void) {
+    s8 hit[4];
+    s16 lane[4];
+    f32 dist[4];
+    SCDCar* car;
+    SCDCar* other;
+    s16 n;
+    s32 left;
+    s32 i;
+    s32 j;
+    s32 k;
+    f32 range;
+    f32 d;
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", D_80100FC0_SlotCarDerby);
+    n = 0;
+    car = D_80101DF8_SlotCarDerby;
+    for (i = 0; i < 4; i++, car++) {
+        if ((car->unk_00 & 1) && (car->unk_02 == 1 || car->unk_02 == 2)) {
+            hit[n] = 0;
+            lane[n] = i;
+            d = car->unk_48 + car->unk_4C;
+            dist[n] = func_8009B618(d, D_80101434_SlotCarDerby);
+            n++;
+        }
+    }
+    if (n < 2) {
+        return n;
+    }
+    range = (D_80101DE0_SlotCarDerby.unk_00 == 2) ? 15.0f : 30.0f;
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            if (i == j) {
+                continue;
+            }
+            d = dist[j] - dist[i];
+            if (d < 0.0) {
+                d += D_80101434_SlotCarDerby;
+            }
+            if (d > 40.0) {
+                continue;
+            }
+            car = &D_80101DF8_SlotCarDerby[lane[i]];
+            other = &D_80101DF8_SlotCarDerby[lane[j]];
+            d = 0.0f;
+            for (k = 0; k < 3; k++) {
+                d += ((&car->unk_0C.x)[k] - (&other->unk_0C.x)[k]) * ((&car->unk_0C.x)[k] - (&other->unk_0C.x)[k]);
+            }
+            if (range < sqrtf(d)) {
+                continue;
+            }
+            hit[j] = -1;
+            if (hit[i] == 0) {
+                hit[i] = 1;
+            }
+            if (D_80101DE0_SlotCarDerby.unk_00 == 2) {
+                func_800F6ED4_SlotCarDerby(car, 0x144);
+            }
+        }
+    }
+    left = n;
+    for (i = 0; i < n; i++) {
+        if (hit[i] != 0) {
+            car = &D_80101DF8_SlotCarDerby[lane[i]];
+            if (hit[i] > 0) {
+                if (D_80101DE0_SlotCarDerby.unk_00 == 2) {
+                    func_800F744C_SlotCarDerby(2, car);
+                }
+            } else if (D_80101DE0_SlotCarDerby.unk_00 != 2) {
+                car->unk_50 = 10.5f;
+            } else {
+                car->unk_02 = 3;
+                car->unk_64 = car->unk_66 = 0;
+                left--;
+            }
+        }
+    }
+    return left;
+}
+void func_800F744C_SlotCarDerby(s16 kind, SCDCar* car) {
+    f32 ahead[3] = { -8.0f, -10.0f, 10.0f };
+    f32 rise[3] = { -0.0f, -5.0f, 0.0f };
+    Vec pos;
+    Vec dir;
+    Vec angles;
+    Matrix4f m;
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", D_80100FCC_SlotCarDerby);
-
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800F744C_SlotCarDerby);
-
+    func_800F96F4_SlotCarDerby(car->unk_48, car->unk_4C, ahead[kind], &pos, &dir);
+    dir.x = -dir.x;
+    dir.y = -dir.y;
+    dir.z = -dir.z;
+    func_800F9EA4_SlotCarDerby(&dir, &angles.x);
+    if (kind < 2) {
+        if (kind == 0) {
+            func_800F96F4_SlotCarDerby(car->unk_48, car->unk_4C, car->unk_50, &pos, &dir);
+            func_8009EA40(m, pos.x, pos.y, pos.z);
+        } else {
+            func_8009EA40(m, car->unk_0C.x, car->unk_0C.y, car->unk_0C.z);
+        }
+        MtxRotate(m, car->unk_24.x, car->unk_24.y, car->unk_24.z);
+        func_800F9F2C_SlotCarDerby(m, 0.0f, 0.0f, ahead[kind], &pos.x);
+    }
+    pos.y += rise[kind];
+    if (kind < 2) {
+        func_800FD9E8_SlotCarDerby(kind, &pos, &angles);
+    } else {
+        func_80021EC0(1, pos.x * 10.0, pos.y * 10.0, pos.z * 10.0);
+    }
+}
 void func_800F7650_SlotCarDerby(s16 model, f32 speed) {
     unk_ovl_2D_struct* p = &D_800F2B7C[model];
 
