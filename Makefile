@@ -134,6 +134,8 @@ build/src/overlays/ovl_6F_MinigameInstructions/2E8220.c.o: CFLAGS = -G0 -mips3 -
 build/src/overlays/ovl_2C_KeyPaWay/1F62C0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # ovl_02 E5DA0.c (slot machine reels/effects) also has the mul fix on: nop before a mult at a loop head (func_800FD590)
 build/src/overlays/ovl_02_SlotMachine/E5DA0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# ovl_02 E13F0.c also has the mul fix on: nop between back-to-back mul.s (func_800FAE34)
+build/src/overlays/ovl_02_SlotMachine/E13F0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 
 #build/src/libultra/os/%.o: CFLAGS := -O2 $(CFLAGSCOMMON)
 #build/src/libultra/libc/%.o: CFLAGS := -O2 $(CFLAGSCOMMON)

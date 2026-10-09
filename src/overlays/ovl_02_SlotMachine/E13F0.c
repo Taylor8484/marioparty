@@ -1,4 +1,5 @@
 #include "SlotMachine.h"
+#include "engine/pad.h"
 
 u8 D_800FE130_SlotMachine[76][38] = {
     { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF },
@@ -162,8 +163,288 @@ void func_800FAC10_SlotMachine(s16 model, f32 x, f32 y, s32 mode) {
         }
     }
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E13F0", func_800FAE34_SlotMachine);
+void func_800FAE34_SlotMachine(omObjData* obj) {
+    SlotPlayerWork* p;
+    SlotWork* w;
+    u8 port;
+    s32 stat;
+    f32 t;
+    f32 s;
+    f32 sc;
+    s16 r;
 
+    sc = 0.0f;
+    p = SLOT_PLAYER(obj);
+    w = func_800FBFEC_SlotMachine(obj);
+    if (w->unk_00 >= 0) {
+        w->unk_00 |= 0x80C0;
+        w->unk_02 = 1;
+        w->unk_04 = w->unk_06 = 4;
+        w->unk_10 = D_800F2B7C[*obj->model].unk_24;
+        w->unk_14 = D_800F2B7C[*obj->model].unk_28;
+        w->unk_18 = D_800F2B7C[*obj->model].unk_2C;
+        w->unk_40 = w->unk_48 = 0;
+        w->unk_42 = 0x30;
+        p->unk_38 = sc;
+        func_800184BC(obj, 1);
+        D_800FFA0C_SlotMachine = GwPlayer[p->unk_58].cpu_difficulty;
+        return;
+    }
+    port = p->unk_56;
+    stat = func_80017A60(obj);
+    switch (w->unk_08) {
+        case 0:
+            w->unk_1C = w->unk_10;
+            w->unk_20 = w->unk_14;
+            switch (w->unk_40) {
+                case 0:
+                    obj->rot.x = w->unk_5E;
+                    obj->rot.y = 180.0f;
+                    obj->rot.z = 0.0f;
+                    p->unk_3C = 0.0f;
+                    func_80025EB4(obj->model[0], 1, 1);
+                    func_800258EC(obj->model[1], 4, 4);
+                    if (D_800FEC80_SlotMachine == 3) {
+                        func_800258EC(obj->model[1], 4, 0);
+                        func_800184BC(obj, 0x23);
+                        w->unk_40 = 1;
+                    }
+                    break;
+                case 1:
+                    func_80025CA8(obj->model[0], 8.0f);
+                    func_80025EB4(obj->model[0], 1, 1);
+                    if ((w->unk_14 += -28.8) <= 350.0) {
+                        D_800FEC8C_SlotMachine = 0;
+                        w->unk_40 = 2;
+                    }
+                    break;
+                case 2:
+                    D_800FEC8C_SlotMachine += 3.6;
+                    w->unk_14 = (func_800AEFD0(D_800FEC8C_SlotMachine) * 15.0f + 2.5) * 20.0;
+                    w->unk_18 = (func_800AEAC0(D_800FEC8C_SlotMachine) * 15.0f - 17.5) * 20.0;
+                    if (D_800FEC8C_SlotMachine >= 80.0) {
+                        D_800FEC8C_SlotMachine = 80;
+                        obj->rot.x = 0.0f;
+                        obj->rot.y = 45.0f;
+                        obj->rot.z = 0.0f;
+                        w->unk_14 = 0.0f;
+                        p->unk_3C = 135.0f;
+                        func_80025EB4(obj->model[0], 1, 0);
+                        func_800184BC(obj, 6);
+                        w->unk_40 = 3;
+                        w->unk_44 = 0;
+                    }
+                    break;
+                case 3:
+                    w->unk_44 += 3;
+                    w->unk_10 = (func_800AEAC0(w->unk_44) * 15.0f + -20.0f) * 20.0f;
+                    w->unk_14 = (func_800AEAC0(w->unk_44 * 2) * 30.0f + 2.5 - func_800AEAC0(w->unk_44) * 2.5) * 20.0;
+                    w->unk_18 = (func_800AEAC0(w->unk_44) * 2.5 + -2.5) * 20.0;
+                    if (w->unk_44 == 45) {
+                        func_800184BC(obj, 9);
+                    }
+                    if (w->unk_44 >= 90) {
+                        func_80010ED4(GwPlayer[p->unk_58].character + 0x12E, 0);
+                        w->unk_40 = 4;
+                        w->unk_44 = 0;
+                    }
+                    break;
+                case 4:
+                    w->unk_44 += 6;
+                    w->unk_10 = (func_800AEAC0(w->unk_44) * 5.0f + -5.0f) * 20.0f;
+                    w->unk_14 = func_800AEAC0(w->unk_44 * 2) * 5.0f * 20.0f;
+                    if (w->unk_44 >= 90) {
+                        func_80010ED4(GwPlayer[p->unk_58].character + 0x12E, 0);
+                        func_800184BC(obj, 0xB);
+                        w->unk_40 = 5;
+                        w->unk_44 = 0;
+                    }
+                    break;
+                case 5:
+                    p->unk_3C += 1.0f;
+                    if ((obj->rot.y -= 1.0f) == 10.0) {
+                        func_800674BC((s16)D_800FFA1C_SlotMachine, 1, 0x8000);
+                        func_800674BC((s16)D_800FFA2C_SlotMachine, 0, 0x8000);
+                        func_800674BC((s16)D_800FFA2C_SlotMachine, 1, 0x8000);
+                    }
+                    if (obj->rot.y <= 0.0) {
+                        func_800184BC(obj, 0);
+                        w->unk_08 = 1;
+                        w->unk_40 = 0;
+                        w->unk_44 = 0;
+                        func_800258EC(D_800FFA22_SlotMachine, 4, 0);
+                        D_800FEC7C_SlotMachine = 300;
+                        D_800FEC80_SlotMachine = 8;
+                        omSysPauseEnableFlag = 0;
+                        p->unk_3C = 0.0f;
+                    }
+                    break;
+            }
+            break;
+        case 1:
+            w->unk_1C = obj->trans.x;
+            w->unk_20 = obj->trans.y;
+            if (GwPlayer[p->unk_58].flags & 1) {
+                ContStkY[(s8)port] = 0;
+                ContStkX[(s8)port] = 0;
+                ContBtnTrg[(s8)port] = 0;
+                ContBtn[(s8)port] = 0;
+                if (stat & 2) {
+                    switch (w->unk_40) {
+                        case 0:
+                            if (w->unk_42 == 0) {
+                                ContBtn[(s8)port] = ContBtnTrg[(s8)port] |= 0x8000;
+                                w->unk_40++;
+                            } else if (D_800FFA28_SlotMachine == 2 && !(func_800FC050_SlotMachine() & 0x1F)) {
+                                ContBtn[(s8)port] = ContBtnTrg[(s8)port] |= 0x8000;
+                                w->unk_40++;
+                            } else {
+                                w->unk_42--;
+                            }
+                            break;
+                        case 1:
+                            w->unk_42 = func_800FC684_SlotMachine();
+                            if (w->unk_42 != 0) {
+                                w->unk_40++;
+                                r = rand8() % (12 - D_800FFA0C_SlotMachine * 2) - 6;
+                                w->unk_42 += r + (s16)D_800FFA0C_SlotMachine;
+                            }
+                            break;
+                        case 2:
+                            if (w->unk_42 < 7) {
+                                ContBtn[(s8)port] = ContBtnTrg[(s8)port] |= 0x8000;
+                                w->unk_40++;
+                                w->unk_42 = 0;
+                            } else {
+                                w->unk_42--;
+                            }
+                            break;
+                        case 3:
+                            w->unk_42 = func_800FC684_SlotMachine();
+                            if (w->unk_42 != 0) {
+                                w->unk_40++;
+                                r = rand8() % (24 - D_800FFA0C_SlotMachine * 2) - 12;
+                                w->unk_42 += r + (s16)D_800FFA0C_SlotMachine;
+                            }
+                            break;
+                        case 4:
+                            if (w->unk_42 < 7) {
+                                ContBtn[(s8)port] = ContBtnTrg[(s8)port] |= 0x8000;
+                                w->unk_40++;
+                                w->unk_42 = 20;
+                            } else {
+                                w->unk_42--;
+                            }
+                            break;
+                        case 5:
+                            if (w->unk_42 == 0) {
+                                w->unk_40++;
+                            }
+                            w->unk_42--;
+                            break;
+                        case 6:
+                            if (D_800FEC80_SlotMachine != 12) {
+                                ContStkX[(s8)port] = -60;
+                                if (obj->trans.x <= -230.0) {
+                                    w->unk_40++;
+                                }
+                            }
+                            break;
+                    }
+                } else {
+                    switch (w->unk_40) {
+                        case 6:
+                            if (D_800FEC80_SlotMachine != 12) {
+                                ContStkX[(s8)port] = -60;
+                                if (obj->trans.x <= -230.0) {
+                                    w->unk_40++;
+                                }
+                            }
+                            break;
+                        case 7:
+                            if (D_800FEC80_SlotMachine != 12) {
+                                ContStkX[(s8)port] = 60;
+                                if (obj->trans.x >= 230.0) {
+                                    w->unk_40--;
+                                }
+                            }
+                            break;
+                    }
+                }
+            }
+            if (D_800FEC80_SlotMachine == 12) {
+                ContBtn[(s8)port] &= 0x7FFF;
+                ContBtnTrg[(s8)port] &= 0x7FFF;
+            }
+            func_80005A28(obj);
+            obj->trans.z = 0.0f;
+            if (fabs(obj->trans.x) > 245.0) {
+                obj->trans.x = w->unk_1C;
+            }
+            w->unk_10 = obj->trans.x;
+            w->unk_14 = obj->trans.y;
+            w->unk_18 = obj->trans.z;
+            if (stat & 0x120) {
+                if (fabs(w->unk_10) < 60.0 && fabs(w->unk_18) < 60.0) {
+                    if (w->unk_14 + p->unk_34 >= 280.0 && w->unk_14 + p->unk_34 <= 340.0 && p->unk_38 < 0.0) {
+                        D_800FEC88_SlotMachine = 1;
+                        p->unk_38 = 0.0f;
+                        func_80060540(0x194, 0);
+                    } else if (w->unk_14 + p->unk_34 >= 290.0) {
+                        w->unk_10 = w->unk_1C;
+                    }
+                }
+            } else if (obj->trans.y <= 10.0 && D_800FEC80_SlotMachine == 12) {
+                func_8009ECB0(D_800F2B7C[*obj->model].unk7C, 0.0f, 0.0f, 0.0f);
+                obj->trans.y = 0.0f;
+                w->unk_08 = 2;
+            }
+            break;
+        case 2:
+            w->unk_1C = w->unk_10;
+            w->unk_20 = w->unk_14;
+            func_800184BC(obj, 1);
+            if (w->unk_10 >= 0.0f) {
+                w->unk_10 -= 8.0;
+                p->unk_3C = 90.0f;
+                obj->rot.x = 0.0f;
+                obj->rot.y = 270.0f;
+                obj->rot.z = 0.0f;
+            } else {
+                w->unk_10 += 8.0;
+                p->unk_3C = -90.0f;
+                obj->rot.x = 0.0f;
+                obj->rot.y = 90.0f;
+                obj->rot.z = 0.0f;
+            }
+            if (w->unk_1C * w->unk_10 <= 0.0f) {
+                func_800184BC(obj, 0);
+                w->unk_10 = 0.0f;
+                D_800FEC80_SlotMachine = 13;
+                p->unk_3C = 0.0f;
+                obj->rot.x = 0.0f;
+                obj->rot.y = 0.0f;
+                obj->rot.z = 0.0f;
+                w->unk_08++;
+            }
+            break;
+    }
+    obj->trans.x = w->unk_10;
+    obj->trans.y = w->unk_14;
+    obj->trans.z = w->unk_18;
+    s = w->unk_14 / 20.0f;
+    if (s > 0.0) {
+        sc = 1.0 - s * 0.025;
+    } else {
+        sc = 1.0f;
+    }
+    func_80025830(obj->model[1], sc, 1.0f, sc);
+    func_80025798(obj->model[1], obj->trans.x, 4.0f, obj->trans.z);
+    func_800F91C4_SlotMachine(w->unk_08, w->unk_40, w->unk_10, w->unk_14, w->unk_18);
+    if (w->unk_08 != 1) {
+        func_80017DB0(obj);
+    }
+}
 // load scheduling: the frame table's base is loaded before the index product, twice (masked 4)
 #ifdef NON_MATCHING
 void func_800FBD60_SlotMachine(void) {
