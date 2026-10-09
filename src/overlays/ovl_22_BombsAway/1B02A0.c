@@ -572,8 +572,82 @@ void func_800FEE2C_BombsAway(void) {
 #else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FEE2C_BombsAway);
 #endif
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FF218_BombsAway);
+void func_800FF218_BombsAway(s16 model) {
+    s16 xs[32];
+    s16 zs[32];
+    unk2C0C0StructC0* m;
+    unk2C0C0StructE0* v;
+    s16 nz;
+    s16 nx;
+    s16 i;
+    s16 j;
+    s16 n;
 
+    m = D_800F2B7C[model].unk_6C;
+    v = m->unk_04;
+    nz = 0;
+    nx = 0;
+    i = 0;
+    n = m->unk_72;
+    for (i = 0; i < n; i++, v++) {
+        for (j = 0; j < nx; j++) {
+            if (xs[j] == v->unk_00) {
+                break;
+            }
+        }
+        if (j >= nx) {
+            xs[nx] = v->unk_00;
+            nx++;
+        }
+        for (j = 0; j < nz; j++) {
+            if (zs[j] == v->unk_04) {
+                break;
+            }
+        }
+        if (j >= nz) {
+            zs[nz] = v->unk_04;
+            nz++;
+        }
+    }
+    func_800FF9C4_BombsAway(xs, nx);
+    func_800FF9C4_BombsAway(zs, nz);
+    D_80100B44_BombsAway = func_80023684(n * 6, 0x7918);
+    for (i = 0; i < n; i++) {
+        D_80100B44_BombsAway[i].unk_00 = 1;
+    }
+    v = m->unk_04;
+    for (i = 0; i < n; i++, v++) {
+        for (j = 0; j < nx; j++) {
+            if (xs[j] == v->unk_00) {
+                break;
+            }
+        }
+        if (j >= nx) {
+            j = nx - 1;
+        }
+        D_80100B44_BombsAway[i].unk_02 = j;
+        if (j == 0 || j == nx - 1) {
+            D_80100B44_BombsAway[i].unk_00 = 0;
+        }
+    }
+    v = m->unk_04;
+    for (i = 0; i < n; i++, v++) {
+        for (j = 0; j < nz; j++) {
+            if (zs[j] == v->unk_04) {
+                break;
+            }
+        }
+        if (j >= nz) {
+            j = nz - 1;
+        }
+        D_80100B44_BombsAway[i].unk_04 = j;
+        if (j == 0 || j == nz - 1) {
+            D_80100B44_BombsAway[i].unk_00 = 0;
+        }
+    }
+    D_80100B48_BombsAway[0] = abs(xs[0] - xs[1]);
+    D_80100B48_BombsAway[1] = abs(zs[0] - zs[1]);
+}
 void func_800FF674_BombsAway(s16 model, s32 angle, s16* unused) {
     unk2C0C0StructC0* m;
     BaVtxMap* map;
