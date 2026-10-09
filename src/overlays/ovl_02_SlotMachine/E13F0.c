@@ -112,8 +112,306 @@ void func_800F76E0_SlotMachine(void) {
 SlotWork* func_800F7734_SlotMachine(omObjData* unused, omObjData* obj) {
     return func_800FBFEC_SlotMachine(obj);
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E13F0", func_800F7750_SlotMachine);
+/* Retail called these sprite and image helpers without a prototype (implicit int: the caller
+   extends or masks the result), so on the N64 they are called as returning s32. */
+#ifndef TARGET_PC
+#define SLOT_UNPROTO(f) ((s32 (*)())(f))
+#define SLOT_8001E1D0(a, b) ((s32 (*)(s16, s32))func_8001E1D0)(a, b)
+#else
+#define SLOT_UNPROTO(f) f
+#define SLOT_8001E1D0(a, b) func_8001E1D0(a, b)
+#endif
 
+// register allocation: the image index and func_800FC050 % 480 sit in other registers (masked 33,
+// mostly branch offsets after one missing move)
+#ifdef NON_MATCHING
+void func_800F7750_SlotMachine(omObjData* obj) {
+    omObjData* player;
+    SlotWork* coin;
+    void* file;
+    s32 i;
+    s32 sprite;
+    s32 grp;
+    s32 result;
+    s32 img;
+    u16 idx;
+
+    img = 0;
+    D_800FFA24_SlotMachine = (D_800FFA24_SlotMachine + 1) % 3;
+    player = D_800F3FB0[0];
+    switch (D_800FEC80_SlotMachine) {
+        case 0:
+            if (D_800FEC98_SlotMachine == 0) {
+                func_800FC018_SlotMachine();
+                file = DataRead(0x2A);
+                sprite = (s16)SLOT_UNPROTO(func_800678A4)(file);
+                DataClose(file);
+                grp = (s16)SLOT_UNPROTO(func_80064EF4)(20, 0);
+                for (i = 0; i < 20; i++) {
+                    coin = &D_800FF250_SlotMachine[i];
+                    if (i == 0) {
+                        func_8001DE70(0x20);
+                        idx = img = (u16)SLOT_UNPROTO(ReadImgPackand)(0x21, 0x284, 8);
+                    } else {
+                        idx = (u16)SLOT_8001E1D0(img, 8);
+                    }
+                    func_80025930(coin->unk_40 = (D_800ECDE0 + idx)->unk_00, 0x70000000, 0x70000000);
+                    func_80025830(coin->unk_40, 2.5f, 2.5f, 2.5f);
+                    coin->unk_42 = grp;
+                    func_80067208(grp, i, sprite, 0);
+                    func_800674BC(grp, i, 0x900C);
+                    func_800672B0(grp, i, 0);
+                    func_800674F4(grp, (s16)i, 0xFF, 0xFF, 0xBE);
+                    func_80067354(grp, i, 1.6f, 1.6f);
+                    coin->unk_10 = 0.0f;
+                    coin->unk_14 = 0.0f;
+                    coin->unk_18 = -300.0f;
+                    coin->unk_00 = 1;
+                    coin->unk_02 = 0;
+                    coin->unk_08 = 0;
+                    coin->unk_46 = 0;
+                    coin->unk_44 = 0;
+                }
+                D_800FEC98_SlotMachine = 1;
+            }
+            break;
+        case 13:
+        case 14:
+        case 15:
+        case 16:
+            if (D_800FE100_SlotMachine != 0) {
+                if (D_800FEC94_SlotMachine == 0) {
+                    GwPlayer[D_800FFCB8_SlotMachine].coins_mg += (u16)D_800FEC90_SlotMachine;
+                    func_800674BC((s16)D_800FFCE4_SlotMachine, 0, 0x8000);
+                    func_800674BC((s16)D_800FFCE4_SlotMachine, 1, 0x8000);
+                    GMesCreate(2);
+                } else if (D_800FEC94_SlotMachine >= 60) {
+                    D_800FEC80_SlotMachine = 0x11;
+                }
+            } else {
+                if (D_800FEC94_SlotMachine == 0) {
+                    GwPlayer[D_800FFCB8_SlotMachine].coins_mg += (u16)D_800FEC90_SlotMachine;
+                    func_800674BC((s16)D_800FFCE4_SlotMachine, 0, 0x8000);
+                    func_800674BC((s16)D_800FFCE4_SlotMachine, 1, 0x8000);
+                    if (D_800FEC90_SlotMachine != 0) {
+                        GMesCreate(2);
+                    } else {
+                        GMesCreate(14);
+                    }
+                } else if (D_800FEC94_SlotMachine > 0 && D_800FECA0_SlotMachine == 0) {
+                    if (D_800FEC90_SlotMachine == 0) {
+                        if (D_800FEC94_SlotMachine == 30) {
+                            func_80060128(0x34);
+                            func_800184BC(player, 14);
+                            D_800FECA0_SlotMachine = D_800FEC94_SlotMachine;
+                        }
+                    } else if (GMesStatAllGet() & 2) {
+                        s32 se = 0x3B;
+                        if (D_800FEC90_SlotMachine == 20) {
+                            se = 0x37;
+                        }
+                        func_80060128(se);
+                        D_800FECA0_SlotMachine = D_800FEC94_SlotMachine;
+                    }
+                } else {
+                    switch (D_800FEC90_SlotMachine) {
+                        case 0:
+                            if (D_800FEC94_SlotMachine == D_800FECA0_SlotMachine + 18) {
+                                func_80010ED4(GwPlayer[D_800FFCB8_SlotMachine].character + 0x44A, 0);
+                            } else if (D_800FEC94_SlotMachine >= D_800FECA0_SlotMachine + 95) {
+                                D_800FEC80_SlotMachine = 0x11;
+                            }
+                            break;
+                        case 20:
+                            if (D_800FEC94_SlotMachine == D_800FECA0_SlotMachine + 2) {
+                                func_800184BC(player, 13);
+                            } else if (D_800FEC94_SlotMachine == D_800FECA0_SlotMachine + 38) {
+                                func_80010ED4(GwPlayer[D_800FFCB8_SlotMachine].character + 0x451, 0);
+                            } else if (D_800FEC94_SlotMachine >= D_800FECA0_SlotMachine + 95) {
+                                D_800FEC80_SlotMachine = 0x11;
+                            }
+                            break;
+                        default:
+                            if (D_800FEC94_SlotMachine == D_800FECA0_SlotMachine + 16) {
+                                func_800184BC(player, 13);
+                            } else if (D_800FEC94_SlotMachine == D_800FECA0_SlotMachine + 36) {
+                                if (D_800FEC90_SlotMachine >= 10) {
+                                    func_80010ED4(GwPlayer[D_800FFCB8_SlotMachine].character + 0x451, 0);
+                                }
+                            } else if (D_800FEC94_SlotMachine >= D_800FECA0_SlotMachine + 91) {
+                                D_800FEC80_SlotMachine = 0x11;
+                            }
+                            break;
+                    }
+                }
+                if (ContBtnTrg[GwPlayer[D_800FFCB8_SlotMachine].port] & 0x9000) {
+                    D_800FECA4_SlotMachine = 1;
+                }
+                if (D_800FECA4_SlotMachine != 0 && D_800FEC94_SlotMachine >= D_800FECA0_SlotMachine + 60) {
+                    func_80011A30(90);
+                    D_800FEC80_SlotMachine = 0x11;
+                }
+            }
+            D_800FEC94_SlotMachine++;
+            break;
+        case 0x11:
+            D_800FFCDC_SlotMachine = -1;
+            break;
+        default:
+            D_800FFA28_SlotMachine = func_800FC2CC_SlotMachine();
+            if (D_800FEC7C_SlotMachine <= 0 && D_800FEC80_SlotMachine == 8 && D_800FFA28_SlotMachine == 0) {
+                if (D_800FEC84_SlotMachine > 0) {
+                    func_800FC3F4_SlotMachine();
+                    D_800FEC7C_SlotMachine = 300;
+                    D_800FEC84_SlotMachine--;
+                    func_800671DC((s16)D_800FFCE4_SlotMachine, 0, D_800FEC84_SlotMachine % 10);
+                    func_800671DC((s16)D_800FFCE4_SlotMachine, 1, D_800FEC84_SlotMachine / 10);
+                } else {
+                    if (D_800FEC90_SlotMachine == 0) {
+                        D_800FEC80_SlotMachine = 12;
+                    }
+                    func_800601D4(90);
+                }
+            }
+            if ((D_800FFA28_SlotMachine == 2 || D_800FFA28_SlotMachine == 3) && D_800FEC7C_SlotMachine <= 0) {
+                D_800FEC7C_SlotMachine += 30;
+                func_800FC5C4_SlotMachine();
+            }
+            if (D_800FFA28_SlotMachine == 4) {
+                result = (s16)SLOT_UNPROTO(func_800FC664_SlotMachine)();
+                if (result >= 0) {
+                    D_800FEC80_SlotMachine = 10;
+                    switch (result) {
+                        case 1:
+                            D_800FEC90_SlotMachine += 3;
+                            break;
+                        case 2:
+                            D_800FEC90_SlotMachine += 8;
+                            break;
+                        case 3:
+                            D_800FEC90_SlotMachine += 5;
+                            break;
+                        case 0:
+                        case 4:
+                            D_800FEC90_SlotMachine += 6;
+                            break;
+                        case 5:
+                            D_800FEC90_SlotMachine += 1;
+                            break;
+                        case 6:
+                            D_800FEC90_SlotMachine += 10;
+                            D_800FEC80_SlotMachine = 10;
+                            break;
+                        case 7:
+                            D_800FEC90_SlotMachine += 20;
+                            D_800FEC80_SlotMachine = 11;
+                            break;
+                    }
+                    if (result == 7) {
+                        PlaySound(0x1D9);
+                    } else {
+                        PlaySound(0x1D7);
+                    }
+                }
+                D_800FEC7C_SlotMachine = 30;
+            }
+            D_800FEC7C_SlotMachine--;
+            break;
+    }
+    func_800F89E8_SlotMachine();
+    if (D_800FEC90_SlotMachine != 0) {
+        for (i = 0; i < D_800FEC90_SlotMachine; i++) {
+            coin = &D_800FF250_SlotMachine[i];
+            if (coin->unk_00 != 0) {
+                switch (coin->unk_02) {
+                    case 0:
+                        if (++coin->unk_44 >= i * 4) {
+                            coin->unk_28 = func_800FC050_SlotMachine() % 480 - 240;
+                            coin->unk_2C = coin->unk_30 = 0.0f;
+                            coin->unk_1C = coin->unk_10;
+                            coin->unk_20 = coin->unk_14;
+                            coin->unk_24 = coin->unk_18;
+                            coin->unk_02++;
+                            coin->unk_44 = 0;
+                            func_800258EC(coin->unk_40, 4, 0);
+                        }
+                        break;
+                    case 1:
+                        coin->unk_44++;
+                        coin->unk_10 = coin->unk_44 * coin->unk_28 / 16.0f;
+                        coin->unk_14 = 0.0f;
+                        coin->unk_18 = (16 - coin->unk_44) * coin->unk_24 / 16.0f;
+                        if (coin->unk_44 >= 16) {
+                            coin->unk_1C = coin->unk_10;
+                            coin->unk_20 = coin->unk_14;
+                            coin->unk_24 = coin->unk_18;
+                            coin->unk_44 = 0;
+                            coin->unk_02++;
+                        }
+                        break;
+                    case 2:
+                        if (++coin->unk_44 >= 240) {
+                            coin->unk_44 = 0;
+                            coin->unk_02++;
+                        }
+                        break;
+                    case 3:
+                        coin->unk_44++;
+                        if (coin->unk_44 & 1) {
+                            func_800258EC(coin->unk_40, 4, 4);
+                        } else {
+                            func_800258EC(coin->unk_40, 4, 0);
+                        }
+                        if (coin->unk_44 >= 60) {
+                            func_800258EC(coin->unk_40, 4, 4);
+                            coin->unk_44 = 0;
+                            coin->unk_02++;
+                            D_800FEC9C_SlotMachine++;
+                        }
+                        break;
+                }
+                func_80025798(coin->unk_40, coin->unk_10, coin->unk_14, coin->unk_18);
+                if ((s32)sqrtf((coin->unk_10 - player->trans.x) * (coin->unk_10 - player->trans.x) +
+                               (coin->unk_14 - player->trans.y) * (coin->unk_14 - player->trans.y) +
+                               (coin->unk_18 - player->trans.z) * (coin->unk_18 - player->trans.z)) <= 70.0 &&
+                    coin->unk_02 != 4) {
+                    coin->unk_00 = 0;
+                    coin->unk_02 = 0;
+                    func_800258EC(coin->unk_40, 4, 4);
+                    D_800FEC9C_SlotMachine++;
+                    func_80067480(coin->unk_42, i, 0x8000);
+                    func_800672B0(coin->unk_42, i, 1);
+                    func_80067284(coin->unk_42, i, 2.0f);
+                    func_800672DC(coin->unk_42, i, 0, 0);
+                    func_80066DF4(coin->unk_42, i, 0, coin->unk_10, coin->unk_14, coin->unk_18);
+                    PlaySound(0xFC);
+                }
+            } else if (coin->unk_02 == 0 && (func_80067328(coin->unk_42, i) & 4)) {
+                func_800674BC(coin->unk_42, i, 0x8000);
+                coin->unk_02++;
+            }
+        }
+        if (D_800FEC9C_SlotMachine == D_800FEC90_SlotMachine && D_800FEC80_SlotMachine == 8) {
+            D_800FEC80_SlotMachine = 12;
+        }
+    }
+    if (D_800F5144 == 1 && D_800FEC80_SlotMachine != -1) {
+        func_800FBD60_SlotMachine();
+        omOvlReturnEx(1);
+        func_80060198();
+        return;
+    }
+    if (D_800FFCDC_SlotMachine < 0) {
+        if (D_800FE100_SlotMachine != 0) {
+            func_80060398(40);
+        }
+        func_800726AC(0, 20);
+        obj->func_ptr = func_800F8554_SlotMachine;
+    }
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E13F0", func_800F7750_SlotMachine);
+#endif
 void func_800F8554_SlotMachine(omObjData* obj) {
     if (func_80072718() == 0) {
         func_800F699C_SlotMachine();
