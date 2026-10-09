@@ -587,8 +587,200 @@ void func_800F8210_RunningOfTheBulb(omObjData* arg0) {
 }
 
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F82F4_RunningOfTheBulb);
+void func_800F82F4_RunningOfTheBulb(omObjData* arg0) {
+    RotbPlayerWork* work;
+    RotbPlayerExt* ext;
+    RotbPlayerWork* other;
+    RotbBulbExt* bulb;
+    omObjData* obj;
+    u16* trgp;
+    s16* btnp;
+    f32 off;
+    f32 height;
+    f32 angle;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 d;
+    f32 sy;
+    s32 port;
+    s16 i;
+    u8 stkX;
+    u8 stkY;
+    u16 trg;
+    u16 btn;
 
+    work = arg0->unk_50;
+    ext = work->unk_E4;
+    port = work->unk_56;
+    off = ext->unk_44;
+    height = ext->unk_48;
+    stkX = ContStkX[(u16)port];
+    stkY = ContStkY[(u16)port];
+    trgp = &ContBtnTrg[(u16)port];
+    trg = *trgp;
+    btnp = &ContBtn[(u16)port];
+    btn = *btnp;
+    if (D_800FE464_RunningOfTheBulb == 2) {
+        *trgp = *btnp = ContStkX[(u16)port] = ContStkY[(u16)port] = 0;
+        if (work->unk_38 != 1000.0f) {
+            angle = func_800B0CD8(-arg0->trans.x, -arg0->trans.z);
+            ContStkX[(u16)port] = func_800AEAC0(angle) * 80.0f;
+            ContStkY[(u16)port] = -func_800AEFD0(angle) * 80.0f;
+        } else if (!(ext->unk_00 & 0x80)) {
+            ext->unk_00 |= 0x80;
+            ContBtnTrg[(u16)port] = ContBtn[(u16)port] = ContStkX[(u16)port] = ContStkY[(u16)port] = 0;
+        }
+        func_80005A28(arg0);
+    } else {
+        if (work->unk_B1 != -1) {
+            if (ext->unk_00 & 4) {
+                if (ext->unk_00 & 0x40) {
+                    func_800186E4(arg0, 1, 0x23);
+                    if (func_80017A50(arg0) == 1) {
+                        func_800185A4(arg0, 1);
+                    }
+                    ext->unk_00 &= ~0x40;
+                }
+                ext->unk_00 &= ~4;
+                bulb = ROTB_BODY(ext->unk_2C)->unk_68.bulb;
+                if (bulb->unk_00 & 8) {
+                    bulb->unk_00 &= ~8;
+                    other = D_800FE460_RunningOfTheBulb[work->unk_B1]->unk_50;
+                    func_800FA44C_RunningOfTheBulb(ext->unk_2C, other->unk_3C);
+                } else {
+                    func_800FA44C_RunningOfTheBulb(ext->unk_2C, 1000.0f);
+                }
+                ext->unk_2C = NULL;
+            }
+            work->unk_B1 = -1;
+        }
+        if (ext->unk_00 & 0x10) {
+            PlaySound(0x327);
+            func_80060618(0x45F, ext->unk_02);
+            func_80060F04(work->unk_58, 2, 2, 0x14);
+            ext->unk_00 &= ~0x10;
+            if (ext->unk_2C != NULL) {
+                func_800FA44C_RunningOfTheBulb(ext->unk_2C, 1000.0f);
+            }
+            work->unk_40 = 0.0f;
+            work->unk_38 = 1000.0f;
+            func_80009E20(arg0);
+            ext->unk_00 |= 0x20;
+            func_800258EC(arg0->model[9], 4, 4);
+            if (arg0 == D_800FE4A0_RunningOfTheBulb || (D_800FE458_RunningOfTheBulb != 0 && work->unk_58 == 0)) {
+                func_800601D4(0x28);
+                D_800FE464_RunningOfTheBulb = 2;
+                D_800FE4A4_RunningOfTheBulb = 9;
+                D_800FE470_RunningOfTheBulb[1]->work[0] = 0;
+                D_800FE478_RunningOfTheBulb->func_ptr = &func_800FB0D8_RunningOfTheBulb;
+                func_80009730();
+                for (i = 0; i < 4; i++) {
+                    if (GwPlayer[i].coins < 5) {
+                        GwPlayer[i].coins_mg -= GwPlayer[i].coins;
+                    } else {
+                        GwPlayer[i].coins_mg -= 5;
+                    }
+                }
+            }
+            dx = D_800FE478_RunningOfTheBulb->trans.x - arg0->trans.x;
+            dy = (D_800FE478_RunningOfTheBulb->trans.y + 300.0f) - arg0->trans.y;
+            dz = (D_800FE478_RunningOfTheBulb->trans.z + 100.0f) - arg0->trans.z;
+            d = func_800B1750(dx * dx + dy * dy + dz * dz) / 10.0f;
+            ext->unk_5C = (D_800FE478_RunningOfTheBulb->trans.x - arg0->trans.x) / d;
+            ext->unk_60 = ((D_800FE478_RunningOfTheBulb->trans.y + 300.0f) - arg0->trans.y) / d;
+            ext->unk_64 = ((D_800FE478_RunningOfTheBulb->trans.z + 100.0f) - arg0->trans.z) / d;
+            arg0->func_ptr = &func_800F8D80_RunningOfTheBulb;
+            return;
+        }
+        if (ext->unk_00 & 4) {
+            func_800FBF74_RunningOfTheBulb(arg0);
+        } else if (GwPlayer[work->unk_58].flags & 1) {
+            ContBtnTrg[(u16)port] = ContBtn[(u16)port] = ContStkX[(u16)port] = ContStkY[(u16)port] = 0;
+            func_800FC0F4_RunningOfTheBulb(arg0);
+        }
+        if (work->unk_53 >= 0) {
+            ext->unk_28 = D_800F2AF8[work->unk_53];
+        }
+        if (ext->unk_00 & 2) {
+            sy = arg0->scale.y;
+            if (sy < 0.7f) {
+                sy = 0.7f;
+            }
+            func_80025830(arg0->model[9], arg0->scale.x * ext->unk_40, sy * ext->unk_3C, arg0->scale.z);
+            if (!(work->unk_50 & 7)) {
+                ext->unk_00 &= ~2;
+                func_80025830(arg0->model[9], ext->unk_40, ext->unk_3C, 1.0f);
+                for (i = 0; i < 6; i++) {
+                    func_800090C4(arg0, i + 4, 2);
+                }
+            }
+            off = 150.0f;
+        }
+        if (func_800F77B4_RunningOfTheBulb(arg0) != NULL) {
+            if (work->unk_38 != 1000.0f) {
+                if (work->unk_38 < 0.0f) {
+                    work->unk_38 = -work->unk_38;
+                }
+            } else if (arg0->trans.y <= 0.0f && !(ext->unk_00 & 2)) {
+                work->unk_50 |= 1;
+                work->unk_9C = 0;
+                arg0->trans.y = 0.0f;
+                ext->unk_00 |= 2;
+                for (i = 0; i < 6; i++) {
+                    func_800090C4(arg0, i + 4, 1);
+                }
+                func_80060F04(work->unk_58, 2, 2, 0x14);
+            }
+        }
+        if (ext->unk_00 & 8) {
+            ContBtn[(u16)port] = ContBtnTrg[(u16)port] = ContStkX[(u16)port] = ContStkY[(u16)port] = 0;
+        }
+        func_80005A28(arg0);
+        if (arg0->trans.y < 0.0f) {
+            omSetTra(arg0, arg0->trans.x, 0.0f, arg0->trans.z);
+        }
+        /* Retail returns without restoring the controller when the round ends here. */
+        if ((u16)func_800FDDC0_RunningOfTheBulb(arg0) == 1) {
+            return;
+        }
+        if (D_800FE478_RunningOfTheBulb->trans.z - 200.0f <= arg0->trans.z && arg0->trans.y <= 550.0f) {
+            ext->unk_00 |= 0x10;
+        }
+        if ((ext->unk_00 & 4) && ext->unk_2C != NULL) {
+            if (!(ext->unk_00 & 8)) {
+                if (ext->unk_38 < 1.0f) {
+                    if ((ext->unk_38 += 0.15f) > 1.0f) {
+                        ext->unk_38 = 1.0f;
+                    }
+                    func_80025830(arg0->model[9], ext->unk_38 * ext->unk_40, ext->unk_38 * ext->unk_3C, ext->unk_38);
+                }
+                omSetTra(ext->unk_2C, arg0->trans.x, arg0->trans.y + 100.0f, arg0->trans.z);
+            }
+            if (work->unk_54 != -1 && !(ext->unk_00 & 8)) {
+                obj = D_800F3FB0[work->unk_54];
+                if (obj == D_800FE4A0_RunningOfTheBulb) {
+                    other = obj->unk_50;
+                    if (!(other->unk_E4->unk_00 & 4)) {
+                        func_8000A534(obj, 0.0f);
+                        func_8000A6F4(D_800FE4A0_RunningOfTheBulb);
+                        other->unk_50 &= ~0x20;
+                        if (func_8000A634(arg0, D_800FE4AC_RunningOfTheBulb) == 1) {
+                            func_80017D1C(arg0);
+                        }
+                        D_800FE4A0_RunningOfTheBulb = arg0;
+                        func_800258EC(D_800FE4AC_RunningOfTheBulb->model[0], 4, 0);
+                    }
+                }
+            }
+        }
+        func_80025798(arg0->model[9], func_800AEAC0(45.0f) * off + arg0->trans.x, height + arg0->trans.y, func_800AEFD0(45.0f) * off + arg0->trans.z);
+    }
+    ContStkX[(u16)port] = stkX;
+    ContStkY[(u16)port] = stkY;
+    ContBtnTrg[(u16)port] = trg;
+    ContBtn[(u16)port] = btn;
+}
 void func_800F8D80_RunningOfTheBulb(omObjData* arg0) {
     RotbPlayerExt* temp_s0;
 
