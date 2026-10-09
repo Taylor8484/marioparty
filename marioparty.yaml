@@ -1725,7 +1725,7 @@ segments:
     bss_size: 0x40
     subsegments:
       - [0x278ED0, c]
-      - [0x27C7C0, data, 278ED0]
+      - [0x27C7C0, .data, 278ED0]
       - [0x27CA80, .rodata, 278ED0]
       - {0x27CB30, type: bss, vram: 0x800FA240, name: ovl_42_bss}
   - type: code
@@ -1739,7 +1739,7 @@ segments:
     bss_size: 0xB0
     subsegments:
       - [0x27CB30, c]
-      - [0x2809F0, data, 27CB30]
+      - [0x2809F0, .data, 27CB30]
       - [0x280BB0, .rodata, 27CB30]
       - {0x280C80, type: bss, vram: 0x800FA730, name: ovl_43_bss}
   - type: code
