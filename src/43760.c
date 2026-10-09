@@ -331,6 +331,18 @@ void func_8004388C(s32 arg0) {
             sel = 3;
         }
     }
+#ifdef TARGET_PC
+    /* --dev-built-minigames: a type with no built minigame (2v2, so far) offers the
+       four-player list instead; the teams are then simply not used. */
+    for (j = 0; j < D_800C4E10[sel]; j++) {
+        if (pb_dev_minigame_allowed(lists[sel][j] - 1)) {
+            break;
+        }
+    }
+    if (j == D_800C4E10[sel]) {
+        sel = 0;
+    }
+#endif
     D_800D6459 = sel;
     for (i = 0; i < D_800C4D3C[sel]; i++) {
         p = &D_800D6400[i];
