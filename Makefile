@@ -107,6 +107,8 @@ DEPENDS := $(OBJECTS:=.d)
 
 #leave the mul fix on
 build/src/overlays/ovl_23_CraneGame/%.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# ovl_25 SlotCarDerby too: nop between back-to-back mul.s (func_800F9B60)
+build/src/overlays/ovl_25_SlotCarDerby/%.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # ovl_61 29B410.c (opening scene) also has the mul fix on: nop between back-to-back mul.s (func_800F86D0, func_800FB670)
 build/src/overlays/ovl_61_OpeningScene/29B410.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # 69010.c (sprite draw) was built with the assembler VR4300 mul fix on: a nop after each mul.s pair
@@ -272,7 +274,8 @@ $(BUILD_DIR)/src/%.c.o: src/%.c
 # ovl_03 EB0E0.c too (func_800F8EF0: mul.s right after a branch-likely's delay slot).
 # ovl_17 166D50.c and 168CA0.c too (func_800F8400, func_800FA058: mul fix on, mul.s right after func_800AEAC0's return).
 # ovl_23 1B3E00.c, 1B9050.c and 1BAA60.c too (func_800F746C: mul fix on, mul.s right after func_800AEAC0's return).
-$(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o $(BUILD_DIR)/src/1B800.c.o $(BUILD_DIR)/src/3DEB0.c.o $(BUILD_DIR)/src/59E80.c.o $(BUILD_DIR)/src/overlays/ovl_61_OpeningScene/29B410.c.o $(BUILD_DIR)/src/overlays/ovl_62_BoardIntro/2A2500.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2DB2D0.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2DF200.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2E8220.c.o $(BUILD_DIR)/src/overlays/ovl_2C_KeyPaWay/1F62C0.c.o $(BUILD_DIR)/src/overlays/ovl_14_CoinBlockBlitz/14E940.c.o $(BUILD_DIR)/src/overlays/ovl_03_BuriedTreasure/EB0E0.c.o $(BUILD_DIR)/src/overlays/ovl_17_BoxMountainMayhem/166D50.c.o $(BUILD_DIR)/src/overlays/ovl_17_BoxMountainMayhem/168CA0.c.o $(BUILD_DIR)/src/overlays/ovl_23_CraneGame/1B3E00.c.o $(BUILD_DIR)/src/overlays/ovl_23_CraneGame/1B9050.c.o $(BUILD_DIR)/src/overlays/ovl_23_CraneGame/1BAA60.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
+# ovl_25 1C1EB0.c too (mul fix on; kept with its neighbours for mul.s after a call's return).
+$(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o $(BUILD_DIR)/src/1B800.c.o $(BUILD_DIR)/src/3DEB0.c.o $(BUILD_DIR)/src/59E80.c.o $(BUILD_DIR)/src/overlays/ovl_61_OpeningScene/29B410.c.o $(BUILD_DIR)/src/overlays/ovl_62_BoardIntro/2A2500.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2DB2D0.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2DF200.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2E8220.c.o $(BUILD_DIR)/src/overlays/ovl_2C_KeyPaWay/1F62C0.c.o $(BUILD_DIR)/src/overlays/ovl_14_CoinBlockBlitz/14E940.c.o $(BUILD_DIR)/src/overlays/ovl_03_BuriedTreasure/EB0E0.c.o $(BUILD_DIR)/src/overlays/ovl_17_BoxMountainMayhem/166D50.c.o $(BUILD_DIR)/src/overlays/ovl_17_BoxMountainMayhem/168CA0.c.o $(BUILD_DIR)/src/overlays/ovl_23_CraneGame/1B3E00.c.o $(BUILD_DIR)/src/overlays/ovl_23_CraneGame/1B9050.c.o $(BUILD_DIR)/src/overlays/ovl_23_CraneGame/1BAA60.c.o $(BUILD_DIR)/src/overlays/ovl_25_SlotCarDerby/1C1EB0.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
 	@$(PRINT)$(GREEN)Compiling C file: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
 	@mkdir -p $(shell dirname $@)
 	@$(CC_HOST) $(CFLAGS_CHECK) $(CPPFLAGS) -MMD -MP -MT $@ -MF $@.d $<
