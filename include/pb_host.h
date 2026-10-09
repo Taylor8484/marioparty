@@ -62,6 +62,7 @@ void pb_gfx_forget(const void *p);
    game's turn count (-1: the game's own). */
 int pb_dev_minigame_allowed(s32 mg);
 s32 pb_dev_turns(void);
+s32 pb_dev_board(void); /* --dev-board N: the board a new game uses (GwSystem.curBoardIndex), or -1 */
 #define PB_N64_RAM_SIZE(s) ((s) * 2)
 /* The depth buffer at N64 RAM 0x803D0800 (320 x 240 x 16 bits, up to the RSP buffers at
    0x803F6000); display lists name it by its physical address 0x3D0800. */

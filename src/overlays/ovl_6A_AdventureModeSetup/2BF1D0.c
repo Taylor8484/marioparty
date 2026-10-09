@@ -3085,6 +3085,11 @@ void func_800FF0A0_AdventureModeSetup(void) {
             }
     }
     sys->curBoardIndex = board;
+#ifdef TARGET_PC
+    if (pb_dev_board() >= 0) {
+        sys->curBoardIndex = pb_dev_board(); /* mp1host --dev-board */
+    }
+#endif
 }
 #else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_6A_AdventureModeSetup/2BF1D0", func_800FF0A0_AdventureModeSetup);
