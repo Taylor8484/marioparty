@@ -395,8 +395,53 @@ void func_800FCC98_SlotMachine(void) {
 #else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E5DA0", func_800FCC98_SlotMachine);
 #endif
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E5DA0", func_800FD248_SlotMachine);
+void func_800FD248_SlotMachine(void) {
+    void* data;
+    SlotFx* fx;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E5DA0", func_800FD420_SlotMachine);
+    data = DataRead(0x140015);
+    D_800FFC88_SlotMachine = func_800678A4(data);
+    DataClose(data);
+    D_800FFC8A_SlotMachine = func_80064EF4(6, 0);
+    for (fx = D_800FFAD8_SlotMachine, i = 0; i < 6; fx++, i++) {
+        fx->unk_02 = fx->unk_01 = fx->unk_03 = fx->unk_00 = 0;
+        fx->unk_04 = fx->unk_08 = fx->unk_0C = 0.0f;
+        fx->unk_10 = fx->unk_14 = 0.0f;
+        fx->unk_18 = fx->unk_1C = 1.0f;
+        fx->unk_20 = 0.0f;
+        fx->unk_24 = 1.0f;
+        fx->unk_28 = fx->unk_2C = fx->unk_30 = fx->unk_34 = 0.0f;
+        fx->unk_3A = fx->unk_3C = fx->unk_38 = 0;
+        fx->unk_3E = fx->unk_40 = fx->unk_42 = fx->unk_44 = 0;
+        func_80067208(D_800FFC8A_SlotMachine, i, D_800FFC88_SlotMachine, 0);
+        func_80066DC4(D_800FFC8A_SlotMachine, i, 160, 120);
+        func_80067354(D_800FFC8A_SlotMachine, i, 1.0f, 1.0f);
+        func_8006752C(D_800FFC8A_SlotMachine, i, 0x100);
+        func_800674BC(D_800FFC8A_SlotMachine, i, 0x9008);
+        func_800672B0(D_800FFC8A_SlotMachine, i, 0);
+    }
+    D_800FFC8C_SlotMachine = D_800FFC90_SlotMachine;
+    D_800FFC96_SlotMachine = D_800FFC9A_SlotMachine = -1;
+    D_800FFC98_SlotMachine = D_800FFC9C_SlotMachine = 0;
+    D_800FFCA0_SlotMachine = 0;
+    D_800FFC9E_SlotMachine = -1;
+}
+void func_800FD420_SlotMachine(void) {
+    SlotFx* fx;
+    s32 i;
 
+    for (fx = D_800FFAD8_SlotMachine, i = 0; i < 6; fx++, i++) {
+        if ((fx->unk_00 & 0xC0) == 0xC0) {
+            func_80067480(D_800FFC8A_SlotMachine, i, 0x8000);
+            func_800671DC(D_800FFC8A_SlotMachine, i, fx->unk_03);
+            func_80066DC4(D_800FFC8A_SlotMachine, i, fx->unk_10 + 160.0f, fx->unk_14 + 120.0f);
+            func_80067354(D_800FFC8A_SlotMachine, i, fx->unk_18, fx->unk_1C);
+            func_8006752C(D_800FFC8A_SlotMachine, i, (s32)(fx->unk_24 * 256.0f));
+            func_800673B0(D_800FFC8A_SlotMachine, i, fx->unk_20);
+        } else {
+            func_800674BC(D_800FFC8A_SlotMachine, i, 0x8000);
+        }
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E5DA0", func_800FD590_SlotMachine);
