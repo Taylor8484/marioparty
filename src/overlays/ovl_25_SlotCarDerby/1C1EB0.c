@@ -500,8 +500,56 @@ s32 D_80100F58_SlotCarDerby[6] = { 30, 2, 27, 2, 27, 2 };
 s32 D_80100F70_SlotCarDerby[6] = { 0, 0, 0, 0, 0, 0 };
 s16 D_80100F88_SlotCarDerby[4] = { 0, 0x3000, 0x2000, 0 };
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800F76E8_SlotCarDerby);
+// register allocation of the D_800C59AC file-id load (masked 0)
+#ifdef NON_MATCHING
+void func_800F76E8_SlotCarDerby(omObjData* obj, s16 player) {
+    SCDPlayerWork* work;
+    unk2C0C0Struct50* head;
+    s32 file;
+    u32 chr;
 
+    obj->func_ptr = func_800F7A00_SlotCarDerby;
+    obj->work[0] = player;
+    obj->unk_50 = func_80023684(sizeof(SCDPlayerWork), 0x7918);
+    func_8009B770(obj->unk_50, 0, sizeof(SCDPlayerWork));
+    work = obj->unk_50;
+    work->unk_D8 = func_80023684(obj->mtncnt * 4, 0x7918); /* s16[2] per motion */
+    func_8009B770(work->unk_D8, 0, obj->mtncnt * 4);
+    chr = GwPlayer[player].character;
+    if ((D_801024B0_SlotCarDerby == 2) & (player == 3)) {
+        chr = 6;
+    }
+    if (chr < 6) {
+        file = D_800C59AC[chr].unk_00 | D_800C59AC[chr].unk_08;
+    } else {
+        chr = 6;
+        file = 0x70000;
+    }
+    obj->model[1] = LoadFormFile(file, 0x6BD);
+    obj->model[0] = LoadFormFile(D_80100CD8_SlotCarDerby[chr] | 0x390000, 0x6B9);
+    func_800343C8(D_800F2B7C[obj->model[1]].unk_08);
+    head = func_80026A0C(obj->model[0], "head");
+    D_80101FF8_SlotCarDerby[obj->work[0]] = head;
+    func_80020EA0(obj->model[1], D_80100CBC_SlotCarDerby[chr], obj->model[0], "head");
+    head->unk_38.y += D_80100D04_SlotCarDerby[chr][0];
+    head->unk_38.z += D_80100D04_SlotCarDerby[chr][1];
+    head->unk_50.x = D_80100CE8_SlotCarDerby[chr];
+    head->unk_50.y = D_80100CE8_SlotCarDerby[chr];
+    head->unk_50.z = D_80100CE8_SlotCarDerby[chr];
+    obj->trans.x = obj->trans.y = obj->trans.z = 0.0f;
+    obj->scale.x = obj->scale.y = obj->scale.z = 1.4f;
+    func_80025798(obj->model[0], obj->trans.x, obj->trans.y, obj->trans.z);
+    func_80025830(obj->model[0], obj->scale.x, obj->scale.y, obj->scale.z);
+    work->unk_C0 = 0xFFFF;
+    func_8001874C(obj, 0, 0x390007, 1, 0);
+    D_800F2B7C[obj->model[0]].unk_08 = 0;
+    work->unk_56 = GwPlayer[player].port;
+    func_800F7084_SlotCarDerby(obj);
+    func_800F70C4_SlotCarDerby(obj)->unk_0A = chr;
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800F76E8_SlotCarDerby);
+#endif
 void func_800F7A00_SlotCarDerby(omObjData* obj) {
     SCDCar* car;
     s32 throttle;
