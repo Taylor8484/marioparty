@@ -1698,10 +1698,219 @@ void func_800FBF74_RunningOfTheBulb(omObjData* arg0) {
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FC0F4_RunningOfTheBulb);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FCEA0_RunningOfTheBulb);
+f32 func_800FCEA0_RunningOfTheBulb(omObjData* arg0, omObjData* arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5) {
+    struct {
+        f32 dist[10];
+        f32 angle[10];
+    } near;
+    RotbPlayerWork* work;
+    omObjData* obj;
+    f32 angle;
+    f32 x;
+    f32 z;
+    s32 i;
+    s32 j;
+    u16 n;
+    u16 tries;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FD394_RunningOfTheBulb);
+    angle = func_800B0CD8(arg2 - arg0->trans.x, arg3 - arg0->trans.z) - CRot.y;
+    n = 0;
+    if (angle < -180.0f) {
+        angle += 360.0f;
+    }
+    for (i = 0; i < 4; i++) {
+        obj = D_800FE460_RunningOfTheBulb[i];
+        if (((obj == arg0) | (obj == arg1)) != 0) {
+            continue;
+        }
+        work = obj->unk_50;
+        if (work->unk_E4->unk_00 & 0x34) {
+            continue;
+        }
+        x = obj->trans.x;
+        z = obj->trans.z;
+        near.dist[n] = func_800B1750((x - arg0->trans.x) * (x - arg0->trans.x) + (z - arg0->trans.z) * (z - arg0->trans.z));
+        near.angle[n] = func_800B0CD8(x - arg0->trans.x, z - arg0->trans.z);
+        if ((near.angle[n] = near.angle[n] - CRot.y) < -180.0f) {
+            near.angle[n] += 360.0f;
+        }
+        n++;
+    }
+    for (i = 0; i < 6; i++) {
+        obj = D_800FE480_RunningOfTheBulb[i];
+        if (obj->func_ptr == NULL) {
+            continue;
+        }
+        if (ROTB_FLOOR(obj)->unk_28->unk_02 != 1 && !(obj->trans.y < 180.0f)) {
+            continue;
+        }
+        x = obj->trans.x;
+        z = obj->trans.z;
+        near.dist[n] = func_800B1750((x - arg0->trans.x) * (x - arg0->trans.x) + (z - arg0->trans.z) * (z - arg0->trans.z));
+        near.angle[n] = func_800B0CD8(x - arg0->trans.x, z - arg0->trans.z);
+        if ((near.angle[n] = near.angle[n] - CRot.y) < -180.0f) {
+            near.angle[n] += 360.0f;
+        }
+        n++;
+    }
+    tries = 0;
+    work = arg0->unk_50;
+retry:
+    /* Retail counts j past a blocking entry before leaving the scan, so a blocker in the last
+       slot reads as "none". */
+    for (j = 0; j < n;) {
+        if (func_800FDB84_RunningOfTheBulb(near.angle[j], angle) <= arg4 && near.dist[j] <= arg5) {
+            j++;
+            break;
+        }
+        j++;
+    }
+    if (j == n) {
+        x = func_800AEAC0(angle) * arg5 + arg0->trans.x;
+        z = func_800AEFD0(angle) * arg5 + arg0->trans.z;
+        if (work->unk_48 + -400.0f <= x && x <= 400.0f - work->unk_48 && work->unk_48 + -2500.0f <= z && z <= 2500.0f - work->unk_48) {
+            goto done;
+        }
+        if (z < D_800FE478_RunningOfTheBulb->trans.z - 200.0f) {
+            goto done;
+        }
+    }
+    D_800FE456_RunningOfTheBulb++;
+    if (++tries == 36) {
+        D_800FE454_RunningOfTheBulb = 1;
+        goto done;
+    }
+    angle += 10.0f;
+    if (angle > 180.0f) {
+        angle -= 360.0f;
+    }
+    goto retry;
+done:
+    if (angle < 0.0f) {
+        angle += 360.0f;
+    }
+    if (angle >= 360.0f) {
+        angle -= 360.0f;
+    }
+    return angle;
+}
+f32 func_800FD394_RunningOfTheBulb(omObjData* arg0, omObjData* arg1, f32 arg2, f32 arg3, f32 arg4) {
+    struct {
+        f32 dist[14];
+        f32 angle[14];
+    } near;
+    RotbPlayerWork* work;
+    omObjData* obj;
+    f32 x;
+    f32 z;
+    s32 i;
+    s32 j;
+    u16 n;
+    u16 tries;
 
+    n = 0;
+    for (i = 0; i < 4; i++) {
+        obj = D_800FE460_RunningOfTheBulb[i];
+        if (((obj == arg0) | (obj == arg1)) != 0) {
+            continue;
+        }
+        work = obj->unk_50;
+        if (work->unk_E4->unk_00 & 0x34) {
+            continue;
+        }
+        x = obj->trans.x;
+        z = obj->trans.z;
+        near.dist[n] = func_800B1750((x - arg0->trans.x) * (x - arg0->trans.x) + (z - arg0->trans.z) * (z - arg0->trans.z));
+        near.angle[n] = func_800B0CD8(x - arg0->trans.x, z - arg0->trans.z);
+        if ((near.angle[n] = near.angle[n] - CRot.y) < -180.0f) {
+            near.angle[n] += 360.0f;
+        }
+        n++;
+    }
+    for (i = 0; i < 4; i++) {
+        obj = D_800FE49C_RunningOfTheBulb[i];
+        x = obj->trans.x;
+        if (x + 70.0f < -400.0f) {
+            continue;
+        }
+        if (400.0f < x - 70.0f) {
+            continue;
+        }
+        z = obj->trans.z;
+        if (z + 70.0f < -2500.0f) {
+            continue;
+        }
+        if (D_800FE478_RunningOfTheBulb->trans.z + 200.0f < z - 70.0f) {
+            continue;
+        }
+        if (200.0f < obj->trans.y) {
+            continue;
+        }
+        near.dist[n] = func_800B1750((x - arg0->trans.x) * (x - arg0->trans.x) + (z - arg0->trans.z) * (z - arg0->trans.z));
+        near.angle[n] = func_800B0CD8(x - arg0->trans.x, z - arg0->trans.z);
+        if ((near.angle[n] = near.angle[n] - CRot.y) < -180.0f) {
+            near.angle[n] += 360.0f;
+        }
+        n++;
+    }
+    for (i = 0; i < 6; i++) {
+        obj = D_800FE480_RunningOfTheBulb[i];
+        if (obj->func_ptr == NULL) {
+            continue;
+        }
+        if (ROTB_FLOOR(obj)->unk_28->unk_02 != 1 && !(obj->trans.y < 180.0f)) {
+            continue;
+        }
+        x = obj->trans.x;
+        z = obj->trans.z;
+        near.dist[n] = func_800B1750((x - arg0->trans.x) * (x - arg0->trans.x) + (z - arg0->trans.z) * (z - arg0->trans.z));
+        near.angle[n] = func_800B0CD8(x - arg0->trans.x, z - arg0->trans.z);
+        if ((near.angle[n] = near.angle[n] - CRot.y) < -180.0f) {
+            near.angle[n] += 360.0f;
+        }
+        n++;
+    }
+    tries = 0;
+    work = arg0->unk_50;
+retry:
+    /* Retail counts j past a blocking entry before leaving the scan, so a blocker in the last
+       slot reads as "none". */
+    for (j = 0; j < n;) {
+        if (func_800FDB84_RunningOfTheBulb(near.angle[j], arg2) <= arg3 && near.dist[j] <= arg4) {
+            j++;
+            break;
+        }
+        j++;
+    }
+    if (j == n) {
+        x = func_800AEAC0(arg2) * arg4 + arg0->trans.x;
+        z = func_800AEFD0(arg2) * arg4 + arg0->trans.z;
+        if (work->unk_48 + -400.0f <= x && x <= 400.0f - work->unk_48 && work->unk_48 + -2500.0f <= z && z <= 2500.0f - work->unk_48) {
+            goto done;
+        }
+        if (z < D_800FE478_RunningOfTheBulb->trans.z - 200.0f) {
+            goto done;
+        }
+    }
+    D_800FE456_RunningOfTheBulb++;
+    if (++tries == 36) {
+        D_800FE454_RunningOfTheBulb = 1;
+        goto done;
+    }
+    arg2 += 10.0f;
+    if (arg2 > 180.0f) {
+        arg2 -= 360.0f;
+    }
+    goto retry;
+done:
+    if (arg2 < 0.0f) {
+        arg2 += 360.0f;
+    }
+    if (arg2 >= 360.0f) {
+        arg2 -= 360.0f;
+    }
+    return arg2;
+}
 f32 func_800FD9BC_RunningOfTheBulb(u16 arg0, f32* arg1) {
     f32 temp_f0;
     f32 var_f12;
