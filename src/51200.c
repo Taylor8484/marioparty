@@ -75,8 +75,21 @@ void func_8004D0B0(s16);
 
 typedef struct unk51200 {
 /* 0x00 */ Object* obj;
+#ifdef TARGET_PC
+/* Two structs share this view: func_80048224's (a Process* at 0x04, mystery_struct_ret_func_80048224)
+   and func_80050E10's unkMallocStruct (an s16 at 0x04). The union keeps unk8 at that struct's
+   host offset and unk4 at unkMallocStruct's. */
+union {
+    struct {
+        u16 unk4;
+        s16 unk6;
+    };
+    Process* unk4p;
+};
+#else
 /* 0x04 */ u16 unk4;
 /* 0x06 */ s16 unk6;
+#endif
 /* 0x08 */ s16 unk8;
 /* 0x0A */ s16 unkA;
 } unk51200;
