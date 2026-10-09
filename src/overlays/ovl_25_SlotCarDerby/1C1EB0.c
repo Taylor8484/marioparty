@@ -756,9 +756,9 @@ SCDObj* func_800FDD28_SlotCarDerby(omObjData* obj) {
 #define SCD_MTX_H(mtx, n) (((u16*)&(mtx))[n])
 #endif
 
+/* Projects pos through camera cam's view into screen x, y and a perspective scale (z). */
 // scheduling of &Center and the viewport register (masked 4)
 #ifdef NON_MATCHING
-/* Projects pos through camera cam's view into screen x, y and a perspective scale (z). */
 void func_800FDD54_SlotCarDerby(s32 cam, Vec* pos, Vec* screen) {
     Mtx look;
     Mtx mtx;
@@ -839,10 +839,10 @@ void func_800FE138_SlotCarDerby(u8 count) {
 #define SCD_TEX_MASK(x) \
     ((x) < 3 ? 1 : (x) < 5 ? 2 : (x) < 9 ? 3 : (x) < 17 ? 4 : (x) < 33 ? 5 : (x) < 65 ? 6 : (x) < 129 ? 7 : (x) < 257 ? 8 : 9)
 
-// register allocation: the vertex pointer and the quad x (masked 10)
-#ifdef NON_MATCHING
 /* Takes a free billboard for sprite and builds its display list (texture and quad), its
    per-frame vertex copies and its per-frame material lists. Returns its id, -1 if none is free. */
+// register allocation: the vertex pointer and the quad x (masked 10)
+#ifdef NON_MATCHING
 s16 func_800FE2F0_SlotCarDerby(u16 sprite, u8 flags) {
     SCDBillboard* b;
     unk65770Anim* anim;
@@ -1077,10 +1077,159 @@ void func_800FF784_SlotCarDerby(s16 id) {
         }
     }
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800FF8A4_SlotCarDerby);
+/* Rewrites each visible billboard's material list for this frame and advances its animation
+   (two steps a frame; flags 4/0x40/2 hide, free or hold it at the end). */
+void func_800FF8A4_SlotCarDerby(void) {
+    SCDBillboard* b;
+    unk65770Anim* anim;
+    unk65770AnimC* frame;
+    Gfx* gfx;
+    unk65770Anim8* seq;
+    s32 len;
+    s32 count;
+    s16 j;
+    s16 i;
 
+    for (i = 0; i < D_8010248C_SlotCarDerby; i++) {
+        b = &D_80103298[i];
+        if (b->unk_00 == (Gfx*)-1 || b->unk_20 != 0 || (b->unk_28 & 0x20)) {
+            continue;
+        }
+        gfx = b->unk_04[D_800F37F0];
+        gDPPipeSync(gfx++);
+        gDPSetPrimColor(gfx++, 0, 0, b->unk_2A, b->unk_2B, b->unk_2C, b->unk_29);
+        gDPSetTextureFilter(gfx++, D_80100F88_SlotCarDerby[(b->unk_28 & 0x18) >> 3]);
+        anim = D_800EC700[b->unk_22];
+        frame = &anim->unk0[b->unk_24];
+        if (anim->unk18 & 0x8000) {
+            gDPSetTextureLUT(gfx++, G_TT_NONE);
+        } else {
+            gDPSetTextureLUT(gfx++, G_TT_RGBA16);
+            if (anim->unk18 < 0x11) {
+                gDPLoadTLUT_pal16(gfx++, 0, anim->unkC);
+            } else {
+                gDPLoadTLUT_pal256(gfx++, anim->unkC);
+            }
+        }
+        gSPSegment(gfx++, 2, osVirtualToPhysical(frame->unk0));
+        gSPSegment(gfx++, 1, osVirtualToPhysical(b->unk_10[D_800F37F0]));
+        gSPDisplayList(gfx++, b->unk_00);
+        gSPEndDisplayList(gfx++);
+        if (b->unk_28 & 1) {
+            continue;
+        }
+        if (anim->unk4 != NULL) {
+            seq = *anim->unk4;
+            len = seq->unk4[b->unk_24].unk2;
+            count = seq->unk0;
+        } else {
+            len = 8;
+            count = anim->unk10;
+        }
+        for (j = 0; j < 2; j++) {
+            b->unk_30 += b->unk_34;
+            if (b->unk_30 >= len) {
+                b->unk_24++;
+                b->unk_30 -= len;
+                if (b->unk_24 + 1 >= count) {
+                    if (b->unk_28 & 4) {
+                        func_800FF6AC_SlotCarDerby(i, 0x20);
+                        break;
+                    }
+                    if (b->unk_28 & 0x40) {
+                        func_800FF784_SlotCarDerby(i);
+                        break;
+                    }
+                    if (b->unk_28 & 2) {
+                        b->unk_24--;
+                        break;
+                    }
+                    b->unk_24 = 0;
+                }
+            }
+        }
+    }
+}
+/* Builds this frame's billboard display list: each visible billboard's matrix (camera-facing
+   unless flag 0x80) and material list, then restores the viewport's matrix. */
+// scheduling: &Center, the viewport index and the unk_1C base loads (masked 10)
+#ifdef NON_MATCHING
+void func_800FFD18_SlotCarDerby(void) {
+    Mtx view;
+#ifdef TARGET_PC
+    /* retail puts this stack matrix's address in the display list; the host draws the list after
+       the function returns, so it lives in static storage there */
+    static
+#endif
+    Mtx proj;
+    Matrix4f mf;
+    Matrix4f tmp;
+    Matrix4f sc;
+    Vec eye;
+    Vec at;
+    Vec up;
+    SCDBillboard* b;
+    Gfx* gfx;
+    Mtx* mtx;
+    f32 rx;
+    f32 ry;
+    s32 i;
+
+    func_800FF8A4_SlotCarDerby();
+    D_800F2B7C[D_801024A8_SlotCarDerby].unk_6C->unk_00 = &D_80102490_SlotCarDerby[D_80100EA8_SlotCarDerby];
+    gfx = D_80102490_SlotCarDerby[D_80100EA8_SlotCarDerby];
+    mtx = D_8010249C_SlotCarDerby[D_80100EA8_SlotCarDerby];
+    proj = *(&D_800C3110->unk_138 + D_800F3FA8 * 2); /* the viewport's projection pair */
+    rx = CRot.x;
+    ry = CRot.y;
+    eye.x = func_800AEAC0(ry) * func_800AEFD0(rx) * CZoom + Center.x;
+    eye.y = -func_800AEAC0(rx) * CZoom + Center.y;
+    eye.z = func_800AEFD0(ry) * func_800AEFD0(rx) * CZoom + Center.z;
+    at.x = Center.x;
+    at.y = Center.y;
+    at.z = Center.z;
+    up.x = func_800AEAC0(ry) * func_800AEAC0(rx);
+    up.y = func_800AEFD0(rx);
+    up.z = func_800AEFD0(ry) * func_800AEAC0(rx);
+    guLookAt(&view, eye.x, eye.y, eye.z, at.x, at.y, at.z, up.x, up.y, up.z);
+    gDPSetCycleType(gfx++, G_CYC_1CYCLE);
+    gSPClearGeometryMode(gfx++, G_LIGHTING | G_FOG | G_CULL_BOTH);
+    gSPSetGeometryMode(gfx++, G_ZBUFFER | G_SHADE | G_TEXTURE_GEN_LINEAR | G_SHADING_SMOOTH);
+    gDPSetBlendColor(gfx++, 0, 0, 0, 1);
+    gDPSetAlphaCompare(gfx++, G_AC_THRESHOLD);
+    gSPTexture(gfx++, 0x8000, 0x8000, 0, G_TX_RENDERTILE, G_ON);
+    for (i = 0; i < D_8010248C_SlotCarDerby; i++) {
+        b = &D_80103298[i];
+        if (b->unk_00 == (Gfx*)-1 || (b->unk_28 & 0x20)) {
+            continue;
+        }
+        guMtxL2F(mf, &view);
+        MtxTranslate(mf, b->unk_38.x, b->unk_38.y, b->unk_38.z);
+        MtxRotate(mf, b->unk_50.x, b->unk_50.y, b->unk_50.z);
+        MtxScale(mf, b->unk_44.x, b->unk_44.y, b->unk_44.z);
+        if (!(b->unk_28 & 0x80)) {
+            sc[0][0] = b->unk_44.x;
+            sc[1][1] = b->unk_44.y;
+            sc[2][2] = b->unk_44.z;
+            sc[3][3] = 1.0f;
+            sc[0][1] = sc[0][2] = sc[0][3] = sc[1][0] = sc[1][2] = sc[1][3] = sc[2][0] = sc[2][1] = sc[2][3] =
+                sc[3][0] = sc[3][1] = sc[3][2] = 0.0f;
+            MtxReset(mf, tmp);
+            MtxMult(sc, tmp, mf);
+        }
+        if (b->unk_20 != 0) {
+            gSPSegment(gfx++, 1, osVirtualToPhysical(*((Vtx**)b->unk_1C + D_800F37F0 + 2)));
+        }
+        func_800A0A20(mf, mtx);
+        gSPMatrix(gfx++, osVirtualToPhysical(mtx++), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gfx++, b->unk_04[D_800F37F0]);
+    }
+    gSPMatrix(gfx++, osVirtualToPhysical(&proj), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gSPEndDisplayList(gfx++);
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800FFD18_SlotCarDerby);
-
+#endif
 void func_801001F8_SlotCarDerby(void) {
     s32 i;
 
