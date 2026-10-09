@@ -744,6 +744,13 @@ void func_80066DC4(s16 grpIdx, s16 idx, s16 x, s16 y) {
     obj->unk40 = x;
     obj->unk42 = y;
 }
+/* Halfword i of an N64-layout Mtx (integer halves 0..15, fractions 16..31). The host keeps the
+   32-bit words in host byte order, so a u16 index would read the other half of each word. */
+#ifdef TARGET_PC
+#define MTX_HALF(m, i) ((u16)(((u32*)(m))[(i) >> 1] >> (((i) & 1) ? 0 : 16)))
+#else
+#define MTX_HALF(m, i) (((u16*)(m))[i])
+#endif
 void func_80066DF4(s16 grpIdx, s16 idx, s16 camIdx, f32 x, f32 y, f32 z) {
     Mtx mtx;
     unk65770Obj* obj = D_800EE330[grpIdx]->obj[idx];
@@ -758,9 +765,9 @@ void func_80066DF4(s16 grpIdx, s16 idx, s16 camIdx, f32 x, f32 y, f32 z) {
 
     guTranslate(m, x, y, z);
     guMtxCatL(m, view, m);
-    sx = (s32)((((u16*)&mtx)[12] << 16) | ((u16*)&mtx)[28]) >> 16;
-    sy = (s32)((((u16*)&mtx)[13] << 16) | ((u16*)&mtx)[29]) >> 16;
-    sz = (s32)((((u16*)&mtx)[14] << 16) | ((u16*)&mtx)[30]) >> 16;
+    sx = (s32)((MTX_HALF(&mtx, 12) << 16) | MTX_HALF(&mtx, 28)) >> 16;
+    sy = (s32)((MTX_HALF(&mtx, 13) << 16) | MTX_HALF(&mtx, 29)) >> 16;
+    sz = (s32)((MTX_HALF(&mtx, 14) << 16) | MTX_HALF(&mtx, 30)) >> 16;
     dist = sz * sinf(D_800C3110[camIdx].unk_40 * 0.017444444444444446 / 2.0);
     dist = fabsf(dist / cosf(D_800C3110[camIdx].unk_40 * 0.017444444444444446 / 2.0));
     D_800E4124 = dist;
