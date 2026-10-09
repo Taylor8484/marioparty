@@ -196,6 +196,8 @@ build/src/overlays/ovl_03_BuriedTreasure/E8F60.c.o: CFLAGS = -G0 -mips3 -mgp32 -
 build/src/overlays/ovl_03_BuriedTreasure/EB0E0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 build/src/overlays/ovl_17_BoxMountainMayhem/166D50.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 build/src/overlays/ovl_17_BoxMountainMayhem/168CA0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# ovl_40 259EB0.c: nop before mult at func_800FA61C's roulette loop head
+build/src/overlays/ovl_40_ResultsScene/259EB0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 
 # -O3 static inlines
 build/src/7CD60.c.o: OPTFLAGS = -O3
