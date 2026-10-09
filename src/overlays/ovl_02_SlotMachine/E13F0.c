@@ -129,12 +129,68 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E13F0", func_800F9534_
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E13F0", func_800F99E0_SlotMachine);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E13F0", func_800FAC10_SlotMachine);
+void func_800FAC10_SlotMachine(s16 model, f32 x, f32 y, s32 mode) {
+    unk2C0C0StructC0* c0;
+    unk2C0C0StructE0* src;
+    unk2C0C0StructE0* dst;
+    s16 n;
+    s16 i;
 
+    c0 = D_800F2B7C[model].unk_6C;
+    src = c0->unk_04;
+    dst = c0->unk_08[D_800F37F0];
+    n = c0->unk_72;
+    if (mode == 0) {
+        for (i = 0; i < n; i++) {
+            *dst = *src;
+            if (i != 1) {
+                dst->unk_00 = src->unk_00 + x * 0.5;
+                dst->unk_04 = src->unk_04 + y * 0.5;
+            }
+            src++;
+            dst++;
+        }
+    } else if (mode == 1) {
+        for (i = 0; i < n; i++) {
+            *dst = *src;
+            if (i != 1) {
+                dst->unk_00 = src->unk_00 * x;
+                dst->unk_04 = src->unk_04 * y;
+            }
+            src++;
+            dst++;
+        }
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E13F0", func_800FAE34_SlotMachine);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E13F0", func_800FBD60_SlotMachine);
+// load scheduling: the frame table's base is loaded before the index product, twice (masked 4)
+#ifdef NON_MATCHING
+void func_800FBD60_SlotMachine(void) {
+    s32 i;
+    unk65770Obj* spr;
+    unk65770Obj* spr2;
+    unk65770Anim* anim;
 
+    for (i = 0; i < 3; i++) {
+        HuMemDirectFree(D_800FFA3C_SlotMachine[i]);
+        HuMemDirectFree(D_800FFA48_SlotMachine[i]);
+        if (D_800FEC80_SlotMachine < 3) {
+            HuMemDirectFree(D_800FFA54_SlotMachine[i]);
+        }
+    }
+    HuMemDirectFree(D_800FFA10_SlotMachine);
+    spr = func_800675F4((s16)D_800FFCC0_SlotMachine, 0);
+    anim = spr->unk4C;
+    anim->unk0[spr->unk52].unk0 = D_800FFA14_SlotMachine;
+    spr2 = func_800675F4((s16)D_800FFA30_SlotMachine, 0);
+    anim = spr2->unk4C;
+    anim->unk0[spr2->unk52].unk0 = D_800FFA18_SlotMachine;
+    func_800FBF6C_SlotMachine();
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E13F0", func_800FBD60_SlotMachine);
+#endif
 SlotWork* func_800FBE84_SlotMachine(omObjData* obj) {
     SlotWork* w;
 
