@@ -297,3 +297,18 @@ D_80100F7C_SlotCarDerby = D_80100F70_SlotCarDerby + 0xC;
 D_80100F80_SlotCarDerby = D_80100F70_SlotCarDerby + 0x10;
 /* ovl_25 .bss: D_8010247C (between splat labels D_8010247A and D_8010247E) for the C users */
 D_8010247C_SlotCarDerby = 0x8010247C;
+
+/* ovl_01 ChanceTime: labels inside its C .data objects that its INCLUDE_ASM functions use */
+D_80101265_ChanceTime = D_80101264_ChanceTime + 0x1;
+D_80101299_ChanceTime = D_80101298_ChanceTime + 0x1;
+D_801012B2_ChanceTime = D_801012B0_ChanceTime + 0x2;
+D_801012B4_ChanceTime = D_801012B0_ChanceTime + 0x4;
+D_801012BA_ChanceTime = D_801012B8_ChanceTime + 0x2;
+D_801012BC_ChanceTime = D_801012B8_ChanceTime + 0x4;
+D_801012C1_ChanceTime = D_801012C0_ChanceTime + 0x1;
+D_801012C2_ChanceTime = D_801012C0_ChanceTime + 0x2;
+D_801012C6_ChanceTime = D_801012C4_ChanceTime + 0x2;
+D_801012C8_ChanceTime = D_801012C4_ChanceTime + 0x4;
+D_801012CE_ChanceTime = D_801012CC_ChanceTime + 0x2;
+D_801012D0_ChanceTime = D_801012CC_ChanceTime + 0x4;
+D_80101326_ChanceTime = D_80101324_ChanceTime + 0x2;
