@@ -289,7 +289,7 @@ void func_800FDD08_SlotCarDerby(omObjData* obj, SCDObj* rec);
 SCDObj* func_800FDD28_SlotCarDerby(omObjData* obj);
 void func_800FDD54_SlotCarDerby(s32 cam, Vec* pos, Vec* screen);
 void func_800FE138_SlotCarDerby(u8 count);
-s16 func_800FE2F0_SlotCarDerby(u16 sprite, u8 flags);
+s16 func_800FE2F0_SlotCarDerby(s16 sprite, u8 flags); /* callers pass sprite unmasked (lh) */
 void func_800FF53C_SlotCarDerby(s16 id, s16 frame);
 void func_800FF57C_SlotCarDerby(s16 id, f32 speed);
 void func_800FF5BC_SlotCarDerby(s16 id, f32 x, f32 y, f32 z);

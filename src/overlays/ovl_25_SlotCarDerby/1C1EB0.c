@@ -1070,12 +1070,209 @@ s32 func_800FBE7C_SlotCarDerby(u8 player, s16 crossed) {
     }
     return D_80100EB8_SlotCarDerby;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800FBEE0_SlotCarDerby);
+/* Clears a scenery record (func_800FBEE0, func_800FC394). */
+#define SCD_OBJ_CLEAR(o)                                                                         \
+    {                                                                                            \
+        (o)->unk_00 = 0;                                                                         \
+        (o)->unk_02 = 0;                                                                         \
+        (o)->unk_08 = 0;                                                                         \
+        (o)->unk_0C = 0;                                                                         \
+        (o)->unk_10.x = (o)->unk_10.y = (o)->unk_10.z = 0.0f;                                    \
+        (o)->unk_1C.x = (o)->unk_1C.y = (o)->unk_1C.z = 0.0f;                                    \
+        (o)->unk_28.x = (o)->unk_28.y = (o)->unk_28.z = 0.0f;                                    \
+        (o)->unk_40[0] = (o)->unk_40[1] = (o)->unk_40[2] = (o)->unk_40[3] = 0;                   \
+        (o)->unk_40[4] = (o)->unk_40[5] = (o)->unk_40[6] = (o)->unk_40[7] = 0;                   \
+        (o)->unk_40[8] = (o)->unk_40[9] = (o)->unk_40[10] = (o)->unk_40[11] = 0;                 \
+        (o)->unk_40[12] = (o)->unk_40[13] = (o)->unk_40[14] = (o)->unk_40[15] = 0;               \
+    }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800FC0BC_SlotCarDerby);
+void func_800FBEE0_SlotCarDerby(s16 course) {
+    s32 i;
+    SCDObj* o;
 
+    D_800F2AF8[D_800ED440++] = omAddObj(10, 5, 8, -1, func_800FC0BC_SlotCarDerby);
+    D_800F2AF8[D_800ED440++] = omAddObj(11, 0, 0, -1, func_800FC394_SlotCarDerby);
+    D_800F2AF8[D_800ED440++] = omAddObj(12, 0, 0, -1, func_800FCD6C_SlotCarDerby);
+    D_80102468_SlotCarDerby = HuMemDirectMalloc(16 * sizeof(SCDObj));
+    for (i = 0; i < 16; i++) {
+        o = &D_80102468_SlotCarDerby[i];
+        o->unk_00 = 0;
+        o->unk_02 = 0;
+        o->unk_08 = 0;
+        o->unk_0C = 0;
+        o->unk_10.x = o->unk_10.y =
+            o->unk_10.z = 0.0f;
+        o->unk_1C.x = o->unk_1C.y =
+            o->unk_1C.z = 0.0f;
+        o->unk_28.x = o->unk_28.y =
+            o->unk_28.z = 0.0f;
+        o->unk_40[0] = o->unk_40[1] =
+            o->unk_40[2] = o->unk_40[3] = 0;
+        o->unk_40[4] = o->unk_40[5] =
+            o->unk_40[6] = o->unk_40[7] = 0;
+        o->unk_40[8] = o->unk_40[9] =
+            o->unk_40[10] = o->unk_40[11] = 0;
+        o->unk_40[12] = o->unk_40[13] =
+            o->unk_40[14] = o->unk_40[15] = 0;
+    }
+    func_800FE138_SlotCarDerby(48);
+    func_800FFD18_SlotCarDerby();
+    D_80100EAC_SlotCarDerby = course;
+    if (D_801024B0_SlotCarDerby == 2) {
+        D_80100EBC_SlotCarDerby = 1;
+    }
+}
+void func_800FC0BC_SlotCarDerby(omObjData* obj) {
+    SCDPlayerWork* w;
+
+    obj->func_ptr = func_800FCF50_SlotCarDerby;
+    omSetStatBit(obj, 0xA0);
+    if (D_80100EBC_SlotCarDerby == 0) {
+        obj->model[0] = LoadFormFile(0x70000, 0x499);
+        obj->model[1] = func_800174C0(0x39000D, 0x489);
+    } else {
+        obj->model[0] = LoadFormFile(0x70000, 0x49D);
+        obj->model[1] = func_800174C0(0x39000D, 0x48D);
+    }
+    obj->model[4] = func_800174C0(0x39000C, 0x99);
+    obj->model[2] = func_800174C0(0x39000E, 0x49D);
+    obj->model[3] = func_800174C0(0x39000F, 0x49D);
+    func_80026040(obj->model[1]);
+    func_80025EB4(obj->model[1], 2, 2);
+    obj->unk_50 = func_80023684(sizeof(SCDPlayerWork), 0x7918);
+    func_8009B770(obj->unk_50, 0, sizeof(SCDPlayerWork));
+    w = SCD_WORK(obj);
+    w->unk_D8 = func_80023684(obj->mtncnt * sizeof(SCDPlayerWork), 0x7918);
+    func_8009B770(w->unk_D8, 0, obj->mtncnt * sizeof(SCDPlayerWork));
+    w->unk_C0 = 0xFFFF;
+    func_8001874C(obj, 0, 0x390011, 1, 0);
+    func_8001874C(obj, 1, 0x390012, 1, 0);
+    obj->trans.x = D_80100EC0_SlotCarDerby[D_80100EAC_SlotCarDerby].x * 10.0;
+    obj->trans.y = D_80100EC0_SlotCarDerby[D_80100EAC_SlotCarDerby].y * 10.0;
+    obj->trans.z = D_80100EC0_SlotCarDerby[D_80100EAC_SlotCarDerby].z * 10.0;
+    obj->scale.x = obj->scale.y = obj->scale.z = 2.0f;
+    func_80025798(obj->model[1], obj->trans.x, obj->trans.y, obj->trans.z);
+    func_80025830(obj->model[1], obj->scale.x, obj->scale.y, obj->scale.z);
+    func_80025798(obj->model[4], obj->trans.x, obj->trans.y - 240.0, obj->trans.z - 40.0);
+    func_80025830(obj->model[4], obj->scale.x, obj->scale.y, obj->scale.z);
+    func_800FDD08_SlotCarDerby(obj, D_80102468_SlotCarDerby);
+}
+// register allocation; one extra copy of the colon sprite id (masked ~6)
+#ifdef NON_MATCHING
+void func_800FC394_SlotCarDerby(omObjData* obj) {
+    SCDObj* rec;
+    SCDObj* o;
+    s32 digit;
+    s32 colon;
+    void* data;
+    s32* px;
+    s32 t;
+    s32 i;
+    s32 sprite;
+
+    obj->func_ptr = func_800FD2C4_SlotCarDerby;
+    rec = &D_80102468_SlotCarDerby[1];
+    func_800FDD08_SlotCarDerby(obj, rec);
+    t = func_800594FC(D_80100EAE_SlotCarDerby + 1);
+    D_80100EB4_SlotCarDerby = t;
+    D_80100F34_SlotCarDerby[4] = (t % 3) * 3;
+    t /= 3;
+    D_80100F34_SlotCarDerby[3] = t % 10;
+    t /= 10;
+    D_80100F34_SlotCarDerby[2] = t % 10;
+    t /= 10;
+    D_80100F34_SlotCarDerby[1] = t % 6;
+    t /= 6;
+    if (t >= 9) {
+        D_80100F34_SlotCarDerby[0] = 9;
+    } else {
+        D_80100F34_SlotCarDerby[0] = t;
+    }
+    D_80102474_SlotCarDerby = func_80064EF4(7, 5);
+    data = DataRead(0x87);
+    digit = func_800678A4(data);
+    DataClose(data);
+    D_80102478_SlotCarDerby = func_80064EF4(7, 5);
+    data = DataRead(0x87);
+    colon = func_800678A4(data);
+    DataClose(data);
+    func_800FCCA0_SlotCarDerby(colon, 0, 256, 0);
+    func_80066DC4(D_8010247A_SlotCarDerby, 0, 230, 28);
+    func_80067208(D_8010247A_SlotCarDerby, 0, colon, 0);
+    func_800672B0(D_8010247A_SlotCarDerby, 0, 0);
+    func_800671DC(D_8010247A_SlotCarDerby, 0, (s16)D_80100F34_SlotCarDerby[0]);
+    func_800674BC(D_8010247A_SlotCarDerby, 0, 0x1000);
+    func_80066DC4(D_80102476_SlotCarDerby, 0, 230, 44);
+    func_80067208(D_80102476_SlotCarDerby, 0, digit, 0);
+    func_800672B0(D_80102476_SlotCarDerby, 0, 0);
+    func_800674BC(D_80102476_SlotCarDerby, 0, 0x1000);
+    for (i = 1; i < 7; i++) {
+        func_80067208(D_80102476_SlotCarDerby, i, digit, 0);
+        func_800672B0(D_80102476_SlotCarDerby, i, 0);
+        px = &D_80100F18_SlotCarDerby[i];
+        func_80066DC4(D_80102476_SlotCarDerby, i, (s16)*px, 0);
+        func_80067598(D_80102476_SlotCarDerby, i, 0);
+        func_800674BC(D_80102476_SlotCarDerby, i, 0x1000);
+        func_80067208(D_8010247A_SlotCarDerby, i, colon, 0);
+        func_80066DC4(D_8010247A_SlotCarDerby, i, (s16)*px, 0);
+        func_80067598(D_8010247A_SlotCarDerby, i, 0);
+        func_800671DC(D_8010247A_SlotCarDerby, i, (s16)D_80100F34_SlotCarDerby[i]);
+        func_800672B0(D_8010247A_SlotCarDerby, i, 0);
+        func_800674BC(D_8010247A_SlotCarDerby, i, 0x1000);
+    }
+    func_800671DC(D_80102476_SlotCarDerby, 5, (s16)D_80100F34_SlotCarDerby[5]);
+    func_800671DC(D_80102476_SlotCarDerby, 6, (s16)D_80100F34_SlotCarDerby[6]);
+    data = DataRead(0x390014);
+    digit = func_800678A4(data);
+    DataClose(data);
+    D_8010246C_SlotCarDerby = HuMemDirectMalloc(8 * sizeof(SCDObj));
+    for (i = 0; i < 5; i++) {
+        o = &D_8010246C_SlotCarDerby[i];
+        SCD_OBJ_CLEAR(o);
+        o->unk_10.x = (D_80100ED8_SlotCarDerby[i] + 10.0) * 10.0;
+        o->unk_10.y = 1470.0f;
+        o->unk_10.z = D_80100EF0_SlotCarDerby[D_80100EAC_SlotCarDerby] * 10.0;
+        o->unk_40[0] = func_800FE2F0_SlotCarDerby(digit, 0x91);
+        func_800FF5BC_SlotCarDerby(o->unk_40[0], o->unk_10.x, o->unk_10.y, o->unk_10.z);
+        func_800FF65C_SlotCarDerby(o->unk_40[0], -47.0f, 0.0f, 0.0f);
+        func_800FF60C_SlotCarDerby(o->unk_40[0], 10.0f, 10.0f, 1.0f);
+        func_800FF53C_SlotCarDerby(o->unk_40[0], 0);
+    }
+    for (i = 0; i < 2; i++) {
+        data = DataRead(D_80100F50_SlotCarDerby[i] | 0x390000);
+        sprite = func_800678A4(data);
+        DataClose(data);
+        o = &D_8010246C_SlotCarDerby[i + 6];
+        SCD_OBJ_CLEAR(o);
+        o->unk_10.x = (D_80100EF8_SlotCarDerby[i] + 10.0) * 10.0;
+        o->unk_10.y = 1480.0f;
+        o->unk_10.z = (D_80100EF0_SlotCarDerby[D_80100EAC_SlotCarDerby] + 1.5) * 10.0;
+        o->unk_40[0] = func_800FE2F0_SlotCarDerby(sprite, 0x91);
+        func_800FF5BC_SlotCarDerby(o->unk_40[0], o->unk_10.x, o->unk_10.y, o->unk_10.z);
+        func_800FF65C_SlotCarDerby(o->unk_40[0], -43.2f, 0.0f, 0.0f);
+        func_800FF738_SlotCarDerby(o->unk_40[0], 0, 0, 0, 254);
+        func_800FF60C_SlotCarDerby(o->unk_40[0], 10.0f, 10.0f, 1.0f);
+        func_800FF53C_SlotCarDerby(o->unk_40[0], 0);
+    }
+    data = DataRead(0x390015);
+    sprite = func_800678A4(data);
+    DataClose(data);
+    rec->unk_40[0] = func_800FE2F0_SlotCarDerby(sprite, 0x91);
+    rec->unk_40[1] = func_800FE2F0_SlotCarDerby(sprite, 0x91);
+    obj->trans.x = obj->trans.y = obj->trans.z = 0.0f;
+    rec->unk_10.x = D_80100F00_SlotCarDerby[D_80100EAC_SlotCarDerby].x * 10.0;
+    rec->unk_10.y = D_80100F00_SlotCarDerby[D_80100EAC_SlotCarDerby].y * 10.0;
+    rec->unk_10.z = D_80100F00_SlotCarDerby[D_80100EAC_SlotCarDerby].z * 10.0;
+    func_800FF5BC_SlotCarDerby(rec->unk_40[0], rec->unk_10.x + 72.1, rec->unk_10.y, rec->unk_10.z);
+    func_800FF5BC_SlotCarDerby(rec->unk_40[1], rec->unk_10.x - 72.1, rec->unk_10.y, rec->unk_10.z);
+    func_800FF60C_SlotCarDerby(rec->unk_40[0], 11.25f, 14.5f, 1.0f);
+    func_800FF60C_SlotCarDerby(rec->unk_40[1], 11.25f, 14.5f, 1.0f);
+    func_800FF65C_SlotCarDerby(rec->unk_40[0], 0.0f, 45.0f, 0.0f);
+    func_800FF65C_SlotCarDerby(rec->unk_40[1], 0.0f, -45.0f, 0.0f);
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800FC394_SlotCarDerby);
-
+#endif
 // register allocation and multiply order (masked 12)
 #ifdef NON_MATCHING
 /* Scales a sprite palette's RGBA5551 colours by r/g/b (/256), keeping alpha. */
