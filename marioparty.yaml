@@ -2540,7 +2540,7 @@ segments:
     bss_size: 0x4C0
     subsegments:
       - [0x308A50, c]
-      - [0x30C440, data, 308A50]
+      - [0x30C440, .data, 308A50]
       - [0x30C510, .rodata, 308A50]
       - {0x30C540, type: bss, vram: 0x800FA0D0, name: ovl_7C_bss}
   - type: code

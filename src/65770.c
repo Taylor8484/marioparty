@@ -39,20 +39,11 @@ typedef struct unk65770ObjInit {
     /* 0x26 */ s16 unk26;
 } unk65770ObjInit;
 
-typedef struct unk65770Grp {
-    /* 0x00 */ struct unk65770Grp* prev;
-    /* 0x04 */ struct unk65770Grp* next;
-    /* 0x08 */ u16 unk8;
-    /* 0x0A */ u16 count;
-    /* 0x0C */ unk65770Obj* obj[1];
-} unk65770Grp;
-
 typedef struct unk65770Bucket {
     /* 0x00 */ unk65770Obj* head;
     /* 0x04 */ unk65770Obj* tail;
 } unk65770Bucket;
 
-extern unk65770Grp* D_800EE330[256];
 extern unk65770Grp* D_800ECB04;
 extern unk65770Grp* D_800ED0C0;
 extern u16 D_800F502E;

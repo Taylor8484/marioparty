@@ -90,6 +90,16 @@ typedef struct unk65770Anim {
     /* 0x1A */ u8 unk1A;
 } unk65770Anim; // sizeof 0x1C
 
+typedef struct unk65770Grp {
+    /* 0x00 */ struct unk65770Grp* prev;
+    /* 0x04 */ struct unk65770Grp* next;
+    /* 0x08 */ u16 unk8;
+    /* 0x0A */ u16 count;
+    /* 0x0C */ unk65770Obj* obj[1];
+} unk65770Grp;
+
+extern unk65770Grp* D_800EE330[256];
+
 unk65770Obj* func_800675F4(s16 grpIdx, s16 idx);
 
 #endif
