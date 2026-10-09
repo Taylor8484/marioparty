@@ -82,8 +82,61 @@ void func_800FC88C_BombsAway(void) {
     Center.z = 1.0f;
     CZoom = 2.5f;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FC8F8_BombsAway);
+void func_800FC8F8_BombsAway(omObjData* obj) {
+    u16 model = obj->model[0];
 
+    if (D_800FFAC0_BombsAway == 0) {
+        D_80100790_BombsAway.unk_00.z += 25.0;
+        D_80100790_BombsAway.unk_00.x -= 5.0;
+        D_800FFAC2_BombsAway++;
+        if (D_800FFAC2_BombsAway == 5) {
+            func_800FE948_BombsAway(1500.0f, 500.0f, 1.0f, 0);
+        }
+        if (D_800FFAC2_BombsAway == 14) {
+            func_800FE948_BombsAway(1500.0f, 500.0f, 1.0f, 0);
+        }
+        D_800FFAC4_BombsAway = 0x93;
+        if (D_80100790_BombsAway.unk_00.z > 50.0) {
+            D_80100790_BombsAway.unk_00.x = 500.0f;
+            D_80100790_BombsAway.unk_00.z = -2250.0f;
+            D_80100790_BombsAway.unk_0C.y = 0.0f;
+            func_800FC818_BombsAway();
+            CZoom = 1000.0f;
+            func_800258EC(model, 4, 0);
+            func_800258EC(model, 4, 0);
+            D_800FFAC4_BombsAway = 0x3A;
+            D_800FFAC0_BombsAway++;
+            D_800FFAC2_BombsAway = 0;
+        }
+    } else if (D_800FFAC0_BombsAway == 1) {
+        if (D_800FFAC2_BombsAway == 18) {
+            func_800FD4B8_BombsAway(D_800FFAC8_BombsAway.x, D_800FFAC8_BombsAway.y, D_800FFAC8_BombsAway.z, 1.0f);
+            func_800FC530_BombsAway(PlaySound(0x2B9), &D_800FFAC8_BombsAway);
+        }
+        if (D_800FFAC2_BombsAway == 27) {
+            func_800FD4B8_BombsAway(D_800FFAD4_BombsAway.x, D_800FFAD4_BombsAway.y, D_800FFAD4_BombsAway.z, 1.0f);
+            func_800FC530_BombsAway(PlaySound(0x2B9), &D_800FFAD4_BombsAway);
+        }
+        D_800FFAC2_BombsAway++;
+        if (D_80100790_BombsAway.unk_28 > 0.0f) {
+            D_80100790_BombsAway.unk_28 -= 8.0;
+        }
+        D_800FFAC4_BombsAway = (CZoom - 1000.0) / 378.0 * 9.0 / 1.5 + 58.0;
+        if (CZoom < 1378.0) {
+            CZoom += 12.5;
+        } else if (CZoom > 1378.0) {
+            D_800FFAC0_BombsAway++;
+        }
+    } else if (D_800FFAC0_BombsAway == 2) {
+        if (D_80100790_BombsAway.unk_28 > 0.0f) {
+            D_80100790_BombsAway.unk_28 -= 15.0;
+        } else if (D_80100790_BombsAway.unk_28 <= 0.0f) {
+            D_800FFAC0_BombsAway++;
+        }
+        D_800FFAC4_BombsAway = 0x40;
+    }
+    func_80066DC4(D_80100B50_BombsAway, 0, 0xA0, D_800FFAC4_BombsAway);
+}
 // operand order of the offset's or/addu (masked 2; GCC canonicalises pointer + int)
 #ifdef NON_MATCHING
 void func_800FCD04_BombsAway(void) {
