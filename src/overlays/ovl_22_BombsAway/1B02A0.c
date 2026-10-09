@@ -22,8 +22,34 @@ f32 D_800FFB28_BombsAway = 0.0f;
 s32 D_800FFB2C_BombsAway = 0x19971204;
 u16 D_800FFB30_BombsAway[8] = { 0, 180 };
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FC5E0_BombsAway);
+void func_800FC5E0_BombsAway(void) {
+    void* file;
+    s16 image;
 
+    func_800FDCA0_BombsAway();
+    func_800234B8(0, 0x64, 0x64, 0x64);
+    func_800234B8(1, 0xFF, 0xFF, 0xFF);
+    func_80023504(1, 0.0f, 1000.0f, 5000.0f);
+    func_8001D494(0, 45.0f, 80.0f, 6000.0f);
+    omAddObj(0x13, 0, 0, -1, func_800FC7B0_BombsAway);
+    omAddObj(0xC, 2, 0, -1, func_800FE254_BombsAway);
+    omSetStatBit(omAddObj(0xC, 1, 0, -1, func_800FDB0C_BombsAway), 0xA0);
+    func_800FD530_BombsAway();
+    func_800FED18_BombsAway();
+    func_800FCD04_BombsAway();
+    func_800FC88C_BombsAway();
+    file = DataRead(0x350013);
+    image = func_800678A4(file);
+    DataClose(file);
+    D_80100B50_BombsAway = func_80064EF4(1, 0);
+    func_80067208(D_80100B50_BombsAway, 0, image, 0);
+    func_800674BC(D_80100B50_BombsAway, 0, 0x4000);
+    func_80066DC4(D_80100B50_BombsAway, 0, 0xA0, 0x78);
+    func_80067354(D_80100B50_BombsAway, 0, 2.0f, 2.2f);
+    func_800674BC(D_80100B50_BombsAway, 0, 0x503C);
+    D_80100780_BombsAway = 1;
+    D_80100B6A_BombsAway = 0;
+}
 void func_800FC7B0_BombsAway(omObjData* obj) {
     obj->func_ptr = func_800FC7C0_BombsAway;
 }
@@ -192,8 +218,38 @@ u16 func_800FE1EC_BombsAway(u32 n) {
     }
     return (u32)D_800FFB2C_BombsAway % n;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FE254_BombsAway);
+void func_800FE254_BombsAway(omObjData* obj) {
+    char names[4][8] = { "taihou1", "taihou2", "taihou3", "taihou4" };
+    BaBomb* p;
+    u16 i;
+    s16 model;
+    s16 m2;
 
+    obj->func_ptr = func_800FE4A4_BombsAway;
+    obj->model[0] = model = LoadFormFile(0x350002, 0x99);
+    obj->model[1] = m2 = func_800174C0(0x350004, 0x99);
+    obj->trans.x = obj->trans.z = 0.0f;
+    obj->trans.y = -30.0f;
+    obj->scale.x = obj->scale.y = obj->scale.z = 1.0f;
+    func_80025830(m2, obj->scale.x, obj->scale.y, obj->scale.z);
+    D_80100790_BombsAway.unk_00.x = 150.0f;
+    D_80100790_BombsAway.unk_00.y = -50.0f;
+    D_80100790_BombsAway.unk_00.z = -2250.0f;
+    D_80100790_BombsAway.unk_18 = -3.5f;
+    D_80100790_BombsAway.unk_0C.x = 0.0f;
+    D_80100790_BombsAway.unk_0C.y = 50.0f;
+    D_80100790_BombsAway.unk_0C.z = 0.0f;
+    for (p = D_801007E0_BombsAway, i = 0; i < 4; i++, p++) {
+        p->unk_20 = func_800FBE34_BombsAway(model, names[i]);
+        p->unk_08 = (Vec*)&p->unk_20->unk_44;
+        p->unk_0C = (Vec*)&p->unk_20->unk_50;
+        p->unk_00 = 3;
+        p->unk_08->x = 0.0f;
+        p->unk_0C->x = p->unk_0C->y = p->unk_0C->z = 1.0f;
+    }
+    D_800FFAC0_BombsAway = 0;
+    D_800FFAC2_BombsAway = 0;
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FE4A4_BombsAway);
 
 s32 func_800FE948_BombsAway(f32 x, f32 z, f32 y, u16 kind) {
