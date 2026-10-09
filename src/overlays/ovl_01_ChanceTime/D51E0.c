@@ -1,5 +1,22 @@
 #include "ChanceTime.h"
 
+void func_8005049C(void);
+void func_80055A40(s32);
+void func_8007B168(u8*, u8);
+extern s16 D_800EE984;
+extern omObjData* D_800F2AF8[];
+extern s8 omSysPauseEnableFlag;
+/* Retail calls func_80055A40 unprototyped with two arguments (-1, -1); the host calls it normally. */
+#ifdef TARGET_PC
+#define func_80055A40_unproto(a, b) func_80055A40(a)
+#else
+#define func_80055A40_unproto(a, b) ((void (*)())func_80055A40)(a, b)
+#endif
+
+
+u16 func_8004F234(void);
+
+
 void func_800090C4(omObjData* obj, u8 idx, u8 val);
 void func_800093FC(omObjData* obj, f32 x, f32 y, f32 z);
 extern f32 D_800B8964;
@@ -57,11 +74,94 @@ s32 D_801012A4_ChanceTime = 0;
 s32 D_801012A8_ChanceTime = 0;
 u32 D_801012AC_ChanceTime = 0;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", func_800F65E0_ChanceTime);
+void func_800F65E0_ChanceTime(void) {
+    s16 i;
+    s16 n;
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", D_80101380_ChanceTime);
+    for (i = 0; i < 4; i++) {
+        if (GwPlayer[i].group == 0) {
+            break;
+        }
+    }
+    switch (i) {
+    case 1:
+        D_80101AAE_ChanceTime[0] = 1;
+        break;
+    case 2:
+        D_80101AAE_ChanceTime[0] = 2;
+        break;
+    case 3:
+        D_80101AAE_ChanceTime[0] = 3;
+        break;
+    case 0:
+    default:
+        D_80101AAE_ChanceTime[0] = 0;
+        break;
+    }
+    for (i = 1, n = 0; i < 4; i++, n++) {
+        if (D_80101AAE_ChanceTime[0] == n) {
+            n++;
+        }
+        D_80101AAE_ChanceTime[i] = n;
+    }
+    func_80029090(0xA);
+    func_8002ADF0(&D_800EDEC0, 0x40);
+    func_8001DE70(0x3C);
+    omInitObjMan(0x28, 0x3C);
+    func_8006CEA0();
+    func_80060088();
+    func_80055A40_unproto(-1, -1);
+    func_800178A0(1);
+    func_800234B8(1, 0x40, 0x40, 0x60);
+    func_80023504(1, -72.0f, 16.0f, 94.0f);
+    omSysPauseEnableFlag = 1;
+    D_801011F0_ChanceTime = _CheckFlag(0x45);
+    func_80017660(0, 0.0f, 0.0f, 319.0f, 239.0f);
+    func_800176C4(0, 640.0f, 480.0f, 511.0f, 640.0f, 480.0f, 511.0f);
+    func_8001D494(0, 20.0f, 80.0f, 8000.0f);
+    LoadBackgroundData(D_FE2310);
+    func_8005049C();
+    func_8000942C();
+    func_80009468();
+    func_80009500();
+    func_80009618(1);
+    /* "ＣＨＡＮＣＥＴＩＭＥ" / "ＣＨＡＮＣＥＴＩＭＥ？" */
+    func_8007B168(D_801011F0_ChanceTime == 0
+                      ? (u8*)"\x82\x62\x82\x67\x82\x60\x82\x6D\x82\x62\x82\x64\x82\x73\x82\x68\x82\x6C\x82\x64"
+                      : (u8*)"\x82\x62\x82\x67\x82\x60\x82\x6D\x82\x62\x82\x64\x82\x73\x82\x68\x82\x6C\x82\x64\x81\x48",
+                  1);
+    D_800EE984 = 0;
+    D_800F2BC0 = 0;
+    D_800ED440 = 0;
+    if (D_801011F0_ChanceTime == 0) {
+        omAddObj(1, 0xA, 5, -1, &func_800F99D8_ChanceTime);
+    } else {
+        omAddObj(1, 0xA, 0xA, -1, &func_800FC1C8_ChanceTime);
+    }
+    func_800090B8(D_800ED440);
+    D_800F2AF8[D_800ED440++] = omAddObj(1, 0, 0, -1, &func_800FF780_ChanceTime);
+    D_800F2AF8[D_800ED440++] = omAddObj(0xC, 0, 0, -1, &func_800FF8A4_ChanceTime);
+    func_800FC390_ChanceTime();
+    D_80101840_ChanceTime[0] = omAddObj(0xC, 2, 0, -1, &func_800FCC18_ChanceTime);
+    D_80101840_ChanceTime[1] = omAddObj(0xC, 2, 0, -1, &func_800FD7DC_ChanceTime);
+    if (D_801011F0_ChanceTime == 0) {
+#ifdef TARGET_PC
+        D_80101848_ChanceTime = omAddObj(0xC, 2, 0, -1, &func_800FE554_ChanceTime);
+#else
+        /* retail: D_80101848 through the D_80101840 base (s0 + 8) */
+        D_80101840_ChanceTime[2] = omAddObj(0xC, 2, 0, -1, &func_800FE554_ChanceTime);
+#endif
+    } else {
+        D_80101848_ChanceTime = omAddObj(0xC, 2, 0, -1, &func_800FE9D8_ChanceTime);
+    }
+    omAddObj(5, 4, 0, -1, &func_800FF930_ChanceTime);
+    omAddObj(0, 0, 0, -1, &func_800F6B00_ChanceTime);
+    D_80101AD8_ChanceTime = omAddObj(5, 0x32, 0, -1, &func_800FB950_ChanceTime);
+    omAddObj(0, 0, 0, -1, &func_800FEBA0_ChanceTime);
+    D_800F3FB0[D_800F2BC0++] = omAddObj(0xA, 9, 0x2B, -1, &func_800F7818_ChanceTime);
+    SetFadeInTypeAndTime(D_801011F0_ChanceTime == 0 ? 5 : 3, 0x10);
+}
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", D_80101398_ChanceTime);
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", D_801013B0_ChanceTime);
 
@@ -559,8 +659,52 @@ s8 func_800FAE60_ChanceTime(omObjData* obj) {
 }
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", func_800FB00C_ChanceTime);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", func_800FB950_ChanceTime);
+void func_800FB950_ChanceTime(omObjData* obj) {
+    s16 i;
+    s16 m;
+    s16 base;
+    s16 base2;
+    s16 loaded;
 
+    base = 0;
+    base2 = 0;
+    for (i = 0; i < 20; i++) {
+        D_80101868_ChanceTime[i].unk_00 = -1;
+        D_80101868_ChanceTime[i].unk_04 = 0.0f;
+        D_80101868_ChanceTime[i].unk_08 = 0.0f;
+        D_80101868_ChanceTime[i].unk_0C = 0.0f;
+        D_80101868_ChanceTime[i].unk_10 = 0.0f;
+        D_80101868_ChanceTime[i].unk_14 = 0.0f;
+        D_80101868_ChanceTime[i].unk_18 = 0;
+        D_80101868_ChanceTime[i].unk_19 = 0;
+    }
+    obj->model[0] = -1;
+    loaded = 0;
+    for (i = 1; i < 21; i++) {
+        if (loaded == 0) {
+            m = LoadFormFile(0x1F0001, 0x6B9);
+            base = m;
+            loaded = 1;
+        } else {
+            m = func_80023FC8(base);
+        }
+        obj->model[i] = m;
+        func_80025830(obj->model[i], 0.135f, 0.135f, 0.135f);
+        func_800258EC(obj->model[i], 4, 4);
+    }
+    /* retail never sets loaded here: every coin model is a new func_8004F234 */
+    loaded = 0;
+    for (i = 21; i < 41; i++) {
+        if (loaded == 0) {
+            obj->model[i] = base2 = func_8004F234();
+        } else {
+            obj->model[i] = func_80023FC8(base2);
+        }
+        func_80025830(obj->model[i], 0.5f, 0.5f, 0.5f);
+        func_800258EC(obj->model[i], 4, 4);
+    }
+    obj->func_ptr = &func_800FB00C_ChanceTime;
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", func_800FBBC4_ChanceTime);
 
 void func_800FC1C8_ChanceTime(omObjData* obj) {
