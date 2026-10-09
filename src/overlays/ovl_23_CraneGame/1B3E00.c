@@ -1,5 +1,15 @@
 #include "CraneGame.h"
 
+/* .data (0x800FF500..0x800FF560) */
+s16 D_800FF500_CraneGame[4][2] = { { 0x38, 0x26 }, { 0x108, 0x26 }, { 0x38, 0xD8 }, { 0x108, 0xD8 } }; /* score digits */
+s32 D_800FF510_CraneGame[4] = { 0, 0, 0, 0 }; /* shown coin counts */
+s16 D_800FF520_CraneGame = 0;
+s16 D_800FF522_CraneGame = 90;
+s16 D_800FF524_CraneGame[4] = { 6, 9, 12, 0 }; /* grip strength per grab quality */
+s16 D_800FF52C_CraneGame[6] = { 0, 0, 0, 0, 2, 5 }; /* grip bonus per prize */
+f32 D_800FF538_CraneGame[6] = { 0.0f, 20.0f, 40.0f, 20.0f, -50.0f, -100.0f }; /* claw depth per character */
+s32 D_800FF550_CraneGame[4] = { 0x00080008, 0x00060006, 0x00050005, 0 }; /* read as (s16): struggle rate */
+
 void func_800F65E0_CraneGame(void) {
     s16 var_a0;
     u8 temp_s0;

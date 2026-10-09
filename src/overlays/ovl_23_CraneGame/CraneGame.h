@@ -131,6 +131,34 @@ typedef struct CGShadowOrder {
     /* 0x02 */ s16 face;
 } CGShadowOrder;
 
+/* A collision face (func_800FD7B4): plane and corner vertex indices. No pointers. */
+typedef struct CGColFace {
+    /* 0x00 */ f32 nx;
+    /* 0x04 */ f32 ny;
+    /* 0x08 */ f32 nz;
+    /* 0x0C */ f32 d;
+    /* 0x10 */ s16 v[4]; /* v[3] = -1 for a triangle */
+    /* 0x18 */ s16 axis; /* dominant normal axis: 0 x, 1 y, 2 z */
+    /* 0x1A */ char unk_1A[2];
+} CGColFace; /* size = 0x1C */
+
+/* A model group's collision faces (CGCol.groups, func_800FD604). */
+typedef struct CGColGroup {
+    /* 0x00 */ s16 n;
+    /* 0x02 */ s16 radius;
+    /* 0x04 */ Matrix4f mtx; /* world to group space (func_800FD3D0) */
+    /* 0x44 */ CGColFace* faces;
+} CGColGroup; /* size = 0x48 (N64) */
+
+/* A model registered for collision (D_80100750_CraneGame, func_800FD37C). */
+typedef struct CGCol {
+    /* 0x00 */ s16 model;
+    /* 0x02 */ u8 unk2; /* frames before it collides */
+    /* 0x03 */ u8 count; /* groups */
+    /* 0x04 */ CGColGroup* groups;
+    /* 0x08 */ unk2C0C0StructA0* verts;
+} CGCol; /* size = 0xC (N64) */
+
 typedef unk34D80Struct80 Temp3; /* D_800ED554 entries (common_structs.h) */
 
 /* ---------------------------------------------------------------------------------------------
@@ -175,6 +203,9 @@ extern f32 D_800FF538_CraneGame[6];
 extern s32 D_800FF550_CraneGame[4];
 extern Gfx D_800FF870_CraneGame[];
 extern Vtx D_800FF8B0_CraneGame[3];
+extern Vec D_800FF8E0_CraneGame[3];
+extern Vec D_800FF904_CraneGame[3];
+extern f32 D_800FF928_CraneGame[3];
 
 /* ---------------------------------------------------------------------------------------------
    Overlay bss (names from the link map)
@@ -231,6 +262,27 @@ extern CGShadowOrder* D_80100704_CraneGame;
 extern s16 D_80100708_CraneGame[33];
 extern s16 D_8010074A_CraneGame;
 extern s16 D_8010074C_CraneGame;
+extern CGCol D_80100750_CraneGame[64];
+extern s16 D_80100A50_CraneGame;
+extern s16 D_80100A52_CraneGame;
+extern unk2C0C0StructA0* D_80100A54_CraneGame;
+extern f32 D_80100A58_CraneGame;
+extern s16 D_80100A5C_CraneGame;
+extern s16 D_80100A5E_CraneGame;
+extern s16 D_80100A60_CraneGame;
+extern s16 D_80100A62_CraneGame;
+extern s16 D_80100A64_CraneGame;
+extern s16 D_80100A66_CraneGame;
+extern s16 D_80100A68_CraneGame;
+extern f32 D_80100A6C_CraneGame[3];
+extern f32 D_80100A78_CraneGame[3];
+extern f32 D_80100A84_CraneGame;
+extern f32 D_80100A88_CraneGame[3];
+extern f32 D_80100A94_CraneGame[3];
+extern f32 D_80100AA0_CraneGame[3];
+extern f32 D_80100AAC_CraneGame;
+extern f32 D_80100AB0_CraneGame[3];
+extern f32 D_80100AC0_CraneGame[16][4];
 extern CGClaw* D_80100BC0_CraneGame[256];
 extern s16 D_80100FC0_CraneGame;
 extern omObjData* D_80100FD0_CraneGame;
@@ -294,12 +346,22 @@ Gfx* func_800FCF78_CraneGame(Gfx*, Mtx*);
 void func_800FD240_CraneGame(void);
 void func_800FD278_CraneGame(void);
 void func_800FD37C_CraneGame(s16);
-s32 func_800FDC94_CraneGame(Vec*, f32, f32, f32, s32);
+void func_800FD3D0_CraneGame(Gfx**, Mtx*, camera*);
+void func_800FD604_CraneGame(CGCol*, s16);
+void func_800FD7B4_CraneGame(unk2C0C0StructA0*, CGColFace*, unk2C0C0Struct20*, s16);
+void func_800FDBF8_CraneGame(Matrix4f, f32, f32, f32, Vec*);
+s32 func_800FDC94_CraneGame(Vec*, f32, f32, f32, s16);
+s32 func_800FDF54_CraneGame(Vec*, Vec*, f32);
+void func_800FE0A4_CraneGame(CGColFace*, s16, Vec*, Vec*);
+f32 func_800FE518_CraneGame(f32, f32);
+void func_800FE598_CraneGame(Vec*, Vec*);
 void func_800FE620_CraneGame(void);
 void func_800FE658_CraneGame(void);
-void func_800FE7AC_CraneGame(s32);
-void func_800FE7B8_CraneGame(s32, s32);
-void func_800FE80C_CraneGame(f32, f32, f32, s32);
+void func_800FE7A0_CraneGame(void);
+void func_800FE7AC_CraneGame(s16);
+void func_800FE7B8_CraneGame(s16, s16);
+void func_800FE80C_CraneGame(f32, f32, f32, f32);
+void func_800FE874_CraneGame(void);
 void func_800FEB08_CraneGame(void);
 
 #endif
