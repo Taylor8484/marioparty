@@ -446,8 +446,67 @@ void func_800FED18_BombsAway(void) {
     }
     D_80100784_BombsAway = 0xFF;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FEE2C_BombsAway);
+// retail keeps 0.0f in f22 across the loop and keeps the dead (z + 2250) / 150 (masked ~20)
+#ifdef NON_MATCHING
+void func_800FEE2C_BombsAway(void) {
+    BaShell* s;
+    f32 f;
+    s32 hit;
+    u16 i;
 
+    for (i = 0; i < 6; i++) {
+        s = &D_80100870_BombsAway[i];
+        if ((u16)s->unk_00 != 0) {
+            if (s->unk_04 > 2500.0) {
+                func_800FECA8_BombsAway(i, 0);
+                func_800258EC(D_80100B52_BombsAway[i], 4, 4);
+                func_800258EC(D_80100B5E_BombsAway[i], 4, 4);
+                continue;
+            }
+            if (s->unk_02 == 0 && s->unk_14 <= 0.0f) {
+                func_800FECA8_BombsAway(i, 0);
+                func_800258EC(D_80100B52_BombsAway[i], 4, 4);
+                func_800258EC(D_80100B5E_BombsAway[i], 4, 4);
+                continue;
+            }
+            hit = func_800FAB74_BombsAway((Vec*)&s->unk_04, (Vec*)&s->unk_10, (Vec*)&s->unk_04);
+            if (hit != 0) {
+                f = (s->unk_0C + 2250.0) / 150.0; /* retail computes this and never uses it */
+                if (hit > 0) {
+                    PlaySound(0x2BA);
+                    func_800FADF4_BombsAway(s->unk_04, s->unk_0C, 1.0f);
+                    func_80021EC0(2, s->unk_04, s->unk_08, s->unk_0C);
+                    func_800F7850_BombsAway(8, s->unk_04, s->unk_08, s->unk_0C, 90.0f);
+                } else {
+                    func_800FC530_BombsAway(PlaySound(0x2B9), (Vec*)&s->unk_04);
+                    func_800FADF4_BombsAway(s->unk_04, s->unk_0C, -1.0f);
+                    func_800FD4B8_BombsAway(s->unk_04, 0.0f, s->unk_0C, 1.0f);
+                }
+                func_800FECA8_BombsAway(i, 0);
+                func_800258EC(D_80100B52_BombsAway[i], 4, 4);
+                func_800258EC(D_80100B5E_BombsAway[i], 4, 4);
+            } else {
+                s->unk_04 += s->unk_10;
+                s->unk_08 += s->unk_14;
+                s->unk_0C += s->unk_18;
+                func_800F7850_BombsAway(1, s->unk_04, s->unk_08, s->unk_0C, 50.0f);
+                if (s->unk_0C <= -750.0) {
+                    s->unk_2C = -(750.0 / s->unk_0C);
+                }
+                s->unk_18 -= s->unk_28 * 0.1 * s->unk_28;
+                s->unk_14 -= s->unk_28 * 10.0;
+            }
+        }
+        f = s->unk_2C * 1.1 * 0.2 * 5.0;
+        func_80025830(D_80100B52_BombsAway[i], f, f, f);
+        func_80025830(D_80100B5E_BombsAway[i], f, f, f);
+        func_80025798(D_80100B52_BombsAway[i], s->unk_04, s->unk_08, s->unk_0C);
+        func_80025798(D_80100B5E_BombsAway[i], s->unk_04, 100.0f, s->unk_0C);
+    }
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FEE2C_BombsAway);
+#endif
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FF218_BombsAway);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FF674_BombsAway);

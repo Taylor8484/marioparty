@@ -160,7 +160,7 @@ void func_800FC478_BombsAway(Vec* pos, Vec* out) {
     out->y = -v[1] / d;
     out->z = 400.0 / d;
 }
-void func_800FC530_BombsAway(s32 sound, Vec* pos) {
+void func_800FC530_BombsAway(s16 sound, Vec* pos) {
     Vec o;
     f32 pan;
 

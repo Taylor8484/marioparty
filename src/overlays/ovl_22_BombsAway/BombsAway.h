@@ -445,7 +445,7 @@ void func_800FC16C_BombsAway(Vec*, Vec*);
 void func_800FC1F4_BombsAway(Matrix4f, Vec*);
 void func_800FC39C_BombsAway(s16);
 void func_800FC478_BombsAway(Vec*, Vec*);
-void func_800FC530_BombsAway(s32, Vec*);
+void func_800FC530_BombsAway(s16, Vec*);
 
 /* 1B02A0.c */
 void func_800FC5E0_BombsAway(void);
