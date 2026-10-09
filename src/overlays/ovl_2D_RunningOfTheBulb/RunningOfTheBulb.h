@@ -360,7 +360,7 @@ void func_800F9094_RunningOfTheBulb(omObjData*);
 void func_800F947C_RunningOfTheBulb(omObjData*, f32);
 void func_800F9550_RunningOfTheBulb(omObjData*);
 void func_800F960C_RunningOfTheBulb(omObjData*);
-void func_800F9648_RunningOfTheBulb(void);
+void func_800F9648_RunningOfTheBulb(omObjData*);
 u16 func_800F9650_RunningOfTheBulb(void);
 void func_800F9724_RunningOfTheBulb(omObjData*);
 void func_800F98F0_RunningOfTheBulb(omObjData*);
