@@ -663,8 +663,13 @@ segments:
       - [0xDD760, c]
       - [0xDE2D0, c]
       - [0xDE6A0, c]
-      - [0xDFDF0, data, D51E0] #801011F0
+      - [0xDFDF0, .data, D51E0] #801011F0
+      - [0xDFEB0, .data, DAF90] #801012B0
+      - [0xDFF20, .data, DD760] #80101320
+      - [0xDFF60, .data, DE2D0] #80101360
+      - [0xDFF70, .data, DE6A0] #80101370
       - [0xDFF80, .rodata, D51E0]
+      - [0xE01D0, .rodata, DAF90] #801015D0
       - [0xE0230, .rodata, DD760]
       - [0xE02B0, .rodata, DE6A0]
       - { start: 0xE02F0, type: bss, vram: 0x801016F0, name: ovl_01_bss }

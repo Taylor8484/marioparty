@@ -317,3 +317,18 @@ D_800F89D4_MushroomBank = D_800F89C0_MushroomBank + 0x14;
 D_800F89D8_MushroomBank = D_800F89C0_MushroomBank + 0x18;
 D_800F89DC_MushroomBank = D_800F89C0_MushroomBank + 0x1C;
 D_800FE368_RunningOfTheBulb = D_800FE364_RunningOfTheBulb + 0x4;
+
+/* ovl_01 ChanceTime: labels inside its C .data objects that its INCLUDE_ASM functions use */
+D_80101265_ChanceTime = D_80101264_ChanceTime + 0x1;
+D_80101299_ChanceTime = D_80101298_ChanceTime + 0x1;
+D_801012B2_ChanceTime = D_801012B0_ChanceTime + 0x2;
+D_801012B4_ChanceTime = D_801012B0_ChanceTime + 0x4;
+D_801012BA_ChanceTime = D_801012B8_ChanceTime + 0x2;
+D_801012BC_ChanceTime = D_801012B8_ChanceTime + 0x4;
+D_801012C1_ChanceTime = D_801012C0_ChanceTime + 0x1;
+D_801012C2_ChanceTime = D_801012C0_ChanceTime + 0x2;
+D_801012C6_ChanceTime = D_801012C4_ChanceTime + 0x2;
+D_801012C8_ChanceTime = D_801012C4_ChanceTime + 0x4;
+D_801012CE_ChanceTime = D_801012CC_ChanceTime + 0x2;
+D_801012D0_ChanceTime = D_801012CC_ChanceTime + 0x4;
+D_80101326_ChanceTime = D_80101324_ChanceTime + 0x2;
