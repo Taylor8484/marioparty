@@ -3526,6 +3526,11 @@ void func_80011164(s16 idx) {
     unkB980Struct1* seq;
     s16 n;
 
+#ifdef TARGET_PC
+    if (idx < 0 || idx >= D_800CEA9C) { /* retail passes -1 (a failed play's handle): reads before the array */
+        return;
+    }
+#endif
     voice = &D_800CEA94[idx];
     if (voice->unk_16 < 0) {
         return;
@@ -3626,6 +3631,11 @@ s32 func_800115BC(void) {
 s32 func_800115C8(s16 idx) {
     unkB980Struct2* voice = &D_800CEA94[idx];
 
+#ifdef TARGET_PC
+    if (idx < 0 || idx >= D_800CEA9C) { /* retail passes -1 (a failed play's handle): reads before the array */
+        return 0;
+    }
+#endif
     if ((D_800CEAA4 & 1) && voice->unk_0C != 0) {
         return 0x100;
     }
@@ -3675,6 +3685,11 @@ void func_800117AC(s16 idx) {
     unkB980Struct1* seq;
     s16 n;
 
+#ifdef TARGET_PC
+    if (idx < 0 || idx >= D_800CEA9C) { /* retail passes -1 (a failed play's handle): reads before the array */
+        return;
+    }
+#endif
     if (!(D_800CEAA4 & 0x8000)) {
         return;
     }
@@ -3818,6 +3833,11 @@ void func_80011D48(s16 idx, s16 angle, f32 dist) {
     s8 minVol;
     unkB980Struct2* voice;
 
+#ifdef TARGET_PC
+    if (idx < 0 || idx >= D_800CEA9C) { /* retail passes -1 (a failed play's handle): reads before the array */
+        return;
+    }
+#endif
     st = &D_800CEAC4[idx];
     voice = &D_800CEA94[idx];
     if (voice->unk_0C != 1) {
@@ -3942,6 +3962,11 @@ void func_80012260(s16 arg0, f32 arg1) {
 }
 
 void func_80012394(s16 idx, f32 a, f32 b) {
+#ifdef TARGET_PC
+    if (idx < 0 || idx >= D_800CEA9C) { /* retail passes -1 (a failed play's handle): reads before the array */
+        return;
+    }
+#endif
     D_800CEAC4[idx].unk_00 = a;
     D_800CEAC4[idx].unk_04 = b;
     if (b < 0.0f) {
@@ -3952,6 +3977,11 @@ void func_80012394(s16 idx, f32 a, f32 b) {
 void func_800123DC(s16 arg0, s8 arg1) {
     unkB980Struct2* voice = &D_800CEA94[arg0];
 
+#ifdef TARGET_PC
+    if (arg0 < 0 || arg0 >= D_800CEA9C) { /* retail passes -1 (a failed play's handle): reads before the array */
+        return;
+    }
+#endif
     if (voice->unk_0C != 1) {
         return;
     }
