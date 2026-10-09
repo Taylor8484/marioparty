@@ -203,8 +203,67 @@ void func_800FD7DC_ChanceTime(omObjData* obj) {
 }
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_01_ChanceTime/DAF90", func_800FDDD4_ChanceTime);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_01_ChanceTime/DAF90", func_800FE554_ChanceTime);
+void func_800FE554_ChanceTime(omObjData* obj) {
+    CTObjWork* work;
+    CTReel* r;
+    s8 i;
+    s8 rnd;
+    s8 a;
+    s8 b;
 
+    obj->model[0] = func_80023FC8(D_80101760_ChanceTime);
+    func_800258EC(obj->model[0], 4, 4);
+    obj->model[1] = func_800174F4(0x130001, 0x689);
+    obj->trans.x = 140.0f;
+    obj->trans.y = 230.0f;
+    obj->trans.z = 1400.0f;
+    obj->scale.x = obj->scale.y = obj->scale.z = 1.5f;
+    obj->rot.x = obj->rot.y = obj->rot.z = 0.0f;
+    func_80025798(obj->model[1], obj->trans.x, obj->trans.y, obj->trans.z);
+    func_80025830(obj->model[1], 0.8f, 0.8f, 0.8f);
+    func_800257E4(obj->model[1], 90.0f, 0.0f, 0.0f);
+    work = func_80023684(sizeof(CTObjWork), 0x7918);
+    obj->unk_50 = work;
+    func_8009B770(work, 0, sizeof(CTObjWork));
+    work->unk_04 = 1;
+    work->unk_05 = 3;
+    work->unk_28 = func_80023684(sizeof(CTReel), 0x7918);
+    func_8009B770(work->unk_28, 0, sizeof(CTReel));
+    r = work->unk_28;
+    for (i = 0; i < 4; i++) {
+        s16 spr = func_80038D5C(D_800F2B7C[obj->model[1]].unk_6C, D_80101AB6_ChanceTime, 0,
+                                D_801012E4_ChanceTime[i]);
+        r->unk_02[i] = spr;
+        func_80039644(spr, 1, 1);
+    }
+    i = 0;
+    func_80025AD4(obj->model[1]);
+    func_80025B34(obj->model[1]);
+    r->unk_0A = 2;
+    r->unk_38 = 0.0f;
+    r->unk_00 = 2;
+    do {
+        r->unk_0C[i] = GwPlayer[i].character;
+        i++;
+    } while (i < 4);
+    r->unk_36 = 4;
+    rnd = a = guRandom() % 3;
+    for (i = 0, b = rnd; i < 4; i++) {
+        a &= 3;
+        b &= 3;
+        func_8003967C(r->unk_02[b], (u8)r->unk_0C[a]);
+        b--;
+        a++;
+    }
+    r->unk_0A += rnd;
+    if (r->unk_0A >= r->unk_36) {
+        r->unk_0A -= r->unk_36;
+    }
+    r->unk_00 = (r->unk_00 - rnd) & 3;
+    D_800F2B7C[obj->model[1]].unk_30 += rnd * 90;
+    D_800F2B7C[obj->model[1]].unk_30 = (s32)D_800F2B7C[obj->model[1]].unk_30 % 360;
+    obj->func_ptr = &func_800FDDD4_ChanceTime;
+}
 void func_800FE97C_ChanceTime(omObjData* arg0) {
     if (((func_800FEC4C_ChanceTime(arg0, 80.0f, D_800F3FB0[0])) != 0) && (D_8010131A_ChanceTime == 0)) {
         D_8010131A_ChanceTime = 1;
