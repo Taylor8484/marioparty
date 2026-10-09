@@ -188,10 +188,19 @@ typedef struct TWInput {
 
 extern TWInput D_800EE1D0[32];
 /* splat labels for the fields of D_800EE1D0[0] */
+#ifdef TARGET_PC
+/* Views: separate host objects would not alias the queue (CPU players' window input was lost
+   and ovl_47's prompt waited forever on a CPU turn). */
+#define D_800EE1D2 ((TWInput*)((u8*)D_800EE1D0 + 2))
+#define D_800EE1D4 ((TWInput*)((u8*)D_800EE1D0 + 4))
+#define D_800EE1D6 ((TWInput*)((u8*)D_800EE1D0 + 6))
+#define D_800EE1D8 ((TWInput*)((u8*)D_800EE1D0 + 8))
+#else
 extern TWInput D_800EE1D2[];
 extern TWInput D_800EE1D4[];
 extern TWInput D_800EE1D6[];
 extern TWInput D_800EE1D8[];
+#endif
 extern u8 D_800F64F8;
 extern Process* D_800F2BC4;
 typedef struct FontFile {
