@@ -160,7 +160,8 @@ typedef struct SCDBillboard {
     /* 0x00 */ Gfx* unk_00;    /* display list, (Gfx*)-1 = free */
     /* 0x04 */ Gfx* unk_04[3]; /* per-frame material lists (D_800F37F0 picks one) */
     /* 0x10 */ Vtx* unk_10[3]; /* per-frame vertices (0x80 bytes) */
-    /* 0x1C */ s32 unk_1C;
+    /* 0x1C */ PB_PTR32 unk_1C; /* a pointer: only cleared here; func_800FFD18 reads [2 + frame]
+                                   from it when unk_20 is set, which nothing in the overlay does */
     /* 0x20 */ s8 unk_20;
     /* 0x21 */ char unk_21;
     /* 0x22 */ u16 unk_22; /* sprite (D_800EC700 index) */
@@ -205,8 +206,15 @@ typedef struct SCDPlayerWork {
 void func_80020EA0(s16, char*, s16, char*);
 void func_80021E58(void);
 void func_80021EC0(s16 arg0, f32 arg1, f32 arg2, f32 arg3);
-s16 func_80024198(u32, Gfx*, s32); /* arg1 is a Gfx* slot array here: pass (Gfx*)D_80102490 */
+/* Defined s16 (src/24740.c); retail's caller here uses the whole v0 (a call without the s16
+   prototype), so the N64 build declares it s32 as src/1EA70.c does. */
+#ifdef TARGET_PC
+s16 func_80024198(u32, Gfx*, s32);
+#else
+s32 func_80024198(u32, Gfx*, s32);
+#endif
 unk2C0C0Struct50* func_80026A0C(s16, char*);
+void func_80023A38(void* src, void* dst, s32 size); /* copy (engine/mallocblock.h) */
 void func_800343C8(s16);
 void func_800594E4(s16, u16);
 void func_8006035C(s16, s8);
