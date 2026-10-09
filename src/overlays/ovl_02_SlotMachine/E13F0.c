@@ -168,7 +168,6 @@ void func_800FAE34_SlotMachine(omObjData* obj) {
     SlotWork* w;
     u8 port;
     s32 stat;
-    f32 t;
     f32 s;
     f32 sc;
     s16 r;
