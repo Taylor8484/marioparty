@@ -1396,7 +1396,7 @@ segments:
     subsegments:
       - [0x1FF1E0, c]
       - [0x206C90, c]
-      - [0x206E40, data, 1FF1E0]
+      - [0x206E40, .data, 1FF1E0]
       - [0x206FD0, .rodata, 1FF1E0]
       - {0x207040, type: bss, vram: 0x800FE440, name: ovl_2D_bss}
   - type: code
