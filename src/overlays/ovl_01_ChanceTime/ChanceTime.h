@@ -183,7 +183,7 @@ extern s8 D_801011F6_ChanceTime;    /* 0 coins, 1 stars */
 extern s8 D_801011F7_ChanceTime;
 extern s8 D_801011F8_ChanceTime;
 extern s8 D_801011F9_ChanceTime;
-extern Vec D_801011FC_ChanceTime;   /* unreferenced */
+extern Vec D_801011FC_ChanceTime;   /* read as D_80101208[-1] (func_800FBBC4) */
 extern Vec D_80101208_ChanceTime;
 extern Vec D_80101214_ChanceTime;
 extern Vec D_80101220_ChanceTime;
