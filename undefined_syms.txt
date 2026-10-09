@@ -295,3 +295,5 @@ D_80100F4A_SlotCarDerby = D_80100F34_SlotCarDerby + 0x16;
 D_80100F4E_SlotCarDerby = D_80100F34_SlotCarDerby + 0x1A;
 D_80100F7C_SlotCarDerby = D_80100F70_SlotCarDerby + 0xC;
 D_80100F80_SlotCarDerby = D_80100F70_SlotCarDerby + 0x10;
+/* ovl_25 .bss: D_8010247C (between splat labels D_8010247A and D_8010247E) for the C users */
+D_8010247C_SlotCarDerby = 0x8010247C;

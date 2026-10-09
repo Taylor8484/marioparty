@@ -792,7 +792,7 @@ void func_800FB228_SlotCarDerby(void) {
 // branch layout of the car-count loop and one base register in state 1 (masked ~8)
 #ifdef NON_MATCHING
 void func_800FB2FC_SlotCarDerby(s32 x, s32 y, s32 z) {
-    s16 unused[16];
+    s16 unused[16]; /* retail stores [1] and [9] before func_80060468 and never reads them */
     Vec v;
     SCDCar* car;
     s32 c;
@@ -1291,12 +1291,218 @@ void func_800FCCA0_SlotCarDerby(s16 anim, s32 r, s32 g, s32 b) {
 #else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800FCCA0_SlotCarDerby);
 #endif
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800FCD6C_SlotCarDerby);
+void func_800FCD6C_SlotCarDerby(omObjData* obj) {
+    SCDFx* fx;
+    unk65770Anim* anim;
+    void* data;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800FCF50_SlotCarDerby);
+    obj->func_ptr = func_800FD658_SlotCarDerby;
+    D_80102488_SlotCarDerby = func_80064EF4(32, 0);
+    data = DataRead(0x390017);
+    D_8010247C_SlotCarDerby[2] = func_800678A4(data);
+    DataClose(data);
+    data = DataRead(0x390018);
+    D_8010247C_SlotCarDerby[0] = func_800678A4(data);
+    DataClose(data);
+    data = DataRead(0x390019);
+    D_8010247C_SlotCarDerby[1] = func_800678A4(data);
+    DataClose(data);
+    D_80102470_SlotCarDerby = HuMemDirectMalloc(32 * sizeof(SCDFx));
+    for (i = 0; i < 32; i++) {
+        fx = &D_80102470_SlotCarDerby[i];
+        fx->unk_01 = -1;
+        fx->unk_02 = fx->unk_04 = 0;
+        fx->unk_08.x = fx->unk_08.y = fx->unk_08.z = 0.0f;
+        fx->unk_14.x = fx->unk_14.y = fx->unk_14.z = 0.0f;
+        fx->unk_20 = fx->unk_24 = fx->unk_28 = 1.0f;
+        fx->unk_2C.x = fx->unk_2C.y = fx->unk_2C.z = 0.0f;
+        anim = func_80067310(D_8010247E_SlotCarDerby);
+        anim->unk0->unk8 = 0;
+        anim->unk0->unkA = 27;
+        fx->unk_00 = func_800FE2F0_SlotCarDerby(D_8010247E_SlotCarDerby, 0xB1);
+        func_800674BC(D_8010248A_SlotCarDerby, i, 0x9008);
+        func_800672B0(D_8010248A_SlotCarDerby, i, 0);
+    }
+    func_800FFD18_SlotCarDerby();
+}
+void func_800FCF50_SlotCarDerby(omObjData* obj) {
+    SCDObj* rec = func_800FDD28_SlotCarDerby(obj);
 
+    switch (D_80100EA0_SlotCarDerby) {
+        case 0:
+        case 1:
+        case 5:
+            if (rec->unk_00 == 0) {
+                D_80102460_SlotCarDerby[0] = obj->model[2];
+                D_80102460_SlotCarDerby[1] = obj->model[3];
+                func_800184BC(obj, 1);
+                if (D_80100EBC_SlotCarDerby == 0) {
+                    func_800258EC(obj->model[1], 4, 0);
+                }
+                D_800F2B7C[obj->model[0]].unk_4C = 0.0f;
+                D_800F2B7C[obj->model[1]].unk_4C = 0.0f;
+                rec->unk_02 = 4;
+                rec->unk_40[0] = 0;
+                rec->unk_40[1] = 0;
+                rec->unk_00 = 1;
+            }
+            break;
+        case 2:
+            if (rec->unk_02 & 4) {
+                if (rec->unk_08 != 0) {
+                    if (rec->unk_08 >= 150) {
+                        func_800184BC(obj, 0);
+                        func_800258EC(obj->model[1], 4, 4);
+                        rec->unk_02 = 2;
+                        rec->unk_08 = 0;
+                        rec->unk_00 = 0;
+                        break;
+                    }
+                } else {
+                    D_800F2B7C[obj->model[0]].unk_4C = 1.0f;
+                    D_800F2B7C[obj->model[1]].unk_4C = 1.0f;
+                    rec->unk_40[0] = 0;
+                    rec->unk_40[1] = 0;
+                }
+                if ((func_8005FD5C() + D_800F64F8) == 0 && D_80100EA4_SlotCarDerby == 0) {
+                    rec->unk_08++;
+                }
+            }
+            if (D_80100EA4_SlotCarDerby == 0) {
+                break;
+            }
+        case 3:
+        case 4:
+            if (rec->unk_00 == 0) {
+                rec->unk_02 = 4;
+                func_800184BC(obj, 1);
+                if (D_80100EBC_SlotCarDerby == 0) {
+                    func_800258EC(obj->model[1], 4, 0);
+                }
+                func_80025CA8(obj->model[0], 0.0f);
+                func_80025CA8(obj->model[1], 0.0f);
+                rec->unk_08 = 0;
+                rec->unk_40[0] = 0;
+                rec->unk_40[1] = 0;
+                rec->unk_00 = 1;
+                if (D_80100EB8_SlotCarDerby != 0) {
+                    GMesCreate(12);
+                    func_800594E4(D_80100EAE_SlotCarDerby + 1, D_80100EB2_SlotCarDerby);
+                } else if (D_801024B0_SlotCarDerby == 0) {
+                    GMesCreate(18);
+                }
+            }
+            break;
+        case 6:
+            break;
+    }
+    if ((s16)rec->unk_02 == 4) {
+        func_80026174(obj->model[1], (s16)D_80102460_SlotCarDerby[rec->unk_40[0]],
+                      1.0f - func_800AEAC0(rec->unk_40[1]));
+        if ((func_8005FD5C() + D_800F64F8) == 0) {
+            rec->unk_40[1] += 6;
+        }
+        if (rec->unk_40[1] >= 180) {
+            rec->unk_40[0] ^= 1;
+            rec->unk_40[1] = 0;
+        }
+    }
+    func_80017DB0(obj);
+}
+// addu operand order for one array address (masked 0)
+#ifdef NON_MATCHING
+void func_800FD2C4_SlotCarDerby(omObjData* obj) {
+    SCDObj* rec = func_800FDD28_SlotCarDerby(obj);
+    SCDObj* o;
+    s32* p;
+    s32* digits;
+    s32 i;
+    s32 d;
+
+    switch (D_80100EA0_SlotCarDerby) {
+        case 1:
+            if (++rec->unk_08 >= D_80100F58_SlotCarDerby[rec->unk_00]) {
+                if (rec->unk_00 >= 5) {
+                    rec->unk_00 = 5;
+                    rec->unk_08 = 0;
+                } else {
+                    rec->unk_08 = 0;
+                    rec->unk_00++;
+                    func_800FF53C_SlotCarDerby(rec->unk_40[0], rec->unk_00);
+                    func_800FF53C_SlotCarDerby(rec->unk_40[1], rec->unk_00);
+                }
+            }
+            break;
+        case 2:
+            if (rec->unk_00 == 5) {
+                rec->unk_00 = 0;
+                rec->unk_08 = 0;
+                func_800FF784_SlotCarDerby(rec->unk_40[0]);
+                func_800FF784_SlotCarDerby(rec->unk_40[1]);
+            }
+            if (D_80100EA4_SlotCarDerby == 0) {
+                D_80100EB0_SlotCarDerby++;
+                D_80100F70_SlotCarDerby[4]++;
+            }
+            i = 0;
+            if (D_80100F70_SlotCarDerby[4] >= 3) {
+                D_80100F70_SlotCarDerby[4] = 0;
+                D_80100F70_SlotCarDerby[3]++;
+                D_8010246C_SlotCarDerby[7].unk_00 ^= 1;
+                if (D_80100F70_SlotCarDerby[3] >= 5) {
+                    D_8010246C_SlotCarDerby[6].unk_00 = 1;
+                }
+                i = 0;
+                if (D_80100F70_SlotCarDerby[3] >= 10) {
+                    D_80100F70_SlotCarDerby[3] = 0;
+                    D_80100F70_SlotCarDerby[2]++;
+                    D_8010246C_SlotCarDerby[6].unk_00 = 0;
+                    if (D_80100F70_SlotCarDerby[2] >= 10) {
+                        D_80100F70_SlotCarDerby[2] = 0;
+                        if (++D_80100F70_SlotCarDerby[1] >= 6) {
+                            D_80100F70_SlotCarDerby[1] = 0;
+                            D_80100F70_SlotCarDerby[0]++;
+                        }
+                    }
+                }
+            }
+            digits = D_80100F70_SlotCarDerby;
+            do {
+                o = &D_8010246C_SlotCarDerby[i];
+                if (i == 4) {
+                    d = (u8)(rand8() % 3) + digits[4] * 3;
+                    func_800FF53C_SlotCarDerby(o->unk_40[0], d);
+                    func_800671DC(D_80102476_SlotCarDerby, 4, d);
+                } else {
+                    p = i + digits;
+                    func_800FF53C_SlotCarDerby(o->unk_40[0], (s16)*p);
+                    func_800671DC(D_80102476_SlotCarDerby, i, (s16)*p);
+                }
+            i++;
+            } while (i < 5);
+            func_800FF53C_SlotCarDerby(D_8010246C_SlotCarDerby[6].unk_40[0], D_8010246C_SlotCarDerby[6].unk_00);
+            func_800FF53C_SlotCarDerby(D_8010246C_SlotCarDerby[7].unk_40[0], D_8010246C_SlotCarDerby[7].unk_00);
+            break;
+        case 4:
+        case 5:
+        case 6:
+            break;
+        case 3:
+        case 7:
+            if (D_80100EB0_SlotCarDerby == D_80100EB4_SlotCarDerby) {
+                func_800FF53C_SlotCarDerby(D_8010246C_SlotCarDerby[4].unk_40[0], d = D_80100F70_SlotCarDerby[4] * 3 + 1);
+                func_800671DC(D_80102476_SlotCarDerby, 4, d);
+            } else if (D_80100EB0_SlotCarDerby < D_80100EB4_SlotCarDerby) {
+                func_800FF53C_SlotCarDerby(D_8010246C_SlotCarDerby[4].unk_40[0], d = D_80100F70_SlotCarDerby[4] * 3);
+                func_800671DC(D_80102476_SlotCarDerby, 4, d);
+            }
+            break;
+    }
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800FD2C4_SlotCarDerby);
-
+#endif
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800FD658_SlotCarDerby);
 
 void func_800FD9E8_SlotCarDerby(s32 type, Vec* pos, Vec* rot) {
