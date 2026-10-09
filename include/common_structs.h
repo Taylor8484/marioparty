@@ -554,10 +554,14 @@ typedef struct unkStructTest {
 /* 0x1E */ s16 unk_1C;
 } unkStructTest;
 
+/* A view of 53C80.c's UnkList53 (sprite group list node): the two list pointers are real
+   pointers so that unk_0C lands on UnkList53::data on a 64-bit host too. */
 typedef struct unk_Struct02 {
-    char unk_00[0x0A];
-    s16 unk_0A;
-    s16* unk_0C;
+    /* 0x00 */ void* unk_00;
+    /* 0x04 */ void* unk_04;
+    /* 0x08 */ s16 unk_08;
+    /* 0x0A */ s16 unk_0A;
+    /* 0x0C */ s16* unk_0C;
 } unk_Struct02;
 
 typedef struct unk2C0C0Struct20 {
