@@ -33,12 +33,101 @@ s8 D_800FEDBC_SlotMachine[4][3][2] = {
     { { 0x7F, 0 }, { 0, 0 }, { 0, 0 } },
 };
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E5DA0", func_800FC090_SlotMachine);
+void func_800FC090_SlotMachine(s16 model) {
+    char names[3][8] = { "r1", "r2", "r3" };
+    SlotReel* reel;
+    s32 i;
+    u8 tmp;
+    s32 j;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E5DA0", func_800FC2CC_SlotMachine);
+    D_800FFC8E_SlotMachine = model;
+    D_800FFC94_SlotMachine = D_800FFC96_SlotMachine = -1;
+    D_800FFC90_SlotMachine = 0;
+    D_800FFC92_SlotMachine = 0;
+    for (reel = D_800FFA70_SlotMachine, i = 0; i < 3; reel++, i++) {
+        reel->unk_00 = 0;
+        reel->unk_03 = reel->unk_01 = SLOT_RAND(8);
+        reel->unk_02 = func_800FC8C8_SlotMachine(i, reel->unk_01);
+        reel->unk_04 = 0;
+        reel->unk_08 = func_800FC790_SlotMachine(reel->unk_01);
+        reel->unk_0C = 0.0f;
+        reel->unk_10 = reel->unk_14 = reel->unk_18 = 0.0f;
+        reel->unk_1C = func_80026A0C(D_800FFC8E_SlotMachine, names[i]);
+    }
+    for (i = 0; i < 10; i++) {
+        D_800FFA60_SlotMachine[i] = D_800FED50_SlotMachine[i % 10];
+    }
+    for (i = 0; i < 10; i++) {
+        j = SLOT_RAND(10);
+        tmp = D_800FFA60_SlotMachine[j];
+        D_800FFA60_SlotMachine[j] = D_800FFA60_SlotMachine[i];
+        D_800FFA60_SlotMachine[i] = tmp;
+    }
+    D_800FFA6A_SlotMachine = 0;
+    D_800FFAD0_SlotMachine = -1;
+    func_800FD248_SlotMachine();
+}
+s16 func_800FC2CC_SlotMachine(void) {
+    u16 prev;
+    u16 ret;
+    s16 sym;
+    s16 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E5DA0", func_800FC3F4_SlotMachine);
+    prev = D_800FFC90_SlotMachine;
+    func_800FCC98_SlotMachine();
+    ret = D_800FFC90_SlotMachine;
+    if (D_800FFC90_SlotMachine == 0) {
+        if (prev == 0) {
+            goto end;
+        }
+        ret = 4;
+        sym = func_800FC8C8_SlotMachine(0, D_800FFA70_SlotMachine[0].unk_01);
+        for (i = 1; i < 3; i++) {
+            if (sym != func_800FC8C8_SlotMachine(i, D_800FFA70_SlotMachine[i].unk_01)) {
+                break;
+            }
+        }
+        if (i == 3) {
+            D_800FFC94_SlotMachine = sym;
+        } else {
+            D_800FFC94_SlotMachine = -1;
+        }
+        if (D_800FFAD0_SlotMachine >= 0) {
+            func_8006071C((s16)D_800FFAD0_SlotMachine);
+            D_800FFAD0_SlotMachine = -1;
+        }
+    }
+end:
+    func_800FD590_SlotMachine();
+    return ret;
+}
+void func_800FC3F4_SlotMachine(void) {
+    SlotReel* reel;
+    s32 i;
+    s32 r;
 
+    if (D_800FFC90_SlotMachine == 0) {
+        D_800FFC90_SlotMachine = 1;
+        D_800FFC94_SlotMachine = D_800FFA60_SlotMachine[D_800FFA6A_SlotMachine++];
+        if (D_800FFA6A_SlotMachine >= 10) {
+            D_800FFA6A_SlotMachine = 0;
+        }
+        D_800FFC94_SlotMachine = -1;
+        r = SLOT_RAND(4);
+        for (i = 0, reel = D_800FFA70_SlotMachine; i < 3; i++, reel++) {
+            reel->unk_03 = func_800FC904_SlotMachine(i, D_800FFC94_SlotMachine);
+            reel->unk_08 = func_800FC790_SlotMachine(reel->unk_01);
+            reel->unk_10 = 0.0f;
+            reel->unk_18 = 9.0f;
+            reel->unk_14 = (SLOT_RAND(50) + 50) * 0.01 * reel->unk_18 * 0.2;
+            reel->unk_00 = 1;
+            reel->unk_04 = D_800FED5C_SlotMachine[r][i];
+        }
+        if (D_800FFAD0_SlotMachine < 0) {
+            D_800FFAD0_SlotMachine = func_80060540(0x1D4, 3);
+        }
+    }
+}
 void func_800FC5C4_SlotMachine(void) {
     s32 i;
 
@@ -61,8 +150,35 @@ s16 func_800FC664_SlotMachine(void) {
     return D_800FFC94_SlotMachine;
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E5DA0", func_800FC684_SlotMachine);
+s16 func_800FC684_SlotMachine(void) {
+    s32 found;
+    s32 sym;
+    s32 frames;
+    s32 i;
 
+    found = 0;
+    if ((u16)D_800FFC90_SlotMachine - 2 < 2U) {
+        sym = 0;
+        frames = 0;
+        for (i = 0; i < 3; i++) {
+            if (D_800FFA70_SlotMachine[i].unk_00 != 0) {
+                if ((D_800FFA70_SlotMachine[i].unk_00 == 1) & (found != 0)) {
+                    frames = (func_800FC790_SlotMachine(func_800FC904_SlotMachine(i, sym)) + 360.0 -
+                              D_800FFA70_SlotMachine[i].unk_08) /
+                             D_800FFA70_SlotMachine[i].unk_10;
+                    break;
+                }
+            } else {
+                found = 1;
+                sym = D_800FFC94_SlotMachine;
+            }
+        }
+        if (found) {
+            return frames;
+        }
+    }
+    return 0;
+}
 f32 func_800FC790_SlotMachine(s16 face) {
     return D_800FECD0_SlotMachine[face];
 }
@@ -76,8 +192,21 @@ s16 func_800FC7A8_SlotMachine(f32 angle) {
     }
     return 0;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E5DA0", func_800FC804_SlotMachine);
+s16 func_800FC804_SlotMachine(f32 angle) {
+    s16 i;
 
+    for (i = 0; i < 8; i++) {
+        if (i == 0) {
+            if (angle <= (f32)(D_800FECD0_SlotMachine[0] * 0.5)) {
+                return 7;
+            }
+        } else if (angle <= (f32)((D_800FECD0_SlotMachine[i] - D_800FECD0_SlotMachine[i - 1]) * 0.5 +
+                                  D_800FECD0_SlotMachine[i - 1])) {
+            return i - 1;
+        }
+    }
+    return 7;
+}
 s16 func_800FC8C8_SlotMachine(s16 reel, s16 face) {
     return D_800FECF0_SlotMachine[reel][face];
 }
@@ -103,15 +232,169 @@ void func_800FC9A8_SlotMachine(unk2C0C0Struct50* part) {
     MtxRotate(part->unk_64, part->unk_44.x, part->unk_44.y, part->unk_44.z);
     MtxScale(part->unk_64, part->unk_50.x, part->unk_50.y, part->unk_50.z);
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E5DA0", func_800FCA34_SlotMachine);
+// operand order of one addu (cam + index vs index + cam), twice (masked 0)
+#ifdef NON_MATCHING
+void func_800FCA34_SlotMachine(s16 camera, Vec3f* pos, f32* out) {
+    f32 v[3];
+    Matrix4f mtx;
+    f32 (*m)[4];
+    unk_Struct00* cam;
+    f32 t;
+    f32 d;
 
+    cam = &D_800C3110[camera];
+    m = mtx;
+    HuGuLookAtF(m, cam->pos.x, cam->pos.y, cam->pos.z, cam->unkC.x, cam->unkC.y, cam->unkC.z, cam->unk18.x,
+                cam->unk18.y, cam->unk18.z);
+    func_800FCBFC_SlotMachine(m, pos->x, pos->y, pos->z, v);
+    t = func_800AEAC0(cam->unk_40 * 0.5);
+    t /= func_800AEFD0(cam->unk_40 * 0.5);
+    d = t * v[2];
+    if (d < 0.0f) {
+        d = -d;
+    }
+    out[0] = ((unk_Struct00*)(D_800F3FA8 * 16 + (u8*)cam))->unk58 / 4.0 * v[0] / d * 0.75;
+    out[1] = ((unk_Struct00*)(D_800F3FA8 * 16 + (u8*)cam))->unk5A / 4.0 * -v[1] / d;
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E5DA0", func_800FCA34_SlotMachine);
+#endif
 void func_800FCBFC_SlotMachine(Matrix4f m, f32 x, f32 y, f32 z, f32* out) {
     *out++ = x * m[0][0] + y * m[1][0] + z * m[2][0] + m[3][0];
     *out++ = x * m[0][1] + y * m[1][1] + z * m[2][1] + m[3][1];
     *out = x * m[0][2] + y * m[1][2] + z * m[2][2] + m[3][2];
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E5DA0", func_800FCC98_SlotMachine);
+// register allocation: s0/s1/s2 permuted (masked 0)
+#ifdef NON_MATCHING
+void func_800FCC98_SlotMachine(void) {
+    s16 face;
+    s16 cnt;
+    SlotReel* reel;
+    s16 t;
+    s32 i;
+    s16 stopped;
+    s16 spinning;
+    s32 j;
+    f32 a;
 
+    spinning = 0;
+    stopped = 0;
+    t = 0;
+    for (reel = D_800FFA70_SlotMachine, i = 0; i < 3; reel++, i++) {
+        switch (reel->unk_00) {
+            case 0:
+                reel->unk_10 = 0.0f;
+                stopped++;
+                break;
+            case 1:
+                if (reel->unk_04 != 0) {
+                    reel->unk_04--;
+                } else {
+                    reel->unk_10 += reel->unk_14;
+                }
+                if (reel->unk_10 >= reel->unk_18) {
+                    reel->unk_10 = reel->unk_18;
+                } else {
+                    spinning++;
+                }
+                reel->unk_08 += reel->unk_10;
+                reel->unk_08 = (reel->unk_08 >= 360.0) ? reel->unk_08 - 360.0 : reel->unk_08;
+                reel->unk_08 = (reel->unk_08 < 0.0) ? reel->unk_08 + 360.0 : reel->unk_08;
+                break;
+            case 2:
+                if (reel->unk_04 < 0) {
+                    t = 0;
+                    if (D_800FFC94_SlotMachine >= 0) {
+                        face = func_800FC804_SlotMachine(reel->unk_08);
+                        t = -(face != func_800FC7A8_SlotMachine(reel->unk_08));
+                        for (; t < 2; t++) {
+                            if (D_800FFC94_SlotMachine == func_800FC8C8_SlotMachine(i, face)) {
+                                break;
+                            }
+                            if (++face >= 8) {
+                                face = 0;
+                            }
+                        }
+                        if (t < 2) {
+                            reel->unk_03 = face;
+                            if (t < 0) {
+                                t = 0;
+                                reel->unk_01 = face;
+                            }
+                        } else {
+                            t = 0;
+                        }
+                    }
+                    reel->unk_04 = t;
+                }
+                if (reel->unk_04 == 0) {
+                    reel->unk_03 = reel->unk_01;
+                }
+                if (reel->unk_03 == reel->unk_01) {
+                    reel->unk_04 = 0;
+                }
+                reel->unk_08 += reel->unk_10;
+                reel->unk_08 = (reel->unk_08 >= 360.0) ? reel->unk_08 - 360.0 : reel->unk_08;
+                reel->unk_08 = (reel->unk_08 < 0.0) ? reel->unk_08 + 360.0 : reel->unk_08;
+                t = func_800FC7A8_SlotMachine(reel->unk_08);
+                if (t != reel->unk_01) {
+                    if (reel->unk_04 != 0) {
+                        reel->unk_04--;
+                    } else {
+                        reel->unk_08 = func_800FC790_SlotMachine(reel->unk_01);
+                        reel->unk_00 = 0;
+                        reel->unk_14 = reel->unk_10 = 0.0f;
+                        PlaySound(0x1D5);
+                        D_800FFC94_SlotMachine = func_800FC8C8_SlotMachine(i, func_800FC7A8_SlotMachine(reel->unk_08));
+                        stopped++;
+                        face = func_800FC8C8_SlotMachine(0, D_800FFA70_SlotMachine[0].unk_01);
+                        if (face == func_800FC8C8_SlotMachine(i, reel->unk_01) && D_800FFC94_SlotMachine >= 6) {
+                            for (j = i + 1; j < 3; j++) {
+                                D_800FFA70_SlotMachine[j].unk_18 *= 1.2;
+                            }
+                        }
+                    }
+                }
+                break;
+        }
+        reel->unk_01 = func_800FC7A8_SlotMachine(reel->unk_08);
+        reel->unk_02 = func_800FC8C8_SlotMachine(i, reel->unk_01);
+        a = (f32)(reel->unk_08 + -5.0 + reel->unk_0C) + 0.0f;
+        a = (a >= 360.0) ? a - 360.0 : a;
+        a = (a < 0.0) ? a + 360.0 : a;
+        reel->unk_1C->unk_44.x = a;
+        func_800FC9A8_SlotMachine(reel->unk_1C);
+    }
+    D_800FFC96_SlotMachine = -1;
+    if (spinning != 0) {
+        D_800FFC90_SlotMachine = 1;
+    } else if (stopped == 3) {
+        D_800FFC90_SlotMachine = 0;
+    } else {
+        D_800FFC90_SlotMachine = 2;
+        cnt = 0;
+        if (stopped == 2) {
+            face = -1;
+            for (i = 0; i < 3; i++) {
+                if (D_800FFA70_SlotMachine[i].unk_00 == 0) {
+                    t = func_800FC8C8_SlotMachine(i, D_800FFA70_SlotMachine[i].unk_01);
+                    if ((face >= 0) & (t != face)) {
+                        break;
+                    }
+                    cnt++;
+                    face = t;
+                }
+            }
+            if (cnt == stopped) {
+                D_800FFC90_SlotMachine = 3;
+                D_800FFC96_SlotMachine = t;
+            }
+        }
+    }
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E5DA0", func_800FCC98_SlotMachine);
+#endif
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E5DA0", func_800FD248_SlotMachine);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_02_SlotMachine/E5DA0", func_800FD420_SlotMachine);
