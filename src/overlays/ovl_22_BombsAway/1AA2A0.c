@@ -3,6 +3,7 @@
 /* View of the stage's surface plane (D_80100438 = D_80100328.unk_110). */
 extern omObjData* D_800F2AF8[];
 extern u8 D_800F64F8;
+extern u16 D_800EE984;
 
 /* A player's work (obj->unk_50): MgWork's layout (src/99E0.c); no pointers below 0x60. */
 typedef struct BaPlayerWork {
@@ -42,8 +43,102 @@ u8 D_800FFAAC_BombsAway[10][2] = {
     { 5, 4 }, { 5, 4 }, { 0, 1 }, { 2, 3 }, { 5, 4 }, { 4, 5 }, { 4, 5 }, { 4, 5 }, { 0, 0 }, { 0, 0 },
 };
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F65E0_BombsAway);
+void func_800F65E0_BombsAway(void) {
+    BaPlayer* p;
+    BaStage* s;
+    void* data;
+    s16 i;
+    u8 cam;
 
+    func_80029090(10);
+    func_8002ADF0(&D_800EDEC0, 10);
+    func_8001DE70(0x30);
+    omInitObjMan(0x20, 0);
+    i = 0;
+    func_80060088();
+    D_80100148_BombsAway = _CheckFlag(0x2B) != 0;
+    D_8010014A_BombsAway = 0;
+    omSetStatBit(omAddObj(0x7FDA, 0, 0, -1, omOutView), 0xA0);
+    func_800178A0(1);
+    cam = func_800178E8();
+    func_80017660(cam, 0.0f, 0.0f, 320.0f, 240.0f);
+    func_800176C4(cam, 640.0f, 480.0f, 511.0f, 640.0f, 480.0f, 511.0f);
+    func_8001D494(0, 45.0f, 80.0f, 4000.0f);
+    D_800EE984 = 0;
+    D_800F2BC0 = 0;
+    D_800ED440 = 0;
+    D_800ED430 = 0;
+    D_80100140_BombsAway.unk_00 = 0;
+    D_80100140_BombsAway.unk_04 = 0;
+    D_80100140_BombsAway.unk_02 = 0;
+    D_80100140_BombsAway.unk_06 = 900;
+    D_80100310_BombsAway = D_80100314_BombsAway = D_80100318_BombsAway = D_8010031C_BombsAway =
+        D_80100320_BombsAway = 0;
+    p = D_80100150_BombsAway;
+    do {
+        func_8009B770(p, 0, sizeof(BaPlayer));
+        i++;
+        p++;
+    } while (i < 4);
+    s = &D_80100328_BombsAway;
+    func_8009B770(s, 0, sizeof(BaStage));
+    func_800A2A50(s->unk_50);
+    func_800A2A50(s->unk_90);
+    func_800A2A50(s->unk_D0);
+    D_80100458_BombsAway = 0;
+    /* Retail zeroes columns 1 and 2 of the eight rows unk_50[0..3] and unk_90[0..3] (the
+       identities just set lose their [1][1] and [2][2]), and each weight's x. */
+    for (i = 0; i < 8; i++) {
+#ifdef TARGET_PC
+        /* rows 4..7 are unk_90's: view both matrices from the struct (unk_50[i >= 4] is UB). */
+        s->unk_134[i].unk_00 = ((f32(*)[4])((u8*)s + 0x50))[i][1] = ((f32(*)[4])((u8*)s + 0x50))[i][2] = 0.0f;
+#else
+        s->unk_134[i].unk_00 = s->unk_50[i][1] = s->unk_50[i][2] = 0.0f;
+#endif
+    }
+    D_801004BC_BombsAway = 0;
+    for (i = 0; i < 6; i++) {
+        D_801004BE_BombsAway[i] = 0;
+    }
+    func_8009B770(D_80100500_BombsAway, 0, sizeof(D_80100500_BombsAway));
+    D_801006F8_BombsAway = -1;
+    func_8009B770(D_80100698_BombsAway, 0, sizeof(D_80100698_BombsAway));
+    i = 0;
+    func_800FAFB4_BombsAway();
+    func_800F6B28_BombsAway();
+    D_80100324_BombsAway = func_800174C0(0x350007, 0x9D);
+    D_800ED440 = 0;
+    func_800090B8(0);
+    D_800F2AF8[D_800ED440++] = omAddObj(1, 1, 0, -1, func_800F9824_BombsAway);
+    omAddObj(20, 0, 0, -1, func_800F6B88_BombsAway);
+    omAddObj(8, 1, 0, -1, func_800FB1C4_BombsAway);
+    omAddObj(8, 1, 0, -1, func_800FB1E0_BombsAway);
+    for (; i < 9; i++) {
+        D_80100700_BombsAway[i] = -1;
+    }
+    i = 0;
+    func_800F7B00_BombsAway();
+    func_8007B168((u8*)"\x82\x72\x82\x73\x82\x60\x82\x71\x82\x73", 1); /* "START" in full-width SJIS */
+    data = DataRead(0x270004);
+    D_801006FA_BombsAway = func_800678A4(data);
+    DataClose(data);
+    D_80100690_BombsAway = -1;
+    D_80100692_BombsAway = 0;
+    D_80100694_BombsAway = 0;
+    D_801006FC_BombsAway = func_80064EF4(12, 0);
+    do {
+        func_80067208(D_801006FC_BombsAway, i, D_801006FA_BombsAway, 0);
+        func_80067354(D_801006FC_BombsAway, i, 0.5f, 0.5f);
+        func_8006752C(D_801006FC_BombsAway, i, 0x100);
+        func_800674BC(D_801006FC_BombsAway, i, 0x9000);
+        func_800672B0(D_801006FC_BombsAway, i, 0);
+        D_801005A0_BombsAway[i].unk_00 = D_801005A0_BombsAway[i].unk_02 = 0;
+        D_801005A0_BombsAway[i].unk_04 = D_801005A0_BombsAway[i].unk_08 = D_801005A0_BombsAway[i].unk_0C =
+            D_801005A0_BombsAway[i].unk_10 = 0.0f;
+        i++;
+    } while (i < 12);
+    func_800FC5E0_BombsAway();
+}
 void func_800F6B28_BombsAway(void) {
     Center.x = Center.y = Center.z = 0.0f;
     Center.y = 180.0f;
@@ -66,7 +161,6 @@ void func_800F7218_BombsAway(void) {
     func_80060198();
     func_800FC7F4_BombsAway();
 }
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", D_800FFB40_BombsAway);
 
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", D_800FFB4C_BombsAway);
 
