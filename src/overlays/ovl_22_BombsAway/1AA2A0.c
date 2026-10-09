@@ -149,8 +149,145 @@ void func_800F6B28_BombsAway(void) {
 void func_800F6B88_BombsAway(omObjData* obj) {
     obj->func_ptr = func_800F6B98_BombsAway;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F6B98_BombsAway);
+void func_800F6B98_BombsAway(omObjData* obj) {
+    s16 endFrame[] = { 90, 105, 105, 105, 130 };
+    BaPlayer* p;
+    s32 i;
+    s32 out; /* players out (case 2), then the end test (case 3) */
+    s32 fallen;
+    s32 flag;
 
+    switch (D_80100140_BombsAway.unk_00) {
+        case 0:
+            func_800FC39C_BombsAway(0);
+            if (D_80100144_BombsAway == 1) {
+                PlaySound(0x1B6);
+                func_80021E58();
+                SetFadeInTypeAndTime(0, 16);
+            } else if (D_80100144_BombsAway == 0x80) {
+                GMesCreate(0);
+            } else if (D_80100144_BombsAway == 70) {
+                func_80060128(0x1B);
+            } else if (D_80100140_BombsAway.unk_04 >= 180) {
+                GMesCreate(8, (s16)(D_80100140_BombsAway.unk_06 / 30), 0xA0, 0x20);
+                D_80100140_BombsAway.unk_00 = 1;
+                D_80100140_BombsAway.unk_04 = -1;
+                D_800ED430 = 1;
+            }
+            break;
+        case 1:
+            if (--D_80100140_BombsAway.unk_06 >= 61) {
+                func_800F723C_BombsAway();
+            }
+            func_800F7604_BombsAway();
+            if (D_80100314_BombsAway < 2 || D_80100146_BombsAway <= 0 || D_8010014A_BombsAway != 0) {
+                D_80100140_BombsAway.unk_00 = 2;
+                D_80100140_BombsAway.unk_04 = -1;
+                func_800790C0();
+            }
+            break;
+        case 2:
+            if (D_80100140_BombsAway.unk_04 < 5000) {
+                D_80100140_BombsAway.unk_06 = -1;
+                fallen = 0;
+                out = 0;
+                p = D_80100150_BombsAway;
+                for (i = 0; i < D_80100310_BombsAway; i++, p++) {
+                    if (p->unk_02 == 7) {
+                        out++;
+                    } else {
+                        flag = p->unk_00 & 0x10;
+                        fallen += flag != 0;
+                    }
+                }
+                if (out + fallen >= D_80100310_BombsAway) {
+                    D_80100314_BombsAway = out;
+                    D_80100144_BombsAway = 5000;
+                    func_800601D4(90);
+                    if (D_80100148_BombsAway != 0) {
+                        if (D_8010014A_BombsAway != 0) {
+                            GMesCreate(2);
+                        }
+                    } else if (D_80100314_BombsAway > 0) {
+                        GMesCreate(2);
+                    } else {
+                        GMesCreate(0x11);
+                    }
+                }
+            } else if (D_80100148_BombsAway != 0) {
+                if (D_80100140_BombsAway.unk_04 >= 60) {
+                    D_80100140_BombsAway.unk_00 = 3;
+                    D_80100140_BombsAway.unk_04 = -1;
+                }
+            } else if (GMesStatAllGet() == 2) {
+                D_80100140_BombsAway.unk_00 = 3;
+                D_80100140_BombsAway.unk_04 = -1;
+                switch (D_80100314_BombsAway) {
+                    case 1:
+                        func_80060128(0x32);
+                        break;
+                    case 2:
+                    case 3:
+                        func_80060128(0x36);
+                        break;
+                    case 4:
+                        func_80060128(0x37);
+                        break;
+                    default:
+                        func_80060128(0x34);
+                        break;
+                }
+            }
+            break;
+        case 3:
+            D_800ED430 = 2;
+            if (D_80100144_BombsAway == 21 && D_80100314_BombsAway == 1 && D_80100148_BombsAway == 0) {
+                for (i = 0; i < D_80100310_BombsAway; i++) {
+                    if (D_80100150_BombsAway[i].unk_02 == 7) {
+                        GMesCreate(4, GwPlayer[i].character);
+                        func_80060468(0x451, GwPlayer[i].character);
+                        break;
+                    }
+                }
+            }
+            out = 0;
+            if (D_80100148_BombsAway != 0) {
+                out = D_80100144_BombsAway == 60;
+            } else if (D_80100144_BombsAway == endFrame[D_80100314_BombsAway]) {
+                out = 1;
+            }
+            if (out) {
+                if (D_80100148_BombsAway != 0) {
+                    func_80060398(40);
+                    if (D_8010014A_BombsAway == 0) {
+                        for (i = 0; i < 4; i++) {
+                            if (GwPlayer[i].group == 0) {
+                                GwPlayer[i].coins_mg += 10;
+                            }
+                        }
+                    }
+                }
+                func_800726AC(0, 20);
+                obj->func_ptr = func_800F71E4_BombsAway;
+                return;
+            }
+            break;
+    }
+    if (++D_80100140_BombsAway.unk_04 >= 0x7800) {
+        D_80100140_BombsAway.unk_04 -= 0x800;
+    }
+    if (D_80100146_BombsAway >= 0) {
+        func_80079078((D_80100146_BombsAway + 29) / 30);
+    }
+    func_800FB988_BombsAway();
+    if (D_801004BC_BombsAway != 0) {
+        D_801004BC_BombsAway--;
+    }
+    if (D_800F5144 == 1) {
+        func_800F7218_BombsAway();
+        omOvlReturnEx(1);
+    }
+}
 void func_800F71E4_BombsAway(omObjData* obj) {
     if (func_80072718() == 0) {
         func_800F7218_BombsAway();
@@ -162,7 +299,6 @@ void func_800F7218_BombsAway(void) {
     func_800FC7F4_BombsAway();
 }
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", D_800FFB4C_BombsAway);
 
 void func_800F723C_BombsAway(void) {
     s32 i;
