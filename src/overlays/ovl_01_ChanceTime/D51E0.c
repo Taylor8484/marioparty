@@ -938,8 +938,129 @@ s32 func_800F9F30_ChanceTime(omObjData* obj, s8 dir, s16 count) {
     }
     return ret;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", func_800FA458_ChanceTime);
+s32 func_800FA458_ChanceTime(omObjData* obj, s16 a, s16 b) {
+    s16 i;
+    s16 n;
+    s16 d;
+    s32 ret;
 
+    ret = 0;
+    if (D_80101294_ChanceTime == 0) {
+        if (a >= 11) {
+            D_8010174C_ChanceTime[0] = 10;
+        } else {
+            D_8010174C_ChanceTime[0] = a;
+        }
+        if (b >= 11) {
+            D_8010174C_ChanceTime[1] = 10;
+        } else {
+            D_8010174C_ChanceTime[1] = b;
+        }
+        D_80101750_ChanceTime[0] = D_80101750_ChanceTime[1] = 0.0f;
+        for (i = 0; i < D_8010174C_ChanceTime[0]; i++) {
+            D_80101868_ChanceTime[i].unk_00 = obj->model[i + 1];
+            D_80101868_ChanceTime[i].unk_04 = D_800F3FB0[D_80101AA4_ChanceTime[0]]->trans.x;
+            D_80101868_ChanceTime[i].unk_08 = 180.0f;
+            D_80101868_ChanceTime[i].unk_0C = D_800F3FB0[D_80101AA4_ChanceTime[0]]->trans.z;
+            D_80101868_ChanceTime[i].unk_10 = 0.0f;
+            D_80101868_ChanceTime[i].unk_14 = 0.0f;
+            D_80101868_ChanceTime[i].unk_18 = 1;
+            D_80101868_ChanceTime[i].unk_19 = 0;
+        }
+        for (i = D_8010174C_ChanceTime[0]; i < D_8010174C_ChanceTime[0] + D_8010174C_ChanceTime[1]; i++) {
+            D_80101868_ChanceTime[i].unk_00 = obj->model[i + 1];
+            D_80101868_ChanceTime[i].unk_04 = D_800F3FB0[D_80101AA4_ChanceTime[1]]->trans.x;
+            D_80101868_ChanceTime[i].unk_08 = 180.0f;
+            D_80101868_ChanceTime[i].unk_0C = D_800F3FB0[D_80101AA4_ChanceTime[1]]->trans.z;
+            D_80101868_ChanceTime[i].unk_10 = 0.0f;
+            D_80101868_ChanceTime[i].unk_14 = 0.0f;
+            D_80101868_ChanceTime[i].unk_18 = 1;
+            D_80101868_ChanceTime[i].unk_19 = 0;
+        }
+        D_80101758_ChanceTime[0] = GwPlayer[D_801012E0_ChanceTime].coins;
+        D_80101758_ChanceTime[1] = GwPlayer[D_801012E1_ChanceTime].coins;
+        if (D_80101758_ChanceTime[0] != D_80101758_ChanceTime[1]) {
+            func_80060F04(D_80101758_ChanceTime[1] < D_80101758_ChanceTime[0] ? D_801012E0_ChanceTime : D_801012E1_ChanceTime, 2, 2, 20);
+        }
+        GwPlayer[D_801012E0_ChanceTime].coins = 0;
+        GwPlayer[D_801012E1_ChanceTime].coins = 0;
+        D_80101294_ChanceTime = 1;
+        return ret;
+    }
+    n = 0;
+    for (i = 0; i < (s32)D_80101750_ChanceTime[0]; i++) {
+        if (D_80101868_ChanceTime[i].unk_19 == 0) {
+            if (D_80101868_ChanceTime[i].unk_18 == 1) {
+                func_800258EC(D_80101868_ChanceTime[i].unk_00, 4, 0);
+                D_80101868_ChanceTime[i].unk_04 += 10.0f;
+                if (D_800F3FB0[D_80101AA5_ChanceTime]->trans.x < D_80101868_ChanceTime[i].unk_04) {
+                    if (D_80101298_ChanceTime[0] == 0) {
+                        d = D_80101758_ChanceTime[0] - D_80101758_ChanceTime[1];
+                        if (d >= 0) {
+                            func_80055960(D_801012E1_ChanceTime, D_80101758_ChanceTime[0]);
+                        } else {
+                            func_80055810(D_801012E1_ChanceTime, D_80101758_ChanceTime[0], 0);
+                        }
+                        D_80101298_ChanceTime[0] = 1;
+                    }
+                    D_80101868_ChanceTime[i].unk_19 = 1;
+                    func_800258EC(D_80101868_ChanceTime[i].unk_00, 4, 4);
+                }
+                D_80101868_ChanceTime[i].unk_10 = func_800AEAC0(D_80101868_ChanceTime[i].unk_14) * 90.0;
+                D_80101868_ChanceTime[i].unk_14 += 10.0;
+                func_800257E4(D_80101868_ChanceTime[i].unk_00, 0.0f, D_8010129C_ChanceTime, 0.0f);
+                func_80025798(D_80101868_ChanceTime[i].unk_00, D_80101868_ChanceTime[i].unk_04,
+                              D_80101868_ChanceTime[i].unk_08 + D_80101868_ChanceTime[i].unk_10, D_80101868_ChanceTime[i].unk_0C);
+            }
+        } else {
+            n++;
+        }
+    }
+    for (i = D_8010174C_ChanceTime[0]; i < (s32)D_80101754_ChanceTime + D_8010174C_ChanceTime[0]; i++) {
+        if (D_80101868_ChanceTime[i].unk_19 == 0) {
+            if (D_80101868_ChanceTime[i].unk_18 == 1) {
+                func_800258EC(D_80101868_ChanceTime[i].unk_00, 4, 0);
+                D_80101868_ChanceTime[i].unk_04 -= 10.0f;
+                if (D_80101868_ChanceTime[i].unk_04 < D_800F3FB0[D_80101AA4_ChanceTime[0]]->trans.x) {
+                    if (D_80101299_ChanceTime == 0) {
+                        d = D_80101758_ChanceTime[1] - D_80101758_ChanceTime[0];
+                        if (d > 0) {
+                            func_80055960(D_801012E0_ChanceTime, D_80101758_ChanceTime[1]);
+                        } else {
+                            func_80055810(D_801012E0_ChanceTime, D_80101758_ChanceTime[1], 0);
+                        }
+                        D_80101299_ChanceTime = 1;
+                    }
+                    D_80101868_ChanceTime[i].unk_19 = 1;
+                    func_800258EC(D_80101868_ChanceTime[i].unk_00, 4, 4);
+                }
+                D_80101868_ChanceTime[i].unk_10 = func_800AEAC0(D_80101868_ChanceTime[i].unk_14) * 45.0;
+                D_80101868_ChanceTime[i].unk_14 += 10.0;
+                func_800257E4(D_80101868_ChanceTime[i].unk_00, 0.0f, D_8010129C_ChanceTime, 0.0f);
+                func_80025798(D_80101868_ChanceTime[i].unk_00, D_80101868_ChanceTime[i].unk_04,
+                              D_80101868_ChanceTime[i].unk_08 + D_80101868_ChanceTime[i].unk_10, D_80101868_ChanceTime[i].unk_0C);
+            }
+        } else {
+            n++;
+        }
+    }
+    D_8010129C_ChanceTime += 50.0f;
+    if (D_8010129C_ChanceTime >= 360.0f) {
+        D_8010129C_ChanceTime -= 360.0f;
+    }
+    D_80101750_ChanceTime[0] += 0.8 / (11 - D_8010174C_ChanceTime[0]);
+    if ((s32)D_80101750_ChanceTime[0] >= D_8010174C_ChanceTime[0]) {
+        D_80101750_ChanceTime[0] = D_8010174C_ChanceTime[0];
+    }
+    D_80101750_ChanceTime[1] += 0.8 / (11 - D_8010174C_ChanceTime[1]);
+    if ((s32)D_80101750_ChanceTime[1] >= D_8010174C_ChanceTime[1]) {
+        D_80101750_ChanceTime[1] = D_8010174C_ChanceTime[1];
+    }
+    if (n >= D_8010174C_ChanceTime[0] + D_8010174C_ChanceTime[1]) {
+        ret = 1;
+    }
+    return ret;
+}
 s8 func_800FAE60_ChanceTime(omObjData* obj) {
     s16 coins[2];
     s16 stars[2];
