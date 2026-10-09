@@ -369,8 +369,56 @@ s32 func_800FE948_BombsAway(f32 x, f32 z, f32 y, u16 kind) {
     }
     return 0;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FEA0C_BombsAway);
+// register allocation: the copy of n (masked 2)
+#ifdef NON_MATCHING
+void func_800FEA0C_BombsAway(s32 n, f32 tx, f32 tz, f32 speed, u16 kind) {
+    BaShell* s;
+    u16 i;
+    f32 dx;
+    f32 dz;
 
+    for (s = D_80100870_BombsAway, i = 0; i < 6; i++, s++) {
+        if ((u16)s->unk_00 == 0) {
+            break;
+        }
+    }
+    if (i < 6) {
+        func_800FECA8_BombsAway(i, n);
+        s->unk_1C = tx;
+        s->unk_24 = tz;
+        s->unk_28 = speed;
+        s->unk_02 = kind;
+        s->unk_04 += D_80100790_BombsAway.unk_00.x;
+        s->unk_0C += D_80100790_BombsAway.unk_00.z;
+        dx = s->unk_04 - s->unk_1C;
+        dz = s->unk_0C - s->unk_24;
+        if (dx != 0.0) {
+            s->unk_10 = -(dx / 20.0f) * s->unk_28;
+        } else {
+            s->unk_10 = 0.0f;
+        }
+        s->unk_14 = 100.0f;
+        if (dz != 0.0) {
+            s->unk_18 = -(dz / 20.0f) * s->unk_28;
+        } else {
+            s->unk_18 = 0.0f;
+        }
+        s->unk_00 = 1;
+        func_800258EC(D_80100B52_BombsAway[i], 4, 0);
+        func_800258EC(D_80100B5E_BombsAway[i], 4, 0);
+        PlaySound(0x2B8);
+        if (s->unk_02 == 1) {
+            func_800FDE38_BombsAway(1, s->unk_04 - 100.0, s->unk_08 + D_80100790_BombsAway.unk_00.y + 100.0,
+                                    D_80100790_BombsAway.unk_00.z, 1.0f, 16, 1.0f);
+        } else {
+            func_800FDE38_BombsAway(1, s->unk_04, s->unk_08 + D_80100790_BombsAway.unk_00.y + 200.0,
+                                    D_80100790_BombsAway.unk_00.z, 2.0f, 16, 1.0f);
+        }
+    }
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FEA0C_BombsAway);
+#endif
 void func_800FECA8_BombsAway(u16 i, u16 n) {
     BaShell* s = &D_80100870_BombsAway[i];
 
