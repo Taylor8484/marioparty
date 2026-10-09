@@ -15,6 +15,7 @@ extern s8 omSysPauseEnableFlag;
 
 
 u16 func_8004F234(void);
+int abs(int);
 
 
 void func_800090C4(omObjData* obj, u8 idx, u8 val);
@@ -280,8 +281,129 @@ INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", D_801013C8_C
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", func_800F6B00_ChanceTime);
 #endif
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", func_800F7108_ChanceTime);
+void func_800F7108_ChanceTime(omObjData* obj) {
+#ifndef TARGET_PC
+    omObjData* objs[3];
+    CTReel* reels[3];
+#endif
+    CTPlayerWork* work;
+#ifndef TARGET_PC
+    s16 i;
+#endif
+    u16 btn;
+    f32 angle;
+    s8 port;
+    u16 cur;
 
+    btn = 0;
+    angle = -1.0f;
+    work = CT_PWORK(obj);
+#ifndef TARGET_PC
+    /* Dead locals. [2] is D_80101848 (the third panel) read through D_80101840; the panels'
+       reels are read from the omObjData itself (offset 0x28), not from its work. */
+    for (i = 0; i < 3; i++) {
+        objs[i] = D_80101840_ChanceTime[i];
+        reels[i] = ((CTObjWork*)objs[i])->unk_28;
+    }
+#endif
+    D_80101AA6_ChanceTime[work->unk_56] = ContBtn[work->unk_56];
+    D_80101ACA_ChanceTime[work->unk_56] = ContStkX[work->unk_56];
+    D_80101A98_ChanceTime[work->unk_56] = ContStkY[work->unk_56];
+    D_80101AC2_ChanceTime[work->unk_56] = ContBtnTrg[work->unk_56];
+    if (GwPlayer[work->unk_58].flags & 1) {
+        if (D_80101266_ChanceTime == 0) {
+            if (D_801011F0_ChanceTime == 0) {
+                D_801016FA_ChanceTime = 1;
+                if ((guRandom() & 0x10) == 0) {
+                    D_801016F8_ChanceTime[0] = 0;
+                    D_801016F8_ChanceTime[1] = 2;
+                } else {
+                    D_801016F8_ChanceTime[0] = 2;
+                    D_801016F8_ChanceTime[1] = 0;
+                }
+            } else {
+                D_801016F8_ChanceTime[0] = 0;
+                D_801016F8_ChanceTime[1] = 1;
+            }
+            D_80101266_ChanceTime = 1;
+        }
+        if (D_800ED430 == 1) {
+            if (D_801011F0_ChanceTime == 0) {
+                if (D_8010126C_ChanceTime == 0) {
+                    if (D_8010126A_ChanceTime < 3) {
+                        angle = (obj->trans.x + 1000.0f > D_80101840_ChanceTime[D_801016F8_ChanceTime[D_8010126A_ChanceTime]]->trans.x + 1000.0f) ? 180.0f : 0.0f;
+                        if (abs((s32)((obj->trans.x + 1000.0f) - (D_80101840_ChanceTime[D_801016F8_ChanceTime[D_8010126A_ChanceTime]]->trans.x + 1000.0f))) < 21) {
+                            angle = -1.0f;
+                            D_8010126C_ChanceTime = 1;
+                            D_801016F4_ChanceTime = 0;
+                            D_801016FC_ChanceTime = guRandom() % 30 + 60;
+                        }
+                    }
+                    btn = 0;
+                }
+                if (D_8010126C_ChanceTime == 1) {
+                    if (D_801016F4_ChanceTime++ > D_801016FC_ChanceTime) {
+                        D_8010126A_ChanceTime++;
+                        D_8010126C_ChanceTime = 0;
+                        btn = 0x8000;
+                    } else {
+                        work->unk_3C = 0.0f;
+                    }
+                }
+            } else {
+                if (D_8010126C_ChanceTime == 0) {
+                    if (D_8010126A_ChanceTime < 2) {
+                        angle = (obj->trans.x + 1000.0f > D_80101840_ChanceTime[D_801016F8_ChanceTime[D_8010126A_ChanceTime]]->trans.x + 1000.0f) ? 180.0f : 0.0f;
+                        if (abs((s32)((obj->trans.x + 1000.0f) - (D_80101840_ChanceTime[D_801016F8_ChanceTime[D_8010126A_ChanceTime]]->trans.x + 1000.0f))) < 21) {
+                            angle = -1.0f;
+                            D_8010126C_ChanceTime = 1;
+                            D_801016F4_ChanceTime = 0;
+                            D_801016FC_ChanceTime = guRandom() % 30 + 60;
+                        }
+                    }
+                    btn = 0;
+                }
+                if (D_8010126C_ChanceTime == 1) {
+                    if (D_801016F4_ChanceTime++ > D_801016FC_ChanceTime) {
+                        D_8010126A_ChanceTime++;
+                        D_8010126C_ChanceTime = 0;
+                        btn = 0x8000;
+                    } else {
+                        work->unk_3C = 0.0f;
+                    }
+                }
+            }
+            port = work->unk_56;
+            cur = btn | (ContBtn[port] & 0x7FFF);
+            btn = cur;
+            ContBtn[port] = btn;
+            ContBtnTrg[port] = btn;
+            ContBtnTrg[work->unk_56] = cur & (cur ^ D_80101268_ChanceTime);
+            D_80101268_ChanceTime = btn;
+            if (angle < 0.0f) {
+                ContStkX[work->unk_56] = 0;
+                ContStkY[work->unk_56] = 0;
+            } else {
+                ContStkX[work->unk_56] = (s32)(func_800AEFD0(angle) * 40.0f);
+                ContStkY[work->unk_56] = (s32)(-func_800AEAC0(angle) * 40.0f);
+            }
+        }
+    }
+    if (D_801011F8_ChanceTime == 1) {
+        ContBtn[work->unk_56] = D_80101A9C_ChanceTime[work->unk_56];
+        ContStkX[work->unk_56] = D_80101AB8_ChanceTime[work->unk_56];
+        ContStkY[work->unk_56] = D_80101AB2_ChanceTime[work->unk_56];
+        ContBtnTrg[work->unk_56] = D_80101ACE_ChanceTime[work->unk_56];
+    }
+    func_80005A28(obj);
+    if (obj->trans.y <= 0.0f) {
+        D_801011F1_ChanceTime = 1;
+    }
+    ContBtn[work->unk_56] = D_80101AA6_ChanceTime[work->unk_56];
+    ContStkX[work->unk_56] = D_80101ACA_ChanceTime[work->unk_56];
+    ContStkY[work->unk_56] = D_80101A98_ChanceTime[work->unk_56];
+    ContBtnTrg[work->unk_56] = D_80101AC2_ChanceTime[work->unk_56];
+}
 void func_800F7818_ChanceTime(omObjData* arg0) {
     s32 temp_v0;
     s32 temp_a1;
