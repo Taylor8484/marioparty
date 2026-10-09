@@ -1208,7 +1208,12 @@ typedef struct unk34D80Menu {
     /* 0x2A */ char unk_2A[0xA];
 } unk34D80Menu; // sizeof 0x34
 
+#ifdef TARGET_PC
+/* Host view: a split label inside the object before it (one host object, not two). */
+#define D_800EE9A2 ((unk34D80Light*)((u8*)&D_800EE9A0 + 2))
+#else
 extern unk34D80Light D_800EE9A2[];
+#endif
 extern s16 D_800F33E8;
 extern unk34D80Menu D_800F3B88[];
 

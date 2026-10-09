@@ -250,8 +250,14 @@ extern u8 D_800F2B80[];
    (D_800EDED4 = &D_800EDED0[0].y, D_800EDED8 = &D_800EDED0[0].z) and the code addresses each
    column through its label, so they are declared as three Vec3f arrays and read through .x. */
 extern Vec3f D_800EDED0[];
+#ifdef TARGET_PC
+/* Host views: separate host objects did not alias the columns (writes overran D_800EDED0). */
+#define D_800EDED4 ((Vec3f*)((u8*)D_800EDED0 + 4))
+#define D_800EDED8 ((Vec3f*)((u8*)D_800EDED0 + 8))
+#else
 extern Vec3f D_800EDED4[];
 extern Vec3f D_800EDED8[];
+#endif
 f32 func_800296FC(f32, f32, ColVtx*, ColVtx*);
 
 f32 func_80000530(f32 x, f32 y, f32 z, ColVtx* verts, ColTri* tri, Vec3f* dir, Vec3f* out) {
