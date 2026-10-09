@@ -304,6 +304,8 @@ void func_800F7218_BombsAway(void) {
 }
 
 
+// register allocation and one mul.s/lui scheduling swap (masked 7)
+#ifdef NON_MATCHING
 void func_800F723C_BombsAway(void) {
     s32 i;
     s16 newestIdx;
@@ -373,6 +375,9 @@ void func_800F723C_BombsAway(void) {
     }
     D_801006F8_BombsAway = newestIdx;
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F723C_BombsAway);
+#endif
 void func_800F7604_BombsAway(void) {
     s16 ids[8];
     Vec pos;
@@ -519,6 +524,8 @@ void func_800F7C5C_BombsAway(omObjData* obj) {
 void func_800F7C78_BombsAway(omObjData* obj) {
     func_800F8100_BombsAway(obj, 3);
 }
+// register allocation: p and the ground work swap s0/s1 (masked 0)
+#ifdef NON_MATCHING
 void func_800F7C94_BombsAway(omObjData* obj) {
     Vec pos;
     Vec vel;
@@ -627,6 +634,9 @@ void func_800F7C94_BombsAway(omObjData* obj) {
         func_800258EC(model, 4, 4);
     }
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F7C94_BombsAway);
+#endif
 
 
 void func_800F8100_BombsAway(omObjData* obj, s16 player) {
@@ -688,6 +698,8 @@ void func_800F8100_BombsAway(omObjData* obj, s16 player) {
     p->unk_42 = 12;
     p->unk_44 = -1;
 }
+// register allocation: diff and move swap s3/s4 (masked 0)
+#ifdef NON_MATCHING
 void func_800F8538_BombsAway(omObjData* obj) {
     BaPlayer* p;
     s32 port;
@@ -790,6 +802,9 @@ void func_800F8538_BombsAway(omObjData* obj) {
     }
     p->unk_54 = 0;
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F8538_BombsAway);
+#endif
 void func_800F8D48_BombsAway(omObjData* obj) {
     Vec d;
     Vec pos;
@@ -1035,8 +1050,159 @@ void func_800F9824_BombsAway(omObjData* obj) {
     ((void (*)(omObjData*, f32, f32, f32, f32, f32))func_80009028)(obj, 0.0f, -2000.0f, -2000.0f, 2000.0f, 2000.0f);
 #endif
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F997C_BombsAway);
+// register allocation: the sine and 1.0f swap f20/f22 (masked 0)
+#ifdef NON_MATCHING
+void func_800F997C_BombsAway(omObjData* obj) {
+    Matrix4f m;
+    f32 p0[3];
+    f32 p1[3];
+    f32 p2[3];
+    f32 out[3];
+    BaStage* s = &D_80100328_BombsAway;
+    f32 sx;
+    f32 sz;
+    f32 a;
+    f32 k;
+    f32 t;
+    f32 v;
+    s32 i;
+    s32 j;
 
+    if (D_80100140_BombsAway.unk_00 == 0 && D_80100140_BombsAway.unk_04 >= 61) {
+        if (D_80100368_BombsAway > 100.0) {
+            D_80100368_BombsAway = obj->trans.z = D_80100368_BombsAway - 10.0;
+        }
+    }
+    if (s->unk_130 != 0) {
+        sx = sz = 0.0f;
+        for (i = 0; i < s->unk_130; i++) {
+            /* Retail adds the weight's z where the plane's c * z belongs. */
+            func_800FBF9C_BombsAway(s->unk_90, s->unk_134[i].unk_00,
+                                    -(s->unk_110[0] * s->unk_134[i].unk_00 + s->unk_110[2] + s->unk_134[i].unk_08 -
+                                      s->unk_110[3]) /
+                                        s->unk_110[1],
+                                    s->unk_134[i].unk_08, out);
+            t = s->unk_134[i].unk_04 / 4.0;
+            sx += t * out[0];
+            sz += t * out[2];
+        }
+        t = func_800FC0EC_BombsAway(sx, sz) + 90.0;
+        t -= (s32)(t / 360.0f) * 360;
+        if (t < 0.0) {
+            t += 360.0;
+        }
+        t -= s->unk_0C;
+        if (t >= 0.0f) {
+            if (t > 180.0) {
+                t -= 360.0;
+            }
+        } else if (t < -180.0) {
+            t += 360.0;
+        }
+        t = s->unk_0C + t * 0.2;
+        if (t >= 360.0) {
+            t -= 360.0;
+        } else if (t < 0.0) {
+            t += 360.0;
+        }
+        s->unk_0C = t;
+        t = sqrtf(sx * sx + sz * sz) / 300.0;
+        if (t > 1.0) {
+            t = 1.0f;
+        } else if (t < -1.0) {
+            t = -1.0f;
+        }
+        s->unk_10 += (t - s->unk_10) * 0.2;
+        s->unk_130 = 0;
+    } else {
+        s->unk_10 -= s->unk_10 * 0.1;
+    }
+    if (s->unk_20 > 0.0f) {
+        s->unk_14 = (f32)(s->unk_14 + 6.0) - (s32)((f32)(s->unk_14 + 6.0) / 360.0f) * 360;
+        if (s->unk_14 < 0.0) {
+            s->unk_14 += 360.0;
+        }
+    }
+    s->unk_18 = (f32)(s->unk_18 + 5.0) - (s32)((f32)(s->unk_18 + 5.0) / 360.0f) * 360;
+    if (s->unk_18 < 0.0) {
+        s->unk_18 += 360.0;
+    }
+    if (s->unk_1C > 0.0) {
+        s->unk_1C -= 0.01;
+        if (s->unk_1C < 0.0) {
+            s->unk_1C = 0.0f;
+        }
+    }
+    s->unk_28 -= 0.02;
+    if (s->unk_28 < 0.0) {
+        s->unk_28 = 0.0f;
+    }
+    if (s->unk_2C != 0) {
+        s->unk_2C--;
+    }
+    s->unk_00 = (f32)(s->unk_00 + 2.0) - (s32)((f32)(s->unk_00 + 2.0) / 360.0f) * 360;
+    if (s->unk_00 < 0.0) {
+        s->unk_00 += 360.0;
+    }
+    s->unk_38.y = func_800AEAC0(s->unk_00) * 20.0 + -20.0;
+    obj->trans.y = s->unk_38.y + ((f32)(D_80100144_BombsAway & 1) - 0.5) * 0.2 * 100.0 * s->unk_28;
+    s->unk_04 += 2.0;
+    if (s->unk_04 >= 360.0) {
+        s->unk_04 -= 360.0;
+    }
+    s->unk_08 += 1.0;
+    if (s->unk_08 >= 360.0) {
+        s->unk_08 -= 360.0;
+    }
+    a = func_800AEAC0(s->unk_08) * 2.0;
+    k = func_800AEFD0(s->unk_04);
+    func_8009E060(s->unk_50, a, k, 0.0f, func_800AEAC0(s->unk_04));
+    s->unk_50[3][3] = 1.0f;
+    a = s->unk_10 * 8.0;
+    k = func_800AEFD0(s->unk_0C);
+    func_8009E060(m, a, k, 0.0f, func_800AEAC0(s->unk_0C));
+    m[3][3] = 1.0f;
+    func_800AC0B0(m, s->unk_50, s->unk_50);
+    a = func_800AEAC0(s->unk_18) * 20.0;
+    k = func_800AEFD0(s->unk_14);
+    func_8009E060(m, a * s->unk_1C, k, 0.0f, func_800AEAC0(s->unk_14));
+    m[3][3] = 1.0f;
+    func_800AC0B0(m, s->unk_50, m);
+    func_8009EA40(s->unk_50, obj->trans.x, obj->trans.y, obj->trans.z);
+    func_800AC0B0(m, s->unk_50, s->unk_50);
+    func_800FC1F4_BombsAway(s->unk_50, (Vec*)p0);
+    obj->rot.x = s->unk_44.x = p0[0];
+    obj->rot.y = s->unk_44.y = p0[1];
+    obj->rot.z = s->unk_44.z = p0[2];
+    for (j = 0; j < 4; j++) {
+        s->unk_D0[j][0] = s->unk_90[j][0];
+        s->unk_D0[j][1] = s->unk_90[j][1];
+        s->unk_D0[j][2] = s->unk_90[j][2];
+        s->unk_D0[j][3] = s->unk_90[j][3];
+    }
+    func_8009EA40(m, -obj->trans.x, -obj->trans.y, -obj->trans.z);
+    MtxInv(s->unk_50, s->unk_90);
+    func_800AC0B0(m, s->unk_90, s->unk_90);
+    func_800FBF9C_BombsAway(s->unk_50, 0.0f, s->unk_30, 0.0f, p0);
+    func_800FBF9C_BombsAway(s->unk_50, 1.0f, s->unk_30, 0.0f, p1);
+    func_800FBF9C_BombsAway(s->unk_50, 0.0f, s->unk_30, 1.0f, p2);
+    for (j = 0; j < 3; j++) {
+        p1[j] -= p0[j];
+        p2[j] = p0[j] - p2[j];
+    }
+    s->unk_110[0] = p1[1] * p2[2] - p1[2] * p2[1];
+    s->unk_110[1] = p1[2] * p2[0] - p1[0] * p2[2];
+    s->unk_110[2] = p1[0] * p2[1] - p1[1] * p2[0];
+    s->unk_110[3] = p0[0] * s->unk_110[0] + p0[1] * s->unk_110[1] + p0[2] * s->unk_110[2];
+    s->unk_120 = 1.0 / sqrtf(s->unk_110[0] * s->unk_110[0] + s->unk_110[1] * s->unk_110[1] +
+                             s->unk_110[2] * s->unk_110[2]);
+    s->unk_124.x = s->unk_110[0] * s->unk_120;
+    s->unk_124.y = s->unk_110[1] * s->unk_120;
+    s->unk_124.z = s->unk_110[2] * s->unk_120;
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F997C_BombsAway);
+#endif
 f32 func_800FA47C_BombsAway(Vec* pos) {
     return func_800FC0EC_BombsAway(pos->x - D_80100328_BombsAway.unk_38.x, pos->z - D_80100328_BombsAway.unk_38.z);
 }
