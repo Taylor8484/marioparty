@@ -107,14 +107,17 @@ typedef struct SCDParticle {
     /* 0x2C */ char unk_2C[4];
 } SCDParticle; /* size = 0x30 */
 
-/* The camera D_80102420 (func_800FA154 sets it, func_800FA3B4 eases it). No pointers. */
+/* One camera pose: retail indexes centre and view as f32[3] (func_800FA3B4). No pointers. */
+typedef struct SCDCamPose {
+    /* 0x00 */ f32 pos[3];  /* centre */
+    /* 0x0C */ f32 view[3]; /* view direction */
+    /* 0x18 */ f32 zoom;
+} SCDCamPose; /* size = 0x1C */
+
+/* The camera D_80102420 (func_800FA154 sets it, func_800FA3B4 eases cur towards target). */
 typedef struct SCDCamera {
-    /* 0x00 */ Vec unk_00; /* target centre */
-    /* 0x0C */ Vec unk_0C; /* target view direction */
-    /* 0x18 */ f32 unk_18; /* target zoom */
-    /* 0x1C */ Vec unk_1C; /* current centre */
-    /* 0x28 */ Vec unk_28; /* current view direction */
-    /* 0x34 */ f32 unk_34; /* current zoom */
+    /* 0x00 */ SCDCamPose target;
+    /* 0x1C */ SCDCamPose cur;
     /* 0x38 */ char unk_38[8];
 } SCDCamera; /* size = 0x40 */
 
@@ -286,7 +289,7 @@ void func_800FDD08_SlotCarDerby(omObjData* obj, SCDObj* rec);
 SCDObj* func_800FDD28_SlotCarDerby(omObjData* obj);
 void func_800FDD54_SlotCarDerby(s32 cam, Vec* pos, Vec* screen);
 void func_800FE138_SlotCarDerby(u8 count);
-s16 func_800FE2F0_SlotCarDerby(u16 sprite, u8 flags);
+s16 func_800FE2F0_SlotCarDerby(s16 sprite, u8 flags); /* callers pass sprite unmasked (lh) */
 void func_800FF53C_SlotCarDerby(s16 id, s16 frame);
 void func_800FF57C_SlotCarDerby(s16 id, f32 speed);
 void func_800FF5BC_SlotCarDerby(s16 id, f32 x, f32 y, f32 z);
@@ -423,11 +426,11 @@ extern SCDBillboard* D_80103298;
 #define D_80102324_SlotCarDerby (D_80102320_SlotCarDerby[0].pos.y)
 #define D_80102328_SlotCarDerby (D_80102320_SlotCarDerby[0].pos.z)
 #define D_8010232C_SlotCarDerby (D_80102320_SlotCarDerby[0].weight)
-#define D_80102424_SlotCarDerby (D_80102420_SlotCarDerby.unk_00.y)
-#define D_80102428_SlotCarDerby (D_80102420_SlotCarDerby.unk_00.z)
-#define D_8010242C_SlotCarDerby (D_80102420_SlotCarDerby.unk_0C.x)
-#define D_80102430_SlotCarDerby (D_80102420_SlotCarDerby.unk_0C.y)
-#define D_80102434_SlotCarDerby (D_80102420_SlotCarDerby.unk_0C.z)
+#define D_80102424_SlotCarDerby (D_80102420_SlotCarDerby.target.pos[1])
+#define D_80102428_SlotCarDerby (D_80102420_SlotCarDerby.target.pos[2])
+#define D_8010242C_SlotCarDerby (D_80102420_SlotCarDerby.target.view[0])
+#define D_80102430_SlotCarDerby (D_80102420_SlotCarDerby.target.view[1])
+#define D_80102434_SlotCarDerby (D_80102420_SlotCarDerby.target.view[2])
 #define D_80102462_SlotCarDerby ((s16)D_80102460_SlotCarDerby[0])
 #define D_80102476_SlotCarDerby ((s16)D_80102474_SlotCarDerby)
 #define D_8010247A_SlotCarDerby ((s16)D_80102478_SlotCarDerby)
