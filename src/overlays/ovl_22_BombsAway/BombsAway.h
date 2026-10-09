@@ -467,7 +467,7 @@ void func_800FDB78_BombsAway(omObjData*);
 void func_800FDC6C_BombsAway(void);
 void func_800FDCA0_BombsAway(void);
 void func_800FDD58_BombsAway(void);
-s16 func_800FDE38_BombsAway(u16, f32, f32, f32, f32, s16, f32);
+s16 func_800FDE38_BombsAway(s16, f32, f32, f32, f32, u16, f32);
 u16 func_800FE1EC_BombsAway(u32);
 void func_800FE254_BombsAway(omObjData*);
 void func_800FE4A4_BombsAway(omObjData*);

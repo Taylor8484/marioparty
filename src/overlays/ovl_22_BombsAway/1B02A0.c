@@ -210,8 +210,73 @@ void func_800FDD58_BombsAway(void) {
         }
     }
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FDE38_BombsAway);
+// register allocation at entry: the kind test and the life argument (masked 3)
+#ifdef NON_MATCHING
+s16 func_800FDE38_BombsAway(s16 kind, f32 x, f32 y, f32 z, f32 scale, u16 life, f32 alpha) {
+    u16 i;
 
+    if ((u16)kind >= 33) {
+        return 0;
+    }
+    if (alpha <= 0.0f) {
+        return 0;
+    }
+    for (i = 0; i < 32; i++) {
+        if (D_80100990_BombsAway[i].unk_02 != 0) {
+            continue;
+        }
+        if (D_80100990_BombsAway[i].unk_00 != -1) {
+            continue;
+        }
+        D_80100990_BombsAway[i].unk_02 = life;
+        D_80100990_BombsAway[i].unk_04 = kind;
+        D_80100990_BombsAway[i].unk_00 = func_80064EF4(1, 0);
+        func_80067208(D_80100990_BombsAway[i].unk_00, 0, D_80100B10_BombsAway[kind], 0);
+        func_80067284(D_80100990_BombsAway[i].unk_00, 0, alpha);
+        if (kind != 3) {
+            func_800672B0(D_80100990_BombsAway[i].unk_00, 0, 2);
+        } else {
+            func_800672B0(D_80100990_BombsAway[i].unk_00, 0, 3);
+        }
+        if (kind != 3) {
+            func_800674BC(D_80100990_BombsAway[i].unk_00, 0, 0x100C);
+        } else {
+            func_800674BC(D_80100990_BombsAway[i].unk_00, 0, 0x503C);
+        }
+        if ((u16)kind < 2) {
+            func_80067558(D_80100990_BombsAway[i].unk_00, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+        }
+        func_80066DF4(D_80100990_BombsAway[i].unk_00, 0, 0, x, y, z);
+        switch (kind) {
+            case 0:
+                D_80100990_BombsAway[i].unk_08 = scale * 0.6;
+                break;
+            case 1:
+                D_80100990_BombsAway[i].unk_08 = scale * 0.5;
+                break;
+            case 2:
+                D_80100990_BombsAway[i].unk_08 = scale * 0.08;
+                break;
+            case 3:
+                D_80100990_BombsAway[i].unk_08 = scale;
+                break;
+        }
+        func_80067354(D_80100990_BombsAway[i].unk_00, 0, D_80100990_BombsAway[i].unk_08,
+                      D_80100990_BombsAway[i].unk_08);
+        break;
+    }
+#ifdef TARGET_PC
+    /* Retail returns D_80100990[32].unk_00 when every effect is busy: past the array, the first
+       halfword of D_80100B10 on the N64. */
+    if (i >= 32) {
+        return D_80100B10_BombsAway[0];
+    }
+#endif
+    return D_80100990_BombsAway[i].unk_00;
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FDE38_BombsAway);
+#endif
 u16 func_800FE1EC_BombsAway(u32 n) {
     D_800FFB2C_BombsAway = (u32)(D_800FFB2C_BombsAway * 0x19971204 + 0x19760831) >> 16;
     if (n == 0) {
