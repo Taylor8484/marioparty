@@ -1,4 +1,22 @@
-#include "common.h"
+#include "BombsAway.h"
+
+u16 D_800FFAC0_BombsAway = 0;
+u16 D_800FFAC2_BombsAway = 0;
+s16 D_800FFAC4_BombsAway = 0x36;
+Vec D_800FFAC8_BombsAway = { 1000.0f, 0.0f, -1000.0f };
+Vec D_800FFAD4_BombsAway = { 800.0f, 0.0f, -800.0f };
+Vtx D_800FFAE0_BombsAway[4] = {
+    { { { -125, 250, 0 }, 0, { 0, 0 }, { 0, 0, 0, 255 } } },
+    { { { -125, 0, 0 }, 0, { 0, 0x800 }, { 0, 0, 0, 255 } } },
+    { { { 125, 250, 0 }, 0, { 0x800, 0 }, { 0, 0, 0, 255 } } },
+    { { { 125, 0, 0 }, 0, { 0x800, 0x800 }, { 0, 0, 0, 255 } } },
+};
+u16 D_800FFB20_BombsAway[2] = { 0, 0 };
+f32 D_800FFB24_BombsAway = 0.0f;
+f32 D_800FFB28_BombsAway = 0.0f;
+/* Random seed (func_800FE1EC); retail returns its low half through D_800FFB2E. */
+s32 D_800FFB2C_BombsAway = 0x19971204;
+u16 D_800FFB30_BombsAway[8] = { 0, 180 };
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FC5E0_BombsAway);
 

@@ -317,3 +317,4 @@ D_800F89D4_MushroomBank = D_800F89C0_MushroomBank + 0x14;
 D_800F89D8_MushroomBank = D_800F89C0_MushroomBank + 0x18;
 D_800F89DC_MushroomBank = D_800F89C0_MushroomBank + 0x1C;
 D_800FE368_RunningOfTheBulb = D_800FE364_RunningOfTheBulb + 0x4;
+D_800FFA80_BombsAway = D_800FFA7C_BombsAway + 0x4;

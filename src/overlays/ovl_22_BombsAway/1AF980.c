@@ -1,4 +1,4 @@
-#include "common.h"
+#include "BombsAway.h"
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AF980", func_800FBCC0_BombsAway);
 

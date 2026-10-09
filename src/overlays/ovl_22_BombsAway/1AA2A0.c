@@ -1,4 +1,15 @@
-#include "common.h"
+#include "BombsAway.h"
+
+/* Time between bombs per players left (func_800F723C). */
+s16 D_800FFA70_BombsAway[6] = { 100, 15, 20, 25, 30, 0 };
+/* CPU target offsets (x, z) from the platform centre, per corner slot (func_800F8538). */
+f32 D_800FFA7C_BombsAway[6][2] = {
+    { 0.0f, 0.0f }, { 300.0f, 300.0f }, { 300.0f, -300.0f }, { -300.0f, 300.0f }, { -300.0f, -300.0f }, { 0.0f, 800.0f },
+};
+/* Model pairs (indices into D_801004D0) per state (func_800FB2E4). */
+u8 D_800FFAAC_BombsAway[10][2] = {
+    { 5, 4 }, { 5, 4 }, { 0, 1 }, { 2, 3 }, { 5, 4 }, { 4, 5 }, { 4, 5 }, { 4, 5 }, { 0, 0 }, { 0, 0 },
+};
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1AA2A0", func_800F65E0_BombsAway);
 
