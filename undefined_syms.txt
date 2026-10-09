@@ -277,3 +277,23 @@ D_800FF900_CraneGame = D_800FF8E0_CraneGame + 0x20;
 D_800FF91C_CraneGame = D_800FF904_CraneGame + 0x18;
 D_800FF920_CraneGame = D_800FF904_CraneGame + 0x1C;
 D_800FF924_CraneGame = D_800FF904_CraneGame + 0x20;
+/* ovl_25 SlotCarDerby: labels inside its C .data objects that its INCLUDE_ASM functions use */
+D_80100D08_SlotCarDerby = D_80100D04_SlotCarDerby + 0x4;
+D_80100E04_SlotCarDerby = D_80100E00_SlotCarDerby + 0x4;
+D_80100E08_SlotCarDerby = D_80100E00_SlotCarDerby + 0x8;
+D_80100E0C_SlotCarDerby = D_80100E00_SlotCarDerby + 0xC;
+D_80100E60_SlotCarDerby = D_80100E00_SlotCarDerby + 0x60;
+D_80100EAE_SlotCarDerby = D_80100EAC_SlotCarDerby + 0x2;
+D_80100EB2_SlotCarDerby = D_80100EB0_SlotCarDerby + 0x2;
+D_80100EC4_SlotCarDerby = D_80100EC0_SlotCarDerby + 0x4;
+D_80100EC8_SlotCarDerby = D_80100EC0_SlotCarDerby + 0x8;
+D_80100F04_SlotCarDerby = D_80100F00_SlotCarDerby + 0x4;
+D_80100F08_SlotCarDerby = D_80100F00_SlotCarDerby + 0x8;
+D_80100F36_SlotCarDerby = D_80100F34_SlotCarDerby + 0x2;
+D_80100F44_SlotCarDerby = D_80100F34_SlotCarDerby + 0x10;
+D_80100F4A_SlotCarDerby = D_80100F34_SlotCarDerby + 0x16;
+D_80100F4E_SlotCarDerby = D_80100F34_SlotCarDerby + 0x1A;
+D_80100F7C_SlotCarDerby = D_80100F70_SlotCarDerby + 0xC;
+D_80100F80_SlotCarDerby = D_80100F70_SlotCarDerby + 0x10;
+/* ovl_25 .bss: D_8010247C (between splat labels D_8010247A and D_8010247E) for the C users */
+D_8010247C_SlotCarDerby = 0x8010247C;
