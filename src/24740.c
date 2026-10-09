@@ -500,7 +500,12 @@ void func_800247FC(OSMesgQueue* arg0, s32 arg1) {
         }
         func_8002B808();
         D_800F32A0 = (camera*)&D_800C3110[layer];
+#ifdef TARGET_PC
+        /* unkF8 is not at 0xF8 on the host (the PB_PTR32 callback words before it are 8 bytes). */
+        D_800F2BCC = &((unk_Struct00*)D_800F32A0)->unkF8 + D_800F3FA8 * 2;
+#else
         D_800F2BCC = (Mtx*)((u8*)D_800F32A0 + 0xF8 + D_800F3FA8 * 0x80);
+#endif
         var_s4 = D_800F37DC;
         func_8001D658(layer, &D_800F37DC);
         func_8001D7DC(layer, &D_800F37DC);
