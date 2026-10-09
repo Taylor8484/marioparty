@@ -701,7 +701,8 @@ segments:
     subsegments:
       - [0xE8F60, c]
       - [0xEB0E0, c]
-      - [0xEE3F0, data, E8F60] #800FBA70
+      - [0xEE3F0, .data, E8F60] #800FBA70
+      - [0xEE430, .data, EB0E0] #800FBAB0
       - [0xEE7E0, .rodata, E8F60]
       - [0xEE8B0, .rodata, EB0E0] #800FBF30
       - { start: 0xEE9A0, type: bss, vram: 0x800FC020, name: ovl_03_bss }
