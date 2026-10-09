@@ -1732,7 +1732,6 @@ f32 func_800FC054_SkateBoardSkamper(omObjData* obj, f32 angle, f32 x, f32 y, f32
 
 /* A player's movement: stick steering, B (0x4000) to push, A (0x8000) to jump, falls into the
    gaps and off the course, and the finish line at z -9600. */
-#ifdef NON_MATCHING
 void func_800FC758_SkateBoardSkamper(omObjData* obj) {
     s16 sx;
     s16 sy;
@@ -1751,6 +1750,13 @@ void func_800FC758_SkateBoardSkamper(omObjData* obj) {
     f32 v;
     f32 h;
     f32 spd;
+    f32 lim;
+    f32 v1;
+    f32 vv1;
+    f32 v2;
+    f32 vv2;
+    f32 v3;
+    f32 vv3;
 
     func_80005A04((Object*)obj);
     mdl = obj->model[0];
@@ -1787,23 +1793,19 @@ void func_800FC758_SkateBoardSkamper(omObjData* obj) {
     if (flags & 1) {
         ok = 1;
         if (w->unk_38 == 1000.0f) {
-            if (func_800FC054_SkateBoardSkamper(obj, w->unk_3C, x, y, z) != 65536.0f && (btn & 0x8000)) {
-                if (func_800184BC(obj, 6) == 1) {
-                    w->unk_38 = -D_800B8964;
-                    func_80009624((unkGlobalStruct_00*)w, 3);
-                    ok = 0;
-                }
+            if (func_800FC054_SkateBoardSkamper(obj, w->unk_3C, x, y, z) != 65536.0f && (btn & 0x8000) &&
+                func_800184BC(obj, 6) == 1) {
+                w->unk_38 = -D_800B8964;
+                func_80009624((unkGlobalStruct_00*)w, 3);
+                ok = 0;
             }
         } else {
-            v = w->unk_38;
-            if (D_800B8994 < v) {
-                v = D_800B8994;
+            v1 = w->unk_38;
+            if (v1 > D_800B8994) {
+                v1 = D_800B8994;
             }
-            if (w->unk_38 >= 0.0f) {
-                h = y + v * v * -35.0f;
-            } else {
-                h = y + v * v * 35.0f;
-            }
+            vv1 = v1 * v1;
+            h = y + vv1 * ((w->unk_38 >= 0.0f) ? -35.0f : 35.0f);
             w->unk_38 += D_800B8968;
             if (func_800184BC(obj, 6) == 1) {
                 func_80009624((unkGlobalStruct_00*)w, 3);
@@ -1831,12 +1833,14 @@ void func_800FC758_SkateBoardSkamper(omObjData* obj) {
         }
         shadowY = y;
     } else if (flags & 0x18C18) {
-        if (w->unk_38 == 1000.0f) {
+        v = w->unk_38;
+        if (v == 1000.0f) {
             if (flags & 0x10) {
-                if (D_800B8980 < w->unk_40) {
+                if (w->unk_40 > D_800B8980) {
                     w->unk_3C += -(f32)sx / D_800B8970;
                 } else {
-                    w->unk_3C += -((f32)sx / D_800B8970) * ((w->unk_40 <= D_800B898C ? D_800B898C : w->unk_40) / D_800B8980);
+                    lim = (w->unk_40 <= D_800B898C) ? D_800B898C : w->unk_40;
+                    w->unk_3C += -((f32)sx / D_800B8970) * (lim / D_800B8980);
                 }
             }
             h = func_800FC054_SkateBoardSkamper(obj, w->unk_3C, x, y, z);
@@ -1866,18 +1870,12 @@ void func_800FC758_SkateBoardSkamper(omObjData* obj) {
             }
             shadowY = y;
         } else {
-            v = w->unk_38;
-            if (D_800B8994 < v) {
+            if (v > D_800B8994) {
                 v = D_800B8994;
             }
-            if (w->unk_38 >= 0.0f) {
-                h = y + v * v * -35.0f;
-            } else {
-                h = y + v * v * 35.0f;
-            }
+            h = y + v * v * ((w->unk_38 >= 0.0f) ? -35.0f : 35.0f);
             w->unk_38 += D_800B8968;
             y = func_80004578(obj, x, h, z, y);
-            shadowY = y;
             if (w->unk_38 == 1000.0f) {
                 if (w->unk_53 == 0) {
                     if (D_800FDA08_SkateBoardSkamper[w->unk_58] == 0) {
@@ -1893,20 +1891,18 @@ void func_800FC758_SkateBoardSkamper(omObjData* obj) {
                     func_80009624((unkGlobalStruct_00*)w, 4);
                 }
             }
+            shadowY = y;
         }
     } else if (flags & 0x20) {
         if (func_80025E70(mdl) == -1.0f) {
             func_80025D18(mdl);
         }
-        v = w->unk_38;
-        if (D_800B8994 < v) {
-            v = D_800B8994;
+        v2 = w->unk_38;
+        if (v2 > D_800B8994) {
+            v2 = D_800B8994;
         }
-        if (w->unk_38 >= 0.0f) {
-            h = y + v * v * -35.0f;
-        } else {
-            h = y + v * v * 35.0f;
-        }
+        vv2 = v2 * v2;
+        h = y + vv2 * ((w->unk_38 >= 0.0f) ? -35.0f : 35.0f);
         w->unk_38 += D_800B8968;
         D_800FDA14_SkateBoardSkamper[w->unk_58] += 3.5f;
         if (D_800FDA14_SkateBoardSkamper[w->unk_58] > 45.0f) {
@@ -1931,15 +1927,14 @@ void func_800FC758_SkateBoardSkamper(omObjData* obj) {
                 func_800184BC(obj, 21);
                 func_80009624((unkGlobalStruct_00*)w, 4);
             }
-            shadowY = y;
-        } else {
-            shadowY = y;
-            if (D_800F5254 > 0.0f && y > 350.0f) {
+        } else if (D_800F5254 > 0.0f) {
+            if (y > 350.0f) {
                 func_800184BC(obj, 31);
                 w->unk_40 = D_800B8984;
                 w->unk_38 = -D_800B8964 * 0.8;
             }
         }
+        shadowY = y;
     } else if (flags & 6) {
         func_80009C90(obj, sx, sy);
         if (w->unk_53 == 1 && D_800ED430 == 1) {
@@ -1955,7 +1950,7 @@ void func_800FC758_SkateBoardSkamper(omObjData* obj) {
         } else {
             w->unk_40 += -0.5f;
         }
-        if (D_800B8980 < w->unk_40) {
+        if (w->unk_40 > D_800B8980) {
             w->unk_40 = D_800B8980;
         }
         if (w->unk_40 < D_800B8990) {
@@ -1974,15 +1969,12 @@ void func_800FC758_SkateBoardSkamper(omObjData* obj) {
         shadowY = y;
     } else if (flags & 0x20000) {
         w->unk_40 = D_800B8990;
-        v = w->unk_38;
-        if (D_800B8994 < v) {
-            v = D_800B8994;
+        v3 = w->unk_38;
+        if (v3 > D_800B8994) {
+            v3 = D_800B8994;
         }
-        if (w->unk_38 >= 0.0f) {
-            y += v * v * -35.0f;
-        } else {
-            y += v * v * 35.0f;
-        }
+        vv3 = v3 * v3;
+        y += vv3 * ((w->unk_38 >= 0.0f) ? -35.0f : 35.0f);
         w->unk_38 += D_800B8968 / 2.0f;
         if (w->unk_40 != 0.0f) {
             w->unk_40 = D_800B8990;
@@ -2032,9 +2024,6 @@ void func_800FC758_SkateBoardSkamper(omObjData* obj) {
     func_80017DB0(obj);
     w->unk_60 = CRot.y;
 }
-#else
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_16_SkateBoardSkamper/15EAF0", func_800FC758_SkateBoardSkamper);
-#endif
 
 /* CPU input: push (B) at random, jump (A) over a log row 0-250 ahead or the body in front. */
 void func_800FD764_SkateBoardSkamper(omObjData* obj) {
