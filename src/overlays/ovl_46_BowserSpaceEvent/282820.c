@@ -922,6 +922,17 @@ void func_800F8B1C_BowserSpaceEvent(void) {
         func_800F8DC0_BowserSpaceEvent();
         func_80054654();
         func_80070ED4();
+#ifdef TARGET_PC
+        {
+            /* --dev-built-minigames: an event whose minigame the host does not build returns to
+               the board instead (cases 2-5 call minigames 16, 14, 51 and 19). */
+            static const s16 pbEventMg[6] = { -1, -1, 16, 14, 51, 19 };
+            if (D_800F8ED0_BowserSpaceEvent >= 2 && D_800F8ED0_BowserSpaceEvent <= 5 &&
+                !pb_dev_minigame_allowed(pbEventMg[D_800F8ED0_BowserSpaceEvent])) {
+                D_800F8ED0_BowserSpaceEvent = 0;
+            }
+        }
+#endif
         switch (D_800F8ED0_BowserSpaceEvent) {
             case 0:
                 omOvlReturnEx(1);

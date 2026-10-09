@@ -299,6 +299,11 @@ void func_80056B78(void) {
                     break;
             }            
         }
+#ifdef TARGET_PC
+        if (pb_dev_turns() > 0) {
+            gameStatus->maxTurns = pb_dev_turns(); /* mp1host --dev-turns */
+        }
+#endif
         gameStatus->saveSetting = 0;
         gameStatus->minigameExplanation = 0;
         gameStatus->messageSpeed = 1;
