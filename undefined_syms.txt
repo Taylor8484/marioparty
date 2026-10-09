@@ -335,3 +335,8 @@ D_80101326_ChanceTime = D_80101324_ChanceTime + 0x2;
 D_800FFA80_BombsAway = D_800FFA7C_BombsAway + 0x4;
 D_80100776_BombsAway = D_80100774_BombsAway + 0x2;
 D_8010077A_BombsAway = D_80100778_BombsAway + 0x2;
+
+/* ovl_16 SkateBoardSkamper: labels inside its C .data objects that its INCLUDE_ASM functions use */
+D_800FDAB4_SkateBoardSkamper = D_800FDAB0_SkateBoardSkamper + 0x4;
+D_800FDAB8_SkateBoardSkamper = D_800FDAB0_SkateBoardSkamper + 0x8;
+D_800FDAE8_SkateBoardSkamper = D_800FDAE0_SkateBoardSkamper + 0x8;
