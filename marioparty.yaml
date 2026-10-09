@@ -2206,8 +2206,8 @@ segments:
     bss_size: 0x40
     subsegments:
       - [0x2B74A0, c]
-      - [0x2BA290, data, 2B74A0]
-      - [0x2BA460, .rodata, 2B74A0]
+      - [0x2BA290, .data, 2B74A0]
+      - [0x2BA450, .rodata, 2B74A0]
       - {0x2BA4C0, type: bss, vram: 0x800F9600, name: ovl_65_bss}
   - type: code
     start: 0x2BA4C0
