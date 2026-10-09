@@ -2,8 +2,66 @@
 
 int abs(int);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800F65E0_SlotCarDerby);
+void func_800F65E0_SlotCarDerby(void) {
+    omObjData* obj;
+    u8 cam;
 
+    D_80101DF2_SlotCarDerby = 0;
+    D_80101DEE_SlotCarDerby = 0;
+    D_80101DF0_SlotCarDerby = 0;
+    D_80101DF4_SlotCarDerby = 0;
+    D_80101DF6_SlotCarDerby = 0;
+    func_80029090(50);
+    func_8001DE70(32);
+    omInitObjMan(32, 0);
+    func_80060088();
+    D_801024B4_SlotCarDerby = 0;
+    D_801024B2_SlotCarDerby = 0;
+    D_801024B0_SlotCarDerby = 0;
+    if (_CheckFlag(0x2B) != 0) {
+        D_801024B0_SlotCarDerby = 1;
+        if (_CheckFlag(0x2D) != 0) {
+            D_801024B0_SlotCarDerby = 2;
+        }
+    }
+    if (D_801024B0_SlotCarDerby == 2 && GwCommon.boardWork[1] > 0) {
+        if ((s32)((u32)(((rand8() << 8) | rand8()) * 25) >> 14) < 20) {
+            D_801024B4_SlotCarDerby = 1;
+        }
+    }
+    obj = omAddObj(0x7FDA, 0, 0, -1, omOutView);
+    omOutView(obj);
+    omSetStatBit(obj, 0xA0);
+    func_800178A0(1);
+    cam = func_800178E8();
+    func_80017660(cam, 0.0f, 0.0f, 320.0f, 240.0f);
+    func_800176C4(cam, 640.0f, 480.0f, 511.0f, 640.0f, 480.0f, 511.0f);
+    func_8001D494(0, 45.0f, 80.0f, 4000.0f);
+    D_800EE984 = 0;
+    D_800F2BC0 = 0;
+    D_800ED440 = 0;
+    if (D_801024B0_SlotCarDerby != 0) {
+        D_80101420_SlotCarDerby = D_801024B0_SlotCarDerby != 1;
+    } else {
+        D_80101420_SlotCarDerby = 0;
+        if (_CheckFlag(0x32) != 0) {
+            D_80101420_SlotCarDerby = 1;
+        }
+    }
+    func_800234B8(0, 0x88, 0x88, 0x88);
+    func_800234B8(1, 0xFF, 0xFF, 0xFF);
+    func_80023504(1, 0.0f, 2000.0f, 2000.0f);
+    D_800ED440 = 0;
+    D_800F2AF8[D_800ED440++] = omAddObj(0, 0, 0, -1, func_800F6A14_SlotCarDerby);
+    D_800F2AF8[D_800ED440++] = omAddObj(1, 3, 0, -1, func_800FB004_SlotCarDerby);
+    D_800F3FB0[D_800F2BC0++] = omAddObj(4, 2, 2, -1, func_800F7678_SlotCarDerby);
+    D_800F3FB0[D_800F2BC0++] = omAddObj(5, 2, 2, -1, func_800F7694_SlotCarDerby);
+    D_800F3FB0[D_800F2BC0++] = omAddObj(6, 2, 2, -1, func_800F76B0_SlotCarDerby);
+    D_800F3FB0[D_800F2BC0++] = omAddObj(7, 2, 2, -1, func_800F76CC_SlotCarDerby);
+    func_800FBEE0_SlotCarDerby(D_80101420_SlotCarDerby);
+    /* Shift-JIS "ＳＴＡＲＴＧＯＡＬＷＩＮ！" (written as bytes: the source is UTF-8) */
+    func_8007B168((u8*)"\x82\x72\x82\x73\x82\x60\x82\x71\x82\x73\x82\x66\x82\x6E\x82\x60\x82\x6B\x82\x76\x82\x68\x82\x6D\x81\x49", 1);
+}
 void func_800F6A14_SlotCarDerby(omObjData* obj) {
     obj->func_ptr = func_800F6A38_SlotCarDerby;
     func_800FB1C0_SlotCarDerby();
@@ -21,7 +79,6 @@ void func_800F6A38_SlotCarDerby(omObjData* obj) {
     }
     func_800FB2FC_SlotCarDerby(0, 400, 400);
 }
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", D_80100F90_SlotCarDerby);
 
 // register allocation (masked 0)
 #ifdef NON_MATCHING
