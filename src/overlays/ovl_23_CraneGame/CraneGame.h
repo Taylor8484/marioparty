@@ -8,6 +8,7 @@
 #include "common.h"
 #include "engine/pad.h"
 #include "PR/gu.h"
+#include "sprite65770.h"
 
 /* ---------------------------------------------------------------------------------------------
    Structs
@@ -104,6 +105,32 @@ typedef struct CGPrizeType {
     /* 0x06 */ s16 unk6; /* half depth / 10 */
 } CGPrizeType; /* size = 0x8 */
 
+/* A model group's shadow display list (D_80100448_CraneGame, func_800FC4F4): a list of
+   gSPVertex/gSP1Triangle commands that load from segment 1 (the vertex buffer of the frame). */
+typedef struct CGShadowGroup {
+    /* 0x00 */ Gfx* dl;
+    /* 0x04 */ u16 start; /* first vertex in the buffer */
+    /* 0x06 */ u16 count;
+} CGShadowGroup; /* size = 0x8 (N64) */
+
+/* Shadow opacity per shadowed model (D_800FFF48_CraneGame): eases toward target, which is reset to
+   1.0 every frame (func_800FBA78 lowers it). */
+typedef struct CGShadowFade {
+    /* 0x00 */ f32 cur;
+    /* 0x04 */ f32 target;
+} CGShadowFade;
+
+/* A face of the shadow mesh (D_801006F8_CraneGame): unique-vertex indices, bit 15 of v[0] = quad. */
+typedef struct CGShadowFace {
+    /* 0x00 */ u16 v[4];
+} CGShadowFace;
+
+/* Draw order of the faces (D_80100704_CraneGame). */
+typedef struct CGShadowOrder {
+    /* 0x00 */ s16 key;
+    /* 0x02 */ s16 face;
+} CGShadowOrder;
+
 typedef unk34D80Struct80 Temp3; /* D_800ED554 entries (common_structs.h) */
 
 /* ---------------------------------------------------------------------------------------------
@@ -126,6 +153,13 @@ f32 func_80025D40(s16);
 void func_8006035C(s16, s8);
 void func_80060440(s16, s16);
 void func_80018E0C(u16, s16);
+s16 func_8002451C(u32, void (*)(Gfx**, Mtx*, camera*), u8);
+unk65770Anim* func_80067310(s16);
+void func_800A0B90(Matrix4f, void*);
+s16 MtxInv(Mat4, Mat4);
+void func_8001D658(s16, Gfx**);
+void func_800AC0B0(Matrix4f, Matrix4f, Matrix4f);
+void func_80023A38(void*, void*, s32);
 
 /* ---------------------------------------------------------------------------------------------
    Overlay data (.data, 1B3E00.c)
@@ -139,6 +173,8 @@ extern s16 D_800FF524_CraneGame[4];
 extern s16 D_800FF52C_CraneGame[6];
 extern f32 D_800FF538_CraneGame[6];
 extern s32 D_800FF550_CraneGame[4];
+extern Gfx D_800FF870_CraneGame[];
+extern Vtx D_800FF8B0_CraneGame[3];
 
 /* ---------------------------------------------------------------------------------------------
    Overlay bss (names from the link map)
@@ -168,6 +204,33 @@ extern u16 D_800FFE90_CraneGame[4][3];
 extern u16 D_800FFEA8_CraneGame[4];
 extern u16 D_800FFEB0_CraneGame[4];
 extern omObjData* D_800FFEB8_CraneGame;
+extern s16 D_800FFEC0_CraneGame;
+extern s16 D_800FFEC2_CraneGame;
+extern s16 D_800FFEC4_CraneGame;
+extern s16 D_800FFEC8_CraneGame[64];
+extern CGShadowFade D_800FFF48_CraneGame[64];
+extern Vtx* D_80100148_CraneGame[64][3];
+extern CGShadowGroup* D_80100448_CraneGame[64];
+extern s16 D_80100548_CraneGame;
+extern u8* D_8010054C_CraneGame;
+extern s16 D_80100550_CraneGame;
+extern f32 D_80100554_CraneGame;
+extern Vec D_80100558_CraneGame;
+extern s32 D_80100564_CraneGame;
+extern s16 D_80100568_CraneGame;
+extern f32 D_8010056C_CraneGame;
+extern Vtx D_80100570_CraneGame[3][4];
+extern Mtx D_80100630_CraneGame[3];
+extern unk2C0C0StructA0* D_801006F0_CraneGame;
+extern Vtx* D_801006F4_CraneGame;
+extern CGShadowFace* D_801006F8_CraneGame;
+extern u16* D_801006FC_CraneGame;
+extern s16 D_80100700_CraneGame;
+extern s16 D_80100702_CraneGame;
+extern CGShadowOrder* D_80100704_CraneGame;
+extern s16 D_80100708_CraneGame[33];
+extern s16 D_8010074A_CraneGame;
+extern s16 D_8010074C_CraneGame;
 extern CGClaw* D_80100BC0_CraneGame[256];
 extern s16 D_80100FC0_CraneGame;
 extern omObjData* D_80100FD0_CraneGame;
@@ -215,9 +278,17 @@ void func_800FB800_CraneGame(s32, s32);
 void func_800FB830_CraneGame(void);
 void func_800FB8E8_CraneGame(void);
 void func_800FB9C4_CraneGame(s16);
-void func_800FBA78_CraneGame(s16, s32);
+void func_800FBA78_CraneGame(s16, f32);
 void func_800FBAE8_CraneGame(f32);
 void func_800FBB00_CraneGame(f32, f32, f32);
+void func_800FBB18_CraneGame(Gfx**, Mtx*, camera*);
+Gfx* func_800FC0A0_CraneGame(Gfx*, unk2C0C0StructC0*, Matrix4f);
+void func_800FC4F4_CraneGame(s16);
+void func_800FC800_CraneGame(unk2C0C0Struct30*, unk2C0C0StructA0*, s16);
+void func_800FC9B0_CraneGame(void);
+void func_800FCB78_CraneGame(Gfx**, unk2C0C0StructC0*);
+Gfx* func_800FCD7C_CraneGame(Gfx*, u8 (*)[4], s16);
+Gfx* func_800FCF78_CraneGame(Gfx*, Mtx*);
 
 /* 1BAA60 */
 void func_800FD240_CraneGame(void);
