@@ -477,7 +477,7 @@ void func_800FECA8_BombsAway(u16, u16);
 void func_800FED18_BombsAway(void);
 void func_800FEE2C_BombsAway(void);
 void func_800FF218_BombsAway(s16);
-void func_800FF674_BombsAway(s16, u16, s16*);
+void func_800FF674_BombsAway(s16, s32, s16*);
 void func_800FF9C4_BombsAway(s16*, u16);
 
 #endif

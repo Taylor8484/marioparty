@@ -168,7 +168,7 @@ void func_800FDB0C_BombsAway(omObjData* obj) {
     func_800FF218_BombsAway(*obj->model);
 }
 void func_800FDB78_BombsAway(omObjData* obj) {
-    func_800FF674_BombsAway(*obj->model, D_800FFB22_BombsAway % 361, obj->model);
+    func_800FF674_BombsAway(*obj->model, (u16)(D_800FFB22_BombsAway % 361), obj->model);
     func_80027C1C(*obj->model, D_800FFB24_BombsAway, D_800FFB28_BombsAway, 0x20, 0x20);
     if (func_8005FD5C() + D_800F64F8 == 0) {
         D_800FFB22_BombsAway++;
@@ -574,8 +574,69 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FEE2C_B
 #endif
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FF218_BombsAway);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FF674_BombsAway);
+void func_800FF674_BombsAway(s16 model, s32 angle, s16* unused) {
+    unk2C0C0StructC0* m;
+    BaVtxMap* map;
+    unk2C0C0StructE0* src;
+    unk2C0C0StructE0* dst;
+    u16 n;
+    s16 phase;
+    u16 i;
+    f32 a;
+    f32 s1;
+    f32 s2;
+    f32 ax;
+    f32 ay;
+    f32 d;
+    s32 pad[4]; /* unused: retail's frame is 16 bytes larger */
 
+    phase = 0;
+    m = D_800F2B7C[model].unk_6C;
+    map = D_80100B44_BombsAway;
+    src = m->unk_04;
+    dst = m->unk_08[D_800F37F0];
+    n = m->unk_72;
+    a = angle;
+    s1 = func_800AEAC0(a);
+    s2 = func_800AEAC0(angle * 2);
+    func_800AEAC0(a);
+    ax = (f32)((u32)D_80100B48_BombsAway[0] / 6) * D_800F2B7C[model].unk_3C;
+    ay = (f32)((u32)D_80100B48_BombsAway[0] / 10) * D_800F2B7C[model].unk_40;
+    if (angle == 0) {
+        phase++;
+    }
+    for (i = 0; i < n; src++, dst++, i++, map++) {
+        if (map->unk_00 != 0) {
+            d = s1 * ax;
+            if (map->unk_04 & 1) {
+                dst->unk_00 = src->unk_00 + d;
+            } else {
+                dst->unk_00 = src->unk_00 - d;
+            }
+            if (phase & 1) {
+                if ((map->unk_02 & 1) && (map->unk_04 & 1)) {
+                    dst->unk_02 = src->unk_02 + s2 * ay;
+                } else if ((map->unk_02 + map->unk_04) & 1) {
+                    dst->unk_02 = src->unk_02 - s2 * ay;
+                } else {
+                    dst->unk_02 = src->unk_02;
+                }
+            } else {
+                if (!(map->unk_02 & 1) && !(map->unk_04 & 1)) {
+                    dst->unk_02 = src->unk_02 + s2 * ay;
+                } else if ((map->unk_02 & 1) && (map->unk_04 & 1)) {
+                    dst->unk_02 = src->unk_02 - s2 * ay;
+                } else {
+                    dst->unk_02 = src->unk_02;
+                }
+            }
+        } else {
+            dst->unk_00 = src->unk_00;
+            dst->unk_02 = src->unk_02;
+            dst->unk_04 = src->unk_04;
+        }
+    }
+}
 void func_800FF9C4_BombsAway(s16* a, u16 n) {
     u16 i;
     u16 j;
