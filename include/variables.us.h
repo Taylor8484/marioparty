@@ -137,7 +137,17 @@ extern s32 D_800F3848;
 extern u16 D_800F3854;
 extern u8 D_800F3962;
 extern s16 D_800F3F3C;
+#ifdef TARGET_PC
+/* The model renderer's matrix stacks (2C0C0.c, 1EA70.c) index across splat's labels:
+   D_800F3FE0[k + 1] is D_800F4020[k], D_800F5480[k + 1] is D_800F54C0[k], and D_800F5500 is
+   D_800F54C0[1] (the stack runs on through it). The host gives labels separate objects, so they
+   are views of the block they belong to there (D_800F54C0 spans 0x1000 bytes). */
+#define D_800F3FE0 (D_800F4020 - 1)
+#define D_800F5480 (D_800F54C0 - 1)
+#define D_800F5500 (D_800F54C0[1])
+#else
 extern Matrix4f D_800F3FE0[];
+#endif
 extern u8 D_800F3FF4;
 extern Matrix4f D_800F4020[];
 extern f32 D_800F5028;
@@ -147,9 +157,13 @@ extern u16 D_800F50BA;
 extern unk2C0C0StructE0* D_800F50BC;
 extern f32 D_800F524C;
 extern s16 D_800F546A;
+#ifndef TARGET_PC
 extern Matrix4f D_800F5480[];
+#endif
 extern Matrix4f D_800F54C0[];
+#ifndef TARGET_PC
 extern Matrix4f D_800F5500;
+#endif
 extern u32 D_800F64C0;
 extern s16 D_800F64FA;
 extern unk2C0C0StructE0* D_800F6500[];
