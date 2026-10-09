@@ -55,7 +55,7 @@ typedef struct CTPlayerWork {
    (lbu 0xD + 2i) as a u8 argument (func_8003967C): write (u8)r->unk_0A / (u8)r->unk_0C[i],
    never a byte field at +1. */
 typedef struct CTReel {
-    /* 0x00 */ u8 unk_00;      /* face shown, 0..3 (& 3) */
+    /* 0x00 */ s8 unk_00;      /* face shown, 0..3 (& 3); read with lb as an index */
     /* 0x01 */ char unk_01;
     /* 0x02 */ s16 unk_02[4];  /* sprite (model part) per face */
     /* 0x0A */ s16 unk_0A;     /* current entry of unk_0C */
@@ -250,8 +250,6 @@ extern const char D_801015D0_ChanceTime[];
 extern const char D_801015DC_ChanceTime[];
 extern const char D_801015E8_ChanceTime[];
 extern const char D_801015F4_ChanceTime[];
-extern const u8 D_80101600_ChanceTime[24];
-extern const u8 D_80101618_ChanceTime[24];
 /* DD760.c (0x80101320) */
 extern s8 D_80101320_ChanceTime;    /* message process done */
 extern s16 D_80101324_ChanceTime[2]; /* coins/stars to move */
