@@ -158,7 +158,8 @@ void func_800FCD04_BombsAway(void) {
         p->unk_0C.x = p->unk_0C.y = p->unk_0C.z = 1.0f;
         p->unk_18.x = p->unk_18.y = p->unk_18.z = 0.0f;
         p->unk_28 = tex;
-        p->unk_24 = func_80023684(D_800F37DA * 0xA0, 0x7918);
+        /* 20 commands per buffered frame (func_800FCE0C): 0xA0 bytes on the N64. */
+        p->unk_24 = func_80023684(D_800F37DA * (20 * sizeof(Gfx)), 0x7918);
         gSPEndDisplayList(p->unk_24);
         p->unk_00 = func_80024198(0xB1, p->unk_24, 4);
     }
@@ -166,8 +167,75 @@ void func_800FCD04_BombsAway(void) {
 #else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FCD04_BombsAway);
 #endif
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FCE0C_BombsAway);
+void func_800FCE0C_BombsAway(void) {
+    BaSplash* p;
+    Gfx* gfx;
+    s16 frame;
+    u16 i;
 
+    if ((s16)++D_800FFB20_BombsAway >= D_800F37DA) {
+        D_800FFB20_BombsAway = 0;
+    }
+    for (p = D_80100B70_BombsAway, i = 0; i < 6; i++, p++) {
+        /* 20 commands per buffered frame (0xA0 bytes on the N64; func_800FCD04 allocates them). */
+        gfx = &p->unk_24[(s16)D_800FFB20_BombsAway * 20];
+        *D_800F2B7C[p->unk_00].unk_6C->unk_00 = gfx;
+        if (p->unk_04 <= 0.0f) {
+            gSPEndDisplayList(gfx++);
+            continue;
+        }
+        if (p->unk_08 > 0.0f) {
+            p->unk_04 -= p->unk_08;
+        } else if (p->unk_08 < 0.0f) {
+            p->unk_04 += p->unk_08;
+        }
+        frame = (u32)(16.0f - p->unk_04);
+        if (frame < 0) {
+            frame = 0;
+        } else if (frame >= 16) {
+            frame = 15;
+        }
+        func_80025798(p->unk_00, p->unk_18.x, p->unk_18.y, p->unk_18.z);
+        func_80025830(p->unk_00, p->unk_0C.x, p->unk_0C.y, p->unk_0C.z);
+        gDPPipeSync(gfx++);
+        gDPSetCycleType(gfx++, G_CYC_1CYCLE);
+        gDPSetRenderMode(gfx++, 0x4049D8, 0);
+        gDPSetCombine(gfx++, 0xFFFFFF, 0xFFFDF2F9);
+        switch ((s16)p->unk_02) {
+            case 1:
+                gDPSetPrimColor(gfx++, 0, 0, 0xC8, 0xFF, 0xFF, 0xFF);
+                break;
+            case 2:
+                gDPSetPrimColor(gfx++, 0, 0, 0x7D, 0xFF, 0xFF, 0xFF);
+                break;
+            case 0:
+            default:
+                gDPSetPrimColor(gfx++, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+                break;
+        }
+        gDPLoadTextureBlock_4b(gfx++, p->unk_28 + (frame << 11), G_IM_FMT_I, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP,
+                               G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+        gSPVertex(gfx++, D_800FFAE0_BombsAway, 4, 0);
+        gSP1Triangle(gfx++, 0, 1, 2, 0);
+        gSP1Triangle(gfx++, 3, 2, 1, 0);
+        gDPPipeSync(gfx++);
+        gSPEndDisplayList(gfx++);
+        if (frame == 15) {
+            func_80025798(p->unk_00, 0.0f, 0.0f, -30000.0f);
+            func_80025830(p->unk_00, 0.0f, 0.0f, -30000.0f);
+        }
+        if (p->unk_08 > 0.0f) {
+            if (p->unk_04 == 14.0f) {
+                func_800FD364_BombsAway(p->unk_18.x, p->unk_18.y, p->unk_18.z - 25.0, p->unk_0C.x * 1.25, 16.0f,
+                                        -p->unk_08, 1);
+            }
+            if (p->unk_04 == 12.0f) {
+                func_800FD364_BombsAway(p->unk_18.x, p->unk_18.y, p->unk_18.z - 50.0, p->unk_0C.x * 1.5, 16.0f,
+                                        -p->unk_08, 2);
+            }
+        }
+    }
+}
 void func_800FD364_BombsAway(f32 x, f32 y, f32 z, f32 scale, f32 life, f32 b, u16 c) {
     BaSplash* p = D_80100B70_BombsAway;
     u16 i;
