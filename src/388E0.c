@@ -473,6 +473,10 @@ void func_80038888(u8* arg0, unk2C0C0StructC0* arg1, unk388E0Struct80* arg2) {
             *dst = c;
         }
     }
+#ifdef TARGET_PC
+    /* The palette is stored as host-endian u16 RGBA5551: tell the graphics bridge to swap it. */
+    pb_gfx_native16(arg2->unk_24, count * sizeof(u16));
+#endif
 }
 #else
 INCLUDE_ASM("asm/nonmatchings/388E0", func_80038888);
