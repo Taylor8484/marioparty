@@ -191,6 +191,8 @@ build/src/2C0C0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 build/src/99E0.c.o:  CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 build/src/overlays/ovl_7C_UnknownResultsScreen/308A50.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 build/src/overlays/ovl_14_CoinBlockBlitz/14E940.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+build/src/overlays/ovl_17_BoxMountainMayhem/166D50.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+build/src/overlays/ovl_17_BoxMountainMayhem/168CA0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 
 # -O3 static inlines
 build/src/7CD60.c.o: OPTFLAGS = -O3
@@ -264,7 +266,8 @@ $(BUILD_DIR)/src/%.c.o: src/%.c
 # ovl_6F 2DB2D0.c too (func_800F92D4: mul.s right after sinf/cosf's return); 2DF200.c and 2E8220.c too (func_800FADF4, func_80104988).
 # ovl_2C 1F62C0.c too (func_800F7840: mul.s right after func_800AEAC0's return).
 # ovl_14 14E940.c too (func_800F7604: mul.s right after func_800AEFD0's return; the unit has the mul fix on for func_800F83A8).
-$(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o $(BUILD_DIR)/src/1B800.c.o $(BUILD_DIR)/src/3DEB0.c.o $(BUILD_DIR)/src/59E80.c.o $(BUILD_DIR)/src/overlays/ovl_61_OpeningScene/29B410.c.o $(BUILD_DIR)/src/overlays/ovl_62_BoardIntro/2A2500.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2DB2D0.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2DF200.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2E8220.c.o $(BUILD_DIR)/src/overlays/ovl_2C_KeyPaWay/1F62C0.c.o $(BUILD_DIR)/src/overlays/ovl_14_CoinBlockBlitz/14E940.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
+# ovl_17 166D50.c and 168CA0.c too (func_800F8400, func_800FA058: mul fix on, mul.s right after func_800AEAC0's return).
+$(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o $(BUILD_DIR)/src/1B800.c.o $(BUILD_DIR)/src/3DEB0.c.o $(BUILD_DIR)/src/59E80.c.o $(BUILD_DIR)/src/overlays/ovl_61_OpeningScene/29B410.c.o $(BUILD_DIR)/src/overlays/ovl_62_BoardIntro/2A2500.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2DB2D0.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2DF200.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2E8220.c.o $(BUILD_DIR)/src/overlays/ovl_2C_KeyPaWay/1F62C0.c.o $(BUILD_DIR)/src/overlays/ovl_14_CoinBlockBlitz/14E940.c.o $(BUILD_DIR)/src/overlays/ovl_17_BoxMountainMayhem/166D50.c.o $(BUILD_DIR)/src/overlays/ovl_17_BoxMountainMayhem/168CA0.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
 	@$(PRINT)$(GREEN)Compiling C file: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
 	@mkdir -p $(shell dirname $@)
 	@$(CC_HOST) $(CFLAGS_CHECK) $(CPPFLAGS) -MMD -MP -MT $@ -MF $@.d $<

@@ -1030,9 +1030,9 @@ segments:
       - [0x166220, c]
       - [0x166D50, c]
       - [0x168CA0, c]
-      - [0x16BC00, data, 166220]
-      - [0x16BC10, data, 166D50]
-      - [0x16BC20, data, 168CA0]
+      - [0x16BC00, .data, 166220]
+      - [0x16BC10, .data, 166D50]
+      - [0x16BC20, .data, 168CA0]
       - [0x16BCD0, .rodata, 166220]
       - [0x16BD00, .rodata, 166D50]
       - {0x16BD20, type: bss, vram: 0x800FC0E0, name: ovl_17_bss}

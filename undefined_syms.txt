@@ -273,3 +273,5 @@ D_800F9408_UnknownBooStealScene = D_800F9400_UnknownBooStealScene + 0x8;
 D_800F9468_UnknownBooStealScene = D_800F9460_UnknownBooStealScene + 0x8;
 D_800F94D0_UnknownBooStealScene = D_800F94CC_UnknownBooStealScene + 0x4;
 D_800F94F0_UnknownBooStealScene = D_800F94EC_UnknownBooStealScene + 0x4;
+/* ovl_17 BoxMountainMayhem: asm (NON_MATCHING) users of labels inside its C .data arrays */
+D_800FC065_BoxMountainMayhem = D_800FC064_BoxMountainMayhem + 0x1;
