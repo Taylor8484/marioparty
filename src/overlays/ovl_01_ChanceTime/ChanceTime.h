@@ -250,8 +250,6 @@ extern const char D_801015D0_ChanceTime[];
 extern const char D_801015DC_ChanceTime[];
 extern const char D_801015E8_ChanceTime[];
 extern const char D_801015F4_ChanceTime[];
-extern const u8 D_80101600_ChanceTime[24];
-extern const u8 D_80101618_ChanceTime[24];
 /* DD760.c (0x80101320) */
 extern s8 D_80101320_ChanceTime;    /* message process done */
 extern s16 D_80101324_ChanceTime[2]; /* coins/stars to move */
