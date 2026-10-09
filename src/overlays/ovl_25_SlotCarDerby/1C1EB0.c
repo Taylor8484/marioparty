@@ -790,8 +790,164 @@ void func_800F87E4_SlotCarDerby(SCDCar* car, f32 ahead) {
     }
     car->unk_44 = d * 0.3;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800F88CC_SlotCarDerby);
+// float register allocation; GCC shares the braking subtraction (masked 50)
+#ifdef NON_MATCHING
+void func_800F88CC_SlotCarDerby(omObjData* obj, f32 throttle) {
+    Vec a;
+    Vec b;
+    SCDCar* car;
+    f32 target;
+    f32 speed;
+    f32 cur;
+    f32 prev;
+    f32 f;
+    f64 d;
+    s32 lim;
 
+    car = func_800F70C4_SlotCarDerby(obj);
+    if (car->unk_62 != 0) {
+        throttle = 0.1f;
+        car->unk_62--;
+    }
+    if (SCD_CAR_FRAMES0(car)) {
+        car->unk_66 = 1;
+        if (throttle != 0.0f) {
+            car->unk_07 = 1;
+            func_800F6ED4_SlotCarDerby(car, 0x2D6);
+        }
+    }
+    target = throttle * 7.0;
+    cur = car->unk_50;
+    if (cur < target) {
+        speed = cur + 0.14;
+        if (target < speed) {
+            speed = target;
+        }
+    } else if (target < cur) {
+        if (car->unk_60 != 0) {
+            d = cur - (f32)(20 - car->unk_60) / 10.0 * 0.42;
+        } else {
+            d = car->unk_50 - 0.42;
+        }
+        speed = d;
+        if (speed < target) {
+            speed = target;
+        }
+    } else {
+        speed = car->unk_50;
+    }
+    car->unk_50 = speed;
+    target = speed;
+    if (D_80101DE0_SlotCarDerby.unk_00 == 2) {
+        if (car->unk_74 < 0) {
+            if (car->unk_76 == 0) {
+                car->unk_74 = func_80060540(0x2D8, car->unk_01);
+            }
+        }
+        if (car->unk_74 >= 0) {
+            f = speed / 7.0 - 0.2;
+            if (f >= 0.0) {
+                d = f / 0.8;
+                d *= 1000.0;
+            } else {
+                d = f / 0.2;
+                d *= 1400.0;
+            }
+            f = d - 400.0;
+            func_80060440(car->unk_74, f);
+        }
+    }
+    if (car->unk_07 != 0) {
+        speed = 0.0f;
+        car->unk_50 = speed;
+        target = speed;
+        if (++car->unk_07 >= 31) {
+            car->unk_07 = 0;
+        }
+    }
+    prev = car->unk_4C;
+    car->unk_4C = func_800F96F4_SlotCarDerby(car->unk_48, prev, target, &car->unk_0C, &car->unk_30);
+    if (car->unk_00 & 0x80) {
+        if (D_801024B0_SlotCarDerby == 0) {
+            D_800F2B7C[obj->model[0]].unk_20 ^= 4;
+        }
+    } else {
+        if (D_80101434_SlotCarDerby * 0.9 < prev && car->unk_4C < D_80101434_SlotCarDerby * 0.1) {
+            car->unk_00 |= 0x80;
+            if (car->unk_04 == 0) {
+                car->unk_04 = D_80102312_SlotCarDerby++;
+                if (car->unk_04 == 1) {
+                    D_80101DF4_SlotCarDerby = 1;
+                    if (D_801024B0_SlotCarDerby != 0) {
+                        if (GwPlayer[obj->work[0]].group == 0) {
+                            D_801024B2_SlotCarDerby = 1;
+                        }
+                    } else if (!(GwPlayer[obj->work[0]].flags & 1)) {
+                        D_801024B2_SlotCarDerby = 1;
+                    }
+                }
+            }
+            car->unk_06 = 0;
+            D_80101DE0_SlotCarDerby.unk_0A = 60;
+            D_80101DF6_SlotCarDerby += func_800FBE7C_SlotCarDerby(car->unk_01, 1);
+        }
+    }
+    lim = func_800F95F4_SlotCarDerby(car->unk_4C + car->unk_48) + D_80100CAC_SlotCarDerby[car->unk_05];
+    if (lim > 100) {
+        lim = 100;
+    }
+    speed = lim * 7.0 / 100.0;
+    if (speed < target && (((car->unk_00 & 0x80) == 0) & (throttle != 0.0f))) {
+        if (car->unk_06 == 0) {
+            func_80060F04(car->unk_01, 10, 0, 10);
+            func_800F6ED4_SlotCarDerby(car, 0x2D6);
+        } else if (!(car->unk_06 & 3)) {
+            func_80060F04(car->unk_01, 2, 3, 10);
+        }
+        if (car->unk_06++ >= 26) {
+            if (throttle > 0.0f) {
+                car->unk_62 = 40;
+                car->unk_5C = 0.0f;
+            }
+            car->unk_06 = 0;
+            func_80060F04(car->unk_01, 2, 2, 20);
+            func_800F6ED4_SlotCarDerby(car, 0x2DC);
+        }
+    } else {
+        car->unk_06 = 0;
+    }
+    if (car->unk_06 >= 8) {
+        car->unk_60 = car->unk_06 - 6;
+    }
+    if (car->unk_60 != 0) {
+        if (--car->unk_60 < 0) {
+            car->unk_60 = 0;
+        }
+    }
+    car->unk_00 |= 0x10;
+    if (car->unk_62 == 0) {
+        func_800F87E4_SlotCarDerby(car, -car->unk_50 * 16.0f);
+        car->unk_5C = 0.0f;
+    } else {
+        car->unk_40 = 0.0f;
+        if ((car->unk_5C += 27.0) > 360.0f) {
+            car->unk_5C -= 360.0f;
+        }
+        if (!(car->unk_62 & 3)) {
+            func_800F744C_SlotCarDerby(1, car);
+        }
+    }
+    func_800FA2C0_SlotCarDerby(&car->unk_0C.x, 0.2f);
+    speed = car->unk_03 ? 80.0f : 20.0f;
+    func_800F96F4_SlotCarDerby(car->unk_48, car->unk_4C, speed, &a, &b);
+    func_800FA2C0_SlotCarDerby(&a.x, 0.2f);
+    if (!(car->unk_64 & 0xF) && car->unk_50 >= 6.3) {
+        func_800F744C_SlotCarDerby(0, car);
+    }
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800F88CC_SlotCarDerby);
+#endif
 void func_800F8FF8_SlotCarDerby(omObjData* obj) {
     Vec a;
     Vec b;
