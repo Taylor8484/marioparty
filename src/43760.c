@@ -320,6 +320,10 @@ void func_8004388C(s32 arg0) {
     unk43760* p;
     omObjData* obj;
 
+#ifdef TARGET_PC
+    s32 pbTries;
+#endif
+
     sel = 3;
     if (arg0 == -1) {
         sel = func_80054FE4();
@@ -339,8 +343,24 @@ void func_8004388C(s32 arg0) {
         func_800717C0(p->unk_00);
         func_8006DEC8(p->unk_00, p->unk_08 / 2, p->unk_0A / 2);
         func_8006E154(p->unk_00, 0);
+#ifdef TARGET_PC
+        pbTries = 0;
+#endif
         while (1) {
             D_800D6454[i] = lists[sel][(u8)(rand8() % D_800C4E10[sel])];
+#ifdef TARGET_PC
+            /* --dev-built-minigames: offer only minigames the host builds. When the built ones run
+               out (repeats, recent picks, coin rules), take any built one; with none of this type
+               built, the pick is retail's. */
+            if (++pbTries < 4000) {
+                if (!pb_dev_minigame_allowed(D_800D6454[i] - 1)) {
+                    continue;
+                }
+                if (pbTries > 2000) {
+                    break;
+                }
+            }
+#endif
             for (j = 0; j < i; j++) {
                 if (j != i && D_800D6454[j] == D_800D6454[i]) {
                     break;
