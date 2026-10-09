@@ -257,3 +257,7 @@ D_800FF318_KeyPaWay = D_800FF310_KeyPaWay + 0x8;
 D_800FF31C_KeyPaWay = D_800FF310_KeyPaWay + 0xC;
 D_800FF330_KeyPaWay = D_800FF310_KeyPaWay + 0x20;
 D_800FF376_KeyPaWay = D_800FF374_KeyPaWay + 0x2;
+D_800FA004_UnknownResultsScreen = D_800F9FF4_UnknownResultsScreen + 0x10;
+D_800FA014_UnknownResultsScreen = D_800F9FF4_UnknownResultsScreen + 0x20;
+D_800FA024_UnknownResultsScreen = D_800F9FF4_UnknownResultsScreen + 0x30;
+D_800FA034_UnknownResultsScreen = D_800F9FF4_UnknownResultsScreen + 0x40;
