@@ -667,8 +667,110 @@ void func_800F7A00_SlotCarDerby(omObjData* obj) {
 }
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800F7A7C_SlotCarDerby);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800F8270_SlotCarDerby);
+void func_800F8270_SlotCarDerby(omObjData* obj, s32 throttle) {
+    Matrix4f m;
+    Matrix4f rm;
+    Vec angles;
+    Vec v;
+    f32 t;
+    f32 a;
+    f64 speed;
+    SCDCar* car;
+    unk2C0C0Struct50* head;
 
+    t = throttle * 0.01;
+    car = func_800F70C4_SlotCarDerby(obj);
+    if (car->unk_02 == 4) {
+        if (D_80101DE0_SlotCarDerby.unk_00 == 2) {
+            car->unk_02 = 1;
+            car->unk_64 = car->unk_66 = 0;
+        }
+    }
+    switch (car->unk_02) {
+        case 0:
+            break;
+        case 1:
+            func_800F88CC_SlotCarDerby(obj, t);
+            break;
+        case 2:
+            func_800F8FF8_SlotCarDerby(obj);
+            break;
+        case 3:
+            func_800F91B4_SlotCarDerby(obj);
+            break;
+        case 4:
+            func_800F9554_SlotCarDerby(obj);
+            break;
+    }
+    car->unk_64++;
+    if (car->unk_00 & 0x10) {
+        if ((car->unk_58 -= 24.0) < 0.0) {
+            /* unk_06 and unk_07 tested together (lhu): endian-neutral against 0 */
+            if (*(u16*)&car->unk_06 != 0) {
+                car->unk_58 += 360.0;
+            } else {
+                car->unk_58 = 0.0f;
+            }
+        }
+        if (car->unk_07 != 0) {
+            a = func_800AEAC0(car->unk_58) * 45.0;
+        } else {
+            a = car->unk_06;
+            if (a > 20.0f) {
+                a = 20.0f;
+            }
+            a = (a + 40.0f) * func_800AEAC0(car->unk_58);
+        }
+        func_800A2A50(m);
+        func_800A2A50(rm);
+        func_8009E060(m, a + car->unk_5C, 0.0f, 1.0f, 0.0f);
+        m[3][3] = 1.0f;
+        func_800F9EA4_SlotCarDerby(&car->unk_30, &angles.x);
+        MtxRotate(rm, angles.x, angles.y, angles.z);
+        func_800AC0B0(m, rm, m);
+        func_800F9FC8_SlotCarDerby(m, &car->unk_24);
+        speed = car->unk_50 / 7.0 * 2.5;
+        func_800F7650_SlotCarDerby(obj->model[0], speed);
+        if ((((s16)car->unk_64 + car->unk_01) & 3) == 0 && car->unk_58 != 0.0f) {
+            func_800F744C_SlotCarDerby(1, car);
+        }
+        head = D_80101FF8_SlotCarDerby[obj->work[0]];
+        if (head != (unk2C0C0Struct50*)-1 && car->unk_62 == 0) {
+            head->unk_44.x = car->unk_3C;
+            head->unk_44.z = car->unk_44;
+            func_800F96F4_SlotCarDerby(car->unk_48, car->unk_4C, car->unk_50 * 12.0f + 1.0, &v, &angles);
+            v.x -= car->unk_0C.x;
+            v.y -= car->unk_0C.y;
+            v.z -= car->unk_0C.z;
+            func_800F9EA4_SlotCarDerby(&v, &angles.x);
+            a = angles.y - car->unk_24.y;
+            if (a < 0.0) {
+                a += 360.0;
+            }
+            if (a > 180.0) {
+                a -= 360.0;
+            }
+            head->unk_44.y = a * 0.75;
+            func_8009EA40(head->unk_64, head->unk_08.x, head->unk_08.y, head->unk_08.z);
+            MtxRotate(head->unk_64, head->unk_44.x, head->unk_44.y, head->unk_44.z);
+            MtxScale(head->unk_64, head->unk_50.x, head->unk_50.y, head->unk_50.z);
+        }
+    }
+    if (car->unk_08 != 0) {
+        D_800F2B7C[obj->model[0]].unk_20 ^= 4;
+        if (--car->unk_08 == 0) {
+            D_800F2B7C[obj->model[0]].unk_20 |= 4;
+            D_800F2B7C[obj->model[0]].unk_0A |= 1;
+            car->unk_02 = 0;
+        }
+    }
+    obj->trans.x = car->unk_0C.x * 10.0;
+    obj->trans.y = car->unk_0C.y * 10.0;
+    obj->trans.z = car->unk_0C.z * 10.0;
+    obj->rot.x = car->unk_24.x;
+    obj->rot.y = car->unk_24.y;
+    obj->rot.z = car->unk_24.z;
+}
 void func_800F87E4_SlotCarDerby(SCDCar* car, f32 ahead) {
     Vec a;
     Vec b;
