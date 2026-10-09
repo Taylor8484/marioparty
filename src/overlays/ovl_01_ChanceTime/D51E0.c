@@ -1,5 +1,18 @@
 #include "ChanceTime.h"
 
+void func_80025BB8(s16, s16);
+void func_80055B50(s32, s32);
+void func_80055B64(void);
+/* The board's path: retail reads D_801011FC (start) as D_80101208[-1] (adjacent .data objects,
+   one base register); the host names the object. */
+#ifdef TARGET_PC
+#define CT_CAM_FROM D_801011FC_ChanceTime
+#else
+#define CT_CAM_FROM ((&D_80101208_ChanceTime)[-1])
+#endif
+#define CT_CAM_TO D_80101208_ChanceTime
+
+
 void func_8005049C(void);
 void func_80055A40(s32);
 void func_8007B168(u8*, u8);
@@ -938,8 +951,153 @@ void func_800FB950_ChanceTime(omObjData* obj) {
     }
     obj->func_ptr = &func_800FB00C_ChanceTime;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_01_ChanceTime/D51E0", func_800FBBC4_ChanceTime);
-
+void func_800FBBC4_ChanceTime(omObjData* obj) {
+    switch (D_801011F7_ChanceTime) {
+    case 1:
+        switch (D_801012AC_ChanceTime) {
+        case 0:
+            func_800258EC(obj->model[0], 4, 0);
+            func_800258EC(obj->model[1], 4, 0);
+            obj->rot.y = 0.0f;
+            D_801012A8_ChanceTime = 0;
+            D_801012AC_ChanceTime++;
+            break;
+        case 1:
+            if (D_801012A8_ChanceTime >= 11) {
+                func_80025C20(obj->model[0], func_80025E48(obj->motion[3]), 0, 0x1E, 2);
+                D_801012AC_ChanceTime++;
+            }
+            D_801012A8_ChanceTime++;
+            break;
+        case 2:
+            omAddPrcObj(func_800FF354_ChanceTime, 0x3F00, 0x800, 0);
+            D_801012A8_ChanceTime = 0;
+            D_801012AC_ChanceTime++;
+            break;
+        case 3:
+            if (++D_801012A8_ChanceTime >= 21) {
+                D_801012AC_ChanceTime++;
+            }
+            break;
+        case 4:
+            func_80025C20(obj->model[0], func_80025E48(obj->motion[0]), 0, 0x1E, 2);
+            D_801012AC_ChanceTime++;
+            break;
+        case 5:
+            if (D_80101320_ChanceTime == 1) {
+                D_801012AC_ChanceTime++;
+            }
+            break;
+        case 6:
+            if (obj->rot.y < 90.0f) {
+                obj->rot.y += 6.0f;
+                if (obj->rot.y >= 90.0f) {
+                    obj->rot.y = 90.0f;
+                    D_801012AC_ChanceTime++;
+                }
+            }
+            break;
+        case 7:
+            D_801011F3_ChanceTime = 1;
+            func_80025C20(obj->model[0], func_80025E48(obj->motion[1]), 0, 0x1E, 2);
+            D_801012A8_ChanceTime = 0;
+            D_801012AC_ChanceTime++;
+            break;
+        case 8:
+            if (D_801012A8_ChanceTime < 30) {
+                D_801012A8_ChanceTime++;
+                obj->trans.x -= (CT_CAM_TO.x - CT_CAM_FROM.x) / 30.0f;
+                obj->trans.y -= (CT_CAM_TO.y - CT_CAM_FROM.y) / 30.0f;
+                obj->trans.z -= (CT_CAM_TO.z - CT_CAM_FROM.z) / 30.0f;
+            } else {
+                func_800258EC(obj->model[0], 4, 4);
+                func_800258EC(obj->model[1], 4, 4);
+                D_801012AC_ChanceTime++;
+            }
+            break;
+        case 9:
+            D_801011F7_ChanceTime = 0;
+            D_801012A8_ChanceTime = 0;
+            D_801012AC_ChanceTime = 0;
+            break;
+        }
+        break;
+    case 2:
+        switch (D_801012AC_ChanceTime) {
+        case 0:
+            func_800258EC(obj->model[0], 4, 0);
+            func_800258EC(obj->model[1], 4, 0);
+            func_80025BB8(obj->model[0], obj->motion[1]);
+            func_80025EB4(obj->model[0], 2, 2);
+            obj->rot.y = -90.0f;
+            func_80055B50(D_801012E0_ChanceTime, D_801012E0_ChanceTime);
+            func_800559F8();
+            omAddPrcObj(func_800F87CC_ChanceTime, 0x3F00, 0x800, 0);
+            D_801012A8_ChanceTime = 0;
+            D_801012AC_ChanceTime++;
+            break;
+        case 1:
+            if (D_801012A8_ChanceTime >= 31) {
+                D_801012A8_ChanceTime = 0;
+                D_801012AC_ChanceTime++;
+            }
+            D_801012A8_ChanceTime++;
+            break;
+        case 2:
+            if (D_801012A8_ChanceTime < 30) {
+                D_801012A8_ChanceTime++;
+                obj->trans.x += (CT_CAM_TO.x - CT_CAM_FROM.x) / 30.0f;
+                obj->trans.y += (CT_CAM_TO.y - CT_CAM_FROM.y) / 30.0f;
+                obj->trans.z += (CT_CAM_TO.z - CT_CAM_FROM.z) / 30.0f;
+            } else {
+                D_801012AC_ChanceTime++;
+            }
+            break;
+        case 3:
+            if (obj->rot.y < 0.0f) {
+                obj->rot.y += 6.0f;
+                if (obj->rot.y >= 0.0f) {
+                    obj->rot.y = 0.0f;
+                    D_801012AC_ChanceTime++;
+                }
+            }
+            break;
+        case 4:
+            func_80025C20(obj->model[0], func_80025E48(obj->motion[0]), 0, 0x1E, 2);
+            func_80055B64();
+            D_801012AC_ChanceTime++;
+            break;
+        case 5:
+            omAddPrcObj(func_800FF3F0_ChanceTime, 0x3F00, 0x800, 0);
+            D_801012AC_ChanceTime++;
+            break;
+        case 6:
+            if (D_80101320_ChanceTime == 1) {
+                D_801012AC_ChanceTime++;
+                D_801012A8_ChanceTime = 0;
+            }
+            break;
+        case 7:
+            func_80025C20(obj->model[0], func_80025E48(obj->motion[3]), 0, 0x1E, 2);
+            D_801012A8_ChanceTime = 0;
+            D_801012AC_ChanceTime++;
+            break;
+        case 8:
+            if (++D_801012A8_ChanceTime >= 31) {
+                D_801012AC_ChanceTime++;
+            }
+            break;
+        case 9:
+            D_801011F7_ChanceTime = 0;
+            D_801012A8_ChanceTime = 0;
+            D_801012AC_ChanceTime = 0;
+            func_80009438();
+            break;
+        }
+        break;
+    }
+    func_80025798(obj->model[1], obj->trans.x, 0.0f, obj->trans.z);
+}
 void func_800FC1C8_ChanceTime(omObjData* obj) {
     f32 x = D_80101208_ChanceTime.x;
     f32 y = D_80101208_ChanceTime.y;
