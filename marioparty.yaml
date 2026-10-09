@@ -1753,7 +1753,7 @@ segments:
     bss_size: 0x10
     subsegments:
       - [0x280C80, c]
-      - [0x281BA0, data, 280C80]
+      - [0x281BA0, .data, 280C80]
       - [0x281D00, .rodata, 280C80]
       - {0x281D40, type: bss, vram: 0x800F76A0, name: ovl_44_bss}
   - type: code
@@ -1767,7 +1767,7 @@ segments:
     bss_size: 0x10
     subsegments:
       - [0x281D40, c]
-      - [0x2826F0, data, 281D40]
+      - [0x2826F0, .data, 281D40]
       - [0x2827F0, .rodata, 281D40]
       - {0x282820, type: bss, vram: 0x800F70C0, name: ovl_45_bss}
   - type: code
