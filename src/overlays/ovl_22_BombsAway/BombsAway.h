@@ -246,11 +246,13 @@ extern s16 D_800FFAC4_BombsAway;
 extern Vec D_800FFAC8_BombsAway;
 extern Vec D_800FFAD4_BombsAway;
 extern Vtx D_800FFAE0_BombsAway[4];
-extern u16 D_800FFB20_BombsAway[2];
+extern u16 D_800FFB20_BombsAway;
+extern u16 D_800FFB22_BombsAway;
 extern f32 D_800FFB24_BombsAway;
 extern f32 D_800FFB28_BombsAway;
 extern s32 D_800FFB2C_BombsAway; /* random seed; retail returns its low half (lhu D_800FFB2E) */
-extern u16 D_800FFB30_BombsAway[8];
+extern u16 D_800FFB30_BombsAway;
+extern u16 D_800FFB32_BombsAway;
 
 /* ---------------------------------------------------------------------------------------------
    Overlay bss (ovl_22_bss, 0x80100140..0x80100C80)
@@ -284,8 +286,10 @@ extern s16 D_80100700_BombsAway[9]; /* [3..5] = D_80100706: shared player motion
 extern Matrix4f D_80100720_BombsAway; /* camera look-at (func_800FC39C) */
 extern f32 D_80100760_BombsAway;
 extern f32 D_80100770_BombsAway;
-extern s16 D_80100774_BombsAway[2];
-extern s16 D_80100778_BombsAway[2];
+/* Two s16 pairs (4 bytes each); retail addresses each half with its own lui/%lo, so they are
+   scalars here with split labels for the second halves (D_80100776, D_8010077A). */
+extern s16 D_80100774_BombsAway;
+extern s16 D_80100778_BombsAway;
 extern s16 D_8010077C_BombsAway;
 extern s16 D_8010077E_BombsAway;
 extern u8 D_80100780_BombsAway;
@@ -337,6 +341,8 @@ extern Vec D_8010079C_BombsAway;
 extern f32 D_801007A8_BombsAway;
 extern f32 D_801007B8_BombsAway;
 extern s16 D_80100B12_BombsAway;
+extern s16 D_80100776_BombsAway; /* undefined_syms.txt: D_80100774 + 2 */
+extern s16 D_8010077A_BombsAway; /* undefined_syms.txt: D_80100778 + 2 */
 #else
 #define D_80100144_BombsAway (D_80100140_BombsAway.unk_04)
 #define D_80100146_BombsAway (D_80100140_BombsAway.unk_06)
@@ -376,6 +382,8 @@ extern s16 D_80100B12_BombsAway;
 #define D_80100994_BombsAway (D_80100990_BombsAway[0].unk_04)
 #define D_80100998_BombsAway (D_80100990_BombsAway[0].unk_08)
 #define D_80100B12_BombsAway (D_80100B10_BombsAway[1])
+#define D_80100776_BombsAway (((s16*)&D_80100774_BombsAway)[1])
+#define D_8010077A_BombsAway (((s16*)&D_80100778_BombsAway)[1])
 #define D_800FFA80_BombsAway (D_800FFA7C_BombsAway[0][1])
 #define D_800FFAAD_BombsAway (D_800FFAAC_BombsAway[0][1])
 #define D_800FFB2E_BombsAway ((u16)D_800FFB2C_BombsAway)
@@ -465,7 +473,7 @@ void func_800FDB78_BombsAway(omObjData*);
 void func_800FDC6C_BombsAway(void);
 void func_800FDCA0_BombsAway(void);
 void func_800FDD58_BombsAway(void);
-s16 func_800FDE38_BombsAway(u16, f32, f32, f32, f32, s16, f32);
+s16 func_800FDE38_BombsAway(s16, f32, f32, f32, f32, s16, f32);
 u16 func_800FE1EC_BombsAway(u32);
 void func_800FE254_BombsAway(omObjData*);
 void func_800FE4A4_BombsAway(omObjData*);
@@ -475,7 +483,7 @@ void func_800FECA8_BombsAway(u16, u16);
 void func_800FED18_BombsAway(void);
 void func_800FEE2C_BombsAway(void);
 void func_800FF218_BombsAway(s16);
-void func_800FF674_BombsAway(s16, u16, s16*);
-void func_800FF9C4_BombsAway(u16*, u16);
+void func_800FF674_BombsAway(s16, s32, s16*);
+void func_800FF9C4_BombsAway(s16*, u16);
 
 #endif
