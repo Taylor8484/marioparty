@@ -405,7 +405,13 @@ extern SCDObj* D_8010246C_SlotCarDerby;  /* [8] */
 extern SCDFx* D_80102470_SlotCarDerby;   /* [32] */
 extern s32 D_80102474_SlotCarDerby;      /* sprite group (s16 in a word; read (s16)) */
 extern s32 D_80102478_SlotCarDerby;      /* sprite group (read (s16)) */
+#ifdef TARGET_PC
+/* No splat label at 0x8010247C (asm only reads its halves through +2 labels): on the host it is a
+   view of the object gen_ovl.py makes for D_80102478, which runs on to the next label. */
+#define D_8010247C_SlotCarDerby ((s32*)(&D_80102478_SlotCarDerby + 1))
+#else
 extern s32 D_8010247C_SlotCarDerby[3];   /* effect sprites by SCDFx type (read (s16)) */
+#endif
 extern s32 D_80102488_SlotCarDerby;      /* effect sprite group (read (s16)) */
 extern s32 D_8010248C_SlotCarDerby;      /* billboard count */
 extern Gfx* D_80102490_SlotCarDerby[3];  /* per-frame billboard display lists */
