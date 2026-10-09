@@ -332,3 +332,6 @@ D_801012C8_ChanceTime = D_801012C4_ChanceTime + 0x4;
 D_801012CE_ChanceTime = D_801012CC_ChanceTime + 0x2;
 D_801012D0_ChanceTime = D_801012CC_ChanceTime + 0x4;
 D_80101326_ChanceTime = D_80101324_ChanceTime + 0x2;
+D_800FFA80_BombsAway = D_800FFA7C_BombsAway + 0x4;
+D_80100776_BombsAway = D_80100774_BombsAway + 0x2;
+D_8010077A_BombsAway = D_80100778_BombsAway + 0x2;
