@@ -87,7 +87,11 @@ void func_800F6744_BowserSpaceEvent(void) {
 }
 
 void func_800F677C_BowserSpaceEvent(void) {
+#ifdef TARGET_PC
+    char sp10[16]; /* retail: one char that sprintf overruns (harmless in the N64 frame) */
+#else
     char sp10;
+#endif
     s32 windowID;
     s32 var_s0;
 
@@ -279,7 +283,11 @@ void func_800F6AF8_BowserSpaceEvent(void) {
 }
 
 void func_800F7044_BowserSpaceEvent(void) {
+#ifdef TARGET_PC
+    char sp10[16]; /* retail: one char that sprintf overruns (harmless in the N64 frame) */
+#else
     char sp10;
+#endif
     s32 windowID;
     s32 var_a2;
     s32 var_s0_2;
@@ -365,7 +373,11 @@ void func_800F7044_BowserSpaceEvent(void) {
 }
 
 void func_800F7410_BowserSpaceEvent(void) {
+#ifdef TARGET_PC
+    char sp10[16]; /* retail: one char that sprintf overruns (harmless in the N64 frame) */
+#else
     char sp10;
+#endif
     s32 var_a1_2;
     s32 var_s2;
     s32 var_s1;
@@ -545,7 +557,11 @@ void func_800F7410_BowserSpaceEvent(void) {
 }
 
 void func_800F7BFC_BowserSpaceEvent(void) {
+#ifdef TARGET_PC
+    char sp10[16]; /* retail: one char that sprintf overruns (harmless in the N64 frame) */
+#else
     char sp10;
+#endif
     s32 var_a1_2;
     s32 temp_s1;
     s32 tempVar;
@@ -660,7 +676,11 @@ void func_800F7BFC_BowserSpaceEvent(void) {
 }
 
 void func_800F80EC_BowserSpaceEvent(void) {
+#ifdef TARGET_PC
+    char sp10[16]; /* retail: one char that sprintf overruns (harmless in the N64 frame) */
+#else
     char sp10;
+#endif
     s32 var_a1_2;
     s32 var_s1;
     s32 var_s2;
