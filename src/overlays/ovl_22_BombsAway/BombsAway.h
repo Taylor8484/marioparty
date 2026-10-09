@@ -246,7 +246,8 @@ extern s16 D_800FFAC4_BombsAway;
 extern Vec D_800FFAC8_BombsAway;
 extern Vec D_800FFAD4_BombsAway;
 extern Vtx D_800FFAE0_BombsAway[4];
-extern u16 D_800FFB20_BombsAway[2];
+extern u16 D_800FFB20_BombsAway;
+extern u16 D_800FFB22_BombsAway;
 extern f32 D_800FFB24_BombsAway;
 extern f32 D_800FFB28_BombsAway;
 extern s32 D_800FFB2C_BombsAway; /* random seed; retail returns its low half (lhu D_800FFB2E) */

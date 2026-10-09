@@ -1,5 +1,8 @@
 #include "BombsAway.h"
 
+extern u8 D_800F64F8;
+
+
 u16 D_800FFAC0_BombsAway = 0;
 u16 D_800FFAC2_BombsAway = 0;
 s16 D_800FFAC4_BombsAway = 0x36;
@@ -11,7 +14,8 @@ Vtx D_800FFAE0_BombsAway[4] = {
     { { { 125, 250, 0 }, 0, { 0x800, 0 }, { 0, 0, 0, 255 } } },
     { { { 125, 0, 0 }, 0, { 0x800, 0x800 }, { 0, 0, 0, 255 } } },
 };
-u16 D_800FFB20_BombsAway[2] = { 0, 0 };
+u16 D_800FFB20_BombsAway = 0;
+u16 D_800FFB22_BombsAway = 0;
 f32 D_800FFB24_BombsAway = 0.0f;
 f32 D_800FFB28_BombsAway = 0.0f;
 /* Random seed (func_800FE1EC); retail returns its low half through D_800FFB2E. */
@@ -53,8 +57,35 @@ void func_800FC88C_BombsAway(void) {
 }
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FC8F8_BombsAway);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FCD04_BombsAway);
+// operand order of the offset's or/addu (masked 2; GCC canonicalises pointer + int)
+#ifdef NON_MATCHING
+void func_800FCD04_BombsAway(void) {
+    BaSplash* p;
+    u8* file;
+    u8* tex;
+    u16 i;
 
+    file = DataRead(0x35000E);
+    D_80100B6C_BombsAway = file;
+    /* A big-endian u16 offset at bytes 0xA/0xB: read as bytes on every host. */
+    tex = ((file[0xA] << 8) | file[0xB]) + file;
+    for (p = D_80100B70_BombsAway, i = 0; i < 6; i++, p++) {
+        p->unk_04 = 0.0f;
+        p->unk_28 = NULL;
+        p->unk_04 = 0.0f;
+        p->unk_08 = 0.0f;
+        p->unk_02 = 0;
+        p->unk_0C.x = p->unk_0C.y = p->unk_0C.z = 1.0f;
+        p->unk_18.x = p->unk_18.y = p->unk_18.z = 0.0f;
+        p->unk_28 = tex;
+        p->unk_24 = func_80023684(D_800F37DA * 0xA0, 0x7918);
+        gSPEndDisplayList(p->unk_24);
+        p->unk_00 = func_80024198(0xB1, p->unk_24, 4);
+    }
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FCD04_BombsAway);
+#endif
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FCE0C_BombsAway);
 
 void func_800FD364_BombsAway(f32 x, f32 y, f32 z, f32 scale, f32 life, f32 b, u16 c) {
@@ -109,16 +140,49 @@ void func_800FDB0C_BombsAway(omObjData* obj) {
     func_80026040(*obj->model);
     func_800FF218_BombsAway(*obj->model);
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FDB78_BombsAway);
-
+void func_800FDB78_BombsAway(omObjData* obj) {
+    func_800FF674_BombsAway(*obj->model, D_800FFB22_BombsAway % 361, obj->model);
+    func_80027C1C(*obj->model, D_800FFB24_BombsAway, D_800FFB28_BombsAway, 0x20, 0x20);
+    if (func_8005FD5C() + D_800F64F8 == 0) {
+        D_800FFB22_BombsAway++;
+        D_800FFB24_BombsAway += 0.3;
+    }
+}
 void func_800FDC6C_BombsAway(void) {
     func_800258EC(D_80100B40_BombsAway, 4, 4);
     func_80023728(D_80100B44_BombsAway);
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FDCA0_BombsAway);
+void func_800FDCA0_BombsAway(void) {
+    void* file;
+    u16 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FDD58_BombsAway);
+    for (i = 0; i < 32; i++) {
+        D_80100990_BombsAway[i].unk_00 = -1;
+        D_80100990_BombsAway[i].unk_02 = 0;
+    }
+    file = DataRead(0x35000F);
+    D_80100B10_BombsAway[1] = func_800678A4(file);
+    DataClose(file);
+    file = DataRead(0x350011);
+    D_80100B10_BombsAway[3] = func_800678A4(file);
+    DataClose(file);
+}
+void func_800FDD58_BombsAway(void) {
+    u16 i;
+    s16 t;
 
+    for (i = 0; i < 32; i++) {
+        if (D_80100990_BombsAway[i].unk_04 <= 0x20) {
+            if (D_80100990_BombsAway[i].unk_02 == 1) {
+                func_80064D38(D_80100990_BombsAway[i].unk_00);
+                D_80100990_BombsAway[i].unk_00 = -1;
+            }
+            if ((t = D_80100990_BombsAway[i].unk_02) > 0) {
+                D_80100990_BombsAway[i].unk_02 = t - 1;
+            }
+        }
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FDE38_BombsAway);
 
 u16 func_800FE1EC_BombsAway(u32 n) {
@@ -132,8 +196,32 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FE254_B
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FE4A4_BombsAway);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FE948_BombsAway);
+s32 func_800FE948_BombsAway(f32 x, f32 z, f32 y, u16 kind) {
+    BaBomb* p;
+    u16 i;
 
+    for (i = 0; i < 4; i++) {
+        if (++D_80100784_BombsAway >= 4) {
+            D_80100784_BombsAway = 0;
+        }
+        p = &D_801007E0_BombsAway[D_80100784_BombsAway];
+        if (p->unk_00 >= 2 && p->unk_02 == 0) {
+            break;
+        }
+    }
+    if (i < 4) {
+        if (kind < 3) {
+            p->unk_00 = 0;
+            p->unk_02 = 0;
+            p->unk_04 = kind;
+            p->unk_10 = y;
+            p->unk_14 = x;
+            p->unk_1C = z;
+            return 1;
+        }
+    }
+    return 0;
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FEA0C_BombsAway);
 
 void func_800FECA8_BombsAway(u16 i, u16 n) {
@@ -146,8 +234,23 @@ void func_800FECA8_BombsAway(u16 i, u16 n) {
     s->unk_0C = 0.0f;
     s->unk_10 = s->unk_14 = s->unk_18 = s->unk_0C;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FED18_BombsAway);
+void func_800FED18_BombsAway(void) {
+    u16 i;
 
+    for (i = 0; i < 6; i++) {
+        if (i == 0) {
+            D_80100B52_BombsAway[0] = func_800174C0(0x350005, 0x99);
+            D_80100B5E_BombsAway[0] = func_800174C0(0x350007, 0x99);
+        } else {
+            D_80100B52_BombsAway[i] = func_80023FC8(D_80100B52_BombsAway[0]);
+            D_80100B5E_BombsAway[i] = func_80023FC8(D_80100B5E_BombsAway[0]);
+        }
+        func_800258EC(D_80100B52_BombsAway[i], 4, 4);
+        func_800258EC(D_80100B5E_BombsAway[i], 4, 4);
+        func_800FECA8_BombsAway(i, 0);
+    }
+    D_80100784_BombsAway = 0xFF;
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FEE2C_BombsAway);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_22_BombsAway/1B02A0", func_800FF218_BombsAway);
