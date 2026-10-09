@@ -618,8 +618,62 @@ s32 func_800F95F4_SlotCarDerby(f32 dist) {
     }
     return D_80100C90_SlotCarDerby[cls] + 1;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800F96F4_SlotCarDerby);
+f32 func_800F96F4_SlotCarDerby(f32 start, f32 dist, f32 step, Vec* pos, Vec* dir) {
+    f32 d;
+    f32 at;
+    f32 sum;
+    f32 prev;
+    f32 t;
+    s16 i;
+    s16 next;
 
+    d = dist + step;
+    if (d >= 0.0f) {
+        d = func_8009B618(d, D_80101434_SlotCarDerby);
+    } else {
+        d += D_80101434_SlotCarDerby;
+    }
+    at = start + d;
+    if (at >= 0.0f) {
+        at = func_8009B618(at, D_80101434_SlotCarDerby);
+    } else {
+        at += D_80101434_SlotCarDerby;
+    }
+    sum = 0.0f;
+    prev = sum;
+    for (i = 0; i < D_80101428_SlotCarDerby; i++) {
+        sum += D_8010142C_SlotCarDerby[i];
+        if (at <= sum) {
+            break;
+        }
+        prev = sum;
+    }
+    if (i >= D_80101428_SlotCarDerby) {
+        i = 0;
+        at -= D_80101434_SlotCarDerby;
+        prev = 0.0f;
+    }
+    at -= prev;
+    step = at / D_8010142C_SlotCarDerby[i];
+    t = fabsf(step);
+    if (t >= 0.5) {
+        t = t - 0.5;
+    } else {
+        t = t + 0.5;
+        i = (i != 0) ? i - 1 : D_80101428_SlotCarDerby - 1;
+    }
+    if (i < D_80101428_SlotCarDerby - 1) {
+        next = i + 1;
+    } else {
+        next = 0;
+    }
+    prev = D_8010142C_SlotCarDerby[i] * 0.5;
+    sum = prev + D_8010142C_SlotCarDerby[next] * 0.5;
+    t = func_800F9B60_SlotCarDerby(t, 0.0f, prev, sum) / sum;
+    func_800F9BC0_SlotCarDerby(t, &D_80101440_SlotCarDerby[i], &D_80101424_SlotCarDerby[next], &D_80101440_SlotCarDerby[next], pos);
+    func_800F9CB4_SlotCarDerby(t, &D_80101440_SlotCarDerby[i], &D_80101424_SlotCarDerby[next], &D_80101440_SlotCarDerby[next], dir);
+    return d;
+}
 // retail keeps the pos pointer increment (addiu; lwc1 0/4) where GCC folds it (masked 13)
 #ifdef NON_MATCHING
 s32 func_800F9A0C_SlotCarDerby(Vec* pos, f32* groundY) {
