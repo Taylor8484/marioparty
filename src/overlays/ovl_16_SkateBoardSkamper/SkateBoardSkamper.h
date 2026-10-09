@@ -81,7 +81,8 @@ typedef struct SbsFloorWork {
 #define SBS_FLOOR(obj) ((SbsFloorWork*)(obj)->unk_50)
 
 /* Work of the four bodies added to D_800EDE70 (func_800F9B1C, func_80023684(0x6C)): fields up to
-   0x64 follow src/1130.c's PlayerWork. unk_68 is the overlay's 4-byte extension: the body's index. */
+   0x64 follow src/1130.c's PlayerWork (no pointers there). unk_68 is the overlay's 4-byte extension
+   (the body's index), past everything the main code reads. */
 typedef struct SbsBodyWork {
     /* 0x00 */ u8 unk_00[0x34]; /* main-code fields; func_80009340 keeps a byte at 0x21 + slot */
     /* 0x34 */ f32 unk_34;
@@ -98,8 +99,8 @@ typedef struct SbsBodyWork {
     /* 0x55 */ char unk_55[7];
     /* 0x5C */ f32 unk_5C;
     /* 0x60 */ f32 unk_60;
-    /* 0x64 */ omObjData* unk_64;
-    /* 0x68 */ s32* unk_68;
+    /* 0x64 */ f32 unk_64;
+    /* 0x68 */ s32* unk_68; /* 8-aligned on the host too: every field keeps its N64 offset */
 } SbsBodyWork; /* size = 0x6C (N64) */
 
 /* ---------------------------------------------------------------------------------------------

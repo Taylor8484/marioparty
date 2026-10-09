@@ -278,6 +278,7 @@ void func_800F71B8_SkateBoardSkamper(omObjData* obj) {
 }
 
 /* Ripples on the course model's vertex colours and heights around (+-1000, z). */
+// register allocation (masked 25): retail hoists 28.0f into a saved register, this C hoists 255.0f
 #ifdef NON_MATCHING
 void func_800F7758_SkateBoardSkamper(omObjData* obj) {
     unk2C0C0StructC0* m = D_800F2B7C[obj->model[0]].unk_6C;
@@ -350,9 +351,9 @@ s32 func_800F7B7C_SkateBoardSkamper(s32 n, s32 player) {
 }
 
 /* The player's rank (0 leads). */
+// if-conversion (masked 9): GCC turns the last rank test into xor/sltu/negu (retail branches), and retail's frame is 0x18
 #ifdef NON_MATCHING
 s32 func_800F7BC4_SkateBoardSkamper(s32 player) {
-    s32 pad[2]; /* retail's 0x18-byte frame */
     s32 rank;
 
     if (player == D_800FDAB0_SkateBoardSkamper[0]) {
@@ -1443,6 +1444,7 @@ void func_800FB380_SkateBoardSkamper(omObjData* obj) {
 }
 
 /* A player object. */
+// scheduling (masked 2): retail loads w->unk_58 before the unk_38 == 1000.0f test
 #ifdef NON_MATCHING
 void func_800FBAD4_SkateBoardSkamper(omObjData* obj) {
     SbsPlayerWork* w = obj->unk_50;
@@ -1475,6 +1477,7 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_16_SkateBoardSkamper/15EAF0", func_80
 #endif
 
 /* Raises a course tile model's far vertices (y > 400) to n steps of 10 and scrolls its texture. */
+// register allocation (masked 12): one value more live in the inner loop, so a saved register and an 8-byte frame
 #ifdef NON_MATCHING
 void func_800FBC38_SkateBoardSkamper(s16 model, s16 n) {
     unk2C0C0StructC0* m = D_800F2B7C[model].unk_6C;
