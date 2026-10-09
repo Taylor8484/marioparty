@@ -163,8 +163,8 @@ typedef struct SlotFx {
     /* 0x30 */ f32 unk_30; /* start scale x */
     /* 0x34 */ f32 unk_34; /* start scale y */
     /* 0x38 */ s16 unk_38; /* symbol (D_800FFC96) */
-    /* 0x3A */ u16 unk_3A; /* frame counter */
-    /* 0x3C */ u16 unk_3C;
+    /* 0x3A */ s16 unk_3A; /* frame counter */
+    /* 0x3C */ s16 unk_3C;
     /* 0x3E */ s16 unk_3E;
     /* 0x40 */ s16 unk_40;
     /* 0x42 */ s16 unk_42;
