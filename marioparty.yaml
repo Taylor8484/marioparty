@@ -983,8 +983,8 @@ segments:
     subsegments:
       - [0x14E940, c]
       - [0x150E30, c]
-      - [0x152B20, data, 14E940]
-      - [0x152BD0, .rodata, 150E30]
+      - [0x152B20, .data, 14E940]
+      - [0x152BC0, .rodata, 150E30]
       - {0x152BE0, type: bss, vram: 0x800FA880, name: ovl_14_bss}
   - type: code
     start: 0x152BE0
