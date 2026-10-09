@@ -579,8 +579,67 @@ void func_800F8FF8_SlotCarDerby(omObjData* obj) {
     }
     car->unk_00 |= 0x10;
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800F91B4_SlotCarDerby);
+void func_800F91B4_SlotCarDerby(omObjData* obj) {
+    Vec rot;
+    Vec pos;
+    f32 ground;
+    SCDCar* car;
+    s16 i;
+    s16 j;
+    s16 r;
 
+    car = func_800F70C4_SlotCarDerby(obj);
+    if (SCD_CAR_FRAMES0(car)) {
+        func_800FBE7C_SlotCarDerby(car->unk_01, 0);
+        car->unk_04 = 4;
+        car->unk_00 |= 0x40;
+        func_800F6ED4_SlotCarDerby(car, 0x2D7);
+        if (car->unk_74 >= 0) {
+            func_8006071C(car->unk_74);
+        }
+        car->unk_74 = car->unk_78 = -1;
+        func_80060F04(car->unk_01, 30, 0, 30);
+        func_80060618(0x45F, obj->work[0]);
+        car->unk_18.x = car->unk_30.x * 8.0;
+        car->unk_18.y = car->unk_30.y * 8.0 + 8.0;
+        car->unk_18.z = car->unk_30.z * 8.0;
+    }
+    for (j = 0; j < 3; j++) {
+        (&car->unk_0C.x)[j] += (&car->unk_18.x)[j];
+        (&rot.x)[j] = -(&car->unk_18.x)[j];
+    }
+    car->unk_18.y -= 1.0;
+    if (car->unk_18.y < -20.0) {
+        car->unk_18.y = -20.0f;
+    }
+    if (car->unk_18.y < 0.0f) {
+        r = func_800F9A0C_SlotCarDerby(&car->unk_0C, &ground);
+        if (r != 0) {
+            if (r > 0) {
+                car->unk_0C.y = ground;
+                car->unk_18.y = 8.0f;
+                rot.x = 30.0f;
+                rot.y = guRandom() % 90;
+                rot.z = 0.0f;
+                pos.y = car->unk_0C.y;
+                for (i = 0; i < 3; i++) {
+                    pos.x = car->unk_0C.x + func_800AEFD0(rot.y) * 20.0f * 0.5;
+                    pos.z = car->unk_0C.z + func_800AEAC0(rot.y) * 20.0f * 0.5;
+                    func_800FD9E8_SlotCarDerby(1, &pos, &rot);
+                    rot.y = func_8009B618(rot.y + 120.0, 360.0);
+                }
+            }
+        } else if (car->unk_08 == 0) {
+            car->unk_08 = 30;
+        }
+    }
+    car->unk_24.y = func_8009B618(car->unk_24.y + 30.0, 360.0);
+    car->unk_24.z = func_8009B618(car->unk_24.z + 15.0, 360.0);
+    car->unk_00 &= ~0x10;
+    if (car->unk_08 == 0) {
+        func_800FA2C0_SlotCarDerby(&car->unk_0C.x, 0.2f);
+    }
+}
 void func_800F9554_SlotCarDerby(omObjData* obj) {
     SCDCar* car = func_800F70C4_SlotCarDerby(obj);
 
