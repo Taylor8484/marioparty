@@ -652,23 +652,226 @@ void func_800F8EA0_RunningOfTheBulb(omObjData* arg0) {
     ContBtnTrg[temp_s0] = temp_s6;
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F9094_RunningOfTheBulb);
+void func_800F9094_RunningOfTheBulb(omObjData* arg0) {
+    RotbPlayerWork* work;
+    omObjData* other;
+    s16* btnp;
+    u16* trgp;
+    f32 angle;
+    s32 i;
+    s32 port;
+    u8 stkX;
+    u8 stkY;
+    u16 btn;
+    u16 trg;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F947C_RunningOfTheBulb);
+    work = arg0->unk_50;
+    port = work->unk_56;
+    stkX = ContStkX[(u16)port];
+    stkY = ContStkY[(u16)port];
+    btnp = &ContBtn[(u16)port];
+    btn = *btnp;
+    trgp = &ContBtnTrg[(u16)port];
+    trg = *trgp;
+    *btnp = *trgp = ContStkX[(u16)port] = ContStkY[(u16)port] = 0;
+    switch (D_800FE384_RunningOfTheBulb) {
+    case 0:
+        if (arg0 == D_800FE4A0_RunningOfTheBulb) {
+            angle = func_800B0CD8(0.0f - arg0->trans.x, -2235.0f - arg0->trans.z);
+            if (angle < 0.0f) {
+                angle += 360.0f;
+            }
+            if (work->unk_38 == 1000.0f) {
+                if (work->unk_3C == angle) {
+                    D_800FE384_RunningOfTheBulb = 1;
+                    func_800186E4(arg0, 0x14, 0x24);
+                    func_800185A4(arg0, 0x14);
+                    func_80017DB0(arg0);
+                    for (i = 0; i < 4; i++) {
+                        other = D_800FE460_RunningOfTheBulb[i];
+                        if (other != D_800FE4A0_RunningOfTheBulb) {
+                            work = other->unk_50;
+                            angle = func_800B0CD8(0.0f - other->trans.x, -2235.0f - other->trans.z);
+                            if (angle < 0.0f) {
+                                angle += 360.0f;
+                            }
+                            work->unk_3C = angle;
+                        }
+                    }
+                    break;
+                }
+                goto set;
+            } else {
+                ContStkY[(u16)port] = 80;
+            }
+        } else if (arg0->trans.z <= -1770.0f && ROTB_PLAYER(D_800FE4A0_RunningOfTheBulb)->unk_38 != 1000.0f) {
+            angle = func_800FCEA0_RunningOfTheBulb(arg0, NULL, D_800FE364_RunningOfTheBulb[work->unk_58][0], D_800FE364_RunningOfTheBulb[work->unk_58][1], 40.0f, 250.0f);
+            ContStkX[(u16)port] = func_800AEAC0(angle) * 80.0f;
+            ContStkY[(u16)port] = -func_800AEFD0(angle) * 80.0f;
+        } else {
+            goto turn;
+        }
+        break;
+    case 1:
+    turn:
+        angle = func_800B0CD8(0.0f - arg0->trans.x, -2235.0f - arg0->trans.z);
+        if (angle < 0.0f) {
+            angle += 360.0f;
+        }
+    set:
+        work->unk_3C = angle;
+        break;
+    }
+    func_80005A28(arg0);
+    ContStkX[(u16)port] = stkX;
+    ContStkY[(u16)port] = stkY;
+    ContBtn[(u16)port] = btn;
+    ContBtnTrg[(u16)port] = trg;
+}
+void func_800F947C_RunningOfTheBulb(omObjData* arg0, f32 arg1) {
+    RotbPlayerWork* work = arg0->unk_50;
+    RotbPlayerExt* ext = work->unk_E4;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F9550_RunningOfTheBulb);
+    ext->unk_4C = 10;
+    func_800185A4(arg0, 1);
+    arg1 -= work->unk_3C;
+    if (arg1 < 0.0f) {
+        arg1 += 360.0f;
+    }
+    if (!(arg1 < 180.0f)) {
+        arg1 = -(360.0f - arg1);
+    }
+    ext->unk_50 = arg1 / 10.0f;
+    arg0->func_ptr = &func_800F9550_RunningOfTheBulb;
+}
+void func_800F9550_RunningOfTheBulb(omObjData* arg0) {
+    RotbPlayerWork* work = arg0->unk_50;
+    RotbPlayerExt* ext = work->unk_E4;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F960C_RunningOfTheBulb);
-
+    func_80017DB0(arg0);
+    work->unk_3C += ext->unk_50;
+    func_8009ECB0(D_800F2B7C[arg0->model[0]].unk7C, 0.0f, work->unk_3C, 0.0f);
+    if (--ext->unk_4C == 0) {
+        ext->unk_00 |= 0x100;
+        func_800184BC(arg0, 0);
+        func_80017DB0(arg0);
+        arg0->func_ptr = NULL;
+    }
+}
+void func_800F960C_RunningOfTheBulb(omObjData* arg0) {
+    func_800258EC(arg0->model[9], 4, 4);
+    func_80017DB0(arg0);
+}
 void func_800F9648_RunningOfTheBulb(void) {
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F9650_RunningOfTheBulb);
+u16 func_800F9650_RunningOfTheBulb(void) {
+    RotbPlayerWork* work;
+    RotbPlayerExt* ext;
+    s32 n;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F9724_RunningOfTheBulb);
+    n = 0;
+    for (i = 0; i < 4; i++) {
+        work = D_800FE460_RunningOfTheBulb[i]->unk_50;
+        ext = work->unk_E4;
+        if (ext->unk_00 & 0x30) {
+            n++;
+        } else if (work->unk_38 == 1000.0f && (ext->unk_00 & 0x80) && func_80017A60(D_800FE460_RunningOfTheBulb[i]) == 2) {
+            n++;
+        }
+    }
+    return (u16)n == 4;
+}
+void func_800F9724_RunningOfTheBulb(omObjData* arg0) {
+    RotbBodyWork* body;
+    RotbBulbExt* ext;
+    u16 sprite;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F98F0_RunningOfTheBulb);
+    arg0->model[0] = LoadFormFile(0x410006, 0xA89);
+    arg0->model[2] = LoadFormFile(6, 0x689);
+    func_80021240(arg0->model[0]);
+    func_80021240(arg0->model[2]);
+    body = func_80023684(sizeof(RotbBodyWork), 0x7918);
+    arg0->unk_50 = body;
+    body->unk_68.bulb = func_80023684(sizeof(RotbBulbExt), 0x7918);
+    body->unk_44 = 0.1f;
+    body->unk_48 = 70.0f;
+    body->unk_34 = 0.0f;
+    body->unk_3C = 0.0f;
+    body->unk_5C = 0;
+    body->unk_52 = 7;
+    body->unk_60 = 0.0f;
+    body->unk_50 = 0x40;
+    body->unk_54 = 1;
+    body->unk_38 = 1000.0f;
+    body->unk_40 = 6.0f;
+    func_800F98F0_RunningOfTheBulb(arg0);
+    ext = body->unk_68.bulb;
+    sprite = func_8001E00C((void*)-1, 0x69D, 8);
+    ext->unk_40 = sprite;
+    D_800ECDE0[(s16)sprite].unk_02 = D_800FE45A_RunningOfTheBulb;
+    func_80025930(ext->unk_42 = D_800ECDE0[ext->unk_40].unk_00, 0x70000000, 0x70000000);
+    func_80025830(ext->unk_42, 2.0f, 2.0f, 2.0f);
+    func_8001E268(ext->unk_40, 1, 1);
+    D_800EDE70[D_800EE984++] = arg0;
+    arg0->func_ptr = &func_800F9C2C_RunningOfTheBulb;
+}
+void func_800F98F0_RunningOfTheBulb(omObjData* arg0) {
+    RotbBulbExt* ext;
+    f32 z;
+    f32 dist;
+    f32 angle;
+    f32 s;
+    f32 xs;
+    f32 y;
+    u8 r;
 
+    ext = ROTB_BODY(arg0)->unk_68.bulb;
+    ext->unk_00 = 1;
+    ext->unk_08 = NULL;
+    ext->unk_0C = 0;
+    ext->unk_10 = 0;
+    ext->unk_14 = NULL;
+    ext->unk_02 = 0;
+    ext->unk_1C = 0.0f;
+    ext->unk_20 = 0.0f;
+    ext->unk_24 = ext->unk_28 = ext->unk_20;
+    z = D_800FE4A0_RunningOfTheBulb->trans.z;
+    r = rand8();
+    dist = r + rand8();
+    dist = func_8009B618(dist, 1000.0);
+    if (dist < 1100.0f) {
+        dist = 1100.0f;
+    }
+    r = rand8();
+    angle = r + rand8();
+    angle = func_8009B618(angle, 180.0) + 90.0;
+    s = func_800AEFD0(angle);
+    xs = s * (u8)(rand8() % 100);
+    if (xs < 0.0f) {
+        xs += -450.0f;
+    } else {
+        xs += 650.0f;
+    }
+    s = func_800AEAC0(angle);
+    dist = s * dist + z;
+    if (D_800FE478_RunningOfTheBulb->trans.z - 200.0f < dist) {
+        dist = D_800FE478_RunningOfTheBulb->trans.z - 1000.0f;
+    }
+    rand8();
+    y = (u8)(rand8() % 10) + 120.0f;
+    func_800211BC(arg0->model[0], 0x10);
+    func_800211BC(arg0->model[2], 0xEF);
+    ext->unk_04 = 0x10;
+    ext->unk_2C = ext->unk_30 = ext->unk_34 = 0.0f;
+    omSetTra(arg0, xs, y, dist);
+    omSetSca(arg0, 1.0f, 1.0f, 1.0f);
+    func_800FA36C_RunningOfTheBulb(arg0);
+    func_800258EC(arg0->model[0], 4, 0);
+    func_800258EC(arg0->model[2], 4, 0);
+    func_8009ECB0(D_800F2B7C[arg0->model[0]].unk7C, 0.0f, ext->unk_20, 0.0f);
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800F9C2C_RunningOfTheBulb);
 
 void func_800FA2B8_RunningOfTheBulb(omObjData* arg0) {
@@ -703,8 +906,37 @@ void func_800FA41C_RunningOfTheBulb(omObjData* arg0) {
     temp_v1->unk_18 = 1.0f;
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FA44C_RunningOfTheBulb);
+void func_800FA44C_RunningOfTheBulb(omObjData* arg0, f32 arg1) {
+    RotbBulbExt* ext;
+    RotbPlayerExt* pext;
 
+    ext = ROTB_BODY(arg0)->unk_68.bulb;
+    if (ext->unk_00 & 2) {
+        pext = ROTB_PLAYER(ext->unk_14)->unk_E4;
+        if (pext->unk_00 & 0x40) {
+            func_800186E4(ext->unk_14, 1, 0x23);
+            if (func_80017A50(ext->unk_14) == 1) {
+                func_800185A4(ext->unk_14, 1);
+            }
+            pext->unk_00 &= ~0x40;
+        }
+        pext->unk_00 &= ~0xC;
+        func_800258EC(ext->unk_14->model[9], 4, 4);
+    }
+    func_800FA5B8_RunningOfTheBulb(ext);
+    if (arg1 == 1000.0f) {
+        func_800F98F0_RunningOfTheBulb(arg0);
+        return;
+    }
+    ext->unk_24 = func_800AEAC0(arg1);
+    ext->unk_28 = func_800AEFD0(arg1);
+    ext->unk_02 = 30;
+    ext->unk_00 |= 0x10;
+    if (ext->unk_20 < 0.0f) {
+        ext->unk_20 += 360.0f;
+    }
+    arg0->func_ptr = &func_800FA5EC_RunningOfTheBulb;
+}
 void func_800FA5B8_RunningOfTheBulb(RotbBulbExt* arg0) {
     if (arg0->unk_08 != NULL) {
         arg0->unk_00 = (u16) (arg0->unk_00 & 0xFFFB);
@@ -713,28 +945,295 @@ void func_800FA5B8_RunningOfTheBulb(RotbBulbExt* arg0) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FA5EC_RunningOfTheBulb);
+void func_800FA5EC_RunningOfTheBulb(omObjData* arg0) {
+    RotbBulbExt* ext;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FA78C_RunningOfTheBulb);
+    ext = ROTB_BODY(arg0)->unk_68.bulb;
+    if (ext->unk_02 == 0) {
+        ext->unk_00 &= ~0x10;
+        func_800F98F0_RunningOfTheBulb(arg0);
+        if (D_800FE464_RunningOfTheBulb == 2 && D_800FE44A_RunningOfTheBulb == 1) {
+            arg0->func_ptr = NULL;
+        } else {
+            arg0->func_ptr = &func_800F9C2C_RunningOfTheBulb;
+        }
+        return;
+    }
+    ext->unk_02--;
+    omSetTra(arg0, ext->unk_24 * 30.0f + arg0->trans.x, arg0->trans.y, ext->unk_28 * 30.0f + arg0->trans.z);
+    func_800FA36C_RunningOfTheBulb(arg0);
+    ext->unk_04 += 10;
+    if (ext->unk_04 >= 0x100) {
+        ext->unk_04 = 0xFF;
+        ext->unk_02 = 0;
+    }
+    func_800211BC(arg0->model[0], ext->unk_04);
+    func_800211BC(arg0->model[2], ext->unk_04);
+    ext->unk_20 += 16.0f;
+    if (ext->unk_20 >= 360.0f) {
+        ext->unk_20 -= 360.0f;
+    }
+    func_8009ECB0(D_800F2B7C[arg0->model[0]].unk7C, -ext->unk_20, ext->unk_20, -ext->unk_20);
+}
+void func_800FA78C_RunningOfTheBulb(omObjData* arg0) {
+    RotbBulbExt* ext;
+    f32 sx;
+    f32 sy;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FAA40_RunningOfTheBulb);
+    ext = ROTB_BODY(arg0)->unk_68.bulb;
+    if (ext->unk_02 == 45) {
+        omSetSca(arg0, 1.0f, 1.0f, 1.0f);
+    }
+    if (ext->unk_02 >= 45) {
+        omSetSca(arg0, ext->unk_38, ext->unk_38, ext->unk_38);
+        if (ext->unk_02 & 1) {
+            ext->unk_38 -= 0.1f;
+        } else {
+            ext->unk_38 += 0.040000003f;
+        }
+    } else {
+        sx = (1.0f - func_800AEFD0(ext->unk_3C) / 2.0f) * ext->unk_38;
+        sy = (1.0f - func_800AEAC0(ext->unk_3C) / 2.0f) * ext->unk_38;
+        omSetSca(arg0, sx, sy, (1.0f - func_800AEFD0(ext->unk_3C) / 2.0f) * ext->unk_38);
+    }
+    if (++ext->unk_02 >= 75) {
+        func_800258EC(arg0->model[0], 4, 4);
+        func_800258EC(arg0->model[2], 4, 4);
+        func_80025798(ext->unk_42, arg0->trans.x, arg0->trans.y - 120.0f, arg0->trans.z);
+        func_800258EC(ext->unk_42, 4, 0);
+        func_8001E268(ext->unk_40, 5, 4);
+        func_8001E2A8(ext->unk_40, 0);
+        arg0->func_ptr = NULL;
+    }
+    ext->unk_04 = func_800AEAC0(ext->unk_3C) * 16.0f + 16.0f;
+    func_800211BC(arg0->model[0], ext->unk_04);
+    func_800211BC(arg0->model[2], ext->unk_04);
+    ext->unk_3C += 24.0f;
+    if (ext->unk_3C >= 360.0f) {
+        ext->unk_3C -= 360.0f;
+    }
+}
+u16 func_800FAA40_RunningOfTheBulb(omObjData* arg0) {
+    Vec pos;
+    Vec2f scr;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FAB8C_RunningOfTheBulb);
+    if (arg0->trans.x >= 382.5f || arg0->trans.x <= -382.5f) {
+        return 0;
+    }
+    if (D_800FE478_RunningOfTheBulb->trans.z - 200.0f <= arg0->trans.z || arg0->trans.z <= -2482.5f) {
+        return 0;
+    }
+    pos.x = arg0->trans.x;
+    pos.y = arg0->trans.y;
+    pos.z = arg0->trans.z;
+    Convert3DTo2D(0, (Vec3f*)&pos, &scr);
+    if (scr.x < 16.0f || scr.x > 304.0f || scr.y < 16.0f || scr.y > 224.0f) {
+        return 0;
+    }
+    return 1;
+}
+void func_800FAB8C_RunningOfTheBulb(omObjData* arg0) {
+    RotbBodyWork* body;
+    RotbBossExt* ext;
+    u16 sprite;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FAD68_RunningOfTheBulb);
+    arg0->model[0] = LoadFormFile(0x410008, 0x1899);
+    body = func_80023684(sizeof(RotbBodyWork), 0x7918);
+    arg0->unk_50 = body;
+    body->unk_44 = 0.1f;
+    body->unk_48 = 150.0f;
+    body->unk_34 = 0.0f;
+    body->unk_3C = 0.0f;
+    body->unk_5C = 0;
+    body->unk_52 = 7;
+    body->unk_60 = 0.0f;
+    body->unk_50 = 0x40;
+    body->unk_54 = 1;
+    body->unk_38 = 1000.0f;
+    body->unk_40 = -2.186f;
+    ext = func_80023684(sizeof(RotbBossExt), 0x7918);
+    body->unk_68.boss = ext;
+    sprite = func_8001E00C((void*)-1, 0x69D, 8);
+    ext->unk_00 = sprite;
+    D_800ECDE0[(s16)sprite].unk_02 = D_800FE45A_RunningOfTheBulb;
+    func_80025930(ext->unk_02 = D_800ECDE0[ext->unk_00].unk_00, 0x70000000, 0x70000000);
+    func_80025830(ext->unk_02, 4.0f, 4.0f, 4.0f);
+    func_8001E268(ext->unk_00, 1, 1);
+    omSetTra(arg0, 0.0f, 0.0f, 2500.0f);
+    func_80025EB4(arg0->model[0], 2, 2);
+    D_800EDE70[D_800EE984++] = arg0;
+    arg0->work[0] = 1;
+    arg0->func_ptr = &func_800FAD68_RunningOfTheBulb;
+}
+void func_800FAD68_RunningOfTheBulb(omObjData* arg0) {
+    RotbBodyWork* body;
+    s32 hit;
+    s32 w;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FAE18_RunningOfTheBulb);
+    if (D_800FE464_RunningOfTheBulb != 0) {
+        hit = arg0->unk_10;
+        if (hit != 0) {
+            arg0->unk_10 = 0;
+            if (hit == 1) {
+                arg0->work[0] = 0;
+            }
+        }
+        body = arg0->unk_50;
+        w = arg0->work[0];
+        if (w == 1) {
+            if (D_800FE464_RunningOfTheBulb == w) {
+                omSetTra(arg0, arg0->trans.x, arg0->trans.y, arg0->trans.z + body->unk_40);
+            } else {
+                omSetTra(arg0, arg0->trans.x, arg0->trans.y, body->unk_40 * 6.0f + arg0->trans.z);
+            }
+        }
+    }
+}
+void func_800FAE18_RunningOfTheBulb(omObjData* arg0) {
+    RotbBodyWork* body;
+    RotbBossExt* ext;
+    s32 hit;
+    f32 sx;
+    f32 sy;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FB0D8_RunningOfTheBulb);
+    hit = arg0->unk_10;
+    if (hit != 0) {
+        arg0->unk_10 = 0;
+        if (hit == 1) {
+            arg0->work[0] = 0;
+        }
+    }
+    body = arg0->unk_50;
+    ext = body->unk_68.boss;
+    if (arg0->work[0] == 1) {
+        omSetTra(arg0, arg0->trans.x, arg0->trans.y, arg0->trans.z + body->unk_40);
+    }
+    if (D_800FE390_RunningOfTheBulb == 45) {
+        omSetSca(arg0, 1.0f, 1.0f, 1.0f);
+    }
+    if (D_800FE390_RunningOfTheBulb >= 45) {
+        omSetSca(arg0, D_800FE38C_RunningOfTheBulb, D_800FE38C_RunningOfTheBulb, D_800FE38C_RunningOfTheBulb);
+        if (D_800FE390_RunningOfTheBulb & 1) {
+            D_800FE38C_RunningOfTheBulb -= 0.1f;
+        } else {
+            D_800FE38C_RunningOfTheBulb += 0.040000003f;
+        }
+    } else {
+        sx = (1.0f - func_800AEFD0(D_800FE388_RunningOfTheBulb) / 2.0f) * D_800FE38C_RunningOfTheBulb;
+        sy = (1.0f - func_800AEAC0(D_800FE388_RunningOfTheBulb) / 2.0f) * D_800FE38C_RunningOfTheBulb;
+        omSetSca(arg0, sx, sy, (1.0f - func_800AEFD0(D_800FE388_RunningOfTheBulb) / 2.0f) * D_800FE38C_RunningOfTheBulb);
+    }
+    if (++D_800FE390_RunningOfTheBulb >= 75) {
+        func_800258EC(arg0->model[0], 4, 4);
+        arg0->func_ptr = NULL;
+        D_800FE4A4_RunningOfTheBulb = 2;
+        func_80025798(ext->unk_02, arg0->trans.x, arg0->trans.y - 120.0f, arg0->trans.z);
+        func_800258EC(ext->unk_02, 4, 0);
+        func_8001E268(ext->unk_00, 5, 4);
+        func_8001E2A8(ext->unk_00, 0);
+        PlaySound(0x333);
+    }
+    D_800FE388_RunningOfTheBulb += 24.0f;
+    if (D_800FE388_RunningOfTheBulb >= 360.0f) {
+        D_800FE388_RunningOfTheBulb -= 360.0f;
+    }
+}
+void func_800FB0D8_RunningOfTheBulb(omObjData* arg0) {
+    omSetSca(arg0, arg0->scale.x, D_800FE398_RunningOfTheBulb = func_800AEAC0(D_800FE394_RunningOfTheBulb) * 0.3f + 1.0f, arg0->scale.z);
+    D_800FE394_RunningOfTheBulb = func_8009B618(D_800FE394_RunningOfTheBulb += 10.0f, 360.0);
+}
+void func_800FB180_RunningOfTheBulb(omObjData* arg0) {
+    RotbFloorWork* work;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FB180_RunningOfTheBulb);
+    arg0->model[0] = -1;
+    arg0->model[1] = LoadFormFile(0x410004, 0x699);
+    D_800F2AF8[D_800ED440++] = arg0;
+    work = func_80023684(sizeof(RotbFloorWork), 0x7918);
+    arg0->unk_50 = work;
+    func_8009B770(work, 0, sizeof(RotbFloorWork));
+    work->unk_04 = 1;
+    work->unk_05 = 3;
+    func_80009058(arg0, 1000.0f, 1000.0f, -400.0f, -450.0f, 400.0f, 500.0f);
+    omSetTra(arg0, 0.0f, 0.0f, -2500.0f);
+    func_80009090(arg0);
+    arg0->func_ptr = NULL;
+}
+void func_800FB28C_RunningOfTheBulb(omObjData* arg0) {
+    RotbBodyWork* body;
+    RotbJumpExt* ext;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FB28C_RunningOfTheBulb);
+    arg0->model[0] = LoadFormFile(0x410003, 0x689);
+    arg0->model[1] = LoadFormFile(0x41000D, 0x1A8D);
+    body = func_80023684(sizeof(RotbBodyWork), 0x7918);
+    arg0->unk_50 = body;
+    ext = func_80023684(sizeof(RotbJumpExt), 0x7918);
+    body->unk_68.jump = ext;
+    body->unk_44 = 0.1f;
+    body->unk_48 = 30.0f;
+    body->unk_34 = 50.0f;
+    body->unk_3C = 0.0f;
+    body->unk_5C = 0;
+    body->unk_38 = 1000.0f;
+    body->unk_52 = 3;
+    body->unk_60 = 0.0f;
+    body->unk_4C = 0.5f;
+    body->unk_50 = 0x40;
+    body->unk_54 = 1;
+    body->unk_58 = 0.8f;
+    body->unk_40 = 0.0f;
+    ext->unk_00 = 0.0f;
+    ext->unk_04 = ext->unk_08 = ext->unk_0C = ext->unk_00;
+    D_800EDE70[D_800EE984++] = arg0;
+    omSetTra(arg0, D_800FE4A0_RunningOfTheBulb->trans.x, D_800FE4A0_RunningOfTheBulb->trans.y, D_800FE4A0_RunningOfTheBulb->trans.z);
+    arg0->func_ptr = &func_800FB3F8_RunningOfTheBulb;
+}
+void func_800FB3F8_RunningOfTheBulb(omObjData* arg0) {
+    RotbBodyWork* body;
+    RotbJumpExt* ext;
+    f32 angle;
+    f32 dx;
+    f32 dz;
+    f32 step;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FB3F8_RunningOfTheBulb);
+    body = arg0->unk_50;
+    ext = body->unk_68.jump;
+    if (!(body->unk_50 & 0x20)) {
+        angle = func_800B0CD8(-2235.0f - arg0->trans.z, 0.0f - arg0->trans.x);
+        ext->unk_14 = 0.0f;
+        ext->unk_1C = ((250.0f - arg0->trans.y) + 1350.0) / (func_800AEAC0(60.0f) * 30.0f);
+        dx = 0.0f - arg0->trans.x;
+        dx *= dx;
+        dz = -2235.0f - arg0->trans.z;
+        dz *= dz;
+        step = func_800B1750(dx + dz);
+        ext->unk_04 = func_800AEFD0(angle) * (step /= 30.0f);
+        ext->unk_0C = func_800AEAC0(angle) * step;
+        ext->unk_08 = arg0->trans.y;
+        ext->unk_20 = 0.5f;
+        arg0->func_ptr = &func_800FB540_RunningOfTheBulb;
+    }
+}
+void func_800FB540_RunningOfTheBulb(omObjData* arg0) {
+    RotbJumpExt* ext;
+    f32 y;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FB540_RunningOfTheBulb);
-
+    ext = ROTB_BODY(arg0)->unk_68.jump;
+    ext->unk_14 += 1.0f;
+    y = func_800AEAC0(60.0f) * ext->unk_1C * ext->unk_14 - ext->unk_14 * 1.5 * ext->unk_14;
+    omSetTra(arg0, arg0->trans.x + ext->unk_04, y + ext->unk_08, arg0->trans.z + ext->unk_0C);
+    omSetRot(arg0, arg0->rot.x - 6.0f, arg0->rot.y, arg0->rot.z);
+    if (ext->unk_14 >= 30.0f) {
+        func_800258EC(arg0->model[1], 4, 0);
+        func_80025798(arg0->model[1], ext->unk_20 * -270.0f + arg0->trans.x, ext->unk_20 * -90.0f + arg0->trans.y, ext->unk_20 * 200.0f + arg0->trans.z);
+        func_800257E4(arg0->model[1], 0.0f, 45.0f, 0.0f);
+        func_80025830(arg0->model[1], ext->unk_20, ext->unk_20, ext->unk_20);
+        omSetRot(arg0, 180.0f, arg0->rot.y, arg0->rot.z);
+        ext->unk_14 = 60.0f;
+        arg0->func_ptr = &func_800FB738_RunningOfTheBulb;
+        func_800601D4(0x28);
+        PlaySound(0x32E);
+    }
+}
 void func_800FB738_RunningOfTheBulb(omObjData* arg0) {
     u16 temp_v0;
     RotbJumpExt* temp_s0;
@@ -771,8 +1270,50 @@ void func_800FB738_RunningOfTheBulb(omObjData* arg0) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_2D_RunningOfTheBulb/1FF1E0", func_800FB8EC_RunningOfTheBulb);
+s32 func_800FB8EC_RunningOfTheBulb(omObjData* arg0, omObjData* arg1) {
+    RotbPlayerWork* work;
+    RotbPlayerExt* ext;
+    RotbBodyWork* body;
+    RotbBulbExt* bulb;
 
+    work = arg0->unk_50;
+    ext = work->unk_E4;
+    body = arg1->unk_50;
+    if (body->unk_52 == 3) {
+        if (func_8000A634(arg0, arg1) == 1) {
+            func_80017D1C(arg0);
+        }
+    } else if (body->unk_52 == 7 && D_800FE464_RunningOfTheBulb != 2) {
+        if (work->unk_E0 == 0) {
+            if (arg1 != D_800FE478_RunningOfTheBulb) {
+                bulb = body->unk_68.bulb;
+                if (!(ext->unk_00 & 0x3E) && !(bulb->unk_00 & 0x1A)) {
+                    bulb->unk_14 = arg0;
+                    ext->unk_00 |= 0xC;
+                    func_80060F04(work->unk_58, 10, 0, 10);
+                    if (!(ext->unk_00 & 0x40)) {
+                        func_800186E4(arg0, 1, 0x23);
+                        if (func_80017A50(arg0) == 1) {
+                            func_800185A4(arg0, 1);
+                        }
+                        ext->unk_00 |= 0x40;
+                    }
+                    if (ext->unk_30 != NULL) {
+                        func_800FA5B8_RunningOfTheBulb(ROTB_BODY(ext->unk_30)->unk_68.bulb);
+                    }
+                    ext->unk_2C = arg1;
+                    func_800FA41C_RunningOfTheBulb(arg1);
+                }
+            } else {
+                ext->unk_00 |= 0x10;
+            }
+        } else if (arg1 != D_800FE478_RunningOfTheBulb && !(body->unk_68.bulb->unk_00 & 0x10)) {
+            func_800FA44C_RunningOfTheBulb(arg1, work->unk_3C);
+            PlaySound(0x32B);
+        }
+    }
+    return 1;
+}
 void func_800FBAA4_RunningOfTheBulb(omObjData* arg0) {
     switch (D_800FE4B4_RunningOfTheBulb) {
     case 0:

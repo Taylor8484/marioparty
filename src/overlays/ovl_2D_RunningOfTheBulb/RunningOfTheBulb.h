@@ -82,8 +82,8 @@ typedef struct RotbPlayerWork {
     /* 0xC0 */ u16 unk_C0;
     /* 0xC2 */ char unk_C2[0x16];
     /* 0xD8 */ s16 (*unk_D8)[2]; /* one pair per motion */
-    /* 0xDC */ void (*unk_DC)(omObjData*, omObjData*); /* collision callback (src/1130.c) */
-    /* 0xE0 */ u16 unk_E0; /* PlayerWork's u16 unk_E0 (1130.c) */
+    /* 0xDC */ s32 (*unk_DC)(omObjData*, omObjData*); /* collision callback (src/1130.c) */
+    /* 0xE0 */ s16 unk_E0; /* PlayerWork's unk_E0 (1130.c), read with lh */
     /* 0xE2 */ char unk_E2[2];
     /* 0xE4 */ struct RotbPlayerExt* unk_E4;
 } RotbPlayerWork; /* size = 0xE8 */
@@ -258,7 +258,7 @@ extern s16 ContBtn[];
 extern s8 ContStkY[];
 
 extern s16 D_800F3778;
-extern s16 D_800EE984;
+extern u16 D_800EE984;
 extern omObjData* D_800EDE70[]; /* src/1130.c's collision list, D_800EE984 entries */
 extern omObjData* D_800F2AF8[];
 extern unkfloatStruct D_800EE738;
@@ -382,7 +382,7 @@ void func_800FB28C_RunningOfTheBulb(omObjData*);
 void func_800FB3F8_RunningOfTheBulb(omObjData*);
 void func_800FB540_RunningOfTheBulb(omObjData*);
 void func_800FB738_RunningOfTheBulb(omObjData*);
-void func_800FB8EC_RunningOfTheBulb(omObjData*, omObjData*);
+s32 func_800FB8EC_RunningOfTheBulb(omObjData*, omObjData*);
 void func_800FBAA4_RunningOfTheBulb(omObjData*);
 void func_800FBB5C_RunningOfTheBulb(omObjData*);
 void func_800FBF30_RunningOfTheBulb(void);
