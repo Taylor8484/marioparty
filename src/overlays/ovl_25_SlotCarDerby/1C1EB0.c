@@ -23,8 +23,49 @@ void func_800F6A38_SlotCarDerby(omObjData* obj) {
 }
 INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", D_80100F90_SlotCarDerby);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800F6AEC_SlotCarDerby);
+// register allocation (masked 0)
+#ifdef NON_MATCHING
+void func_800F6AEC_SlotCarDerby(void) {
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 total;
+    s32 i;
+    s32 j;
+    Vec* base;
+    Vec* a;
+    Vec* b;
 
+    D_80101424_SlotCarDerby = D_80100C70_SlotCarDerby[D_80101420_SlotCarDerby];
+    D_80101428_SlotCarDerby = D_80100C78_SlotCarDerby[D_80101420_SlotCarDerby];
+    D_8010142C_SlotCarDerby = func_80023684(D_80101428_SlotCarDerby * sizeof(f32), 0x7918);
+    D_80101430_SlotCarDerby = func_80023684((D_80101428_SlotCarDerby + 1) * sizeof(f32), 0x7918);
+    total = 0.0f;
+    for (i = 0; i < D_80101428_SlotCarDerby; i++) {
+        j = (i + 1) % D_80101428_SlotCarDerby;
+        base = D_80101424_SlotCarDerby;
+        b = &base[j];
+        a = &base[i];
+        dx = b->x - a->x;
+        dy = b->y - a->y;
+        dz = b->z - a->z;
+        D_8010142C_SlotCarDerby[i] = sqrtf(dx * dx + dy * dy + dz * dz);
+        D_80101430_SlotCarDerby[i] = total;
+        total += D_8010142C_SlotCarDerby[i];
+        a = &D_80101424_SlotCarDerby[i];
+        D_80101440_SlotCarDerby[i].x = a->x + dx * 0.5;
+        D_80101440_SlotCarDerby[i].y = a->y + dy * 0.5;
+        D_80101440_SlotCarDerby[i].z = a->z + dz * 0.5;
+    }
+    D_80101430_SlotCarDerby[i] = total;
+    D_80101434_SlotCarDerby = total;
+    for (i = 0; i < 16; i++) {
+        D_80101DA0_SlotCarDerby[i] = 0;
+    }
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_25_SlotCarDerby/1C1EB0", func_800F6AEC_SlotCarDerby);
+#endif
 void func_800F6D90_SlotCarDerby(void) {
     s32 i;
     s32 j;
