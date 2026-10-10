@@ -160,6 +160,8 @@ void func_800F6D40_YoshisTropicalIslandEndingScene(void) {
     func_8004A140();
 }
 
+// float register allocation: z/dx in f2/f4 vs f4/f6 (masked 5)
+#ifdef NON_MATCHING
 void func_800F717C_YoshisTropicalIslandEndingScene(omObjData* arg0) {
     Object* model;
     f32 dz;
@@ -191,6 +193,9 @@ void func_800F717C_YoshisTropicalIslandEndingScene(omObjData* arg0) {
     }
     arg0->work[0]++;
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2603D0", func_800F717C_YoshisTropicalIslandEndingScene);
+#endif
 
 void func_800F72C4_YoshisTropicalIslandEndingScene(omObjData* arg0) {
     MODEL[1]->unk_18.x = sinf(arg0->rot.y * (M_PI / 180.0));
@@ -201,6 +206,8 @@ void func_800F72C4_YoshisTropicalIslandEndingScene(omObjData* arg0) {
     }
 }
 
+// GCC shares one base register for MODEL[3]/MODEL[11]; retail reloads each (count 105 vs 117)
+#ifdef NON_MATCHING
 void func_800F7384_YoshisTropicalIslandEndingScene(omObjData* arg0) {
     f32 angle;
     Object* dst;
@@ -220,6 +227,9 @@ void func_800F7384_YoshisTropicalIslandEndingScene(omObjData* arg0) {
     dst->unk_30 = (2.0f * sinf(arg0->rot.y * (M_PI / 180.0))) + 2.0f;
     arg0->rot.y += 10.0f;
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2603D0", func_800F7384_YoshisTropicalIslandEndingScene);
+#endif
 
 void func_800F74E0_YoshisTropicalIslandEndingScene(omObjData* arg0) {
     Object* model;
@@ -232,6 +242,8 @@ void func_800F74E0_YoshisTropicalIslandEndingScene(omObjData* arg0) {
     }
 }
 
+// D_80110440 is s32[2] in ending.h; retail uses it as a scalar (base CSE, 2 instructions)
+#ifdef NON_MATCHING
 void func_800F759C_YoshisTropicalIslandEndingScene(void) {
     s32 ids[5] = { 7, 10, 8, 0x6D, 0x25 };
     s32 i;
@@ -471,6 +483,10 @@ void func_800F759C_YoshisTropicalIslandEndingScene(void) {
     OBJ[7]->rot.y = 0.0f;
     func_8004F4D4(MODEL[0], 2, 0);
 }
+#else
+const s32 D_8010EEB8_YoshisTropicalIslandEndingScene[5] __attribute__((section(".rodata"))) = { 7, 10, 8, 0x6D, 0x25 };
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2603D0", func_800F759C_YoshisTropicalIslandEndingScene);
+#endif
 
 void func_800F8550_YoshisTropicalIslandEndingScene(void) {
     func_800F6D40_YoshisTropicalIslandEndingScene();

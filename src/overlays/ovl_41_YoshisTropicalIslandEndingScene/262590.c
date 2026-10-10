@@ -113,20 +113,22 @@ void func_800F8FE8_YoshisTropicalIslandEndingScene(omObjData* arg0) {
     }
 }
 
+// argument register order in one func_8004CCD0 call (masked 1)
+#ifdef NON_MATCHING
 void func_800F9210_YoshisTropicalIslandEndingScene(s32 arg0) {
     s32 ids[6] = { 0x25, 12, 12, 7, 11, 8 };
-    s32* lists[6] = { NULL, NULL, NULL, D_8010DD6C_YoshisTropicalIslandEndingScene, NULL, D_8010DD5C_YoshisTropicalIslandEndingScene };
-    s16 p;
+    s32* lists[6] = { NULL, D_8010E29C_YoshisTropicalIslandEndingScene, D_8010E29C_YoshisTropicalIslandEndingScene, D_8010DD6C_YoshisTropicalIslandEndingScene, NULL, D_8010DD5C_YoshisTropicalIslandEndingScene };
     s32 i;
     Object* model;
-    Vec3f* target;
+    Vec3f* from;
+    Vec3f* to;
 
-    for (p = 0; p < 4; p++) {
-        if (GwCommon.boardWork[3] != p) {
-            func_80052DC8(p, D_8010E284_YoshisTropicalIslandEndingScene[GwPlayer[p].character]);
-            func_80052F34(p);
-            func_80021B14(*GwPlayer[p].player_obj->unk_3C->unk_40, GwPlayer[p].character, 0x80);
-            GwPlayer[p].flags |= 2;
+    for (i = 0; i < 4; i++) {
+        if (GwCommon.boardWork[3] != i) {
+            func_80052DC8(i, D_8010E284_YoshisTropicalIslandEndingScene[GwPlayer[i].character]);
+            func_80052F34(i);
+            func_80021B14(*GwPlayer[i].player_obj->unk_3C->unk_40, GwPlayer[i].character, 0x80);
+            GwPlayer[i].flags |= 2;
         }
     }
     HuPrcSleep(5);
@@ -137,12 +139,14 @@ void func_800F9210_YoshisTropicalIslandEndingScene(s32 arg0) {
         if (i != 0) {
             if (arg0 == 0) {
                 model = GwPlayer[GwCommon.boardWork[i]].player_obj;
-                target = &GwPlayer[GwCommon.boardWork[0]].player_obj->coords;
+                to = &GwPlayer[GwCommon.boardWork[0]].player_obj->coords;
+                from = &model->coords;
             } else {
                 model = GwPlayer[GwCommon.boardWork[i]].player_obj;
-                target = &D_800F32A0->coords;
+                from = &model->coords;
+                to = &D_800F32A0->coords;
             }
-            func_8004CCD0(&model->coords, target, &model->unk_18);
+            func_8004CCD0(from, to, &model->unk_18);
         }
     }
     for (i = 0; i < 6; i++) {
@@ -152,12 +156,14 @@ void func_800F9210_YoshisTropicalIslandEndingScene(s32 arg0) {
         MODEL[i]->coords.z = POS[(i + 3) * 3 + arg0].z;
         if (arg0 == 0) {
             model = MODEL[i];
-            target = &GwPlayer[GwCommon.boardWork[0]].player_obj->coords;
+            to = &GwPlayer[GwCommon.boardWork[0]].player_obj->coords;
+            from = &model->coords;
         } else {
             model = MODEL[i];
-            target = &D_800F32A0->coords;
+            from = &model->coords;
+            to = &D_800F32A0->coords;
         }
-        func_8004CCD0(&model->coords, target, &model->unk_18);
+        func_8004CCD0(from, to, &model->unk_18);
         if (ids[i] != 8) {
             func_80025B34(*MODEL[i]->unk_3C->unk_40);
         }
@@ -175,11 +181,17 @@ void func_800F9210_YoshisTropicalIslandEndingScene(s32 arg0) {
     OBJ[0]->work[3] = 0;
     D_80110400_YoshisTropicalIslandEndingScene[0] = func_80042728(MODEL[0], 1);
 }
+#else
+const s32 D_8010EF00_YoshisTropicalIslandEndingScene[6] __attribute__((section(".rodata"))) = { 0x25, 12, 12, 7, 11, 8 };
+s32* const D_8010EF18_YoshisTropicalIslandEndingScene[6] __attribute__((section(".rodata"))) = {
+    NULL, D_8010E29C_YoshisTropicalIslandEndingScene, D_8010E29C_YoshisTropicalIslandEndingScene, D_8010DD6C_YoshisTropicalIslandEndingScene, NULL, D_8010DD5C_YoshisTropicalIslandEndingScene,
+};
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/262590", func_800F9210_YoshisTropicalIslandEndingScene);
+#endif
 
 void func_800F96E4_YoshisTropicalIslandEndingScene(void) {
     s32 i;
     s32 j;
-    s16 p;
     Object* model;
 
     LoadBackgroundIndex(0xD);
@@ -202,7 +214,7 @@ void func_800F96E4_YoshisTropicalIslandEndingScene(void) {
             func_8004F4D4(MODEL[5], 1, 2);
         }
         if (i == 3) {
-            func_8004F4D4(MODEL[3], 1, 2);
+            func_8004F4D4(MODEL[i], 1, 2);
         }
     }
     HuPrcSleep(0x14);
@@ -213,7 +225,7 @@ void func_800F96E4_YoshisTropicalIslandEndingScene(void) {
     HuPrcSleep(0x46);
     func_800726AC(1, 0x10);
     HuPrcSleep(0x10);
-    p = 0;
+    i = 0;
     func_8004A140();
     func_800F6B54_YoshisTropicalIslandEndingScene();
     HuPrcSleep(5);
@@ -227,16 +239,15 @@ void func_800F96E4_YoshisTropicalIslandEndingScene(void) {
     MODEL[0]->unk_18.y = 0.0f;
     MODEL[0]->unk_18.z = 0.0f;
     MBMotionSet(MODEL[0], 0, 2);
-    for (; p < 4; p++) {
-        if (GwCommon.boardWork[3] == p) {
-            func_80052DC8(p, D_8010E284_YoshisTropicalIslandEndingScene[GwPlayer[p].character]);
-            func_80052F34(p);
-            GwPlayer[p].flags |= 2;
-            GwPlayer[p].player_obj->coords.x = D_8010E1E8_YoshisTropicalIslandEndingScene.x;
-            GwPlayer[p].player_obj->coords.y = D_8010E1E8_YoshisTropicalIslandEndingScene.y;
-            GwPlayer[p].player_obj->coords.z = D_8010E1E8_YoshisTropicalIslandEndingScene.z;
-            model = GwPlayer[p].player_obj;
-            func_8004CCD0(&model->coords, &MODEL[0]->coords, &model->unk_18);
+    for (; i < 4; i++) {
+        if (GwCommon.boardWork[3] == i) {
+            func_80052DC8(i, D_8010E284_YoshisTropicalIslandEndingScene[GwPlayer[i].character]);
+            func_80052F34(i);
+            GwPlayer[i].flags |= 2;
+            GwPlayer[i].player_obj->coords.x = D_8010E1E8_YoshisTropicalIslandEndingScene.x;
+            GwPlayer[i].player_obj->coords.y = D_8010E1E8_YoshisTropicalIslandEndingScene.y;
+            GwPlayer[i].player_obj->coords.z = D_8010E1E8_YoshisTropicalIslandEndingScene.z;
+            func_8004CCD0(&GwPlayer[i].player_obj->coords, &MODEL[0]->coords, &GwPlayer[i].player_obj->unk_18);
         }
     }
     SetFadeInTypeAndTime(1, 0x10);
@@ -290,7 +301,7 @@ void func_800F96E4_YoshisTropicalIslandEndingScene(void) {
         func_8004EE14(GwCommon.boardWork[i], D_800F32A0, 0x14, NULL);
     }
     for (i = 0; i < 6; i++) {
-        if (i < 3 || i > 4) {
+        if (i + 3 != 6 && i + 3 != 7) {
             func_8004E3E0(0, &POS[(i + 3) * 3 + 2], 0x14, MODEL[i]);
             func_8004EE14(0, D_800F32A0, 0x14, MODEL[i]);
         }
@@ -327,7 +338,7 @@ void func_800F96E4_YoshisTropicalIslandEndingScene(void) {
             func_8004EE14(GwCommon.boardWork[i], &GwPlayer[GwCommon.boardWork[0]].player_obj->coords, 1, NULL);
         }
         for (i = 0; i < 6; i++) {
-            if (i != 0) {
+            if (i + 3 != 3) {
                 func_8004EE14(0, &GwPlayer[GwCommon.boardWork[0]].player_obj->coords, 1, MODEL[i]);
             }
         }
@@ -375,13 +386,15 @@ void func_800FA348_YoshisTropicalIslandEndingScene(omObjData* arg0) {
     arg0->work[0]++;
 }
 
+// float register allocation (angle f20/f22 swapped) and centre-index scheduling
+#ifdef NON_MATCHING
 void func_800FA580_YoshisTropicalIslandEndingScene(void) {
-    Vec3f pos;
     s32 count;
     s32 i;
     f32 dist;
     f32 angle;
     omObjData* ring;
+    Vec3f pos;
 
     count = D_8010DC90_YoshisTropicalIslandEndingScene[GwSystem.unk_00];
     dist = D_8010DCFC_YoshisTropicalIslandEndingScene[ENDING_BOARD];
@@ -430,8 +443,9 @@ void func_800FA580_YoshisTropicalIslandEndingScene(void) {
     i = 0xF8;
     func_80025AD4(*MODEL[0]->unk_3C->unk_40);
     func_80028C64(*MODEL[0]->unk_3C->unk_40, 0xFF, 0xFF, 0xFF, 0xFF);
-    dist = 2.0f * D_8010DD1C_YoshisTropicalIslandEndingScene[ENDING_BOARD];
-    func_800A0D00((Vec3f*)&MODEL[0]->xScale, dist, dist, dist);
+    func_800A0D00((Vec3f*)&MODEL[0]->xScale, 2.0f * D_8010DD1C_YoshisTropicalIslandEndingScene[ENDING_BOARD],
+                  2.0f * D_8010DD1C_YoshisTropicalIslandEndingScene[ENDING_BOARD],
+                  2.0f * D_8010DD1C_YoshisTropicalIslandEndingScene[ENDING_BOARD]);
     func_800A0D00(&MODEL[0]->coords, ENDING_CENTER[ENDING_BOARD].x, ENDING_CENTER[ENDING_BOARD].y,
                   ENDING_CENTER[ENDING_BOARD].z);
     omDelObj(ring);
@@ -455,9 +469,15 @@ void func_800FA580_YoshisTropicalIslandEndingScene(void) {
                       D_8010DD1C_YoshisTropicalIslandEndingScene[ENDING_BOARD]);
         func_800A0D00(&MODEL[i + 4]->coords, ENDING_CENTER[ENDING_BOARD].x, ENDING_CENTER[ENDING_BOARD].y,
                       ENDING_CENTER[ENDING_BOARD].z);
-        angle = (i * 45) * (M_PI / 180.0);
-        func_800A0D00(&pos, (sinf(angle) * 1000.0f) + ENDING_CENTER[ENDING_BOARD].x, ENDING_CENTER[ENDING_BOARD].y,
-                      (cosf(angle) * 1000.0f) + ENDING_CENTER[ENDING_BOARD].z);
+        {
+            Vec3f* c = &ENDING_CENTER[ENDING_BOARD];
+            f32 x;
+
+            angle = (i * 45) * (M_PI / 180.0);
+            x = (sinf(angle) * 1000.0f) + c->x;
+            c = &ENDING_CENTER[ENDING_BOARD];
+            func_800A0D00(&pos, x, ENDING_CENTER[ENDING_BOARD].y, (cosf(angle) * 1000.0f) + c->z);
+        }
         func_8004E3E0(0, &pos, 0x32, MODEL[i + 4]);
     }
     HuPrcSleep(0x32);
@@ -485,3 +505,6 @@ void func_800FA580_YoshisTropicalIslandEndingScene(void) {
     func_8004A140();
     HuPrcSleep(5);
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/262590", func_800FA580_YoshisTropicalIslandEndingScene);
+#endif

@@ -111,7 +111,6 @@ void func_800F67AC_YoshisTropicalIslandEndingScene(void) {
     omDelObj(D_8010F848_YoshisTropicalIslandEndingScene);
 }
 
-#ifdef NON_MATCHING
 void func_800F67EC_YoshisTropicalIslandEndingScene(void) {
     if (D_8010DD7C_YoshisTropicalIslandEndingScene[ENDING_BOARD] != NULL) {
         D_8010DD7C_YoshisTropicalIslandEndingScene[ENDING_BOARD]();
@@ -135,10 +134,7 @@ void func_800F67EC_YoshisTropicalIslandEndingScene(void) {
         HuPrcVSleep();
     }
 }
-#else
-const s32 D_8010EE78_YoshisTropicalIslandEndingScene[6] __attribute__((section(".rodata"))) = { 45, 25, 30, 45, 45, 30 };
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/25FC70", func_800F67EC_YoshisTropicalIslandEndingScene);
-#endif
+
 
 void func_800F697C_YoshisTropicalIslandEndingScene(omObjData* arg0) {
     func_8004FBB4();
