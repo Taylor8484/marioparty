@@ -1939,7 +1939,7 @@ segments:
     bss_size: 0x10
     subsegments:
       - [0x28E630, c]
-      - [0x28EC50, data, 28E630]
+      - [0x28EC50, .data, 28E630]
       - {0x28ECA0, type: bss, vram: 0x800F6C50, name: ovl_51_bss}
   - type: code
     start: 0x28ECA0
