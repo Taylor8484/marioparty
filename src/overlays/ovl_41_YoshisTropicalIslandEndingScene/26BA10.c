@@ -9,25 +9,15 @@ typedef struct EndingModelDef {
     /* 0x10 */ void* list;
 } EndingModelDef; /* N64 size 0x14 */
 
-/* ending.h types these three as arrays/split scalars, but retail's code reads them as a scalar
- * (D_801102B0[0], D_80110440[0]) and a Vec3f[8] (D_8010DC9C/DCA0/DCA4 = one board position per
- * board): GCC hoists an array's address into a register, so the N64 build names the same symbols
- * with retail's types through asm labels. The host reads the ending.h objects (BOARD_POS is
- * layout-dependent there until ending.h types D_8010DC9C as Vec3f[8]). */
+/* ending.h declares D_80110440 as s32[2], but this unit's code reads [0] as a scalar (GCC hoists an
+ * array's address into a register, retail reloads it): the N64 build names the same symbol as an s32
+ * through an asm label; the host reads the ending.h object. */
 #ifdef TARGET_PC
-#define ENDING_BOARD (D_801102B0_YoshisTropicalIslandEndingScene[0])
 #define ENDING_EFFECT (D_80110440_YoshisTropicalIslandEndingScene[0])
-#define BOARD_POS ((Vec3f*)&D_8010DC9C_YoshisTropicalIslandEndingScene)
 #else
-extern u8 ending_board_N64 asm("D_801102B0_YoshisTropicalIslandEndingScene");
 extern s32 ending_effect_N64 asm("D_80110440_YoshisTropicalIslandEndingScene");
-extern Vec3f ending_board_pos_N64[8] asm("D_8010DC9C_YoshisTropicalIslandEndingScene");
-#define ENDING_BOARD ending_board_N64
 #define ENDING_EFFECT ending_effect_N64
-#define BOARD_POS ending_board_pos_N64
 #endif
-/* Per-player-count values (25FC70's .data, D_8010DC90[3]); layout-dependent */
-#define PLAYER_COUNT_TBL ((s32*)&D_8010DC90_YoshisTropicalIslandEndingScene)
 
 extern Vec3f D_80110180_YoshisTropicalIslandEndingScene[4]; /* camera: eye, at, up, spare (bss) */
 
@@ -561,16 +551,16 @@ void func_8010400C_YoshisTropicalIslandEndingScene(omObjData* obj) {
 }
 
 void func_801040B8_YoshisTropicalIslandEndingScene(omObjData* obj) {
-    s32 count = PLAYER_COUNT_TBL[GwSystem.unk_00];
+    s32 count = D_8010DC90_YoshisTropicalIslandEndingScene[GwSystem.unk_00];
     s32 i;
     f32 angle;
     f32 x;
 
     for (i = 0; i < obj->trans.y; i++) {
         angle = (360 / count) * i;
-        x = sinf((angle + obj->rot.y) * M_DTOR) * obj->trans.x + BOARD_POS[ENDING_BOARD].x;
-        func_800A0D00(&D_80110448_YoshisTropicalIslandEndingScene[i]->coords, x, BOARD_POS[ENDING_BOARD].y,
-                      cosf((angle + obj->rot.y) * M_DTOR) * obj->trans.x + BOARD_POS[ENDING_BOARD].z);
+        x = sinf((angle + obj->rot.y) * M_DTOR) * obj->trans.x + D_8010DC9C_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene].x;
+        func_800A0D00(&D_80110448_YoshisTropicalIslandEndingScene[i]->coords, x, D_8010DC9C_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene].y,
+                      cosf((angle + obj->rot.y) * M_DTOR) * obj->trans.x + D_8010DC9C_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene].z);
         func_800A0D00((Vec3f*)&D_80110448_YoshisTropicalIslandEndingScene[i]->xScale, obj->scale.x, obj->scale.x,
                       obj->scale.x);
     }
@@ -600,8 +590,8 @@ void func_801042F0_YoshisTropicalIslandEndingScene(omObjData* obj) {
 }
 
 void func_8010444C_YoshisTropicalIslandEndingScene(void) {
-    s32 count = PLAYER_COUNT_TBL[GwSystem.unk_00];
-    f32 radius = D_8010DCFC_YoshisTropicalIslandEndingScene[ENDING_BOARD];
+    s32 count = D_8010DC90_YoshisTropicalIslandEndingScene[GwSystem.unk_00];
+    f32 radius = D_8010DCFC_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene];
     f32 angle;
     f32 x;
     s32 i;
@@ -610,21 +600,21 @@ void func_8010444C_YoshisTropicalIslandEndingScene(void) {
     for (i = 0; i < count; i++) {
         D_80110448_YoshisTropicalIslandEndingScene[i] = MBModelCreate(0x25, NULL);
         angle = (360 / count) * i * M_DTOR;
-        x = sinf(angle) * radius + BOARD_POS[ENDING_BOARD].x;
-        func_800A0D00(&D_80110448_YoshisTropicalIslandEndingScene[i]->coords, x, BOARD_POS[ENDING_BOARD].y,
-                      cosf(angle) * radius + BOARD_POS[ENDING_BOARD].z);
+        x = sinf(angle) * radius + D_8010DC9C_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene].x;
+        func_800A0D00(&D_80110448_YoshisTropicalIslandEndingScene[i]->coords, x, D_8010DC9C_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene].y,
+                      cosf(angle) * radius + D_8010DC9C_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene].z);
         /* retail: writes the scale into coords */
         func_800A0D00(&D_80110448_YoshisTropicalIslandEndingScene[i]->coords,
-                      D_8010DD1C_YoshisTropicalIslandEndingScene[ENDING_BOARD],
-                      D_8010DD1C_YoshisTropicalIslandEndingScene[ENDING_BOARD],
-                      D_8010DD1C_YoshisTropicalIslandEndingScene[ENDING_BOARD]);
+                      D_8010DD1C_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene],
+                      D_8010DD1C_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene],
+                      D_8010DD1C_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene]);
         D_80110400_YoshisTropicalIslandEndingScene[i] = func_80042728(D_80110448_YoshisTropicalIslandEndingScene[i], 1);
     }
     ring = omAddObj(0x1000, 0, 0, -1, func_801040B8_YoshisTropicalIslandEndingScene);
     ring->rot.y = 0.0f;
     ring->trans.x = radius;
     ring->trans.y = count;
-    ring->scale.x = D_8010DD1C_YoshisTropicalIslandEndingScene[ENDING_BOARD];
+    ring->scale.x = D_8010DD1C_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene];
     ring->work[0] = 0;
     LoadBackgroundIndex(0x2D);
     func_80072724(0xFF, 0xFF, 0xFF);
@@ -654,12 +644,12 @@ void func_8010444C_YoshisTropicalIslandEndingScene(void) {
     i = 0xF8;
     func_80025AD4(*D_80110448_YoshisTropicalIslandEndingScene[0]->unk_3C->unk_40);
     func_80028C64(*D_80110448_YoshisTropicalIslandEndingScene[0]->unk_3C->unk_40, 0xFF, 0xFF, 0xFF, 0xFF);
-    D_80110448_YoshisTropicalIslandEndingScene[0]->xScale = 2.0f * D_8010DD1C_YoshisTropicalIslandEndingScene[ENDING_BOARD];
-    D_80110448_YoshisTropicalIslandEndingScene[0]->yScale = 2.0f * D_8010DD1C_YoshisTropicalIslandEndingScene[ENDING_BOARD];
-    D_80110448_YoshisTropicalIslandEndingScene[0]->zScale = 2.0f * D_8010DD1C_YoshisTropicalIslandEndingScene[ENDING_BOARD];
-    D_80110448_YoshisTropicalIslandEndingScene[0]->coords.x = BOARD_POS[ENDING_BOARD].x;
-    D_80110448_YoshisTropicalIslandEndingScene[0]->coords.y = BOARD_POS[ENDING_BOARD].y;
-    D_80110448_YoshisTropicalIslandEndingScene[0]->coords.z = BOARD_POS[ENDING_BOARD].z;
+    D_80110448_YoshisTropicalIslandEndingScene[0]->xScale = 2.0f * D_8010DD1C_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene];
+    D_80110448_YoshisTropicalIslandEndingScene[0]->yScale = 2.0f * D_8010DD1C_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene];
+    D_80110448_YoshisTropicalIslandEndingScene[0]->zScale = 2.0f * D_8010DD1C_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene];
+    D_80110448_YoshisTropicalIslandEndingScene[0]->coords.x = D_8010DC9C_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene].x;
+    D_80110448_YoshisTropicalIslandEndingScene[0]->coords.y = D_8010DC9C_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene].y;
+    D_80110448_YoshisTropicalIslandEndingScene[0]->coords.z = D_8010DC9C_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene].z;
     omDelObj(ring);
     ring = omAddObj(0x1000, 0, 0, -1, func_8010400C_YoshisTropicalIslandEndingScene);
     ring->rot.x = 0.0f;
