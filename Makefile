@@ -183,6 +183,8 @@ build/src/64FD0.c.o: CPPFLAGS = -I include -I include/PR -I include/gcc -I $(BUI
 
 # ovl_01 D51E0.c (Chance Time) also has the mul fix on: nop between back-to-back mul.s (func_800F8288)
 build/src/overlays/ovl_01_ChanceTime/D51E0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# ovl_41 266C80.c (story ending scene) also has the mul fix on: nop between back-to-back mul.s (func_800FD60C)
+build/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/266C80.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 build/src/engine/math.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 
 # mul nops included in the following *.c (Maybe only one func uses --vr4300mul-off)
@@ -214,6 +216,9 @@ build/src/overlays/ovl_2D_RunningOfTheBulb/1FF1E0.c.o: CFLAGS = -G0 -mips3 -mgp3
 build/src/overlays/ovl_22_BombsAway/1AA2A0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # ovl_16 15EAF0.c: nop between mul.s in func_800F7758 (mul fix on; blank-line strip rule below too)
 build/src/overlays/ovl_16_SkateBoardSkamper/15EAF0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# ovl_41 26BA10.c and 2643A0.c: nop between mul.s in func_80102380, func_800FB1E4
+build/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/26BA10.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+build/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 
 # -O3 static inlines
 build/src/7CD60.c.o: OPTFLAGS = -O3
@@ -313,6 +318,15 @@ $(BUILD_DIR)/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/2721F0.c.o: $(B
 # ovl_41 26E620.c: the same blank-line-stripped assembly (mul fix on; mul.s right after sinf's return
 # in func_80107660). A separate rule so the shared target list above is not edited.
 $(BUILD_DIR)/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/26E620.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
+	@$(PRINT)$(GREEN)Compiling C file: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
+	@mkdir -p $(shell dirname $@)
+	@$(CC_HOST) $(CFLAGS_CHECK) $(CPPFLAGS) -MMD -MP -MT $@ -MF $@.d $<
+	$(V)export COMPILER_PATH=tools/gcc_2.7.2/$(DETECTED_OS) && $(CC) $(OPTFLAGS) $(CFLAGS) $(CPPFLAGS) -S -o $(@:.o=.s) $< && sed -i '/^[[:space:]]*$$/d' $(@:.o=.s) && $(CC) $(CFLAGS) -c -o $@ $(@:.o=.s)
+	@$(STRIP) $@ -N dummy-symbol-name
+
+# ovl_41 266C80.c (func_800FD60C), 2643A0.c (func_800FAD64), 26BA10.c (func_80102380): mul fix on, mul.s
+# right after a call's return.
+$(BUILD_DIR)/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/266C80.c.o $(BUILD_DIR)/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0.c.o $(BUILD_DIR)/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/26BA10.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
 	@$(PRINT)$(GREEN)Compiling C file: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
 	@mkdir -p $(shell dirname $@)
 	@$(CC_HOST) $(CFLAGS_CHECK) $(CPPFLAGS) -MMD -MP -MT $@ -MF $@.d $<
