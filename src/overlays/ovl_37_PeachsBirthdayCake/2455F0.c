@@ -117,7 +117,6 @@ extern Object* D_800F7E78_PeachsBirthdayCake[14]; /* marker per slot */
 void func_800F6610_PeachsBirthdayCake(void) {
     BoardSpace* space_data;
     Object* ptr;
-    mpSource_f2b7cstruct *f2bstr;
     void *ret;
     s32 s0;
     f32 ftemp;
@@ -155,8 +154,7 @@ void func_800F6610_PeachsBirthdayCake(void) {
     ftt = 0.0f;
     const20 = 20.0f;
     while (TRUE) {
-        f2bstr = (mpSource_f2b7cstruct*)&D_800F2B7C[*ptr->unk_3C->unk_40];
-        func_800A40D0(&f2bstr->unk124, ftt);
+        func_800A40D0(D_800F2B7C[*ptr->unk_3C->unk_40].unk7C, ftt); /* the typed field: a raw 0x7C view is wrong on the host */
         ftemp -= 0.02f;
 
         ftt += const20;
