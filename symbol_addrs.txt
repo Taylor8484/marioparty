@@ -638,3 +638,4 @@ dmaRead = 0x80061FE8;
 D_8010F770_YoshisTropicalIslandEndingScene = 0x8010F770; // segment:YoshisTropicalIslandEndingScene force_not_migration:True
 D_8010F774_YoshisTropicalIslandEndingScene = 0x8010F774; // segment:YoshisTropicalIslandEndingScene force_not_migration:True
 D_8010F448_YoshisTropicalIslandEndingScene = 0x8010F448; // segment:YoshisTropicalIslandEndingScene type:u32
+D_8010F734_YoshisTropicalIslandEndingScene = 0x8010F734; // segment:YoshisTropicalIslandEndingScene force_not_migration:True
