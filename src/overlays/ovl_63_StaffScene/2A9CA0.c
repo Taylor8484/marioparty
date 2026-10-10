@@ -70,6 +70,9 @@ extern f32 D_800FE19C_StaffScene;    /* the fov last applied */
 void func_800FC554_StaffScene(StaffCamera*);
 void func_800FC5B0_StaffScene(omObjData*);
 void func_800FC864_StaffScene(void);
+s16 func_8006D93C(u8*);
+void func_8005B838(void*);
+void* func_8005B7E8(s32);
 void func_8002019C(s16);
 void func_800FA3D8_StaffScene(void);
 void func_800FAA4C_StaffScene(void);
@@ -956,8 +959,161 @@ void func_800F8128_StaffScene(void) {
         HuPrcVSleep();
     }
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800F8380_StaffScene);
+void func_800F8380_StaffScene(void) {
+    unkCommonStruct0 mes;
+    s32 vx;
+    s32 vy;
+    s16 id;
+    s16 win;
+    StaffRoll* r;
+    u8* str;
+    s16 len;
+    s32 w;
+    s32 i;
+    s32 d;
+    f32 sx;
+    s32 x;
+    s32 y;
+    s32 tx;
+    s32 ty;
+    s16 next;
 
+    r = HuPrcCurrentGet()->user_data;
+    win = func_80064EF4(1, 0);
+    func_80067208(win, 0, r->tex, 0);
+    func_800672B0(win, 0, 0);
+    func_800674BC(win, 0, 0x100C);
+    func_80067384(win, 0, 0x1000);
+    func_80066DC4(win, 0, 400, 0);
+    func_80067354(win, 0, 0.5f, 0.5f);
+    id = -1;
+    r->stat = 1;
+    do {
+        switch (r->cmd) {
+        case 1:
+            str = func_8005B7E8(*(u16*)r->names);
+            id = GMesFontMesCreate(&mes, (char*)str, 0, 0, -1);
+            len = func_8006D93C(str);
+            func_8005B838(str);
+            w = len * 16;
+            if (w >= 0x110) {
+                sx = 272.0f / w;
+                w = 264;
+                for (i = 1; i < len + 1; i++) {
+                    func_80067354(mes.unk_14[id], i, sx, 1.0f);
+                }
+            }
+            func_80066DC4(mes.unk_14[id], 0, 320, 0);
+            switch (r->slot) {
+            case 0:
+                y = 248;
+                x = 312 - w;
+                vx = 0;
+                vy = -6;
+                tx = x;
+                ty = 32;
+                break;
+            case 1:
+                y = 32;
+                x = 352;
+                vx = -6;
+                vy = 0;
+                tx = 48;
+                ty = 32;
+                break;
+            case 2:
+                y = -16;
+                x = 48;
+                vx = 0;
+                vy = 6;
+                tx = 48;
+                ty = 208;
+                break;
+            case 3:
+                y = 208;
+                x = -32 - w;
+                vx = 6;
+                vy = 0;
+                tx = 312 - w;
+                ty = 208;
+                break;
+            }
+            next = 3;
+            r->stat = 2;
+            r->cmd = 0;
+            break;
+        case -1:
+            r->stat = 0;
+            r->cmd = 0;
+            break;
+        case 2:
+            switch (r->slot) {
+            case 0:
+                ty = -16;
+                vy = -8;
+                break;
+            case 1:
+                tx = -32 - w;
+                vx = -8;
+                break;
+            case 2:
+                ty = 256;
+                vy = 8;
+                break;
+            case 3:
+                tx = 352;
+                vx = 8;
+                break;
+            }
+            next = 4;
+            r->stat = 2;
+            r->cmd = 0;
+            break;
+        default:
+            r->cmd = 0;
+            break;
+        }
+        switch (r->stat) {
+        case 2:
+            if ((tx != x) | (ty != y)) {
+                d = tx - x;
+                if (vx != 0) {
+                    x += vx;
+                    if ((d *= tx - x) < 0) {
+                        x = tx;
+                    }
+                }
+                d = ty - y;
+                if (vy != 0) {
+                    y += vy;
+                    if ((d *= ty - y) < 0) {
+                        y = ty;
+                    }
+                }
+                func_80066DC4(mes.unk_14[id], 0, x, y);
+                func_80066DC4(win, 0, x - 16, y);
+            }
+            if ((tx == x) & (ty == y)) {
+                r->stat = next;
+            }
+            break;
+        case 3:
+            break;
+        case 4:
+            func_80066DC4(win, 0, 400, 0);
+            func_80077044(&mes);
+            id = -1;
+            r->stat = 1;
+            break;
+        }
+        HuPrcVSleep();
+    } while (r->stat != 0);
+    func_80064D38(win);
+    r->stat = -1;
+    while (1) {
+        HuPrcVSleep();
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800F8894_StaffScene);
 
 void func_800F91E0_StaffScene(void) {
