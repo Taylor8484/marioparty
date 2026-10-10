@@ -1114,7 +1114,232 @@ void func_800F8380_StaffScene(void) {
         HuPrcVSleep();
     }
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800F8894_StaffScene);
+TextWindow* func_8006DD60(s16);
+void func_8006E984(TextWindow*);
+
+/* The names of each credits page: up to four rows of text windows behind a bar, slid in from the
+   page's corner (StaffRoll.slot), a page at a time; the last page adds a fifth bar */
+void func_800F8894_StaffScene(void) {
+    TextWindow* tw[4];
+    s16 win[4];
+    s16 w[4];
+    s16 bar;
+    StaffRoll* r;
+    void* file;
+    s16 n;
+    s16* names;
+    s16* rows;
+    s16 nrows;
+    s16 next;
+    s16 maxw;
+    s16 timer;
+    s32 vx;
+    s32 vy;
+    s32 tx;
+    s32 ty;
+    s16 tex;
+    s16 bar2;
+    s16 last;
+    s32 i;
+    s32 d;
+    s16 l;
+    s32 x;
+    s32 y;
+
+    r = HuPrcCurrentGet()->user_data;
+    i = 0;
+    bar = func_80064EF4(4, 0);
+    for (; i < 4; i++) {
+        func_80067208(bar, i, r->tex, 0);
+        func_800672B0(bar, i, 0);
+        func_800674BC(bar, i, 0x100C);
+        func_80067384(bar, i, 0x1000);
+        func_80066DC4(bar, i, 400, 0);
+        func_80067354(bar, i, 0.5f, 0.5f);
+        win[i] = func_8006D010(320, 240, 264, 32, 0, 0);
+        tw[i] = func_8006DD60(win[i]);
+        tw[i]->unk_03 = tw[i]->unk_04 = 0;
+        tw[i]->unk_09 = 4;
+        func_800674BC(tw[i]->unk_44, 0, 0x8000);
+        func_8006E2B8(win[i], 40, 200, 255);
+    }
+    file = func_80014614(0xF0007);
+    tex = func_800678A4(file);
+    FreeTemp(file);
+    bar2 = -1;
+    last = 0;
+    r->stat = 1;
+    do {
+        switch (r->cmd) {
+        case -1:
+            r->stat = 0;
+            break;
+        case 1:
+            names = r->names;
+            rows = r->rows;
+            n = 0;
+            r->stat = 2;
+            if (names == D_800FD45C_StaffScene) {
+                last = 1;
+            }
+            break;
+        case 2:
+            r->stat = 3;
+            break;
+        }
+        r->cmd = 0;
+        switch (r->stat) {
+        case 2:
+            if (n < r->count) {
+                maxw = 0;
+                for (i = 0; i < *rows && n < r->count; i++, n++) {
+                    func_8006E984(tw[i]);
+                    LoadStringIntoWindow(win[i], (void*)(PB_PTR32)*names, 0, 0);
+                    names++;
+                    func_80066DC4(tw[i]->unk_44, 0, 320, 0);
+                    l = func_8006D93C(tw[i]->stringPtr) + 1;
+                    l = l * tw[i]->unk_09;
+                    l = l + func_8006D99C(tw[i]->stringPtr, 0) + 8;
+                    w[i] = l;
+                    if (maxw < l) {
+                        maxw = l;
+                    }
+                }
+                if (last && n == r->count) {
+                    i--;
+                    bar2 = func_80064EF4(1, 0);
+                    func_80067208(bar2, 0, tex, 0);
+                    func_800672B0(bar2, 0, 0);
+                    func_800674BC(bar2, 0, 0x100C);
+                    func_80067384(bar2, 0, 0x1000);
+                    func_80066DC4(bar2, 0, 400, 0);
+                    i++;
+                }
+                rows++;
+                nrows = i;
+                switch (r->slot) {
+                case 0:
+                    y = 224 - (nrows << 4);
+                    x = 352;
+                    vx = -6;
+                    vy = 0;
+                    tx = 48;
+                    ty = y;
+                    break;
+                case 1:
+                    y = -16;
+                    x = 308 - maxw;
+                    vx = 0;
+                    vy = 6;
+                    tx = x;
+                    ty = 224 - (nrows << 4);
+                    break;
+                case 2:
+                    y = 24;
+                    x = -32 - maxw;
+                    vx = 6;
+                    vy = 0;
+                    tx = 308 - maxw;
+                    ty = 24;
+                    break;
+                case 3:
+                    y = 248;
+                    x = 48;
+                    vx = 0;
+                    vy = -6;
+                    tx = 48;
+                    ty = 24;
+                    break;
+                }
+                timer = 90;
+                r->stat = 3;
+                next = (n < r->count) ? 4 : 5;
+            } else {
+                r->stat = 1;
+            }
+            break;
+        case 3:
+            if ((tx != x) | (ty != y)) {
+                if (vx != 0) {
+                    d = tx - x;
+                    x += vx;
+                    if ((d *= tx - x) < 0) {
+                        x = tx;
+                    }
+                }
+                if (vy != 0) {
+                    d = ty - y;
+                    y += vy;
+                    if ((d *= ty - y) < 0) {
+                        y = ty;
+                    }
+                }
+                for (i = 0; i < nrows; i++) {
+                    d = i * 16;
+                    func_80066DC4(tw[i]->unk_44, 0, x, y + d);
+                    func_80066DC4(bar, i, x - 10, y + (u32)(d + 4));
+                    if ((bar2 >= 0) & (i == 3)) {
+                        func_80066DC4(tw[i]->unk_44, 0, x + 37, y + d);
+                        func_80066DC4(bar2, 0, x + 16, y + (u32)(d + 6));
+                    }
+                }
+            }
+            if ((tx == x) & (ty == y)) {
+                r->stat = next;
+                if ((next == 1) & (bar2 >= 0)) {
+                    func_8006DE20(win[3], 1.0f, 1.0f);
+                    func_80064D38(bar2);
+                    bar2 = -1;
+                    last = 0;
+                }
+            }
+            break;
+        case 4:
+        case 5:
+            if (timer != 0) {
+                timer--;
+                break;
+            }
+            switch (r->slot) {
+            case 0:
+                tx = -32 - maxw;
+                vx = -8;
+                break;
+            case 1:
+                ty = 256;
+                vy = 8;
+                break;
+            case 2:
+                tx = 352;
+                vx = 8;
+                break;
+            case 3:
+                ty = -64;
+                vy = -8;
+                break;
+            }
+            if (n < r->count) {
+                r->stat = 3;
+                next = 2;
+            } else {
+                r->stat = 1;
+                next = 1;
+            }
+            break;
+        }
+        HuPrcVSleep();
+    } while (r->stat != 0);
+    func_80067704(tex);
+    if (bar2 >= 0) {
+        func_80064D38(bar2);
+    }
+    func_80064D38(bar);
+    func_80070ED4();
+    r->stat = -1;
+    while (1) {
+        HuPrcVSleep();
+    }
+}
 
 void func_800F91E0_StaffScene(void) {
     StaffRoll title;
@@ -1203,7 +1428,212 @@ void func_800F91E0_StaffScene(void) {
     EndProcess(p3);
     func_80067704(tex);
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800F94E0_StaffScene);
+void DataCloseTemp(void*);
+
+/* The model of each credits page, flying from the page's corner to the coin in the middle */
+void func_800F94E0_StaffScene(void) {
+    StaffModel obj;
+    Vec3f off;
+    Vec3f target;
+    Vec3f vel;
+    StaffRoll* r;
+    StaffObjDef* def;
+    unk_ovl_2D_struct* o;
+    void* file;
+    s16 coin;
+    s16 m;
+    s16 anim;
+    s16 frame;
+    s16 t;
+    s16 next;
+    s32 b;
+    Vec3f* pos;
+
+    r = HuPrcCurrentGet()->user_data;
+    coin = LoadFormFile(0xF0001, 0x6B9);
+    func_800258EC(coin, 4, 4);
+    obj.scale.x = 1.0f;
+    obj.scale.y = 1.0f;
+    obj.scale.z = 1.0f;
+    obj.rot.x = 0.0f;
+    obj.rot.y = 0.0f;
+    obj.rot.z = 0.0f;
+    pos = &obj.pos;
+    def = D_800FD6A0_StaffScene;
+    r->stat = 1;
+    do {
+        switch (r->cmd) {
+        case -1:
+            r->stat = 0;
+            r->cmd = 0;
+            break;
+        case 1:
+            if (def->unk_00 < 0) {
+                def = D_800FD6A0_StaffScene;
+            }
+            file = func_80014614(def->file);
+            HuPrcVSleep();
+            m = LoadFormBinary(file, 0x68D);
+            func_80025EB4(m, 2, 2);
+            FreeTemp(file);
+            if (def->file2 < 0) {
+                anim = -1;
+            } else {
+                HuPrcVSleep();
+                file = func_80014614(def->file2);
+                HuPrcVSleep();
+                anim = LoadFormBinary(file, 0x1D);
+                FreeTemp(file);
+                frame = def->unk_02;
+            }
+            off.x = 0.0f;
+            off.y = def->unk_04;
+            off.z = 0.0f;
+            switch (def->unk_00) {
+            case 1:
+                func_80025830(m, 0.7f, 0.7f, 0.7f);
+                break;
+            case 2:
+                o = &D_800F2B7C[m];
+                file = func_80014614(0x90041);
+                func_80038A9C(o->unk_6C, file, 0, "coin_DEF");
+                DataCloseTemp(file);
+                func_80025AD4(m);
+                break;
+            case 3:
+                break;
+            case 4:
+                func_80025830(m, 0.5f, 0.5f, 0.5f);
+                break;
+            case 5:
+                break;
+            }
+            switch (r->slot) {
+            case 0:
+                pos->x = -1100.0f;
+                pos->y = 780.0f;
+                pos->z = -780.0f;
+                target.x = 400.0f;
+                target.y = 40.0f;
+                target.z = 680.0f;
+                break;
+            case 1:
+                pos->x = -1100.0f;
+                pos->y = -250.0f;
+                pos->z = -780.0f;
+                target.x = 400.0f;
+                target.y = 330.0f;
+                target.z = 680.0f;
+                break;
+            case 2:
+                pos->x = 1100.0f;
+                pos->y = -250.0f;
+                pos->z = -780.0f;
+                target.x = -400.0f;
+                target.y = 330.0f;
+                target.z = 680.0f;
+                break;
+            case 3:
+                pos->x = 1100.0f;
+                pos->y = 780.0f;
+                pos->z = -780.0f;
+                target.x = -400.0f;
+                target.y = 40.0f;
+                target.z = 680.0f;
+                break;
+            }
+            vel.x = (target.x - pos->x) * 0.008333334f;
+            vel.y = (target.y - pos->y) * 0.008333334f;
+            vel.z = (target.z - pos->z) * 0.008333334f;
+            func_800258EC(m, 4, 0);
+            func_800258EC(coin, 4, 0);
+            r->stat = 2;
+            r->cmd = 0;
+            next = 3;
+            t = 0;
+            def++;
+            break;
+        case 2:
+            r->stat = 1;
+            break;
+        }
+        switch (r->stat) {
+        case 2:
+            t++;
+            if (target.x == pos->x && target.y == pos->y && target.z == pos->z) {
+                r->stat = next;
+                break;
+            }
+            if (anim >= 0) {
+                if (t == frame) {
+                    func_80025BB8(m, anim);
+                }
+            }
+            if (target.x != pos->x) {
+                b = 0;
+                if (pos->x < target.x) {
+                    b = 1;
+                }
+                pos->x += vel.x;
+                if (pos->x < target.x) {
+                    b ^= 1;
+                }
+                if (b) {
+                    pos->x = target.x;
+                }
+            }
+            if (target.y != pos->y) {
+                b = 0;
+                if (pos->y < target.y) {
+                    b = 1;
+                }
+                pos->y += vel.y;
+                if (pos->y < target.y) {
+                    b ^= 1;
+                }
+                if (b) {
+                    pos->y = target.y;
+                }
+            }
+            if (target.z != pos->z) {
+                b = 0;
+                if (pos->z < target.z) {
+                    b = 1;
+                }
+                pos->z += vel.z;
+                if (pos->z < target.z) {
+                    b ^= 1;
+                }
+                if (b) {
+                    pos->z = target.z;
+                }
+            }
+            func_80025798(m, pos->x + off.x, pos->y + off.y, pos->z + off.z);
+            func_80025798(coin, pos->x, pos->y, pos->z);
+            break;
+        case 3:
+            func_800258EC(coin, 4, 4);
+            func_8002456C(m);
+            if (anim >= 0) {
+                func_8002456C(anim);
+            }
+            r->stat = 4;
+            break;
+        case 4:
+            break;
+        }
+        HuPrcVSleep();
+    } while (r->stat != 0);
+    func_8002456C(coin);
+    r->stat = -1;
+    while (1) {
+        HuPrcVSleep();
+    }
+}
+
+/* unreferenced: the zero tail after jtbl_800FE230, before func_800FAD30's double D_800FE250
+   (16-aligned in retail) */
+const s32 D_800FE244_StaffScene[3] = { 0, 0, 0 };
 
 void func_800F9C38_StaffScene(void) {
     s16 model[12];
