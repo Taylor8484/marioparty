@@ -28,7 +28,7 @@ extern s32 D_801102B8_YoshisTropicalIslandEndingScene[16];
 extern omObjData* D_80110300_YoshisTropicalIslandEndingScene[16]; /* omAddObj */
 extern Vec3f D_80110340_YoshisTropicalIslandEndingScene[];
 extern void* D_80110400_YoshisTropicalIslandEndingScene[16];      /* func_80042728 */
-extern s32 D_80110440_YoshisTropicalIslandEndingScene[2];         /* func_8004F954 */
+extern s32 D_80110440_YoshisTropicalIslandEndingScene;            /* func_8004F954; a scalar (54 uses, all at +0) */
 extern Object* D_80110448_YoshisTropicalIslandEndingScene[16];    /* MBModelCreate */
 
 /* Teardown shared by every scene (25FC70.c): deletes the objects and models of the blocks above */
