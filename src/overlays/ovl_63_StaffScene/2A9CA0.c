@@ -1,6 +1,10 @@
 #include "StaffScene.h"
 #include "PR/gu.h"
 
+/* Turns the camera towards m: within dist of it (mode >= 3 also pulls the camera in and lifts it by
+   rise), yaw by at most maxYaw a frame, pitch by at most 1 degree */
+
+
 
 extern char* D_800FD2E0_StaffScene;
 extern StaffCamera D_800FD2E4_StaffScene;
@@ -1419,8 +1423,96 @@ void func_800FB5F0_StaffScene(StaffModel* m, Vec3f* to, s32 n) {
         HuPrcVSleep();
     }
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FB6A8_StaffScene);
+void func_800FB6A8_StaffScene(StaffModel* m, f32 dist, s32 mode, f32 rise, f32 maxYaw) {
+    f32 minYaw;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 dxz;
+    f32 d;
+    f32 yaw;
+    f32 pitch;
+    f32 a;
+    f32 lim;
+    f32 dist2;
 
+    if (mode != 0) {
+        minYaw = 0.0f - maxYaw;
+        dist2 = dist * dist;
+        dx = m->pos.x - Center.x;
+        dy = m->pos.y - Center.y;
+        dz = m->pos.z - Center.z;
+        dxz = dx * dx + dz * dz;
+        if (mode >= 3) {
+            d = dxz + dy * dy;
+            if (dist2 < d) {
+                d = dist / func_800B1750(d);
+                Center.x = m->pos.x - dx * d;
+                Center.y = m->pos.y - dy * d;
+                Center.z = m->pos.z - dz * d;
+            }
+            Center.y += rise;
+        }
+        yaw = func_800B0CD8(dx, dz) - 180.0f;
+        if (yaw > 360.0f) {
+            yaw -= 360.0f;
+        } else if (yaw < 0.0f) {
+            yaw += 360.0f;
+        }
+        pitch = func_800B0CD8(dy, func_800B1750(dxz));
+        a = func_800B0CD8(0.0f - Center.x, 0.0f - Center.z) - 180.0f;
+        if (a > 360.0f) {
+            a -= 360.0f;
+        } else if (a < 0.0f) {
+            a += 360.0f;
+        }
+        a -= yaw;
+        if (a > 180.0f) {
+            a -= 360.0f;
+        } else if (a < -180.0f) {
+            a += 360.0f;
+        }
+        lim = 30.0f;
+        if (a > lim || (lim = -30.0f, a < lim)) {
+            a = lim;
+        }
+        yaw += a;
+        if (yaw > 360.0f) {
+            yaw -= 360.0f;
+        } else if (yaw < 0.0f) {
+            yaw += 360.0f;
+        }
+        a = yaw - CRot.y;
+        if (a > 180.0f) {
+            a -= 360.0f;
+        } else if (a < -180.0f) {
+            a += 360.0f;
+        }
+        if (maxYaw < a) {
+            a = maxYaw;
+        } else if (a < minYaw) {
+            a = minYaw;
+        }
+        a += CRot.y;
+        if (a > 360.0f) {
+            a -= 360.0f;
+        } else if (a < 0.0f) {
+            a += 360.0f;
+        }
+        CRot.y = a;
+        a = pitch - CRot.x;
+        if (a > 180.0f) {
+            a -= 360.0f;
+        } else if (a < -180.0f) {
+            a += 360.0f;
+        }
+        lim = 1.0f;
+        if (a > lim || (lim = -1.0f, a < lim)) {
+            a = lim;
+        }
+        CRot.x += a;
+    }
+}
 void func_800FBB88_StaffScene(StaffModel* m, s32* state, s32 t) {
     s32 hit;
     s32 z;
