@@ -22,6 +22,13 @@ extern Vec3f D_800FD360_StaffScene;
 extern Vec3f D_800FD36C_StaffScene;
 extern Vec3f D_800FD378_StaffScene;
 extern Vec3f D_800FD9C0_StaffScene;
+extern StaffCamera D_800FD954_StaffScene;
+extern Vec3f D_800FD974_StaffScene;
+extern StaffCtl D_800FD980_StaffScene;
+extern StaffCtl D_800FD984_StaffScene;
+extern StaffCtl D_800FD988_StaffScene;
+extern StaffCtl D_800FD98C_StaffScene;
+extern StaffCtl D_800FD990_StaffScene;
 extern Vec3f D_800FD9CC_StaffScene;
 extern Vec3f D_800FD9D8_StaffScene;
 extern Vec3f D_800FD9E4_StaffScene[3];
@@ -63,6 +70,12 @@ extern f32 D_800FE19C_StaffScene;    /* the fov last applied */
 void func_800FC554_StaffScene(StaffCamera*);
 void func_800FC5B0_StaffScene(omObjData*);
 void func_800FC864_StaffScene(void);
+void func_8002019C(s16);
+void func_800FA3D8_StaffScene(void);
+void func_800FAA4C_StaffScene(void);
+void func_800FAD30_StaffScene(void);
+void func_800FB1A0_StaffScene(void);
+void func_800FBE80_StaffScene(void);
 s16 func_80038A9C(unk2C0C0StructC0*, void*, s32, char*);
 void func_80025930(s16, s32, s32);
 void func_80025AD4(s16);
@@ -1247,8 +1260,119 @@ void func_800FA3D8_StaffScene(void) {
         HuPrcVSleep();
     }
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FA4F4_StaffScene);
+void func_800FA4F4_StaffScene(void) {
+    s32 pad[2]; /* retail frame */
+    s16 model[16];
+    s16 bg[8];
+    Process* p1;
+    Process* p2;
+    Process* p3;
+    Process* p4;
+    Process* p5;
+    s32 i;
+    s16 wait;
+    s16 n;
+    f32 dx;
+    f32 dy;
+    f32 dz;
 
+    n = 105;
+    dx = (D_800FD974_StaffScene.x - D_800FD954_StaffScene.center.x) / 105.0f;
+    dy = (D_800FD974_StaffScene.y - D_800FD954_StaffScene.center.y) / 105.0f;
+    dz = (D_800FD974_StaffScene.z - D_800FD954_StaffScene.center.z) / 105.0f;
+    func_8002578C(1);
+    for (i = 0; i < 16; i++) {
+        model[i] = -1;
+    }
+    for (i = 0; i < 8; i++) {
+        bg[i] = -1;
+    }
+    wait = 18;
+    func_800FC554_StaffScene(&D_800FD954_StaffScene);
+    p1 = omAddPrcObj(func_800FA3D8_StaffScene, 0x3F00, 0x800, 0);
+    p1->user_data = &D_800FD980_StaffScene;
+    p2 = omAddPrcObj(func_800FBE80_StaffScene, 0x3F00, 0x1000, 0);
+    p2->user_data = &D_800FD984_StaffScene;
+    p3 = omAddPrcObj(func_800FB1A0_StaffScene, 0x3F00, 0x1000, 0);
+    p3->user_data = &D_800FD988_StaffScene;
+    p4 = omAddPrcObj(func_800FAD30_StaffScene, 0x3F00, 0x1000, 0);
+    p4->user_data = &D_800FD98C_StaffScene;
+    p5 = omAddPrcObj(func_800FAA4C_StaffScene, 0x3F00, 0x800, 0);
+    p5->user_data = &D_800FD990_StaffScene;
+    model[0] = func_800174C0(0xF0000, 0x299);
+    SetFadeInTypeAndTime(0, 8);
+    PlaySound(0xB);
+    HuPrcSleep(8);
+    D_800FD984_StaffScene.cmd = 3;
+    HuPrcSleep(0);
+    while (D_800FD984_StaffScene.stat != 4) {
+        if (wait != 0) {
+            wait--;
+        } else if (n != 0) {
+            n--;
+            Center.x += dx;
+            Center.y += dy;
+            Center.z += dz;
+        }
+        HuPrcSleep(0);
+    }
+    D_800FD98C_StaffScene.cmd = 2;
+    while (D_800FD984_StaffScene.stat != 5) {
+        HuPrcSleep(0);
+    }
+    do {
+        HuPrcSleep(0);
+    } while ((CRot.x += 3.0f) < 42.0f);
+    CRot.x = 42.0f;
+    PlaySound(8);
+    D_800FD988_StaffScene.cmd = 4;
+    HuPrcVSleep();
+    while (D_800FD988_StaffScene.stat == 4) {
+        HuPrcVSleep();
+    }
+    HuPrcSleep(3);
+    func_80072724(0xFF, 0xFF, 0xFF);
+    func_800726AC(0, 3);
+    HuPrcSleep(3);
+    PlaySound(0xE);
+    PlaySound(0x11);
+    D_800FD980_StaffScene.cmd = 1;
+    D_800FD984_StaffScene.cmd = -1;
+    D_800FD988_StaffScene.cmd = 1;
+    D_800FD98C_StaffScene.cmd = 1;
+    D_800FD990_StaffScene.cmd = -1;
+    while (D_800FD980_StaffScene.stat != -1) {
+        HuPrcSleep(0);
+    }
+    EndProcess(p1);
+    while (D_800FD984_StaffScene.stat != -1) {
+        HuPrcSleep(0);
+    }
+    EndProcess(p2);
+    while (D_800FD988_StaffScene.stat != -1) {
+        HuPrcSleep(0);
+    }
+    EndProcess(p3);
+    while (D_800FD98C_StaffScene.stat >= 0) {
+        HuPrcSleep(0);
+    }
+    EndProcess(p4);
+    while (D_800FD990_StaffScene.stat != -1) {
+        HuPrcSleep(0);
+    }
+    EndProcess(p5);
+    for (i = 0; i < 16; i++) {
+        if (model[i] >= 0) {
+            func_8002456C(model[i]);
+        }
+    }
+    for (i = 0; i < 8; i++) {
+        if (bg[i] >= 0) {
+            func_8002019C(bg[i]);
+        }
+    }
+    HuPrcVSleep();
+}
 void func_800FAA4C_StaffScene(void) {
     s16 xy[2];
     StaffCtl* ctl;
