@@ -33,6 +33,9 @@ extern void* D_80110400_YoshisTropicalIslandEndingScene[16];      /* func_800427
 extern s32 D_80110440_YoshisTropicalIslandEndingScene[2];         /* func_8004F954 */
 extern Object* D_80110448_YoshisTropicalIslandEndingScene[16];    /* MBModelCreate */
 
+/* Teardown shared by every scene (25FC70.c): deletes the objects and models of the blocks above */
+void func_800F6B54_YoshisTropicalIslandEndingScene(void);
+
 /* Per-board scenes (D_8010DD9C) and their setup (D_8010DD7C) */
 void func_800F8550_YoshisTropicalIslandEndingScene(void);
 void func_800F8848_YoshisTropicalIslandEndingScene(void);
