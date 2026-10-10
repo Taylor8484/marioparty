@@ -333,7 +333,11 @@ void func_800F7108_ChanceTime(omObjData* obj) {
     D_80101ACA_ChanceTime[work->unk_56] = ContStkX[work->unk_56];
     D_80101A98_ChanceTime[work->unk_56] = ContStkY[work->unk_56];
     D_80101AC2_ChanceTime[work->unk_56] = ContBtnTrg[work->unk_56];
+#ifdef TARGET_PC
+    if ((GwPlayer[work->unk_58].flags & 1) || pb_autoplay_steer()) {
+#else
     if (GwPlayer[work->unk_58].flags & 1) {
+#endif
         if (D_80101266_ChanceTime == 0) {
             if (D_801011F0_ChanceTime == 0) {
                 D_801016FA_ChanceTime = 1;

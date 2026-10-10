@@ -2706,7 +2706,7 @@ s16 func_800FE2F0_SlotCarDerby(s16 sprite, u8 flags) {
     b = &D_80103298[id];
     b->unk_22 = sprite;
     b->unk_28 = flags;
-    dl = HuMemDirectMalloc(0x10000);
+    dl = HuMemDirectMalloc(0x2000 * sizeof(Gfx)); /* 0x10000 bytes on the N64 */
     vbuf = v = HuMemDirectMalloc(8 * sizeof(Vtx));
     gfx = dl;
     gDPPipeSync(gfx++);
@@ -2782,7 +2782,7 @@ s16 func_800FE2F0_SlotCarDerby(s16 sprite, u8 flags) {
     func_80023A38(dl, b->unk_00, size);
     HuMemDirectFree(dl);
     HuMemDirectFree(vbuf);
-    dl = HuMemDirectMalloc(0x10000);
+    dl = HuMemDirectMalloc(0x2000 * sizeof(Gfx)); /* 0x10000 bytes on the N64 */
     gfx = dl;
     gDPPipeSync(gfx++);
     gDPSetPrimColor(gfx++, 0, 0, b->unk_2A, b->unk_2B, b->unk_2C, b->unk_29);
