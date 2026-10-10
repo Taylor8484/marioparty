@@ -1,4 +1,4 @@
-#include "common.h"
+#include "ending.h"
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/25FC70", func_800F65E0_YoshisTropicalIslandEndingScene);
 
@@ -25,3 +25,7 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/25
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/25FC70", func_800F6C80_YoshisTropicalIslandEndingScene);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/25FC70", func_800F6D18_YoshisTropicalIslandEndingScene);
+
+
+
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/25FC70", D_8010EE78_YoshisTropicalIslandEndingScene);

@@ -55,8 +55,8 @@ void func_80109110_YoshisTropicalIslandEndingScene(omObjData *arg0) {
         var_f20 -= 360.0f;
     }
     
-    new_var = (-func_800AEAC0(var_f20)) + D_80110448_YoshisTropicalIslandEndingScene[temp_s1]->unk_10;
-    D_80110448_YoshisTropicalIslandEndingScene[temp_s1]->unk_10 = new_var;
+    new_var = (-func_800AEAC0(var_f20)) + D_80110448_YoshisTropicalIslandEndingScene[temp_s1]->coords.y;
+    D_80110448_YoshisTropicalIslandEndingScene[temp_s1]->coords.y = new_var;
     arg0->rot.x = var_f20;
 }
 
@@ -76,8 +76,27 @@ void func_8010920C_YoshisTropicalIslandEndingScene(Gfx** arg0) {
     gDPSetColorImage(D_800F37DC++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, 0x02000000);
 }
 
+
+
+
+
+
+
+
+
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2721F0", D_8010F5D8_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2721F0", D_8010F5DC_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2721F0", D_8010F604_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2721F0", D_8010F668_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2721F0", D_8010F66C_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2721F0", D_8010F6E4_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2721F0", D_8010F70C_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2721F0", D_8010F720_YoshisTropicalIslandEndingScene);
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2721F0", func_80109294_YoshisTropicalIslandEndingScene);
 
+
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2721F0", D_8010F738_YoshisTropicalIslandEndingScene);
+const f64 D_8010F758_YoshisTropicalIslandEndingScene __attribute__((section(".rodata"))) = 0.0174532925199432955;
 void func_8010A740_YoshisTropicalIslandEndingScene(omObjData* arg0) {
     omObjData* temp_s0;
 
@@ -87,8 +106,8 @@ void func_8010A740_YoshisTropicalIslandEndingScene(omObjData* arg0) {
         arg0->rot.x -= 360.0f;
     }
     
-    D_80110448_YoshisTropicalIslandEndingScene[0]->unk_18 = (sinf((f32) (arg0->rot.x * D_8010F758_YoshisTropicalIslandEndingScene)) * 0.2f);
-    D_80110448_YoshisTropicalIslandEndingScene[0]->unk_20 = 1.0f;
+    D_80110448_YoshisTropicalIslandEndingScene[0]->unk_18.x = (sinf((f32) (arg0->rot.x * D_8010F758_YoshisTropicalIslandEndingScene)) * 0.2f);
+    D_80110448_YoshisTropicalIslandEndingScene[0]->unk_18.z = 1.0f;
 }
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2721F0", func_8010A7EC_YoshisTropicalIslandEndingScene);
@@ -115,11 +134,11 @@ void func_8010AE40_YoshisTropicalIslandEndingScene(omObjData* arg0) {
     D_800C34A4 = arg0->rot.x;
     
     if (arg0->rot.y > 1.0f) {
-        func_800258EC(*D_80110480_YoshisTropicalIslandEndingScene->unk_3C->unk_40, 4, 4);
+        func_800258EC(*D_80110448_YoshisTropicalIslandEndingScene[14]->unk_3C->unk_40, 4, 4);
         return;
     }
     
-    func_80026B8C(*D_80110480_YoshisTropicalIslandEndingScene->unk_3C->unk_40, arg0->rot.y, arg0->rot.z, 2);
+    func_80026B8C(*D_80110448_YoshisTropicalIslandEndingScene[14]->unk_3C->unk_40, arg0->rot.y, arg0->rot.z, 2);
     arg0->rot.x += 39.0f;
     
     if (arg0->rot.x > 360.0f) {
@@ -131,9 +150,9 @@ void func_8010AE40_YoshisTropicalIslandEndingScene(omObjData* arg0) {
 
 void func_8010AF58_YoshisTropicalIslandEndingScene(omObjData* arg0) {
     arg0->func_ptr = &func_8010AE40_YoshisTropicalIslandEndingScene;
-    func_80025930(*D_80110480_YoshisTropicalIslandEndingScene->unk_3C->unk_40, 0x22000, 0x20000);
-    func_80025AD4(*D_80110480_YoshisTropicalIslandEndingScene->unk_3C->unk_40);
-    func_80026040(*D_80110480_YoshisTropicalIslandEndingScene->unk_3C->unk_40);
+    func_80025930(*D_80110448_YoshisTropicalIslandEndingScene[14]->unk_3C->unk_40, 0x22000, 0x20000);
+    func_80025AD4(*D_80110448_YoshisTropicalIslandEndingScene[14]->unk_3C->unk_40);
+    func_80026040(*D_80110448_YoshisTropicalIslandEndingScene[14]->unk_3C->unk_40);
     arg0->rot.x = arg0->rot.y = 0.0f;
     arg0->rot.z = 1.0f;
 }
