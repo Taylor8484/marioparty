@@ -54,6 +54,8 @@ extern f32 D_800FE19C_StaffScene;    /* the fov last applied */
 void func_800FC554_StaffScene(StaffCamera*);
 void func_800FC5B0_StaffScene(omObjData*);
 void func_800FC864_StaffScene(void);
+s32 LoadFormBinary(void*, u32);
+void func_80025BB8(s16, s16);
 void func_800FB6A8_StaffScene(StaffModel*, f32, s32, f32, f32);
 void func_800FBB88_StaffScene(StaffModel*, s32*, s32);
 void func_800FCAF4_StaffScene(void);
@@ -930,8 +932,85 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800F91E0_
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800F94E0_StaffScene);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800F9C38_StaffScene);
+void func_800F9C38_StaffScene(void) {
+    s16 model[12];
+    s16 anim[12];
+    f32 y[12];
+    StaffCtl* ctl;
+    StaffObjDef* def;
+    void* file;
+    s16 m;
+    s16 c;
+    s32 i;
 
+    ctl = HuPrcCurrentGet()->user_data;
+    for (i = 0; i < 12; i++) {
+        def = &D_800FD6A0_StaffScene[D_800FD900_StaffScene[i]];
+        file = func_80014614(def->file);
+        m = LoadFormBinary(file, 0x6A9);
+        func_80025EB4(m, 2, 2);
+        func_80025798(m, D_800FD870_StaffScene[i].x, D_800FD870_StaffScene[i].y, D_800FD870_StaffScene[i].z);
+        y[i] = D_800FD870_StaffScene[i].y;
+        if (i == 9) {
+            func_80025830(m, 1.5f, 1.5f, 1.5f);
+        }
+        FreeTemp(file);
+        model[i] = m;
+        if ((def->file2 < 0) | (i >= 6)) {
+            anim[i] = -1;
+        } else {
+            file = func_80014614(def->file2);
+            anim[i] = LoadFormBinary(file, 0x1D);
+            FreeTemp(file);
+        }
+    }
+    ctl->stat = 1;
+    do {
+        c = ctl->cmd;
+        if (c != 0) {
+            switch (c) {
+            case 2:
+                ctl->stat = 2;
+                break;
+            case -1:
+                ctl->stat = 0;
+                break;
+            case 3:
+                ctl->stat = 3;
+                break;
+            }
+            ctl->cmd = 0;
+        }
+        switch (ctl->stat) {
+        case 1:
+            break;
+        case 3:
+            for (i = 0; i < 12; i++) {
+                y[i] -= 5.0f;
+                func_80025798(model[i], D_800FD870_StaffScene[i].x, y[i], D_800FD870_StaffScene[i].z);
+            }
+            break;
+        case 2:
+            PlaySound(0x96);
+            for (i = 0; i < 6; i++) {
+                func_80025BB8(model[i], anim[i]);
+            }
+            ctl->stat = 1;
+            break;
+        }
+        HuPrcVSleep();
+    } while (ctl->stat != 0);
+    for (i = 0; i < 12; i++) {
+        func_8002456C(model[i]);
+        if (anim[i] >= 0) {
+            func_8002456C(anim[i]);
+        }
+    }
+    ctl->stat = -1;
+    while (1) {
+        HuPrcVSleep();
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800F9F70_StaffScene);
 
 void func_800FA3D8_StaffScene(void) {
