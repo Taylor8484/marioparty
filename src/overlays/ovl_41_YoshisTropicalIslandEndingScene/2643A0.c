@@ -14,15 +14,6 @@ void func_800FB1E4_YoshisTropicalIslandEndingScene(omObjData* obj);
 void func_800FB460_YoshisTropicalIslandEndingScene(omObjData* obj);
 void func_800FB514_YoshisTropicalIslandEndingScene(omObjData* obj);
 
-/* ending.h declares D_80110440 as s32[2], but this unit's code reads [0] as a scalar (GCC hoists an
- * array's address into a register, retail reloads it): the N64 build names the same symbol as an s32
- * through an asm label; the host reads the ending.h object. */
-#ifdef TARGET_PC
-#define ENDING_EFFECT (D_80110440_YoshisTropicalIslandEndingScene[0])
-#else
-extern s32 ending_effect2_N64 asm("D_80110440_YoshisTropicalIslandEndingScene");
-#define ENDING_EFFECT ending_effect2_N64
-#endif
 
 #define BOARD D_801102B0_YoshisTropicalIslandEndingScene
 
@@ -94,6 +85,16 @@ void func_800FAD10_YoshisTropicalIslandEndingScene(omObjData* obj) {
                   "pukuSa-bmerge2", 0);
 }
 
+/* Named so the unit's .rodata stays 8-byte aligned: a li.d literal makes the KMC assembler pad
+ * .rodata to 16 bytes, and 266C80's .rodata starts 8 bytes after this unit's. */
+#ifndef TARGET_PC
+#define DTOR_RODATA __attribute__((section(".rodata")))
+#else
+#define DTOR_RODATA
+#endif
+const f64 D_8010F060_YoshisTropicalIslandEndingScene DTOR_RODATA = M_DTOR;
+const f64 D_8010F068_YoshisTropicalIslandEndingScene DTOR_RODATA = M_DTOR;
+
 void func_800FAD64_YoshisTropicalIslandEndingScene(omObjData* obj) {
     s32 count = D_8010DC90_YoshisTropicalIslandEndingScene[GwSystem.unk_00];
     s32 i;
@@ -106,10 +107,10 @@ void func_800FAD64_YoshisTropicalIslandEndingScene(omObjData* obj) {
         case 0:
             for (i = 0; i < obj->trans.y; i++) {
                 angle = (360 / count) * i;
-                x = sinf((angle + obj->rot.y) * M_DTOR) * obj->trans.x + D_8010DC9C_YoshisTropicalIslandEndingScene[BOARD].x;
+                x = sinf((angle + obj->rot.y) * D_8010F060_YoshisTropicalIslandEndingScene) * obj->trans.x + D_8010DC9C_YoshisTropicalIslandEndingScene[BOARD].x;
                 func_800A0D00(&D_80110448_YoshisTropicalIslandEndingScene[8 + i]->coords, x,
                               D_8010DC9C_YoshisTropicalIslandEndingScene[BOARD].y,
-                              cosf((angle + obj->rot.y) * M_DTOR) * obj->trans.x +
+                              cosf((angle + obj->rot.y) * D_8010F060_YoshisTropicalIslandEndingScene) * obj->trans.x +
                                   D_8010DC9C_YoshisTropicalIslandEndingScene[BOARD].z);
                 func_800A0D00((Vec3f*)&D_80110448_YoshisTropicalIslandEndingScene[8 + i]->xScale, obj->scale.x,
                               obj->scale.x, obj->scale.x);
@@ -123,17 +124,17 @@ void func_800FAD64_YoshisTropicalIslandEndingScene(omObjData* obj) {
         case 1:
             for (i = 0; i < obj->trans.y; i++) {
                 angle2 = (360 / count) * i;
-                x2 = sinf((angle2 + obj->rot.y) * M_DTOR) * obj->trans.x + D_8010DC9C_YoshisTropicalIslandEndingScene[BOARD].x;
+                x2 = sinf((angle2 + obj->rot.y) * D_8010F068_YoshisTropicalIslandEndingScene) * obj->trans.x + D_8010DC9C_YoshisTropicalIslandEndingScene[BOARD].x;
                 func_800A0D00(&D_80110448_YoshisTropicalIslandEndingScene[8 + i]->coords, x2,
                               D_8010DC9C_YoshisTropicalIslandEndingScene[BOARD].y,
-                              cosf((angle2 + obj->rot.y) * M_DTOR) * obj->trans.x +
+                              cosf((angle2 + obj->rot.y) * D_8010F068_YoshisTropicalIslandEndingScene) * obj->trans.x +
                                   D_8010DC9C_YoshisTropicalIslandEndingScene[BOARD].z + obj->scale.z);
                 func_800A0D00((Vec3f*)&D_80110448_YoshisTropicalIslandEndingScene[8 + i]->xScale, obj->scale.x,
                               obj->scale.x, obj->scale.x);
                 D_80110448_YoshisTropicalIslandEndingScene[8 + i]->unk_18.x =
-                    sinf(sinf(obj->rot.z * M_DTOR) * 10.0f * M_DTOR);
+                    sinf(sinf(obj->rot.z * D_8010F068_YoshisTropicalIslandEndingScene) * 10.0f * D_8010F068_YoshisTropicalIslandEndingScene);
                 D_80110448_YoshisTropicalIslandEndingScene[8 + i]->unk_18.z =
-                    cosf(sinf(obj->rot.z * M_DTOR) * 10.0f * M_DTOR);
+                    cosf(sinf(obj->rot.z * D_8010F068_YoshisTropicalIslandEndingScene) * 10.0f * D_8010F068_YoshisTropicalIslandEndingScene);
             }
             obj->rot.z += 5.0f;
             if (obj->rot.z >= 360.0f) {
@@ -142,6 +143,9 @@ void func_800FAD64_YoshisTropicalIslandEndingScene(omObjData* obj) {
             break;
     }
 }
+
+const f64 D_8010F070_YoshisTropicalIslandEndingScene DTOR_RODATA = M_DTOR;
+const f64 D_8010F078_YoshisTropicalIslandEndingScene DTOR_RODATA = M_DTOR;
 
 void func_800FB1E4_YoshisTropicalIslandEndingScene(omObjData* obj) {
     switch (obj->work[0]) {
@@ -155,13 +159,13 @@ void func_800FB1E4_YoshisTropicalIslandEndingScene(omObjData* obj) {
                 obj->rot.x -= 360.0f;
             }
             D_80110448_YoshisTropicalIslandEndingScene[2]->coords.x =
-                sinf(obj->rot.x * M_DTOR) * 70.0f * 5.0f + obj->trans.x;
+                sinf(obj->rot.x * D_8010F070_YoshisTropicalIslandEndingScene) * 70.0f * 5.0f + obj->trans.x;
             D_80110448_YoshisTropicalIslandEndingScene[2]->coords.y = obj->trans.y;
             D_80110448_YoshisTropicalIslandEndingScene[2]->coords.z =
-                (obj->trans.z - 150.0f) + cosf(obj->rot.x * M_DTOR) * 30.0f * 5.0f;
+                (obj->trans.z - 150.0f) + cosf(obj->rot.x * D_8010F070_YoshisTropicalIslandEndingScene) * 30.0f * 5.0f;
             if (!(obj->work[3] & 1)) {
-                func_8004FA90(ENDING_EFFECT, 3.0f, 3.0f, 3.0f);
-                func_8004F9F4(ENDING_EFFECT, D_80110448_YoshisTropicalIslandEndingScene[2]->coords.x,
+                func_8004FA90(D_80110440_YoshisTropicalIslandEndingScene, 3.0f, 3.0f, 3.0f);
+                func_8004F9F4(D_80110440_YoshisTropicalIslandEndingScene, D_80110448_YoshisTropicalIslandEndingScene[2]->coords.x,
                               D_80110448_YoshisTropicalIslandEndingScene[2]->coords.y - 40.0f,
                               D_80110448_YoshisTropicalIslandEndingScene[2]->coords.z, 3);
             }
@@ -174,15 +178,17 @@ void func_800FB1E4_YoshisTropicalIslandEndingScene(omObjData* obj) {
             }
             D_80110448_YoshisTropicalIslandEndingScene[2]->unk_3C->unk_24 = 0.0f;
             D_80110448_YoshisTropicalIslandEndingScene[2]->unk_3C->unk28 = 0.0f;
-            D_80110448_YoshisTropicalIslandEndingScene[2]->unk_3C->unk_2C = sinf(obj->rot.x * M_DTOR) * 10.0f;
+            D_80110448_YoshisTropicalIslandEndingScene[2]->unk_3C->unk_2C = sinf(obj->rot.x * D_8010F078_YoshisTropicalIslandEndingScene) * 10.0f;
             break;
     }
 }
 
+const f64 D_8010F080_YoshisTropicalIslandEndingScene DTOR_RODATA = M_DTOR;
+
 void func_800FB460_YoshisTropicalIslandEndingScene(omObjData* obj) {
     D_80110448_YoshisTropicalIslandEndingScene[5]->coords.y = 0.0f;
     D_80110448_YoshisTropicalIslandEndingScene[5]->unk_30 =
-        sinf(obj->rot.y * M_DTOR) * 20.0f + D_8010EF70_YoshisTropicalIslandEndingScene[5].y;
+        sinf(obj->rot.y * D_8010F080_YoshisTropicalIslandEndingScene) * 20.0f + D_8010EF70_YoshisTropicalIslandEndingScene[5].y;
     obj->rot.y += 2.0f;
     if (obj->rot.y >= 360.0f) {
         obj->rot.y -= 360.0f;
@@ -220,6 +226,8 @@ void func_800FB514_YoshisTropicalIslandEndingScene(omObjData* obj) {
     }
 }
 
+// EF50 model loop: 2.0f hoisted to an FPR, branch layout of the 0xD test (masked 24); calls, constants and strides identical
+#ifdef NON_MATCHING
 void func_800FB648_YoshisTropicalIslandEndingScene(void) {
     Object* stones[7];
     Vec3f step;
@@ -235,7 +243,7 @@ void func_800FB648_YoshisTropicalIslandEndingScene(void) {
     s32 j;
     s32 t;
 
-    func_8004FA90(ENDING_EFFECT, 4.0f, 4.0f, 4.0f);
+    func_8004FA90(D_80110440_YoshisTropicalIslandEndingScene, 4.0f, 4.0f, 4.0f);
     for (i = 0; i < count; i++) {
         D_80110448_YoshisTropicalIslandEndingScene[8 + i] = MBModelCreate(0x25, NULL);
         angle = (360 / count) * i * M_DTOR;
@@ -362,9 +370,9 @@ void func_800FB648_YoshisTropicalIslandEndingScene(void) {
         MBModelKill(D_80110448_YoshisTropicalIslandEndingScene[8 + i]);
         D_80110448_YoshisTropicalIslandEndingScene[8 + i] = NULL;
     }
-    func_8004FAB8(ENDING_EFFECT);
-    ENDING_EFFECT = func_8004F954(0x26, 0x20);
-    func_8004FA90(ENDING_EFFECT, 2.0f, 2.0f, 2.0f);
+    func_8004FAB8(D_80110440_YoshisTropicalIslandEndingScene);
+    D_80110440_YoshisTropicalIslandEndingScene = func_8004F954(0x26, 0x20);
+    func_8004FA90(D_80110440_YoshisTropicalIslandEndingScene, 2.0f, 2.0f, 2.0f);
     HuPrcSleep(7);
 
     /* the players watch the two meet */
@@ -407,7 +415,7 @@ void func_800FB648_YoshisTropicalIslandEndingScene(void) {
     func_8004F40C(GwPlayer[GwCommon.boardWork[0]].player_obj, 0, 2);
     func_8004EE14(0, D_800F32A0, 0xF, GwPlayer[GwCommon.boardWork[0]].player_obj);
     for (i = 0; i < 5; i++) {
-        func_8004F9F4(ENDING_EFFECT, GwPlayer[GwCommon.boardWork[0]].player_obj->coords.x - 20.0f,
+        func_8004F9F4(D_80110440_YoshisTropicalIslandEndingScene, GwPlayer[GwCommon.boardWork[0]].player_obj->coords.x - 20.0f,
                       GwPlayer[GwCommon.boardWork[0]].player_obj->coords.y - 50.0f,
                       GwPlayer[GwCommon.boardWork[0]].player_obj->coords.z + 100.0f, 1);
         HuPrcSleep(1);
@@ -430,7 +438,7 @@ void func_800FB648_YoshisTropicalIslandEndingScene(void) {
     func_8004F4D4(GwPlayer[GwCommon.boardWork[1]].player_obj, 4, 0);
     func_8004EE14(0, D_800F32A0, 0x14, GwPlayer[GwCommon.boardWork[1]].player_obj);
     for (i = 0; i < 10; i++) {
-        func_8004F9F4(ENDING_EFFECT, GwPlayer[GwCommon.boardWork[1]].player_obj->coords.x - 20.0f,
+        func_8004F9F4(D_80110440_YoshisTropicalIslandEndingScene, GwPlayer[GwCommon.boardWork[1]].player_obj->coords.x - 20.0f,
                       GwPlayer[GwCommon.boardWork[1]].player_obj->coords.y - 50.0f,
                       GwPlayer[GwCommon.boardWork[1]].player_obj->coords.z + 100.0f, 1);
         HuPrcSleep(1);
@@ -456,7 +464,7 @@ void func_800FB648_YoshisTropicalIslandEndingScene(void) {
     }
     MBMotionSet(D_80110448_YoshisTropicalIslandEndingScene[0], 0, 2);
     MBMotionSet(D_80110448_YoshisTropicalIslandEndingScene[1], 0, 2);
-    func_8004FAB8(ENDING_EFFECT);
+    func_8004FAB8(D_80110440_YoshisTropicalIslandEndingScene);
     HuPrcSleep(5);
 
     /* the winner rides off */
@@ -622,12 +630,36 @@ void func_800FB648_YoshisTropicalIslandEndingScene(void) {
     HuPrcSleep(0xA);
     func_8004F4D4(GwPlayer[GwCommon.boardWork[0]].player_obj, 2, 0);
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", func_800FB648_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010F0B8_YoshisTropicalIslandEndingScene);
+/* INCLUDE_RODATA leaves the assembler in .text while GCC believes it is still in .rodata: return there
+ * for D_8010F114 below */
+asm(".section .rodata");
+/* the asm names the tables' inner labels */
+asm(".globl D_8010E2BC_YoshisTropicalIslandEndingScene\nD_8010E2BC_YoshisTropicalIslandEndingScene = D_8010E2B0_YoshisTropicalIslandEndingScene + 0xC\n"
+    ".globl D_8010E2C8_YoshisTropicalIslandEndingScene\nD_8010E2C8_YoshisTropicalIslandEndingScene = D_8010E2B0_YoshisTropicalIslandEndingScene + 0x18\n"
+    ".globl D_8010E2F8_YoshisTropicalIslandEndingScene\nD_8010E2F8_YoshisTropicalIslandEndingScene = D_8010E2D4_YoshisTropicalIslandEndingScene + 0x24\n"
+    ".globl D_8010EF74_YoshisTropicalIslandEndingScene\nD_8010EF74_YoshisTropicalIslandEndingScene = D_8010EF70_YoshisTropicalIslandEndingScene + 0x4\n"
+    ".globl D_8010EF78_YoshisTropicalIslandEndingScene\nD_8010EF78_YoshisTropicalIslandEndingScene = D_8010EF70_YoshisTropicalIslandEndingScene + 0x8\n"
+    ".globl D_8010EF88_YoshisTropicalIslandEndingScene\nD_8010EF88_YoshisTropicalIslandEndingScene = D_8010EF70_YoshisTropicalIslandEndingScene + 0x18\n"
+    ".globl D_8010EFC8_YoshisTropicalIslandEndingScene\nD_8010EFC8_YoshisTropicalIslandEndingScene = D_8010EFC4_YoshisTropicalIslandEndingScene + 0x4\n"
+    ".globl D_8010EFCC_YoshisTropicalIslandEndingScene\nD_8010EFCC_YoshisTropicalIslandEndingScene = D_8010EFC4_YoshisTropicalIslandEndingScene + 0x8\n"
+    ".globl D_8010EFD0_YoshisTropicalIslandEndingScene\nD_8010EFD0_YoshisTropicalIslandEndingScene = D_8010EFC4_YoshisTropicalIslandEndingScene + 0xC\n"
+    ".globl D_8010EFDC_YoshisTropicalIslandEndingScene\nD_8010EFDC_YoshisTropicalIslandEndingScene = D_8010EFC4_YoshisTropicalIslandEndingScene + 0x18\n"
+    ".globl D_8010EFE8_YoshisTropicalIslandEndingScene\nD_8010EFE8_YoshisTropicalIslandEndingScene = D_8010EFC4_YoshisTropicalIslandEndingScene + 0x24\n"
+    ".globl D_8010F004_YoshisTropicalIslandEndingScene\nD_8010F004_YoshisTropicalIslandEndingScene = D_8010F000_YoshisTropicalIslandEndingScene + 0x4\n"
+    ".globl D_8010F008_YoshisTropicalIslandEndingScene\nD_8010F008_YoshisTropicalIslandEndingScene = D_8010F000_YoshisTropicalIslandEndingScene + 0x8\n"
+    ".globl D_8010F00C_YoshisTropicalIslandEndingScene\nD_8010F00C_YoshisTropicalIslandEndingScene = D_8010F000_YoshisTropicalIslandEndingScene + 0xC\n");
+#endif
 
+#ifdef NON_MATCHING
 /* unreferenced */
 const Vec3f D_8010F0C0_YoshisTropicalIslandEndingScene[7] = {
     { 0.0f, 410.0f, 1210.0f },   { -142.5f, 0.0f, 1485.0f }, { -345.0f, 0.0f, 1532.5f }, { -150.0f, 130.0f, 1410.0f },
     { 135.0f, 0.0f, 1610.0f },   { -240.0f, 0.0f, 1485.0f }, { -100.0f, 0.0f, 1387.5f },
 };
+#endif
 /* read by 266C80 (2643A0.h) */
 const Vec3f D_8010F114_YoshisTropicalIslandEndingScene[4] = {
     { 0.0f, 0.0f, 1475.0f },

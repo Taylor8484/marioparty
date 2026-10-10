@@ -9,15 +9,6 @@ typedef struct EndingModelDef {
     /* 0x10 */ void* list;
 } EndingModelDef; /* N64 size 0x14 */
 
-/* ending.h declares D_80110440 as s32[2], but this unit's code reads [0] as a scalar (GCC hoists an
- * array's address into a register, retail reloads it): the N64 build names the same symbol as an s32
- * through an asm label; the host reads the ending.h object. */
-#ifdef TARGET_PC
-#define ENDING_EFFECT (D_80110440_YoshisTropicalIslandEndingScene[0])
-#else
-extern s32 ending_effect_N64 asm("D_80110440_YoshisTropicalIslandEndingScene");
-#define ENDING_EFFECT ending_effect_N64
-#endif
 
 extern Vec3f D_80110180_YoshisTropicalIslandEndingScene[4]; /* camera: eye, at, up, spare (bss) */
 
@@ -179,10 +170,10 @@ void func_80102760_YoshisTropicalIslandEndingScene(omObjData* obj) {
     }
     if (phase < 0.25) {
         scale = (phase + 0.1f) * 24.0f;
-        func_8004FA90(ENDING_EFFECT, scale, scale, scale);
+        func_8004FA90(D_80110440_YoshisTropicalIslandEndingScene, scale, scale, scale);
         y = phase * 3.0f * 24.0f * 5.0f;
-        func_8004F9F4(ENDING_EFFECT, -1010.0f, y, -286.5f, 3);
-        func_8004F9F4(ENDING_EFFECT, -860.0f, y, -286.5f, 3);
+        func_8004F9F4(D_80110440_YoshisTropicalIslandEndingScene, -1010.0f, y, -286.5f, 3);
+        func_8004F9F4(D_80110440_YoshisTropicalIslandEndingScene, -860.0f, y, -286.5f, 3);
     }
     obj->rot.x = t;
 }
@@ -193,6 +184,8 @@ void func_80102AE4_YoshisTropicalIslandEndingScene(omObjData* obj) {
     obj->work[0] = 0;
 }
 
+// register allocation: neg.s result in $f2 (masked 0)
+#ifdef NON_MATCHING
 void func_80102B18_YoshisTropicalIslandEndingScene(omObjData* obj) {
     u8 idx = obj->work[0];
     f32 angle = obj->rot.x;
@@ -207,6 +200,9 @@ void func_80102B18_YoshisTropicalIslandEndingScene(omObjData* obj) {
     D_80110448_YoshisTropicalIslandEndingScene[idx]->coords.y += d;
     obj->rot.x = angle;
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/26BA10", func_80102B18_YoshisTropicalIslandEndingScene);
+#endif
 
 omObjData* func_80102BAC_YoshisTropicalIslandEndingScene(u8 idx) {
     omObjData* obj = omAddObj(0x600, 0, 0, -1, func_80102B18_YoshisTropicalIslandEndingScene);
@@ -271,6 +267,8 @@ void func_80102C14_YoshisTropicalIslandEndingScene(void) {
     MBModelDispOff(D_80110448_YoshisTropicalIslandEndingScene[0]);
 }
 
+// retail keeps a dead copy of the argument in $s0 (frame 0x20 vs 0x18); calls identical
+#ifdef NON_MATCHING
 void func_80102F54_YoshisTropicalIslandEndingScene(omObjData* obj) {
     Vec3f* cam = D_80110180_YoshisTropicalIslandEndingScene;
 
@@ -278,6 +276,9 @@ void func_80102F54_YoshisTropicalIslandEndingScene(omObjData* obj) {
     func_8001D420(0, &cam[0], &cam[1], &cam[2]);
     func_8001D57C(0);
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/26BA10", func_80102F54_YoshisTropicalIslandEndingScene);
+#endif
 
 void func_80102FB4_YoshisTropicalIslandEndingScene(omObjData* obj) {
     Vec3f* cam = D_80110180_YoshisTropicalIslandEndingScene;
@@ -328,6 +329,8 @@ omObjData* func_801031C8_YoshisTropicalIslandEndingScene(s32 idx, f32 y, f32 z) 
 
 const Vec3f D_8010F310_YoshisTropicalIslandEndingScene = { 0.0f, 610.0f, 1662.5f };
 
+// wait loop: beqzl vs beqz (a0 = 0 in the delay slot either way; masked 2)
+#ifdef NON_MATCHING
 void func_8010329C_YoshisTropicalIslandEndingScene(void) {
     Vec3f focus;
     Vec3f pt;
@@ -484,9 +487,9 @@ void func_8010329C_YoshisTropicalIslandEndingScene(void) {
     func_800A0D00(&GwPlayer[GwCommon.boardWork[3]].player_obj->unk_18, -1.0f, 0.0f, 0.0f);
     GwPlayer[GwCommon.boardWork[3]].flags |= 2;
     func_8004F4D4(GwPlayer[GwCommon.boardWork[3]].player_obj, 1, 2);
-    func_8004FAB8(ENDING_EFFECT);
-    ENDING_EFFECT = func_8004F954(0x26, 0x20);
-    func_8004FA90(ENDING_EFFECT, 5.0f, 5.0f, 5.0f);
+    func_8004FAB8(D_80110440_YoshisTropicalIslandEndingScene);
+    D_80110440_YoshisTropicalIslandEndingScene = func_8004F954(0x26, 0x20);
+    func_8004FA90(D_80110440_YoshisTropicalIslandEndingScene, 5.0f, 5.0f, 5.0f);
     D_80110300_YoshisTropicalIslandEndingScene[0] = omAddObj(0x1000, 0, 0, -1, func_80102AE4_YoshisTropicalIslandEndingScene);
     HuPrcSleep(0x14);
     SetFadeInTypeAndTime(1, 0x10);
@@ -540,6 +543,9 @@ void func_8010329C_YoshisTropicalIslandEndingScene(void) {
     HuPrcSleep(0x3C);
     func_8004F4D4(GwPlayer[GwCommon.boardWork[0]].player_obj, 0, 0);
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/26BA10", func_8010329C_YoshisTropicalIslandEndingScene);
+#endif
 
 void func_8010400C_YoshisTropicalIslandEndingScene(omObjData* obj) {
     obj->rot.x += 5.0f;
@@ -662,12 +668,12 @@ void func_8010444C_YoshisTropicalIslandEndingScene(void) {
         HuPrcVSleep();
     } while (i >= 0);
     HuPrcSleep(0x1E);
-    D_80110300_YoshisTropicalIslandEndingScene[1] = omAddObj(0x1000, 0, 0, -1, func_801042F0_YoshisTropicalIslandEndingScene);
-    D_80110300_YoshisTropicalIslandEndingScene[1]->trans.x = 0.0f;
+    D_80110300_YoshisTropicalIslandEndingScene[2] = omAddObj(0x1000, 0, 0, -1, func_801042F0_YoshisTropicalIslandEndingScene);
+    D_80110300_YoshisTropicalIslandEndingScene[2]->trans.x = 0.0f;
     func_800726AC(0, 0x10);
     HuPrcSleep(0x10);
-    omDelObj(D_80110300_YoshisTropicalIslandEndingScene[1]);
-    D_80110300_YoshisTropicalIslandEndingScene[1] = NULL;
+    omDelObj(D_80110300_YoshisTropicalIslandEndingScene[2]);
+    D_80110300_YoshisTropicalIslandEndingScene[2] = NULL;
     omDelObj(ring);
     MBModelKill(D_80110448_YoshisTropicalIslandEndingScene[0]);
     D_80110448_YoshisTropicalIslandEndingScene[0] = NULL;
@@ -723,6 +729,8 @@ void func_80104C50_YoshisTropicalIslandEndingScene(Vec3f* pts, f32* times, f32 t
     out->z = func_80022D9C(v[2], v[3], t);
 }
 
+// addu operand order computing the point address (masked 0)
+#ifdef NON_MATCHING
 void func_80104D24_YoshisTropicalIslandEndingScene(s16 hmf, f32 len, f32 t, Vec3f* out) {
     Vec3f v[4];
     f32 times[4];
@@ -750,3 +758,6 @@ void func_80104D24_YoshisTropicalIslandEndingScene(s16 hmf, f32 len, f32 t, Vec3
     times[3] = step * (seg + 2);
     func_80104C50_YoshisTropicalIslandEndingScene(v, times, t, out);
 }
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/26BA10", func_80104D24_YoshisTropicalIslandEndingScene);
+#endif
