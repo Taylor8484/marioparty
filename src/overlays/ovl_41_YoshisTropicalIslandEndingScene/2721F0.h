@@ -50,18 +50,9 @@ typedef struct EndingCam {
 } EndingCam; /* size 0x38 */
 extern EndingCam D_80110210_YoshisTropicalIslandEndingScene[2];
 
-/* The scene's player-position table (Vec3f[12]) starts at 0x8010F5D4, 4 bytes inside 26E620's
- * .rodata subsegment: its first float, D_8010F5D4 (-790.0f), is defined by 26E620. On the N64 the
- * rest follows it in this unit's .rodata (D_8010F5D8); the host, where two objects are not
- * adjacent, gets its own whole copy. Moving 2721F0's .rodata start to 0x278C64 would remove this. */
-#ifdef TARGET_PC
-extern const Vec3f D_8010F5D4_host[12];
-#define ENDING_PLAYER_POS D_8010F5D4_host
-#else
-/* declared here as the whole table (26E620 defines only its first float) */
+/* The scene's player-position table */
 extern const Vec3f D_8010F5D4_YoshisTropicalIslandEndingScene[12];
 #define ENDING_PLAYER_POS D_8010F5D4_YoshisTropicalIslandEndingScene
-#endif
 
 /* Scene model table: MBModelCreate(id, list) at pos */
 typedef struct EndingModel {

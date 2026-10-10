@@ -41,11 +41,10 @@ Vec3f D_8010ECEC_YoshisTropicalIslandEndingScene = { 640.0f, 480.0f, 511.0f };
     -80.0f, 0.0f, 800.0f, \
     80.0f, 0.0f, 400.0f, \
     80.0f, 0.0f, 800.0f
-#ifdef TARGET_PC
-const Vec3f D_8010F5D4_host[12] = { -790.0f, ENDING_PLAYER_POS_REST };
-#else
-const f32 D_8010F5D8_YoshisTropicalIslandEndingScene[35] = { ENDING_PLAYER_POS_REST };
-#endif
+/* unreferenced .rodata at the head of the unit (splat put it in 26E620's D_8010F5A8) */
+const s32 D_8010F5B0_YoshisTropicalIslandEndingScene[3] __attribute__((section(".rodata"))) = { 0x40, 6, -1 };
+const f32 D_8010F5BC_YoshisTropicalIslandEndingScene[6] __attribute__((section(".rodata"))) = { 200.0f, 500.0f, 1800.0f, 0.0f, 450.0f, 500.0f };
+const Vec3f D_8010F5D4_YoshisTropicalIslandEndingScene[12] = { -790.0f, ENDING_PLAYER_POS_REST };
 const EndingModel D_8010F664_YoshisTropicalIslandEndingScene[6] = {
     { 0x40, NULL, { 0.0f, 650.0f, 800.0f } },
     { 6, D_8010EC70_YoshisTropicalIslandEndingScene, { 0.0f, 450.0f, 500.0f } },
@@ -439,8 +438,9 @@ void func_80109294_YoshisTropicalIslandEndingScene(void) {
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2721F0", func_80109294_YoshisTropicalIslandEndingScene);
 /* the asm names labels inside the C tables */
 __asm__(
-    ".globl D_8010F5DC_YoshisTropicalIslandEndingScene\nD_8010F5DC_YoshisTropicalIslandEndingScene = D_8010F5D8_YoshisTropicalIslandEndingScene + 0x4\n"
-    ".globl D_8010F604_YoshisTropicalIslandEndingScene\nD_8010F604_YoshisTropicalIslandEndingScene = D_8010F5D8_YoshisTropicalIslandEndingScene + 0x2C\n"
+    ".globl D_8010F5D8_YoshisTropicalIslandEndingScene\nD_8010F5D8_YoshisTropicalIslandEndingScene = D_8010F5D4_YoshisTropicalIslandEndingScene + 0x4\n"
+    ".globl D_8010F5DC_YoshisTropicalIslandEndingScene\nD_8010F5DC_YoshisTropicalIslandEndingScene = D_8010F5D4_YoshisTropicalIslandEndingScene + 0x8\n"
+    ".globl D_8010F604_YoshisTropicalIslandEndingScene\nD_8010F604_YoshisTropicalIslandEndingScene = D_8010F5D4_YoshisTropicalIslandEndingScene + 0x30\n"
     ".globl D_8010F667_YoshisTropicalIslandEndingScene\nD_8010F667_YoshisTropicalIslandEndingScene = D_8010F664_YoshisTropicalIslandEndingScene + 0x3\n"
     ".globl D_8010F668_YoshisTropicalIslandEndingScene\nD_8010F668_YoshisTropicalIslandEndingScene = D_8010F664_YoshisTropicalIslandEndingScene + 0x4\n"
     ".globl D_8010F66C_YoshisTropicalIslandEndingScene\nD_8010F66C_YoshisTropicalIslandEndingScene = D_8010F664_YoshisTropicalIslandEndingScene + 0x8\n"

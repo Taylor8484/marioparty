@@ -140,6 +140,8 @@ build/src/overlays/ovl_2C_KeyPaWay/1F62C0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32
 build/src/overlays/ovl_02_SlotMachine/E5DA0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # ovl_02 E13F0.c also has the mul fix on: nop between back-to-back mul.s (func_800FAE34)
 build/src/overlays/ovl_02_SlotMachine/E13F0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# 26E620.c (ovl_41, story ending) was built with the VR4300 mul fix on (nop between mul.s in func_8010725C)
+build/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/26E620.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 
 #build/src/libultra/os/%.o: CFLAGS := -O2 $(CFLAGSCOMMON)
 #build/src/libultra/libc/%.o: CFLAGS := -O2 $(CFLAGSCOMMON)
@@ -302,6 +304,15 @@ $(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o $(BUILD_DIR)/src/1B800.c.o 
 # ovl_41 2721F0.c too (func_8010B0E4: mul fix on, mul.s right after sinf/cosf's return); own rule
 # so the five ovl_41 branches do not all edit the list above.
 $(BUILD_DIR)/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/2721F0.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
+	@$(PRINT)$(GREEN)Compiling C file: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
+	@mkdir -p $(shell dirname $@)
+	@$(CC_HOST) $(CFLAGS_CHECK) $(CPPFLAGS) -MMD -MP -MT $@ -MF $@.d $<
+	$(V)export COMPILER_PATH=tools/gcc_2.7.2/$(DETECTED_OS) && $(CC) $(OPTFLAGS) $(CFLAGS) $(CPPFLAGS) -S -o $(@:.o=.s) $< && sed -i '/^[[:space:]]*$$/d' $(@:.o=.s) && $(CC) $(CFLAGS) -c -o $@ $(@:.o=.s)
+	@$(STRIP) $@ -N dummy-symbol-name
+
+# ovl_41 26E620.c: the same blank-line-stripped assembly (mul fix on; mul.s right after sinf's return
+# in func_80107660). A separate rule so the shared target list above is not edited.
+$(BUILD_DIR)/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/26E620.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
 	@$(PRINT)$(GREEN)Compiling C file: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
 	@mkdir -p $(shell dirname $@)
 	@$(CC_HOST) $(CFLAGS_CHECK) $(CPPFLAGS) -MMD -MP -MT $@ -MF $@.d $<
