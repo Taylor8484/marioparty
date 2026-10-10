@@ -40,6 +40,18 @@ typedef struct StaffObjDef {
     /* 0x0C */ s32 file2; /* -1: none */
 } StaffObjDef;
 
+/* The control block func_800F91E0 shares with each credits process (8380 title, 8894 names, 94E0 coin) */
+typedef struct StaffRoll {
+    /* 0x00 */ s16* names; /* message ids (the title process: one) */
+    /* 0x04 */ s16* rows;  /* names per row, 0 ends */
+    /* 0x08 */ s16 count;
+    /* 0x0A */ s16 slot;   /* the screen corner, 0-3 */
+    /* 0x0C */ s16 tex;
+    /* 0x0E */ s16 stat;
+    /* 0x10 */ s16 cmd;
+    /* 0x12 */ u8 unk_12[6];
+} StaffRoll; /* N64 size 0x18 */
+
 /* A camera setting (func_800FC554) */
 typedef struct StaffCamera {
     /* 0x00 */ Vec3f center;

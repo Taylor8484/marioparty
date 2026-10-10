@@ -54,6 +54,9 @@ extern f32 D_800FE19C_StaffScene;    /* the fov last applied */
 void func_800FC554_StaffScene(StaffCamera*);
 void func_800FC5B0_StaffScene(omObjData*);
 void func_800FC864_StaffScene(void);
+void func_800F8380_StaffScene(void);
+void func_800F8894_StaffScene(void);
+void func_800F94E0_StaffScene(void);
 s32 LoadFormBinary(void*, u32);
 void func_80025BB8(s16, s16);
 void func_800FB6A8_StaffScene(StaffModel*, f32, s32, f32, f32);
@@ -928,8 +931,93 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800F8380_
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800F8894_StaffScene);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800F91E0_StaffScene);
+void func_800F91E0_StaffScene(void) {
+    StaffRoll title;
+    StaffRoll names;
+    StaffRoll coin;
+    Process* p1;
+    Process* p2;
+    Process* p3;
+    void* file;
+    s16 tex;
+    StaffCredit* c;
+    s16 slot;
 
+    file = func_80014614(0xA0014);
+    tex = func_800678A4(file);
+    FreeTemp(file);
+    title.tex = tex;
+    names.tex = tex;
+    p1 = omAddPrcObj(func_800F8380_StaffScene, 0x3F08, 0x800, 0);
+    p1->user_data = &title;
+    title.cmd = 0;
+    omPrcSetStatBit(p1, 0xA0);
+    p2 = omAddPrcObj(func_800F8894_StaffScene, 0x3F08, 0x800, 0);
+    p2->user_data = &names;
+    names.cmd = 0;
+    omPrcSetStatBit(p2, 0xA0);
+    p3 = omAddPrcObj(func_800F94E0_StaffScene, 0x3F08, 0x800, 0);
+    p3->user_data = &coin;
+    coin.cmd = 0;
+    omPrcSetStatBit(p3, 0xA0);
+    slot = 0;
+    HuPrcVSleep();
+    c = D_800FD4C0_StaffScene;
+    while (c->names != NULL) {
+        title.names = &c->title;
+        title.slot = slot;
+        title.cmd = 1;
+        while (title.stat != 3) {
+            HuPrcVSleep();
+        }
+        names.count = c->count;
+        names.names = c->names;
+        names.rows = c->rows;
+        names.slot = slot;
+        names.cmd = 1;
+        do {
+            HuPrcVSleep();
+        } while (names.stat != 5);
+        coin.slot = slot;
+        coin.cmd = 1;
+        do {
+            HuPrcVSleep();
+        } while (coin.stat != 4);
+        coin.cmd = 2;
+        names.cmd = 2;
+        do {
+            HuPrcVSleep();
+        } while (names.stat != 1);
+        title.cmd = 2;
+        do {
+            HuPrcVSleep();
+        } while (title.stat != 1);
+        if (++slot >= 4) {
+            slot = 0;
+        }
+        c++;
+        if (c->names == NULL) {
+            break;
+        }
+        HuPrcSleep(30);
+    }
+    title.cmd = -1;
+    names.cmd = -1;
+    coin.cmd = -1;
+    while (title.stat != -1) {
+        HuPrcVSleep();
+    }
+    while (names.stat != -1) {
+        HuPrcVSleep();
+    }
+    while (coin.stat != -1) {
+        HuPrcVSleep();
+    }
+    EndProcess(p1);
+    EndProcess(p2);
+    EndProcess(p3);
+    func_80067704(tex);
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800F94E0_StaffScene);
 
 void func_800F9C38_StaffScene(void) {
