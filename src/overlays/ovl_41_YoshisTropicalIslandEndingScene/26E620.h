@@ -26,6 +26,5 @@ extern f32 D_801101EC_YoshisTropicalIslandEndingScene;
 #endif
 
 /* 26E620.c's last .rodata word, read by 2721F0.c (func_80109294) */
-extern const f32 D_8010F5D4_YoshisTropicalIslandEndingScene;
 
 #endif

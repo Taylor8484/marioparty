@@ -3,25 +3,8 @@
 
 
 
-/* A board's ending position: the Vec3f[8] table at D_8010DC9C (25FC70.c's .data). ending.h
- * declares it as three objects (D_8010DC9C, D_8010DCA0, D_8010DCA4[22]); retail indexes it as one
- * Vec3f array (%lo(D_8010DC9C+4) etc.). On the N64 D_8010DC9C_v is an undefined_syms.txt alias;
- * the host views ending.h's object (25FC70 must define the table contiguously). */
-#ifdef TARGET_PC
-#define END_POS ((Vec3f*)&D_8010DC9C_YoshisTropicalIslandEndingScene)
-#else
-extern Vec3f D_8010DC9C_v_YoshisTropicalIslandEndingScene[8];
-#define END_POS D_8010DC9C_v_YoshisTropicalIslandEndingScene
-#endif
-
-/* The current board, D_801102B0[0]: retail reads it as a scalar (no hoisted array address in
- * func_80107024's loop). On the N64 D_801102B0_s is an undefined_syms.txt alias of the array. */
-#ifdef TARGET_PC
-#define BOARD_IDX (D_801102B0_YoshisTropicalIslandEndingScene[0])
-#else
-extern u8 D_801102B0_s_YoshisTropicalIslandEndingScene;
-#define BOARD_IDX D_801102B0_s_YoshisTropicalIslandEndingScene
-#endif
+#define END_POS D_8010DC9C_YoshisTropicalIslandEndingScene
+#define BOARD_IDX D_801102B0_YoshisTropicalIslandEndingScene
 
 
 f32 func_80022D9C(f32* vals, f32* times, f32 t);
@@ -166,7 +149,7 @@ void func_80107024_YoshisTropicalIslandEndingScene(omObjData* obj) {
     f32 a;
     f32 x;
 
-    n = (&D_8010DC90_YoshisTropicalIslandEndingScene)[GwSystem.unk_00];
+    n = D_8010DC90_YoshisTropicalIslandEndingScene[GwSystem.unk_00];
     for (i = 0; i < obj->trans.y; i++) {
         a = (360 / n) * i;
         x = sinf((a + obj->rot.y) * D_8010F598_YoshisTropicalIslandEndingScene) * obj->trans.x + END_POS[BOARD_IDX].x;
@@ -195,9 +178,9 @@ void func_8010725C_YoshisTropicalIslandEndingScene(omObjData* obj) {
     if (t > 1.0f) {
         t = 1.0f;
     }
-    func_800A0D00(&from, END_POS[D_801102B0_YoshisTropicalIslandEndingScene[0]].x,
-                  END_POS[D_801102B0_YoshisTropicalIslandEndingScene[0]].y,
-                  END_POS[D_801102B0_YoshisTropicalIslandEndingScene[0]].z);
+    func_800A0D00(&from, END_POS[D_801102B0_YoshisTropicalIslandEndingScene].x,
+                  END_POS[D_801102B0_YoshisTropicalIslandEndingScene].y,
+                  END_POS[D_801102B0_YoshisTropicalIslandEndingScene].z);
     func_800A0D00(&to, D_8010EB3C_YoshisTropicalIslandEndingScene[0].x, D_8010EB3C_YoshisTropicalIslandEndingScene[0].y,
                   D_8010EB3C_YoshisTropicalIslandEndingScene[0].z);
     func_800A0D00(&d, to.x - from.x, to.y - from.y, to.z - from.z);
@@ -274,7 +257,7 @@ void func_80107660_YoshisTropicalIslandEndingScene(void) {
     flag = 0;
     LoadBackgroundIndex(0x36);
     InitCameras(2);
-    n = (&D_8010DC90_YoshisTropicalIslandEndingScene)[GwSystem.unk_00];
+    n = D_8010DC90_YoshisTropicalIslandEndingScene[GwSystem.unk_00];
     t = D_8010DCFC_YoshisTropicalIslandEndingScene[BOARD_IDX];
     for (i = 0; i < n; i++) {
         D_80110448_YoshisTropicalIslandEndingScene[i] = MBModelCreate(0x25, NULL);
@@ -553,8 +536,4 @@ void func_801088C4_YoshisTropicalIslandEndingScene(s16 model, f32 len, f32 pos, 
     out->y = func_80022D9C(v[1], t, u);
     out->z = func_80022D9C(v[2], t, u);
 }
-/* Trailing .rodata no code in this unit reads (splat put it in D_8010F5A8's label) */
-const s32 D_8010F5B0_YoshisTropicalIslandEndingScene[3] __attribute__((section(".rodata"))) = { 0x40, 6, -1 };
-const f32 D_8010F5BC_YoshisTropicalIslandEndingScene[6] __attribute__((section(".rodata"))) = { 200.0f, 500.0f, 1800.0f, 0.0f, 450.0f, 500.0f };
 /* read by 2721F0.c (func_80109294); declared in 26E620.h */
-const f32 D_8010F5D4_YoshisTropicalIslandEndingScene __attribute__((section(".rodata"))) = -790.0f;
