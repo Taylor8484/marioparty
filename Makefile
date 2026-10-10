@@ -111,6 +111,8 @@ build/src/overlays/ovl_23_CraneGame/%.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LA
 build/src/overlays/ovl_25_SlotCarDerby/%.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # ovl_61 29B410.c (opening scene) also has the mul fix on: nop between back-to-back mul.s (func_800F86D0, func_800FB670)
 build/src/overlays/ovl_61_OpeningScene/29B410.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# ovl_41 2721F0.c (story ending, Yoshi scene): nop between dependent mul.s (func_80109294)
+build/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/2721F0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # 69010.c (sprite draw) was built with the assembler VR4300 mul fix on: a nop after each mul.s pair
 build/src/69010.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # 24740.c (model entries) also has the mul fix on: nop between dependent mul.s (func_80027100)
@@ -138,6 +140,8 @@ build/src/overlays/ovl_2C_KeyPaWay/1F62C0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32
 build/src/overlays/ovl_02_SlotMachine/E5DA0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # ovl_02 E13F0.c also has the mul fix on: nop between back-to-back mul.s (func_800FAE34)
 build/src/overlays/ovl_02_SlotMachine/E13F0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# 26E620.c (ovl_41, story ending) was built with the VR4300 mul fix on (nop between mul.s in func_8010725C)
+build/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/26E620.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 
 #build/src/libultra/os/%.o: CFLAGS := -O2 $(CFLAGSCOMMON)
 #build/src/libultra/libc/%.o: CFLAGS := -O2 $(CFLAGSCOMMON)
@@ -179,6 +183,8 @@ build/src/64FD0.c.o: CPPFLAGS = -I include -I include/PR -I include/gcc -I $(BUI
 
 # ovl_01 D51E0.c (Chance Time) also has the mul fix on: nop between back-to-back mul.s (func_800F8288)
 build/src/overlays/ovl_01_ChanceTime/D51E0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# ovl_41 266C80.c (story ending scene) also has the mul fix on: nop between back-to-back mul.s (func_800FD60C)
+build/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/266C80.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 build/src/engine/math.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 
 # mul nops included in the following *.c (Maybe only one func uses --vr4300mul-off)
@@ -198,6 +204,8 @@ build/src/overlays/ovl_14_CoinBlockBlitz/14E940.c.o: CFLAGS = -G0 -mips3 -mgp32 
 # ovl_03 E8F60.c (nop before mult, func_800F7164) and EB0E0.c (func_800F8D1C, func_800FA90C) have the mul fix on
 build/src/overlays/ovl_03_BuriedTreasure/E8F60.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 build/src/overlays/ovl_03_BuriedTreasure/EB0E0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# ovl_41 262590.c (func_800F8FE8: nop between back-to-back mul.s) has the mul fix on
+build/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/262590.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 build/src/overlays/ovl_17_BoxMountainMayhem/166D50.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 build/src/overlays/ovl_17_BoxMountainMayhem/168CA0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # ovl_40 259EB0.c: nop before mult at func_800FA61C's roulette loop head
@@ -290,8 +298,35 @@ $(BUILD_DIR)/src/%.c.o: src/%.c
 # ovl_23 1B3E00.c, 1B9050.c and 1BAA60.c too (func_800F746C: mul fix on, mul.s right after func_800AEAC0's return).
 # ovl_25 1C1EB0.c too (mul fix on; kept with its neighbours for mul.s after a call's return).
 # ovl_22 1AA2A0.c too (func_800F723C: mul fix on, mul.s right after func_800AEFD0's return).
-# ovl_41 26BA10.c and 2643A0.c too (func_80102380, func_800FAD64: mul fix on, mul.s right after a call's return).
-$(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o $(BUILD_DIR)/src/1B800.c.o $(BUILD_DIR)/src/3DEB0.c.o $(BUILD_DIR)/src/59E80.c.o $(BUILD_DIR)/src/overlays/ovl_61_OpeningScene/29B410.c.o $(BUILD_DIR)/src/overlays/ovl_62_BoardIntro/2A2500.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2DB2D0.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2DF200.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2E8220.c.o $(BUILD_DIR)/src/overlays/ovl_2C_KeyPaWay/1F62C0.c.o $(BUILD_DIR)/src/overlays/ovl_14_CoinBlockBlitz/14E940.c.o $(BUILD_DIR)/src/overlays/ovl_03_BuriedTreasure/EB0E0.c.o $(BUILD_DIR)/src/overlays/ovl_17_BoxMountainMayhem/166D50.c.o $(BUILD_DIR)/src/overlays/ovl_17_BoxMountainMayhem/168CA0.c.o $(BUILD_DIR)/src/overlays/ovl_23_CraneGame/1B3E00.c.o $(BUILD_DIR)/src/overlays/ovl_23_CraneGame/1B9050.c.o $(BUILD_DIR)/src/overlays/ovl_23_CraneGame/1BAA60.c.o $(BUILD_DIR)/src/overlays/ovl_25_SlotCarDerby/1C1EB0.c.o $(BUILD_DIR)/src/overlays/ovl_2D_RunningOfTheBulb/1FF1E0.c.o $(BUILD_DIR)/src/overlays/ovl_22_BombsAway/1AA2A0.c.o $(BUILD_DIR)/src/overlays/ovl_16_SkateBoardSkamper/15EAF0.c.o $(BUILD_DIR)/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/26BA10.c.o $(BUILD_DIR)/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
+# ovl_41 262590.c too (mul fix on for func_800F8FE8; mul.s right after sinf/cosf's return elsewhere).
+$(BUILD_DIR)/src/1130.c.o $(BUILD_DIR)/src/34D80.c.o $(BUILD_DIR)/src/1B800.c.o $(BUILD_DIR)/src/3DEB0.c.o $(BUILD_DIR)/src/59E80.c.o $(BUILD_DIR)/src/overlays/ovl_61_OpeningScene/29B410.c.o $(BUILD_DIR)/src/overlays/ovl_62_BoardIntro/2A2500.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2DB2D0.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2DF200.c.o $(BUILD_DIR)/src/overlays/ovl_6F_MinigameInstructions/2E8220.c.o $(BUILD_DIR)/src/overlays/ovl_2C_KeyPaWay/1F62C0.c.o $(BUILD_DIR)/src/overlays/ovl_14_CoinBlockBlitz/14E940.c.o $(BUILD_DIR)/src/overlays/ovl_03_BuriedTreasure/EB0E0.c.o $(BUILD_DIR)/src/overlays/ovl_17_BoxMountainMayhem/166D50.c.o $(BUILD_DIR)/src/overlays/ovl_17_BoxMountainMayhem/168CA0.c.o $(BUILD_DIR)/src/overlays/ovl_23_CraneGame/1B3E00.c.o $(BUILD_DIR)/src/overlays/ovl_23_CraneGame/1B9050.c.o $(BUILD_DIR)/src/overlays/ovl_23_CraneGame/1BAA60.c.o $(BUILD_DIR)/src/overlays/ovl_25_SlotCarDerby/1C1EB0.c.o $(BUILD_DIR)/src/overlays/ovl_2D_RunningOfTheBulb/1FF1E0.c.o $(BUILD_DIR)/src/overlays/ovl_22_BombsAway/1AA2A0.c.o $(BUILD_DIR)/src/overlays/ovl_16_SkateBoardSkamper/15EAF0.c.o $(BUILD_DIR)/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/262590.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
+	@$(PRINT)$(GREEN)Compiling C file: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
+	@mkdir -p $(shell dirname $@)
+	@$(CC_HOST) $(CFLAGS_CHECK) $(CPPFLAGS) -MMD -MP -MT $@ -MF $@.d $<
+	$(V)export COMPILER_PATH=tools/gcc_2.7.2/$(DETECTED_OS) && $(CC) $(OPTFLAGS) $(CFLAGS) $(CPPFLAGS) -S -o $(@:.o=.s) $< && sed -i '/^[[:space:]]*$$/d' $(@:.o=.s) && $(CC) $(CFLAGS) -c -o $@ $(@:.o=.s)
+	@$(STRIP) $@ -N dummy-symbol-name
+
+# ovl_41 2721F0.c too (func_8010B0E4: mul fix on, mul.s right after sinf/cosf's return); own rule
+# so the five ovl_41 branches do not all edit the list above.
+$(BUILD_DIR)/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/2721F0.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
+	@$(PRINT)$(GREEN)Compiling C file: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
+	@mkdir -p $(shell dirname $@)
+	@$(CC_HOST) $(CFLAGS_CHECK) $(CPPFLAGS) -MMD -MP -MT $@ -MF $@.d $<
+	$(V)export COMPILER_PATH=tools/gcc_2.7.2/$(DETECTED_OS) && $(CC) $(OPTFLAGS) $(CFLAGS) $(CPPFLAGS) -S -o $(@:.o=.s) $< && sed -i '/^[[:space:]]*$$/d' $(@:.o=.s) && $(CC) $(CFLAGS) -c -o $@ $(@:.o=.s)
+	@$(STRIP) $@ -N dummy-symbol-name
+
+# ovl_41 26E620.c: the same blank-line-stripped assembly (mul fix on; mul.s right after sinf's return
+# in func_80107660). A separate rule so the shared target list above is not edited.
+$(BUILD_DIR)/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/26E620.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
+	@$(PRINT)$(GREEN)Compiling C file: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
+	@mkdir -p $(shell dirname $@)
+	@$(CC_HOST) $(CFLAGS_CHECK) $(CPPFLAGS) -MMD -MP -MT $@ -MF $@.d $<
+	$(V)export COMPILER_PATH=tools/gcc_2.7.2/$(DETECTED_OS) && $(CC) $(OPTFLAGS) $(CFLAGS) $(CPPFLAGS) -S -o $(@:.o=.s) $< && sed -i '/^[[:space:]]*$$/d' $(@:.o=.s) && $(CC) $(CFLAGS) -c -o $@ $(@:.o=.s)
+	@$(STRIP) $@ -N dummy-symbol-name
+
+# ovl_41 266C80.c (func_800FD60C), 2643A0.c (func_800FAD64), 26BA10.c (func_80102380): mul fix on, mul.s
+# right after a call's return.
+$(BUILD_DIR)/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/266C80.c.o $(BUILD_DIR)/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0.c.o $(BUILD_DIR)/src/overlays/ovl_41_YoshisTropicalIslandEndingScene/26BA10.c.o: $(BUILD_DIR)/src/%.c.o: src/%.c
 	@$(PRINT)$(GREEN)Compiling C file: $(ENDGREEN)$(BLUE)$<$(ENDBLUE)$(ENDLINE)
 	@mkdir -p $(shell dirname $@)
 	@$(CC_HOST) $(CFLAGS_CHECK) $(CPPFLAGS) -MMD -MP -MT $@ -MF $@.d $<
