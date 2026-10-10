@@ -1606,8 +1606,8 @@ segments:
     subsegments:
       - [0x24C390, c]
       - [0x24C3C0, c]
-      - [0x24F280, data, 24C390]
-      - [0x24F2B0, data, 24C3C0]
+      - [0x24F280, .data, 24C390]
+      - [0x24F2B0, .data, 24C3C0]
       - [0x24FA70, .rodata, 24C3C0]
       - {0x24FA80, type: bss, vram: 0x800F9CD0, name: ovl_3A_bss}
   - type: code
