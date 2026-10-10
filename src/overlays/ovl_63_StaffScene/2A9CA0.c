@@ -54,6 +54,8 @@ extern f32 D_800FE19C_StaffScene;    /* the fov last applied */
 void func_800FC554_StaffScene(StaffCamera*);
 void func_800FC5B0_StaffScene(omObjData*);
 void func_800FC864_StaffScene(void);
+void func_8002854C(void);
+f32 func_80025D40(s16);
 void func_800FC624_StaffScene(s16*, s16, f32, f32, f32);
 void func_800F8380_StaffScene(void);
 void func_800F8894_StaffScene(void);
@@ -1100,8 +1102,108 @@ void func_800F9C38_StaffScene(void) {
         HuPrcVSleep();
     }
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800F9F70_StaffScene);
+// register allocation (retail hoists two more constants and keeps one more callee-saved FPR)
+#ifdef NON_MATCHING
+void func_800F9F70_StaffScene(void) {
+    Vec3f vel;
+    Vec3f acc;
+    s16 model[16];
+    StaffModel* m;
+    StaffSparkle* s;
+    Vec3f* p;
+    f32* rz;
+    s32 i;
+    s16 m0;
+    s16 m1;
+    s16 m2;
+    s16 t;
+    f32 a;
+    f32 v;
+    f32 s1;
+    f32 s2;
 
+    for (i = 0; i < 16; i++) {
+        model[i] = -1;
+    }
+    func_8002578C(0);
+    func_800FC554_StaffScene(&D_800FD934_StaffScene);
+    func_80028510(0x36B, 0x3C0, 0, 0, 0x30);
+    HuPrcVSleep();
+    m0 = func_800174C0(0x90035, 0x699);
+    func_80025CA8(m0, func_80025D40(m0) - 1.0f);
+    func_80025EB4(m0, 1, 1);
+    model[0] = m0;
+    m1 = LoadFormFile(0x210001, 0x689);
+    func_80025830(m1, 2.3f, 0.7f, 2.3f);
+    func_80025798(m1, 0.0f, -100.0f, 0.0f);
+    model[1] = m1;
+    m2 = func_80023FC8(m1);
+    func_80025830(m2, 2.0f, 0.7f, 2.0f);
+    func_80025798(m2, 0.0f, -100.0f, 0.0f);
+    model[2] = m2;
+    m = func_800FC998_StaffScene();
+    func_800A0D00(&m->pos, 0.0f, 320.0f, 0.0f);
+    s = func_800FD0F0_StaffScene(m, 0);
+    func_80060128(4);
+    SetFadeInTypeAndTime(0, 0x10);
+    a = 0.0f;
+    rz = &m->rot.z;
+    t = 136;
+    do {
+        v = func_800AEAC0(a) * 30.0f;
+        if (t != 0) {
+            t--;
+            a += 6.0f;
+        } else {
+            a += 4.0f;
+            if (v * *rz < 0.0f) {
+                v = 0.0f;
+            }
+        }
+        *rz = v;
+        if (a > 360.0f) {
+            a -= 360.0f;
+        }
+        HuPrcVSleep();
+    } while (t != 0 || *rz != 0.0f);
+    s->cmd = 4;
+    PlaySound(5);
+    p = &m->pos;
+    func_800A0D00(&vel, -10.0f, -14.0f, 15.0f);
+    func_800A0D00(&acc, 0.7f, 1.0f, 0.0f);
+    s1 = 2.3f;
+    s2 = 2.0f;
+    t = 60;
+    do {
+        func_800A0E00(p, p, &vel);
+        func_800A0E00(&vel, &vel, &acc);
+        if (vel.x > 13.0f) {
+            vel.x = 13.0f;
+        }
+        s1 *= 0.94f;
+        s2 *= 0.94f;
+        func_80025830(m1, s1, 0.7f, s1);
+        func_80025830(m2, s2, 0.7f, s2);
+        if (t == 20) {
+            func_80072724(0xFF, 0xFF, 0xFF);
+            func_800726AC(0, 0x14);
+        }
+        HuPrcVSleep();
+    } while (--t != 0);
+    HuPrcSleep(0x14);
+    func_8002854C();
+    func_800FD170_StaffScene(s);
+    func_800FCA8C_StaffScene(m);
+    for (i = 0; i < 16; i++) {
+        if (model[i] > 0) {
+            func_8002456C(model[i]);
+        }
+    }
+    HuPrcVSleep();
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800F9F70_StaffScene);
+#endif
 void func_800FA3D8_StaffScene(void) {
     StaffCtl* ctl;
     s16 model;
