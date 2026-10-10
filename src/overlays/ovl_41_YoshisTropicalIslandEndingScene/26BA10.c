@@ -34,8 +34,22 @@ extern Vec3f D_80110180_YoshisTropicalIslandEndingScene[4]; /* camera: eye, at, 
 f32 func_80022D9C(f32* vals, f32* times, f32 t);
 void func_80052DC8(s16 index, void* list);
 void func_80028C64(s16 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4);
+void func_8004B1B8(void);
+void func_8004F584(s32);
+s32 func_8004F628(s32, u16, s16, s16);
+void func_8004F7C0(s32, f32, f32);
+void func_8004FAB8(s32);
 
+void func_80102380_YoshisTropicalIslandEndingScene(omObjData* obj);
+void func_80102598_YoshisTropicalIslandEndingScene(omObjData* obj);
+void func_8010262C_YoshisTropicalIslandEndingScene(omObjData* obj);
 void func_80102760_YoshisTropicalIslandEndingScene(omObjData* obj);
+void func_80102AE4_YoshisTropicalIslandEndingScene(omObjData* obj);
+omObjData* func_80102BAC_YoshisTropicalIslandEndingScene(u8 idx);
+void func_80102C14_YoshisTropicalIslandEndingScene(void);
+void func_80102FB4_YoshisTropicalIslandEndingScene(omObjData* obj);
+omObjData* func_801031C8_YoshisTropicalIslandEndingScene(s32 idx, f32 y, f32 z);
+void func_8010444C_YoshisTropicalIslandEndingScene(void);
 void func_80102B18_YoshisTropicalIslandEndingScene(omObjData* obj);
 void func_80102F54_YoshisTropicalIslandEndingScene(omObjData* obj);
 void func_80103044_YoshisTropicalIslandEndingScene(omObjData* obj);
@@ -322,9 +336,220 @@ omObjData* func_801031C8_YoshisTropicalIslandEndingScene(s32 idx, f32 y, f32 z) 
     return obj;
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/26BA10", func_8010329C_YoshisTropicalIslandEndingScene);
+const Vec3f D_8010F310_YoshisTropicalIslandEndingScene = { 0.0f, 610.0f, 1662.5f };
 
-INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/26BA10", D_8010F310_YoshisTropicalIslandEndingScene);
+void func_8010329C_YoshisTropicalIslandEndingScene(void) {
+    Vec3f focus;
+    Vec3f pt;
+    Vec3f focus2;
+    Vec3f focus3;
+    Vec3f a;
+    Vec3f b;
+    Vec3f c;
+    Vec3f eye;
+    Vec3f* cam = D_80110180_YoshisTropicalIslandEndingScene;
+    f32 angle;
+    f32 speed;
+    f32 t;
+    f32 s;
+    s32 i;
+    s32 j;
+    s32 wait;
+    s32 msg;
+
+    HuPrcSleep(3);
+    func_8010444C_YoshisTropicalIslandEndingScene();
+    HuPrcSleep(3);
+
+    /* the star rises and spins */
+    LoadBackgroundIndex(0x2B);
+    D_80110448_YoshisTropicalIslandEndingScene[0] = MBModelCreate(0x40, NULL);
+    func_800A0D00(&D_80110448_YoshisTropicalIslandEndingScene[0]->coords, 0.0f, 300.0f, 0.0f);
+    func_800A0D00(&D_80110448_YoshisTropicalIslandEndingScene[0]->unk_18, 0.0f, 0.0f, 1.0f);
+    func_800A0D00((Vec3f*)&D_80110448_YoshisTropicalIslandEndingScene[0]->xScale, 0.75f, 0.75f, 0.75f);
+    D_80110300_YoshisTropicalIslandEndingScene[0] = omAddObj(0x1000, 0, 0, -1, func_80102380_YoshisTropicalIslandEndingScene);
+    D_80110300_YoshisTropicalIslandEndingScene[0]->trans.x = 0.0f;
+    D_80110300_YoshisTropicalIslandEndingScene[0]->trans.y = 0.0f;
+    D_80110300_YoshisTropicalIslandEndingScene[0]->trans.z = 0.0f;
+    D_80110300_YoshisTropicalIslandEndingScene[0]->rot.x = 0.0f;
+    D_80110300_YoshisTropicalIslandEndingScene[0]->rot.y = 0.0f;
+    D_80110300_YoshisTropicalIslandEndingScene[0]->rot.z = 0.0f;
+    D_80110300_YoshisTropicalIslandEndingScene[0]->work[0] = 3;
+    D_80110300_YoshisTropicalIslandEndingScene[1] = omAddObj(0x1000, 0, 0, -1, func_80102598_YoshisTropicalIslandEndingScene);
+    D_80110300_YoshisTropicalIslandEndingScene[1]->rot.y = 0.0f;
+    D_80110300_YoshisTropicalIslandEndingScene[2] = omAddObj(0x1000, 0, 0, -1, func_8010262C_YoshisTropicalIslandEndingScene);
+    D_80110300_YoshisTropicalIslandEndingScene[2]->rot.x = 0.0f;
+    D_80110300_YoshisTropicalIslandEndingScene[2]->work[0] = 0;
+    D_80110400_YoshisTropicalIslandEndingScene[0] = func_80042728(D_80110448_YoshisTropicalIslandEndingScene[0], 1);
+    D_80110448_YoshisTropicalIslandEndingScene[1] = MBModelCreate(0x34, NULL);
+    func_800A0D00(&D_80110448_YoshisTropicalIslandEndingScene[1]->coords, -360.0f, 205.0f, -1065.0f);
+    D_80110448_YoshisTropicalIslandEndingScene[2] = MBModelCreate(0x34, NULL);
+    func_800A0D00(&D_80110448_YoshisTropicalIslandEndingScene[2]->coords, 360.0f, 205.0f, -1065.0f);
+    for (i = 0; i < D_80110448_YoshisTropicalIslandEndingScene[1]->unk_3C->mdlcnt; i++) {
+        func_80025EB4(D_80110448_YoshisTropicalIslandEndingScene[1]->unk_3C->unk_40[i], 2, 1);
+        func_80025EB4(D_80110448_YoshisTropicalIslandEndingScene[2]->unk_3C->unk_40[i], 2, 1);
+    }
+    func_800A0D00(&focus, 0.0f, 300.0f, -650.0f);
+    func_8004B5DC(&focus);
+    PlaySound(0x66);
+    SetFadeInTypeAndTime(0, 0x10);
+    wait = 0x10;
+    do {
+        HuPrcSleep(wait);
+        wait = 0;
+    } while (D_80110300_YoshisTropicalIslandEndingScene[2]->work[0] == 0);
+    omDelObj(D_80110300_YoshisTropicalIslandEndingScene[1]);
+    D_80110300_YoshisTropicalIslandEndingScene[1] = NULL;
+    omDelObj(D_80110300_YoshisTropicalIslandEndingScene[2]);
+    D_80110300_YoshisTropicalIslandEndingScene[2] = NULL;
+    speed = 10.0f;
+    angle = 360.0f;
+    do {
+        D_80110448_YoshisTropicalIslandEndingScene[0]->unk_18.x = func_800AEAC0(angle);
+        D_80110448_YoshisTropicalIslandEndingScene[0]->unk_18.y = 0.0f;
+        D_80110448_YoshisTropicalIslandEndingScene[0]->unk_18.z = func_800AEFD0(angle);
+        angle += speed;
+        speed -= 0.05f;
+        HuPrcSleep(0);
+    } while (angle <= 360.0f);
+    func_800A0D00(&D_80110448_YoshisTropicalIslandEndingScene[0]->unk_18, 0.0f, 0.0f, 1.0f);
+    HuPrcSleep(0x14);
+    PlaySound(0x68);
+    func_80072724(0xFF, 0xFF, 0xFF);
+    func_800726AC(0, 0);
+    HuPrcSleep(0x10);
+    PlaySound(0x69);
+    for (i = 0; i < D_80110448_YoshisTropicalIslandEndingScene[1]->unk_3C->mdlcnt; i++) {
+        func_80025EB4(D_80110448_YoshisTropicalIslandEndingScene[1]->unk_3C->unk_40[i], 1, 2);
+        func_80025EB4(D_80110448_YoshisTropicalIslandEndingScene[2]->unk_3C->unk_40[i], 1, 2);
+    }
+    msg = func_8004F628(0xA015A, 0xA, 0xA0, 0xB0);
+    func_8004F7C0(msg, 1.0f, 1.0f);
+    SetFadeInTypeAndTime(0, 0x10);
+    HuPrcSleep(0x10);
+    HuPrcSleep(0x2E);
+    func_80060128(2);
+    HuPrcSleep(0xE);
+    func_800726AC(0, 5);
+    HuPrcSleep(5);
+    func_8004F584(msg);
+    func_8004A140();
+    func_800F6B54_YoshisTropicalIslandEndingScene();
+    HuPrcSleep(3);
+
+    /* the winner on the island; the camera follows two paths */
+    LoadBackgroundIndex(0x2A);
+    D_80110448_YoshisTropicalIslandEndingScene[0] = MBModelCreate(0x42, NULL);
+    func_800A0D00(&D_80110448_YoshisTropicalIslandEndingScene[0]->coords, 0.0f, 0.0f, 0.0f);
+    func_800A0D00(&D_80110448_YoshisTropicalIslandEndingScene[0]->unk_18, 0.0f, 0.0f, 1.0f);
+    func_800A0D00((Vec3f*)&D_80110448_YoshisTropicalIslandEndingScene[0]->xScale, 1.0f, 1.0f, 1.0f);
+    func_80025F60(*D_80110448_YoshisTropicalIslandEndingScene[0]->unk_3C->unk_40, 0);
+    func_80052DC8(GwCommon.boardWork[0], D_8010E970_YoshisTropicalIslandEndingScene[GwPlayer[GwCommon.boardWork[0]].character]);
+    func_80021B14(*GwPlayer[GwCommon.boardWork[0]].player_obj->unk_3C->unk_40, GwPlayer[GwCommon.boardWork[0]].character, 0);
+    func_800258EC(*GwPlayer[GwCommon.boardWork[0]].player_obj->unk_40->unk_40, 0x180, 0x80);
+    func_80025AD4(*GwPlayer[GwCommon.boardWork[0]].player_obj->unk_40->unk_40);
+    func_800A0D00(&GwPlayer[GwCommon.boardWork[0]].player_obj->coords, 0.0f, 285.0f, 1662.5f);
+    HuPrcSleep(3);
+    func_8004B1B8();
+    D_80110300_YoshisTropicalIslandEndingScene[0] = omAddObj(0x1000, 0, 0, -1, func_80102FB4_YoshisTropicalIslandEndingScene);
+    D_80110300_YoshisTropicalIslandEndingScene[0]->work[0] = 0;
+    func_800A0D00(&cam[0], 0.0f, 410.0f, 4100.0f);
+    func_800A0D00(&cam[1], 0.0f, 25.0f, -1000.0f);
+    func_800A0D00(&cam[2], 0.0f, 1.0f, 0.0f);
+    func_800A0D00(&cam[3], 0.0f, 0.0f, 0.0f);
+    D_801102B8_YoshisTropicalIslandEndingScene[3] = LoadFormFile(0xA00D2, 0x2AD);
+    D_801102B8_YoshisTropicalIslandEndingScene[4] = LoadFormFile(0xA00D3, 0x2AD);
+    SetFadeInTypeAndTime(0, 0x10);
+    for (j = 10; j < 0x18D; j++) {
+        if (j == 11) {
+            HuPrcSleep(0x28);
+        }
+        func_80104D24_YoshisTropicalIslandEndingScene((s16)D_801102B8_YoshisTropicalIslandEndingScene[3], 400.0f, j, &pt);
+        func_800A0D00(&cam[0], pt.x, pt.y, pt.z);
+        func_80104D24_YoshisTropicalIslandEndingScene((s16)D_801102B8_YoshisTropicalIslandEndingScene[4], 400.0f, j, &pt);
+        func_800A0D00(&cam[1], pt.x, pt.y, pt.z);
+        if (j == 0x176) {
+            func_800726AC(0, 0x14);
+        }
+        HuPrcSleep(0);
+    }
+    HuPrcSleep(4);
+    omDelObj(D_80110300_YoshisTropicalIslandEndingScene[0]);
+    D_80110300_YoshisTropicalIslandEndingScene[0] = NULL;
+    func_8004A140();
+    func_800F6B54_YoshisTropicalIslandEndingScene();
+    HuPrcSleep(3);
+
+    /* the player walks past the effects */
+    LoadBackgroundIndex(0x27);
+    func_800A0D00(&focus2, -800.0f, 0.0f, -286.5f);
+    func_8004B5DC(&focus2);
+    D_80110448_YoshisTropicalIslandEndingScene[1] = MBModelCreate(6, D_8010E968_YoshisTropicalIslandEndingScene);
+    func_800A0D00(&D_80110448_YoshisTropicalIslandEndingScene[1]->coords, -400.0f, 0.0f, -286.5f);
+    func_800A0D00(&D_80110448_YoshisTropicalIslandEndingScene[1]->unk_18, -5.0f, 0.0f, 0.0f);
+    func_800A0D00((Vec3f*)&D_80110448_YoshisTropicalIslandEndingScene[1]->xScale, 1.0f, 1.0f, 1.0f);
+    MBMotionSet(D_80110448_YoshisTropicalIslandEndingScene[1], 0, 2);
+    func_80052DC8(GwCommon.boardWork[3], D_8010E970_YoshisTropicalIslandEndingScene[GwPlayer[GwCommon.boardWork[3]].character]);
+    func_800A0D00(&GwPlayer[GwCommon.boardWork[3]].player_obj->coords, -1010.0f, 0.0f, -286.5f);
+    func_800A0D00(&GwPlayer[GwCommon.boardWork[3]].player_obj->unk_18, -1.0f, 0.0f, 0.0f);
+    GwPlayer[GwCommon.boardWork[3]].flags |= 2;
+    func_8004F4D4(GwPlayer[GwCommon.boardWork[3]].player_obj, 1, 2);
+    func_8004FAB8(ENDING_EFFECT);
+    ENDING_EFFECT = func_8004F954(0x26, 0x20);
+    func_8004FA90(ENDING_EFFECT, 5.0f, 5.0f, 5.0f);
+    D_80110300_YoshisTropicalIslandEndingScene[0] = omAddObj(0x1000, 0, 0, -1, func_80102AE4_YoshisTropicalIslandEndingScene);
+    HuPrcSleep(0x14);
+    SetFadeInTypeAndTime(1, 0x10);
+    HuPrcSleep(0x10);
+    HuPrcSleep(0x5A);
+    func_800726AC(1, 0x14);
+    HuPrcSleep(0x14);
+    func_8004A140();
+    func_800F6B54_YoshisTropicalIslandEndingScene();
+    HuPrcSleep(3);
+
+    /* everyone on the island; the camera pulls back */
+    LoadBackgroundIndex(0x2A);
+    func_800A0D00(&focus3, 0.0f, 0.0f, 0.0f);
+    func_8004B5DC(&focus3);
+    func_80102C14_YoshisTropicalIslandEndingScene();
+    HuPrcSleep(3);
+    func_8004B1B8();
+    func_8001D494(0, 30.0f, 200.0f, 36000.0f);
+    D_80110300_YoshisTropicalIslandEndingScene[0] = omAddObj(0x1000, 0, 0, -1, func_80102FB4_YoshisTropicalIslandEndingScene);
+    D_80110300_YoshisTropicalIslandEndingScene[0]->work[0] = 0;
+    func_800A0D00(&cam[0], 0.0f, 560.0f, 4200.0f);
+    func_800A0D00(&cam[1], 0.0f, 25.0f, -1000.0f);
+    func_800A0D00(&cam[2], 0.0f, 1.0f, 0.0f);
+    func_800A0D00(&cam[3], 0.0f, 0.0f, 0.0f);
+    SetFadeInTypeAndTime(0, 0x10);
+    t = 0.2f;
+    while (1) {
+        s = func_800B1750(t);
+        if (s > 1.0f) {
+            s = 1.0f;
+        }
+        func_800A0D00(&a, 0.0f, 610.0f, 3700.0f);
+        func_800A0D00(&b, 0.0f, 0.0f, 4200.0f);
+        func_800A0D00(&c, 0.0f, 0.0f, -5400.0f);
+        func_800A0D00(&eye, s * c.x + b.x + a.x, s * c.y + b.y + a.y, s * c.z + b.z + a.z);
+        func_800A0D00(&cam[0], eye.x, eye.y, eye.z);
+        t += 0.0125f;
+        if (t > 1.0f) {
+            break;
+        }
+        HuPrcSleep(0);
+    }
+    D_80110300_YoshisTropicalIslandEndingScene[14] =
+        func_801031C8_YoshisTropicalIslandEndingScene(4, D_80110448_YoshisTropicalIslandEndingScene[4]->coords.y, 0.0f);
+    a = D_8010F310_YoshisTropicalIslandEndingScene;
+    func_8004E3E0(0, &a, 0x3C, D_80110448_YoshisTropicalIslandEndingScene[0]);
+    D_80110400_YoshisTropicalIslandEndingScene[0] = func_80042728(D_80110448_YoshisTropicalIslandEndingScene[0], 1);
+    MBModelDispOn(D_80110448_YoshisTropicalIslandEndingScene[0]);
+    D_80110300_YoshisTropicalIslandEndingScene[0] = func_80102BAC_YoshisTropicalIslandEndingScene(0);
+    HuPrcSleep(0x3C);
+    func_8004F4D4(GwPlayer[GwCommon.boardWork[0]].player_obj, 0, 0);
+}
 
 void func_8010400C_YoshisTropicalIslandEndingScene(omObjData* obj) {
     obj->rot.x += 5.0f;
