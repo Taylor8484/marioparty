@@ -2,8 +2,20 @@
 #include "engine/process.h"
 #include "spaces.h"
 
-#define DK_STAR_COUNT 7
-#define DK_THWOMP_COUNT 3
+#define LUIGI_STAR_COUNT 7
+
+/* One engine-room pipe: open when its target scale reaches 1 (func_800F7668). */
+typedef struct LuigiPipe {
+    /* 0x0 */ s16 open;
+    /* 0x4 */ f32 target;
+} LuigiPipe; // size 0x8
+
+/* One steam puff of the pipe ride (func_800F857C / func_800F8450). */
+typedef struct LuigiSteam {
+    /* 0x00 */ s16 active;
+    /* 0x04 */ Vec3f pos;
+    /* 0x10 */ Vec3f vel;
+} LuigiSteam; // size 0x1C
 
 struct LuigiTuple {
     s16 one;
@@ -19,6 +31,8 @@ extern Object* D_800F9CD8_LuigisEngineRoom;
 extern Object* D_800F9CE0_LuigisEngineRoom[5];
 extern Object* D_800F9CF4_LuigisEngineRoom[3];
 extern Object* D_800F9D00_LuigisEngineRoom[12];
+extern LuigiPipe D_800F9D30_LuigisEngineRoom[11]; // splat: D_800F9D34 = [0].target
+extern LuigiPipe D_800F9D88_LuigisEngineRoom[11]; // splat: D_800F9D8C = [0].target
 extern Object* D_800F9DE0_LuigisEngineRoom;    // toad model
 extern Object* D_800F9DE8_LuigisEngineRoom[7]; // toads
 extern Object* D_800F9E04_LuigisEngineRoom;    // boo model
@@ -27,9 +41,14 @@ extern PB_PTR32 D_800F9E0C_LuigisEngineRoom;
 extern PB_PTR32 D_800F9E10_LuigisEngineRoom;
 extern PB_PTR32 D_800F9E14_LuigisEngineRoom;
 extern PB_PTR32 D_800F9E18_LuigisEngineRoom;
+extern LuigiSteam D_800F9E20_LuigisEngineRoom[20]; // splat: D_800F9E30/34/38 = [0].pos.z/vel.x/vel.y...
+extern Object* D_800FA050_LuigisEngineRoom;
+extern Process* D_800FA054_LuigisEngineRoom;
 
 // main-code functions without a shared prototype
 void func_8004DBD4(s32, s32);
+void func_80056E30(s16);
+void func_80056E48(Vec3f*);
 
 // this overlay's functions
 void func_800F663C_LuigisEngineRoom(void);
@@ -75,11 +94,11 @@ void func_800F8B48_LuigisEngineRoom(void);
 void func_800F719C_LuigisEngineRoom(void);
 void func_800F74CC_LuigisEngineRoom(s16 arg0);
 void func_800F7600_LuigisEngineRoom(void);
-void func_800F7668_LuigisEngineRoom(void *arg0, s32 arg1);
-void func_800F78C8_LuigisEngineRoom(s32 arg0, f32 arg1);
+void func_800F7668_LuigisEngineRoom(LuigiPipe* p, s16 mode);
+void func_800F78C8_LuigisEngineRoom(s16 arg0, f32 arg1);
 void func_800F790C_LuigisEngineRoom(void);
 void func_800F796C_LuigisEngineRoom(void);
-Process *func_800F7A24_LuigisEngineRoom(s32 arg0);
+Process* func_800F7A24_LuigisEngineRoom(s32 arg0);
 s32 func_800F7D60_LuigisEngineRoom(void);
 void func_800F7F78_LuigisEngineRoom(void);
 void func_800F8138_LuigisEngineRoom(void);
@@ -90,7 +109,7 @@ void func_800F8258_LuigisEngineRoom(void);
 void func_800F8450_LuigisEngineRoom(void);
 void func_800F8508_LuigisEngineRoom(void);
 void func_800F855C_LuigisEngineRoom(void);
-void func_800F857C_LuigisEngineRoom(Vec3f *arg0);
+void func_800F857C_LuigisEngineRoom(Vec3f* pos);
 void func_800F873C_LuigisEngineRoom(void);
 void func_800F87A4_LuigisEngineRoom(s16 arg0);
 void func_800F8A94_LuigisEngineRoom(void);
@@ -174,7 +193,7 @@ DecisionTreeNonLeafNode D_800F9794_LuigisEngineRoom[2] = {
     { 0x00000000, { (void*)0x0 }, { 0x10A1E } },
 };
 DecisionTreeNonLeafNode D_800F97AC_LuigisEngineRoom[8] = {
-    { 0x06000000, { func_800F7D60_LuigisEngineRoom }, { (PB_UPTR32)D_800F96C8_LuigisEngineRoom } },
+    { 0x06000000, { (void (*)())func_800F7D60_LuigisEngineRoom }, { (PB_UPTR32)D_800F96C8_LuigisEngineRoom } },
     { 0x02000000, { (void*)0x1 }, { (PB_UPTR32)D_800F9710_LuigisEngineRoom } },
     { 0x02000000, { (void*)0x2 }, { (PB_UPTR32)D_800F9740_LuigisEngineRoom } },
     { 0x02000000, { (void*)0x4 }, { (PB_UPTR32)D_800F9764_LuigisEngineRoom } },
@@ -276,7 +295,7 @@ EventListEntry D_800F9A48_LuigisEngineRoom[] = {
     { 1, 2, func_800F8258_LuigisEngineRoom },
     { 0, 0, NULL },
 };
-s16 D_800F9A58_LuigisEngineRoom[] = { 0, 0x3E, 0, 0x3D }; /* splat: D_800F9A5A = [1] */
+s32 D_800F9A58_LuigisEngineRoom[] = { 0x3E, 0x3D }; /* splat: D_800F9A5A = low half of [0] */
 s32 D_800F9A60_LuigisEngineRoom[] = { 0x00000002, 0x00010049, 0x00010068 }; /* MBModelCreate motion list: words */
 s32 D_800F9A6C_LuigisEngineRoom[] = { 0x00000002, 0x00020049, 0x00020068 }; /* MBModelCreate motion list: words */
 s32 D_800F9A78_LuigisEngineRoom[] = { 0x00000002, 0x00030049, 0x00030068 }; /* MBModelCreate motion list: words */
@@ -416,7 +435,7 @@ void func_800F663C_LuigisEngineRoom(void) { //ov054_func_800F663C
         D_800F9520_LuigisEngineRoom[rand2] = swap1;
     }
 
-    for (s1 = 0; s1 < DK_STAR_COUNT; s1++) {
+    for (s1 = 0; s1 < LUIGI_STAR_COUNT; s1++) {
         ed5c0->starSpaces[s1] = D_800F9510_LuigisEngineRoom[s1];
     }
 }
@@ -427,7 +446,7 @@ void func_800F67A4_LuigisEngineRoom(void) {
 
     ed5c0 = &GwSystem;
 
-    if (++ed5c0->chosenStarSpaceIndex < DK_STAR_COUNT) {
+    if (++ed5c0->chosenStarSpaceIndex < LUIGI_STAR_COUNT) {
         return;
     }
 
@@ -450,13 +469,13 @@ void func_800F6830_LuigisEngineRoom(void) { //ov054_func_800F6830
     s32 s0, s1;
     GW_SYSTEM* ed5c0 = &GwSystem;
 
-    for (s1 = 0; s1 < DK_STAR_COUNT; s1++) {
+    for (s1 = 0; s1 < LUIGI_STAR_COUNT; s1++) {
         BoardSpaceTypeSet(D_800F9540_LuigisEngineRoom[s1], 1);
         SetBoardFeatureFlag(D_800F9530_LuigisEngineRoom[s1]);
     }
 
     if (_CheckFlag(0x44)) {
-        s0 = DK_STAR_COUNT;
+        s0 = LUIGI_STAR_COUNT;
     } else {
         s0 = ed5c0->chosenStarSpaceIndex;
     }
@@ -483,7 +502,7 @@ s16 func_800F6958_LuigisEngineRoom(s32 current_space_index) {
     // This feels a bit odd, but the match was difficult.
     current_space_index = (s16)current_space_index;
 
-    for (; i < DK_STAR_COUNT; i++) {
+    for (; i < LUIGI_STAR_COUNT; i++) {
         if (current_space_index == ov054_star_space_indicesptr[i]) {
             if (i == ed5c0->starSpaces[ed5c0->chosenStarSpaceIndex]) {
                 ed5c0->unk_1A = D_800F9530_LuigisEngineRoom[i];
@@ -491,7 +510,7 @@ s16 func_800F6958_LuigisEngineRoom(s32 current_space_index) {
             }
 
             if (_CheckFlag(68)) {
-                current_space_index = DK_STAR_COUNT;
+                current_space_index = LUIGI_STAR_COUNT;
             }
             else {
                 current_space_index = ed5c0->chosenStarSpaceIndex;
@@ -533,13 +552,13 @@ void func_800F6A38_LuigisEngineRoom(void) {
 
     ftemp = 0.0f;
     for (s0 = 0; s0 < 6; s0++) {
-        func_800A0D00(&ptr->xScale, ftemp, ftemp, ftemp);
+        func_800A0D00((Vec3f*)&ptr->xScale, ftemp, ftemp, ftemp);
         ftemp += 0.4f;
         HuPrcVSleep();
     }
 
     for (s0 = 0; s0 < 3; s0++) {
-        func_800A0D00(&ptr->xScale, ftemp, ftemp, ftemp);
+        func_800A0D00((Vec3f*)&ptr->xScale, ftemp, ftemp, ftemp);
         ftemp -= 0.4f;
         HuPrcVSleep();
     }
@@ -559,7 +578,7 @@ void func_800F6A38_LuigisEngineRoom(void) {
             break;
         }
 
-        func_800A0D00(&ptr->xScale, ftemp, ftemp, ftemp);
+        func_800A0D00((Vec3f*)&ptr->xScale, ftemp, ftemp, ftemp);
         ptr->unk_30 -= 6.0f;
         HuPrcVSleep();
     }
@@ -743,7 +762,26 @@ void func_800F7028_LuigisEngineRoom(void) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F719C_LuigisEngineRoom);
+void func_800F719C_LuigisEngineRoom(void) {
+    func_80060128(0xC);
+    InitCameras(2);
+    func_800F7028_LuigisEngineRoom();
+    EventTableHydrate(D_800F9B90_LuigisEngineRoom);
+    if (_CheckFlag(0xE) == 0) {
+        EventTableHydrate(D_800F9C90_LuigisEngineRoom);
+    }
+    if (_CheckFlag(0xF) == 0) {
+        EventTableHydrate(D_800F9CA0_LuigisEngineRoom);
+    }
+    if (_CheckFlag(0xD) == 0) {
+        EventTableHydrate(D_800F9CB0_LuigisEngineRoom);
+    }
+    func_800584F0(0);
+    if (GwCommon.boardWork[1] != 0) {
+        func_80056E48(&BoardSpaceGet(0x67)->coords);
+        func_80056E30(2);
+    }
+}
 
 void func_800F7258_LuigisEngineRoom(void) { //ov054_Entrypoint3
     InitCameras(1);
@@ -818,19 +856,154 @@ void func_800F7488_LuigisEngineRoom(void) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F74CC_LuigisEngineRoom);
+void func_800F74CC_LuigisEngineRoom(s16 arg0) {
+    Object* obj;
+    s16 kind;
+    u16 id;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F7600_LuigisEngineRoom);
+    if (D_800F9D00_LuigisEngineRoom[arg0] == NULL) {
+        kind = D_800F9590_LuigisEngineRoom[arg0];
+        id = D_800F958C_LuigisEngineRoom[kind];
+        if (D_800F9CF4_LuigisEngineRoom[kind] == NULL) {
+            obj = MBModelCreate(id, NULL);
+            func_8003E174(obj);
+            D_800F9CF4_LuigisEngineRoom[kind] = obj;
+        } else {
+            obj = MBModelParamCreate(D_800F9CF4_LuigisEngineRoom[kind]);
+        }
+        obj->unk_0A |= 2;
+        D_800F9D00_LuigisEngineRoom[arg0] = obj;
+        func_800A0D00((Vec3f*)&obj->xScale, 1.0f, 2.0f, 1.0f);
+        func_8003D514(&obj->unk_18, D_800F95A8_LuigisEngineRoom[arg0]);
+        func_800A0D50(&obj->coords, &BoardSpaceGet(D_800F9574_LuigisEngineRoom[arg0])->coords);
+        obj->coords.y = 0.0f;
+    }
+}
 
+void func_800F7600_LuigisEngineRoom(void) {
+    s32 i;
+
+    D_800F9CF4_LuigisEngineRoom[0] = NULL;
+    D_800F9CF4_LuigisEngineRoom[1] = NULL;
+    for (i = 0; i < 11; i++) {
+        D_800F9D00_LuigisEngineRoom[i] = NULL;
+        func_800F74CC_LuigisEngineRoom(i);
+    }
+}
+
+// register allocation: retail keeps mode in a2 and the first selector in a1 (masked 30, one fewer insn)
+#ifdef NON_MATCHING
+void func_800F7668_LuigisEngineRoom(LuigiPipe* p, s16 mode) {
+    s32 i;
+
+    switch (mode & 1) {
+    case 0:
+        p[0].target = 0.1f;
+        p[1].target = 1.0f;
+        p[2].target = 0.1f;
+        break;
+    case 1:
+        p[0].target = 1.0f;
+        p[1].target = 0.1f;
+        p[2].target = 1.0f;
+        break;
+    }
+    switch (mode & 1) {
+    case 0:
+        p[3].target = 0.1f;
+        p[4].target = 1.0f;
+        break;
+    case 1:
+        p[3].target = 1.0f;
+        p[4].target = 0.1f;
+        break;
+    }
+    switch (mode & 1) {
+    case 0:
+        p[5].target = 0.1f;
+        p[6].target = 1.0f;
+        break;
+    case 1:
+        p[5].target = 1.0f;
+        p[6].target = 0.1f;
+        break;
+    }
+    switch (mode & 1) {
+    case 0:
+        p[7].target = 0.1f;
+        p[8].target = 1.0f;
+        break;
+    case 1:
+        p[7].target = 1.0f;
+        p[8].target = 0.1f;
+        break;
+    }
+    switch (mode & 1) {
+    case 0:
+        p[9].target = 0.1f;
+        p[10].target = 1.0f;
+        break;
+    case 1:
+        p[9].target = 1.0f;
+        p[10].target = 0.1f;
+        break;
+    }
+    for (i = 0; i < 11; i++) {
+        if (p[i].target >= 1.0f) {
+            p[i].open = 1;
+        } else {
+            p[i].open = 0;
+        }
+    }
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F7668_LuigisEngineRoom);
+#endif
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F78C8_LuigisEngineRoom);
+void func_800F78C8_LuigisEngineRoom(s16 arg0, f32 arg1) {
+    func_800A0D00((Vec3f*)&D_800F9D00_LuigisEngineRoom[arg0]->xScale, 1.0f, arg1, 1.0f);
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F790C_LuigisEngineRoom);
+void func_800F790C_LuigisEngineRoom(void) {
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F796C_LuigisEngineRoom);
+    func_800F7668_LuigisEngineRoom(D_800F9D30_LuigisEngineRoom, GwCommon.boardWork[2]);
+    for (i = 0; i < 11; i++) {
+        func_800F78C8_LuigisEngineRoom(i, D_800F9D30_LuigisEngineRoom[i].target);
+    }
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F7A24_LuigisEngineRoom);
+void func_800F796C_LuigisEngineRoom(void) {
+    s32 idx;
+    f32 start;
+    f32 cur;
+    f32 step;
+    s32 i;
+
+    idx = (PB_PTR32)HuPrcCurrentGet()->user_data;
+    start = D_800F9D30_LuigisEngineRoom[idx].target;
+    step = (start - D_800F9D88_LuigisEngineRoom[idx].target) / 10.0f;
+    cur = start;
+    PlaySound(0xD5);
+    for (i = 0; i < 10; i++) {
+        func_800F78C8_LuigisEngineRoom(idx, cur);
+        cur -= step;
+        HuPrcVSleep();
+    }
+    PlaySound(0xD6);
+    EndProcess(NULL);
+}
+
+Process* func_800F7A24_LuigisEngineRoom(s32 arg0) {
+    Process* proc;
+
+    if (D_800F9D30_LuigisEngineRoom[arg0].target == D_800F9D88_LuigisEngineRoom[arg0].target) {
+        return NULL;
+    }
+    proc = omAddPrcObj(func_800F796C_LuigisEngineRoom, 0x4800, 0, 0);
+    proc->user_data = (void*)(PB_PTR32)arg0;
+    return proc;
+}
 
 void func_800F7A90_LuigisEngineRoom(s16 arg0) {
     Object* obj;
@@ -855,7 +1028,7 @@ void func_800F7B90_LuigisEngineRoom(void) {
     s32 i;
 
     D_800F9DE0_LuigisEngineRoom = NULL;
-    for (i = 0; i < DK_STAR_COUNT; i++) {
+    for (i = 0; i < LUIGI_STAR_COUNT; i++) {
         D_800F9DE8_LuigisEngineRoom[i] = NULL;
         if (_CheckFlag(D_800F95E4_LuigisEngineRoom[i]) == 0) {
             func_800F7A90_LuigisEngineRoom(i);
@@ -876,7 +1049,7 @@ void func_800F7C18_LuigisEngineRoom(s16 arg0) {
         }
         D_800F9E08_LuigisEngineRoom[arg0] = obj;
         obj->unk_0A |= 2;
-        func_800A0D00(&obj->xScale, 0.6f, 0.6f, 0.6f);
+        func_800A0D00((Vec3f*)&obj->xScale, 0.6f, 0.6f, 0.6f);
         obj->unk_30 = 100.0f;
         func_800A0D50(&obj->coords, &BoardSpaceGet(D_800F9610_LuigisEngineRoom[arg0])->coords);
         func_8003C314(8, obj, 0, 0);
@@ -892,7 +1065,9 @@ void func_800F7D20_LuigisEngineRoom(void) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F7D60_LuigisEngineRoom);
+s32 func_800F7D60_LuigisEngineRoom(void) {
+    return (GwCommon.boardWork[2] ^ 1) & 1;
+}
 
 void func_800F7D74_LuigisEngineRoom(void) {
     while (func_8004B850() != 0) {
@@ -944,7 +1119,39 @@ void func_800F7E70_LuigisEngineRoom(void) {
     EndProcess(NULL);
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F7F78_LuigisEngineRoom);
+void func_800F7F78_LuigisEngineRoom(void) {
+    unk_8003B8D4Struct* prompt;
+    s32 dir;
+    s32 i;
+    s32 n;
+
+    func_800F7668_LuigisEngineRoom(D_800F9D30_LuigisEngineRoom, GwCommon.boardWork[2]);
+    if (D_800F9D30_LuigisEngineRoom[0].open == 0) {
+        SetPlayerAnimation(-1, -1, 2);
+        HuPrcVSleep();
+        func_800F7D74_LuigisEngineRoom();
+        prompt = func_8003C218(GwSystem.curPlayerIndex, D_800F99B0_LuigisEngineRoom);
+        func_8003C060(prompt, GwSystem.curPlayerIndex, 0);
+        if (PlayerIsCPU(-1) != 0) {
+            n = (s16)RunDecisionTree(D_800F995C_LuigisEngineRoom);
+            for (i = 0; i < n; i++) {
+                func_8003BE84(prompt, -2);
+            }
+            func_8003BE84(prompt, -4);
+        }
+        dir = DirectionPrompt(prompt);
+        func_8003B908(prompt);
+        func_800F7E24_LuigisEngineRoom();
+        if (dir == 0) {
+            SetNextChainAndSpace(-1, 13, 0);
+        } else {
+            SetNextChainAndSpace(-1, 11, 0);
+        }
+    } else {
+        SetNextChainAndSpace(-1, 7, 0);
+    }
+    EndProcess(NULL);
+}
 
 void func_800F80A8_LuigisEngineRoom(void) {
     SetNextChainAndSpace(-1, 12, 0);
@@ -962,31 +1169,223 @@ void func_800F8114_LuigisEngineRoom(void) {
     SetNextChainAndSpace(-1, 14, 1);
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F8138_LuigisEngineRoom);
+void func_800F8138_LuigisEngineRoom(void) {
+    func_800F7668_LuigisEngineRoom(D_800F9D30_LuigisEngineRoom, GwCommon.boardWork[2]);
+    if (D_800F9D30_LuigisEngineRoom[3].open == 0) {
+        SetNextChainAndSpace(-1, 1, 0);
+    }
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F817C_LuigisEngineRoom);
+void func_800F817C_LuigisEngineRoom(void) {
+    func_800F7668_LuigisEngineRoom(D_800F9D30_LuigisEngineRoom, GwCommon.boardWork[2]);
+    if (D_800F9D30_LuigisEngineRoom[5].open == 0) {
+        SetNextChainAndSpace(-1, 2, 0);
+    } else {
+        SetNextChainAndSpace(-1, 6, 0);
+    }
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F81C8_LuigisEngineRoom);
+void func_800F81C8_LuigisEngineRoom(void) {
+    func_800F7668_LuigisEngineRoom(D_800F9D30_LuigisEngineRoom, GwCommon.boardWork[2]);
+    if (D_800F9D30_LuigisEngineRoom[7].open == 0) {
+        SetNextChainAndSpace(-1, 3, 0);
+    }
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F820C_LuigisEngineRoom);
+void func_800F820C_LuigisEngineRoom(void) {
+    func_800F7668_LuigisEngineRoom(D_800F9D30_LuigisEngineRoom, GwCommon.boardWork[2]);
+    if (D_800F9D30_LuigisEngineRoom[9].open == 0) {
+        SetNextChainAndSpace(-1, 14, 0);
+    } else {
+        SetNextChainAndSpace(-1, 15, 0);
+    }
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F8258_LuigisEngineRoom);
+void func_800F8258_LuigisEngineRoom(void) {
+    Vec3f sp10;
+    GW_PLAYER* player;
+    Process* proc;
+    BoardSpace* space;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F8450_LuigisEngineRoom);
+    player = GetPlayerStruct(-1);
+    proc = HuPrcCurrentGet();
+    func_800405DC(player->player_index);
+    SetPlayerAnimation(-1, -1, 2);
+    func_8004CD84(&sp10);
+    HuPrcChildLink(proc, func_8004D1EC(&player->player_obj->unk_18, &sp10, &player->player_obj->unk_18, 8));
+    HuPrcChildWatch();
+    PlaySound(0xD4);
+    while (1) {
+        player->player_obj->coords.y -= 10.0;
+        if (player->player_obj->coords.y <= 0.0f) {
+            break;
+        }
+        HuPrcVSleep();
+    }
+    player->player_obj->coords.y = 0.0f;
+    player->player_obj->unk_0A &= ~2;
+    MBModelDispOff(player->player_obj);
+    HuPrcVSleep();
+    space = BoardSpaceGet(0x62);
+    func_800A0D50(&sp10, &space->coords);
+    sp10.y = 0.0f;
+    HuPrcChildLink(proc, func_8004D648(&player->player_obj->coords, &sp10, &player->player_obj->coords, 20.0f));
+    HuPrcChildWatch();
+    HuPrcVSleep();
+    MBModelDispOn(player->player_obj);
+    player->player_obj->unk_0A |= 2;
+    PlaySound(0xD4);
+    while (1) {
+        player->player_obj->coords.y += 10.0;
+        if (player->player_obj->coords.y >= space->coords.y) {
+            break;
+        }
+        HuPrcVSleep();
+    }
+    player->player_obj->coords.y = space->coords.y;
+    SetPlayerOntoChain(-1, 5, 0);
+    func_8003FEFC(player->player_index);
+    EndProcess(NULL);
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F8508_LuigisEngineRoom);
+void func_800F8450_LuigisEngineRoom(void) {
+    LuigiSteam* steam;
+    Object* obj;
+    s32 alpha;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F855C_LuigisEngineRoom);
+    steam = HuPrcCurrentGet()->user_data;
+    obj = MBModelCreate(0x57, NULL);
+    func_800A0D50(&obj->coords, &steam->pos);
+    alpha = 255;
+    func_80021240(*obj->unk_3C->unk_40);
+    do {
+        func_800211BC(*obj->unk_3C->unk_40, alpha);
+        func_800A0E00(&obj->coords, &obj->coords, &steam->vel);
+        alpha -= 10;
+        HuPrcVSleep();
+    } while (alpha > 0);
+    steam->active = 0;
+    MBModelKill(obj);
+    EndProcess(NULL);
+}
 
+void func_800F8508_LuigisEngineRoom(void) {
+    s32 i;
+
+    D_800FA050_LuigisEngineRoom = MBModelCreate(0x57, NULL);
+    for (i = 0; i < 20; i++) {
+        D_800F9E20_LuigisEngineRoom[i].active = 0;
+    }
+}
+
+void func_800F855C_LuigisEngineRoom(void) {
+    MBModelKill(D_800FA050_LuigisEngineRoom);
+}
+
+// register allocation around the random velocity stores (masked 4)
+#ifdef NON_MATCHING
+void func_800F857C_LuigisEngineRoom(Vec3f* pos) {
+    s32 i;
+    f32 r;
+
+    for (i = 0; i < 20; i++) {
+        if (D_800F9E20_LuigisEngineRoom[i].active == 0) {
+            break;
+        }
+    }
+    if (i != 20) {
+        D_800F9E20_LuigisEngineRoom[i].active = -1;
+        omAddPrcObj(func_800F8450_LuigisEngineRoom, 0x4800, 0, 0)->user_data = &D_800F9E20_LuigisEngineRoom[i];
+        func_800A0D50(&D_800F9E20_LuigisEngineRoom[i].pos, pos);
+        r = (u8)(rand8() % 5) * 1.5f;
+        D_800F9E20_LuigisEngineRoom[i].vel.x = (rand8() & 1) ? r : -r;
+        D_800F9E20_LuigisEngineRoom[i].vel.y = 9.0f;
+        r = (u8)(rand8() % 5) * 1.5f;
+        D_800F9E20_LuigisEngineRoom[i].vel.z = (rand8() & 1) ? r : -r;
+    }
+}
+#else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F857C_LuigisEngineRoom);
+#endif
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F873C_LuigisEngineRoom);
+void func_800F873C_LuigisEngineRoom(void) {
+    Vec3f pos;
+    s32 i;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F87A4_LuigisEngineRoom);
+    func_800A0D50(&pos, &GetPlayerStruct(-1)->player_obj->coords);
+    for (i = 0; i < 20; i++) {
+        func_800F857C_LuigisEngineRoom(&pos);
+        HuPrcSleep(2);
+    }
+    D_800FA054_LuigisEngineRoom = NULL;
+    EndProcess(NULL);
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F8A94_LuigisEngineRoom);
+void func_800F87A4_LuigisEngineRoom(s16 arg0) {
+    Vec3f sp18;
+    GW_PLAYER* player;
+    Process* proc;
+    Object* obj;
+    Vec3f* dest;
+    Process* move;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F8AB8_LuigisEngineRoom);
+    player = GetPlayerStruct(-1);
+    proc = HuPrcCurrentGet();
+    while (func_8004B850() != 0) {
+        HuPrcVSleep();
+    }
+    HuPrcVSleep();
+    player->player_obj->unk_0A &= ~2;
+    MBModelDispOff(player->player_obj);
+    obj = MBModelCreate(player->character, D_800F9AA8_LuigisEngineRoom[player->character]);
+    func_800A0D50(&obj->coords, &player->player_obj->coords);
+    func_800A0D50(&obj->unk_18, &player->player_obj->unk_18);
+    func_800F8508_LuigisEngineRoom();
+    HuPrcSleep(5);
+    SetSpaceDisappearAnim(D_800F9A58_LuigisEngineRoom[arg0]);
+    PlaySound(0xDF);
+    D_800FA054_LuigisEngineRoom = omAddPrcObj(func_800F873C_LuigisEngineRoom, 0x4800, 0, 0);
+    HuPrcSleep(10);
+    func_8004CD84(&sp18);
+    func_8003D514(&sp18, 180.0f);
+    func_8004D1EC(&obj->unk_18, &sp18, &obj->unk_18, 8);
+    func_80060468(0x45E, 0);
+    func_80058910(-1, 4);
+    MBMotionSet(obj, 0, 0);
+    obj->unk_34 = 45.0f;
+    obj->unk_38 = -3.0f;
+    dest = &BoardSpaceGet(GetAbsSpaceIndexFromChainSpaceIndex(4, arg0))->coords;
+    move = func_8004D3F4(&obj->coords, dest, &obj->coords, 30);
+    func_8004D3F4(&player->player_obj->coords, dest, &player->player_obj->coords, 30);
+    HuPrcChildLink(proc, move);
+    HuPrcChildWatch();
+    MBMotionShiftSet(obj, 1, 0, 15, 0);
+    HuPrcSleep(15);
+    while (!(MBMotionCheck(obj) & 1)) {
+        HuPrcVSleep();
+    }
+    MBMotionShiftSet(obj, -1, 0, 15, 2);
+    SetPlayerOntoChain(-1, 4, arg0);
+    while (D_800FA054_LuigisEngineRoom != NULL) {
+        HuPrcVSleep();
+    }
+    func_800F855C_LuigisEngineRoom();
+    MBModelDispOn(player->player_obj);
+    player->player_obj->unk_0A |= 2;
+    func_800A0D50(&player->player_obj->unk_18, &obj->unk_18);
+    MBModelKill(obj);
+    SetSpaceSpawnAnim(D_800F9A58_LuigisEngineRoom[arg0]);
+}
+
+void func_800F8A94_LuigisEngineRoom(void) {
+    func_800F87A4_LuigisEngineRoom(1);
+    EndProcess(NULL);
+}
+
+void func_800F8AB8_LuigisEngineRoom(void) {
+    func_800F87A4_LuigisEngineRoom(0);
+    EndProcess(NULL);
+}
 
 void func_800F8ADC_LuigisEngineRoom(void) {
     func_8004D2A4(-1, 8, 81);
@@ -1074,21 +1473,161 @@ void func_800F8E08_LuigisEngineRoom(void) {
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F8E94_LuigisEngineRoom);
+void func_800F8E94_LuigisEngineRoom(void) {
+    s16 win;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F8FE8_LuigisEngineRoom);
+    if (GetCurrentSpaceIndex() == 0x71) {
+        func_8004D2A4(-1, 8, 0x57);
+        GwCommon.boardWork[0] = 0;
+    } else {
+        func_8004D2A4(-1, 8, 0x54);
+        GwCommon.boardWork[0] = 1;
+    }
+    SetPlayerAnimation(-1, -1, 2);
+    HuPrcVSleep();
+    if (PlayerHasCoins(-1, 20) != 0) {
+        GwCommon.boardWork[1] = 0;
+        func_800587EC(0x55, 0, 1);
+        SetEventReturnFlag(1);
+    } else {
+        while (func_8004B850() != 0) {
+            HuPrcVSleep();
+        }
+        HuPrcVSleep();
+        win = CreateTextWindow(0x54, 0x82, 0xD, 2);
+        LoadStringIntoWindow(win, (void*)0x1D8, -1, -1);
+        func_8006E070(win, 0);
+        ShowTextWindow(win);
+        PlaySound(0xDA);
+        func_8004DBD4(win, GetCurrentPlayerIndex());
+        HideTextWindow(win);
+    }
+    EndProcess(NULL);
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F9118_LuigisEngineRoom);
+void func_800F8FE8_LuigisEngineRoom(void) {
+    s16 win;
+    s32 msg;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F917C_LuigisEngineRoom);
+    func_800F7668_LuigisEngineRoom(D_800F9D30_LuigisEngineRoom, GwCommon.boardWork[2] + 1);
+    msg = 0x1E0;
+    func_800F7668_LuigisEngineRoom(D_800F9D88_LuigisEngineRoom, GwCommon.boardWork[2]);
+    func_800F7A24_LuigisEngineRoom(0);
+    func_800F7A24_LuigisEngineRoom(1);
+    func_800F7A24_LuigisEngineRoom(2);
+    func_800F7A24_LuigisEngineRoom(3);
+    func_800F7A24_LuigisEngineRoom(4);
+    func_800F7A24_LuigisEngineRoom(5);
+    func_800F7A24_LuigisEngineRoom(6);
+    func_800F7A24_LuigisEngineRoom(7);
+    func_800F7A24_LuigisEngineRoom(8);
+    func_800F7A24_LuigisEngineRoom(9);
+    func_800F7A24_LuigisEngineRoom(10);
+    HuPrcSleep(12);
+    if (!(GwCommon.boardWork[2] & 1)) {
+        msg = 0x1DF;
+    }
+    win = CreateTextWindow(0x46, 0x8C, 0xF, 2);
+    LoadStringIntoWindow(win, (void*)(PB_PTR32)msg, -1, -1);
+    func_8006E070(win, 0);
+    ShowTextWindow(win);
+    WaitForTextConfirmation(win);
+    HideTextWindow(win);
+    HuPrcSleep(5);
+    EndProcess(NULL);
+}
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F9260_LuigisEngineRoom);
+void func_800F9118_LuigisEngineRoom(void) {
+    Process* proc;
+
+    proc = HuPrcCurrentGet();
+    GwCommon.boardWork[2]++;
+    HuPrcChildLink(proc, omAddPrcObj(func_800F8FE8_LuigisEngineRoom, 0x1007, 0, 0));
+    HuPrcChildWatch();
+}
+
+void func_800F917C_LuigisEngineRoom(void) {
+    if (GwCommon.boardWork[1] != 0) {
+        GwCommon.boardWork[1] = 0;
+        func_80056E30(2);
+        func_80056E48(&BoardSpaceGet(0x67)->coords);
+        while (func_80072718() != 0) {
+            HuPrcVSleep();
+        }
+        func_800F9118_LuigisEngineRoom();
+        func_800726AC(6, 16);
+        while (func_80072718() != 0) {
+            HuPrcVSleep();
+        }
+        func_80056E30(1);
+        func_8005884C(NULL);
+        SetFadeInTypeAndTime(6, 16);
+        while (func_80072718() != 0) {
+            HuPrcVSleep();
+        }
+        HuPrcSleep(15);
+    }
+    EndProcess(NULL);
+}
+
+void func_800F9260_LuigisEngineRoom(void) {
+    Vec3f* pos;
+
+    SetPlayerAnimation(-1, -1, 2);
+    func_800726AC(4, 16);
+    while (func_80072718() != 0) {
+        HuPrcVSleep();
+    }
+    func_80056E30(2);
+    pos = &BoardSpaceGet(0x67)->coords;
+    func_80056E48(pos);
+    func_8005884C(pos);
+    SetFadeInTypeAndTime(4, 16);
+    while (func_80072718() != 0) {
+        HuPrcVSleep();
+    }
+    func_800F9118_LuigisEngineRoom();
+    func_800726AC(4, 16);
+    while (func_80072718() != 0) {
+        HuPrcVSleep();
+    }
+    func_80056E30(1);
+    func_8005884C(NULL);
+    SetFadeInTypeAndTime(4, 16);
+    while (func_80072718() != 0) {
+        HuPrcVSleep();
+    }
+    HuPrcSleep(15);
+    EndProcess(NULL);
+}
 
 void func_800F9388_LuigisEngineRoom(void) {
     SetNextChainAndSpace(-1, 0, 0);
 }
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_3A_LuigisEngineRoom/24C3C0", func_800F93AC_LuigisEngineRoom);
+void func_800F93AC_LuigisEngineRoom(void) {
+    Process* proc;
+    Vec3f* pos;
+
+    if (_CheckFlag(0x4F) != 0) {
+        func_80056E30(2);
+        pos = &BoardSpaceGet(0x67)->coords;
+        func_80056E48(pos);
+        func_8005884C(pos);
+        proc = HuPrcCurrentGet();
+        HuPrcChildLink(proc, func_800532B4());
+        HuPrcChildWatch();
+        func_8004A510();
+        func_800F9118_LuigisEngineRoom();
+        func_8004A520();
+        HuPrcChildLink(proc, func_800531E8());
+        HuPrcChildWatch();
+        func_80056E30(1);
+        func_8005884C(NULL);
+    }
+    SetBoardFeatureFlag(0x4F);
+    EndProcess(NULL);
+}
 
 void func_800F9474_LuigisEngineRoom(void) {
     InitCameras(2);
