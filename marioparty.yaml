@@ -1575,8 +1575,9 @@ segments:
     subsegments:
       - [0x246DF0, c]
       - [0x246E20, c]
-      - [0x248820, data, 246DF0]
-      - [0x248850, data, 246E20]
+      - [0x248820, .data, 246DF0]
+      - [0x248850, .data, 246E20]
+      - [0x248EF0, .rodata, 246E20]
       - {0x248F00, type: bss, vram: 0x800F86F0, name: ovl_38_bss}
   - type: code
     start: 0x248F00
