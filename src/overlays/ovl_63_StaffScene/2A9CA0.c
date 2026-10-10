@@ -1534,8 +1534,117 @@ void func_800FAD30_StaffScene(void) {
 #else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FAD30_StaffScene);
 #endif
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FB1A0_StaffScene);
+// loop-invariant hoisting: retail hoists 21 and 21.0f into callee-saved registers (frame 216 vs 208)
+#ifdef NON_MATCHING
+void func_800FB1A0_StaffScene(void) {
+    struct {
+        StaffModel* m[6];
+        StaffSparkle* s[6];
+        s16 state[8];
+        s16 timer[8];
+    } w;
+    struct {
+        f32 x;
+        f32 z;
+    } vel[5];
+    StaffCtl* ctl;
+    s32 i;
+    s16 c;
+    s16 n;
+    f32 f;
+    f32 a;
 
+    i = 0;
+    ctl = HuPrcCurrentGet()->user_data;
+    for (f = 0.0f; i < 5; i++) {
+        w.state[i] = 0;
+        w.timer[i] = f;
+        f += 6.0f;
+        w.m[i] = func_800FC998_StaffScene();
+        w.m[i]->cmd = 3;
+        func_80025930(w.m[i]->model, 0x20000000, 0x20000000);
+        w.s[i] = func_800FD0F0_StaffScene(w.m[i], 2);
+    }
+    ctl->stat = 3;
+    do {
+        HuPrcVSleep();
+        c = ctl->cmd;
+        if (c != 0) {
+            switch (c) {
+            case 1:
+                ctl->stat = 0;
+                break;
+            case 4:
+                ctl->stat = 4;
+                break;
+            }
+            ctl->cmd = 0;
+        }
+        if (ctl->stat == 1) {
+            break;
+        }
+        switch (ctl->stat) {
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            n = 5;
+            for (i = 0; i < 5; i++) {
+                if (w.timer[i] != 0) {
+                    w.timer[i]--;
+                    if (w.state[i] != 0) {
+                        if (fabs(w.m[i]->pos.x) < fabs(vel[i].x) || fabs(w.m[i]->pos.z) < fabs(vel[i].z)) {
+                            w.timer[i] = 0;
+                            w.m[i]->pos.x = 0.0f;
+                            w.m[i]->pos.z = 0.0f;
+                        } else {
+                            w.m[i]->pos.x -= vel[i].x;
+                            w.m[i]->pos.z -= vel[i].z;
+                            vel[i].x *= 1.1f;
+                            vel[i].z *= 1.1f;
+                        }
+                    }
+                    continue;
+                }
+                if (w.state[i] != 0) {
+                    if (w.state[i] == 10) {
+                        w.s[i]->cmd = 1;
+                        w.m[i]->cmd = 1;
+                        n--;
+                        continue;
+                    }
+                } else {
+                    w.s[i]->cmd = 4;
+                    w.m[i]->cmd = 4;
+                }
+                a = func_800FD2AC_StaffScene() % 360;
+                w.m[i]->pos.x = func_800AEAC0(a) * 1500.0f;
+                w.m[i]->pos.z = func_800AEFD0(a) * 1500.0f;
+                w.m[i]->pos.y = 2000.0f;
+                w.state[i]++;
+                w.timer[i] = 21;
+                vel[i].x = w.m[i]->pos.x / 21.0f;
+                vel[i].z = w.m[i]->pos.z / w.timer[i];
+            }
+            if (n == 0) {
+                ctl->stat = 0;
+            }
+            break;
+        }
+    } while (ctl->stat != 0);
+    for (i = 0; i < 5; i++) {
+        func_800FD170_StaffScene(w.s[i]);
+        func_800FCA8C_StaffScene(w.m[i]);
+    }
+    ctl->stat = -1;
+    while (1) {
+        HuPrcVSleep();
+    }
+}
+#else
+INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FB1A0_StaffScene);
+#endif
 void func_800FB5F0_StaffScene(StaffModel* m, Vec3f* to, s32 n) {
     Vec3f* p;
     f32 fn;
