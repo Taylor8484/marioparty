@@ -342,3 +342,7 @@ D_800FDAB8_SkateBoardSkamper = D_800FDAB0_SkateBoardSkamper + 0x8;
 D_800FDAE8_SkateBoardSkamper = D_800FDAE0_SkateBoardSkamper + 0x8;
 D_8010DC9C_v_YoshisTropicalIslandEndingScene = D_8010DC9C_YoshisTropicalIslandEndingScene;
 D_801102B0_s_YoshisTropicalIslandEndingScene = D_801102B0_YoshisTropicalIslandEndingScene;
+D_8010EB48_YoshisTropicalIslandEndingScene = D_8010EB3C_YoshisTropicalIslandEndingScene + 0xC;
+D_8010EB54_YoshisTropicalIslandEndingScene = D_8010EB3C_YoshisTropicalIslandEndingScene + 0x18;
+D_8010EB60_YoshisTropicalIslandEndingScene = D_8010EB3C_YoshisTropicalIslandEndingScene + 0x24;
+D_8010EB6C_YoshisTropicalIslandEndingScene = D_8010EB3C_YoshisTropicalIslandEndingScene + 0x30;
