@@ -21,6 +21,11 @@ extern Vec3f D_800FD354_StaffScene;
 extern Vec3f D_800FD360_StaffScene;
 extern Vec3f D_800FD36C_StaffScene;
 extern Vec3f D_800FD378_StaffScene;
+extern Vec3f D_800FD9C0_StaffScene;
+extern Vec3f D_800FD9CC_StaffScene;
+extern Vec3f D_800FD9D8_StaffScene;
+extern Vec3f D_800FD9E4_StaffScene[3];
+extern Vec3f D_800FDA10_StaffScene[160];
 extern f32 D_800FD390_StaffScene;
 
 extern StaffScaleKey D_800FD394_StaffScene[];
@@ -58,6 +63,12 @@ extern f32 D_800FE19C_StaffScene;    /* the fov last applied */
 void func_800FC554_StaffScene(StaffCamera*);
 void func_800FC5B0_StaffScene(omObjData*);
 void func_800FC864_StaffScene(void);
+s16 func_80038A9C(unk2C0C0StructC0*, void*, s32, char*);
+void func_80025930(s16, s32, s32);
+void func_80025AD4(s16);
+void func_80039ACC(s16);
+void func_800FB5F0_StaffScene(StaffModel*, Vec3f*, s32);
+void func_800FBCF4_StaffScene(StaffModel*, Vec3f*, s32, s32);
 void func_8002854C(void);
 f32 func_80025D40(s16);
 void func_800FC624_StaffScene(s16*, s16, f32, f32, f32);
@@ -1594,8 +1605,118 @@ void func_800FBCF4_StaffScene(StaffModel* m, Vec3f* path, s32 n, s32 steps) {
         }
     }
 }
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FBE80_StaffScene);
+void func_800FBE80_StaffScene(void) {
+    StaffCtl* ctl;
+    StaffModel* m;
+    StaffSparkle* s;
+    s16 ring;
+    s16 star;
+    s16 tex;
+    s16 c;
+    void* file;
+    f32 f;
+    f32 g;
 
+    star = -1;
+    ctl = HuPrcCurrentGet()->user_data;
+    m = func_800FC998_StaffScene();
+    m->pos = D_800FD9C0_StaffScene;
+    s = func_800FD0F0_StaffScene(m, 3);
+    s->cmd = 4;
+    ctl->stat = 2;
+    do {
+        HuPrcVSleep();
+        c = ctl->cmd;
+        if (c != 0) {
+            switch (c) {
+            case -1:
+                ctl->stat = 0;
+                break;
+            case 3:
+                ctl->stat = 3;
+                break;
+            }
+            ctl->cmd = 0;
+        }
+        switch (ctl->stat) {
+        case 0:
+        case 1:
+        case 2:
+            break;
+        case 3:
+            m->rot.y = CRot.y;
+            PlaySound(0x1D);
+            func_800FB5F0_StaffScene(m, &D_800FD9CC_StaffScene, 12);
+            func_800FBCF4_StaffScene(m, D_800FDA10_StaffScene, 160, 3);
+            while (fabs(g = m->rot.y - CRot.y) > 8.0) {
+                HuPrcVSleep();
+                m->rot.y += 8.0f;
+                if (m->rot.y > 360.0f) {
+                    m->rot.y -= 360.0f;
+                }
+            }
+            m->rot.y = CRot.y;
+            ctl->stat = 4;
+            break;
+        case 4:
+            HuPrcSleep(15);
+            PlaySound(0x1A);
+            func_800FB5F0_StaffScene(m, &D_800FD9D8_StaffScene, 30);
+            func_80025930(m->model, 0x70000000, 0x70000000);
+            ctl->stat = 5;
+        case 5:
+            func_800FB5F0_StaffScene(m, D_800FD9E4_StaffScene, 24);
+            s->cmd = 6;
+            ring = LoadFormFile(0xA0136, 0x6B9);
+            func_80025798(ring, m->pos.x, m->pos.y - 20.0f, m->pos.z);
+            func_800257E4(ring, CRot.x + 90.0f, m->rot.y, m->rot.z);
+            PlaySound(0x18);
+            for (f = 3.0f; f < 5.0f; f += 0.4f) {
+                func_80025830(ring, f, f, f);
+                HuPrcVSleep();
+            }
+            func_8002456C(ring);
+            star = LoadFormFile(0xA0139, 0x6A9);
+            file = func_80014614(0xA013A);
+            tex = func_80038A9C(D_800F2B7C[star].unk_6C, file, 0, "m1e_020_IA44");
+            FreeTemp(file);
+            func_80025AD4(star);
+            func_80025798(star, m->pos.x, m->pos.y, m->pos.z);
+            for (f = 0.0f; f < 3.0f; f += 0.5f) {
+                func_80025830(star, f, f, f);
+                func_80025798(star, m->pos.x, m->pos.y - f * 96.0f, m->pos.z);
+                HuPrcVSleep();
+            }
+            for (g = 1.0f; f >= 2.0f; f -= 0.5f, g -= 0.5f) {
+                func_80025830(star, f, f, f);
+                func_80025798(star, m->pos.x, m->pos.y - f * 96.0f, m->pos.z);
+                m->scale.x = g;
+                m->scale.y = g;
+                m->scale.z = g;
+                HuPrcVSleep();
+            }
+            ctl->stat = 6;
+        case 6:
+            if (f < 6.0f) {
+                f += 0.04f;
+            }
+            g = (1.125f - rand8() / 1024.0f) * f;
+            func_80025830(star, g, g, g);
+            func_80025798(star, m->pos.x, m->pos.y - g * 96.0f, m->pos.z);
+            break;
+        }
+    } while (ctl->stat != 0);
+    if (star >= 0) {
+        func_80039ACC(tex);
+        func_8002456C(star);
+    }
+    func_800FD170_StaffScene(s);
+    func_800FCA8C_StaffScene(m);
+    ctl->stat = -1;
+    while (1) {
+        HuPrcVSleep();
+    }
+}
 void func_800FC480_StaffScene(void) {
     func_800178A0(1);
     func_80017660(0, 0.0f, 0.0f, 320.0f, 240.0f);
