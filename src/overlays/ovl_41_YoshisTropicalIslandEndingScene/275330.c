@@ -1,5 +1,16 @@
-#include "common.h"
+#include "ending.h"
 
+
+
+
+
+
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/275330", D_8010F770_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/275330", D_8010F774_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/275330", D_8010F778_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/275330", D_8010F7A0_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/275330", D_8010F7A4_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/275330", D_8010F7A8_YoshisTropicalIslandEndingScene);
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/275330", func_8010BCA0_YoshisTropicalIslandEndingScene);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/275330", func_8010BD1C_YoshisTropicalIslandEndingScene);

@@ -1,5 +1,41 @@
-#include "common.h"
+#include "ending.h"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010EF50_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010EF70_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010EF74_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010EF78_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010EF88_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010EFB0_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010EFC4_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010EFC8_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010EFCC_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010EFD0_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010EFDC_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010EFE8_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010F000_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010F004_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010F008_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010F00C_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010F024_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010F030_YoshisTropicalIslandEndingScene);
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", func_800FAD10_YoshisTropicalIslandEndingScene);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", func_800FAD64_YoshisTropicalIslandEndingScene);
@@ -11,3 +47,13 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/26
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", func_800FB514_YoshisTropicalIslandEndingScene);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", func_800FB648_YoshisTropicalIslandEndingScene);
+
+
+
+
+
+
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010F0B8_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010F114_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010F118_YoshisTropicalIslandEndingScene);
+INCLUDE_RODATA("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2643A0", D_8010F11C_YoshisTropicalIslandEndingScene);
