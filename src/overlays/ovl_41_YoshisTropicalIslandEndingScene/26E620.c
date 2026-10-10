@@ -246,11 +246,14 @@ void func_801074EC_YoshisTropicalIslandEndingScene(omObjData* obj) {
         cam->far = 28000.0f;
     }
 }
+#ifdef NON_MATCHING
+/* in the asm path func_80107660's .s defines it */
+const f64 D_8010F5A0_YoshisTropicalIslandEndingScene __attribute__((section(".rodata"))) = 0.017453292519943295;
+#endif
+extern const f64 D_8010F5A8_YoshisTropicalIslandEndingScene;
+
 // register allocation, and loop.c hoists the 2300.0f constant of the last loop (masked 9)
 #ifdef NON_MATCHING
-const f64 D_8010F5A0_YoshisTropicalIslandEndingScene __attribute__((section(".rodata"))) = 0.017453292519943295;
-const f64 D_8010F5A8_YoshisTropicalIslandEndingScene __attribute__((section(".rodata"))) = 0.02;
-
 void func_80107660_YoshisTropicalIslandEndingScene(void) {
     Vec3f a;
     Vec3f b;
@@ -506,8 +509,8 @@ void func_80107660_YoshisTropicalIslandEndingScene(void) {
 }
 #else
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/26E620", func_80107660_YoshisTropicalIslandEndingScene);
-const f64 D_8010F5A8_YoshisTropicalIslandEndingScene __attribute__((section(".rodata"))) = 0.02;
 #endif
+const f64 D_8010F5A8_YoshisTropicalIslandEndingScene __attribute__((section(".rodata"))) = 0.02;
 void func_801088C4_YoshisTropicalIslandEndingScene(s16 model, f32 len, f32 pos, Vec3f* out) {
     f32 v[3][4];
     f32 t[4];
