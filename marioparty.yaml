@@ -1979,7 +1979,8 @@ segments:
     bss_size: 0x10
     subsegments:
       - [0x291360, c]
-      - [0x291F10, data, 291360]
+      - [0x291F10, .data, 291360]
+      - [0x292010, .rodata, 291360]
       - {0x292020, type: bss, vram: 0x800F72A0, name: ovl_54_bss}
   - type: code
     start: 0x292020
