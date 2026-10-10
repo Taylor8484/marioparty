@@ -1560,7 +1560,7 @@ segments:
       - [0x2455C0, c]
       - [0x2455F0, c]
       - [0x246A60, .data, 2455C0]
-      - [0x246A90, data, 2455F0]
+      - [0x246A90, .data, 2455F0]
       - [0x246D10, .rodata, 2455F0]
       - {0x246DF0, type: bss, vram: 0x800F7E10, name: ovl_37_bss}
   - type: code
