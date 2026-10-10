@@ -27,4 +27,7 @@ extern f32 D_801101EC_YoshisTropicalIslandEndingScene;
 
 /* 26E620.c's last .rodata word, read by 2721F0.c (func_80109294) */
 
+void func_80107660_YoshisTropicalIslandEndingScene(void);
+void func_801088C4_YoshisTropicalIslandEndingScene(s16 model, f32 len, f32 pos, Vec3f* out);
+
 #endif
