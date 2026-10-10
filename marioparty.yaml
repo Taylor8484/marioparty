@@ -2225,7 +2225,7 @@ segments:
     subsegments:
       - [0x2A9970, c]
       - [0x2A9CA0, c]
-      - [0x2B0670, data, 2A9970]
+      - [0x2B0670, .data, 2A9CA0]
       - [0x2B1540, .rodata, 2A9CA0]
       - {0x2B1670, type: bss, vram: 0x800FE2E0, name: ovl_63_bss}
   - type: code
