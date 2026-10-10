@@ -210,6 +210,8 @@ build/src/overlays/ovl_17_BoxMountainMayhem/166D50.c.o: CFLAGS = -G0 -mips3 -mgp
 build/src/overlays/ovl_17_BoxMountainMayhem/168CA0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # ovl_40 259EB0.c: nop before mult at func_800FA61C's roulette loop head
 build/src/overlays/ovl_40_ResultsScene/259EB0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
+# ovl_64 2B1670.c: ovl_40 twin (same mul-fix nop)
+build/src/overlays/ovl_64_ResultsEternalStar2/2B1670.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # ovl_2D 1FF1E0.c: nop between mul.s in func_800F7A0C
 build/src/overlays/ovl_2D_RunningOfTheBulb/1FF1E0.c.o: CFLAGS = -G0 -mips3 -mgp32 -mfp32 -D_LANGUAGE_C
 # ovl_22 1AA2A0.c: nop between mul.s in func_800FA4B4 (mul fix on; blank-line strip rule below too)
