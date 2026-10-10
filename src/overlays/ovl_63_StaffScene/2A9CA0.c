@@ -54,6 +54,8 @@ extern f32 D_800FE19C_StaffScene;    /* the fov last applied */
 void func_800FC554_StaffScene(StaffCamera*);
 void func_800FC5B0_StaffScene(omObjData*);
 void func_800FC864_StaffScene(void);
+void func_800FB6A8_StaffScene(StaffModel*, f32, s32, f32, f32);
+void func_800FBB88_StaffScene(StaffModel*, s32*, s32);
 void func_800FCAF4_StaffScene(void);
 u32 func_800FD1D8_StaffScene(u32);
 u32 func_800FD2AC_StaffScene(void);
@@ -932,8 +934,36 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800F9C38_
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800F9F70_StaffScene);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FA3D8_StaffScene);
+void func_800FA3D8_StaffScene(void) {
+    StaffCtl* ctl;
+    s16 model;
+    f32 v;
+    f32 u;
 
+    ctl = HuPrcCurrentGet()->user_data;
+    model = LoadFormFile(0x9001A, 0x699);
+    func_80026040(model);
+    func_80025F10(model, 1);
+    u = v = 0.0f;
+    ctl->stat = 1;
+    do {
+        HuPrcVSleep();
+        switch (ctl->cmd) {
+        case 0:
+            break;
+        case 1:
+            ctl->stat = 0;
+            break;
+        }
+        func_80027C1C(model, u, v, 0x20, 0x20);
+        v += 0.5f;
+    } while (ctl->stat != 0);
+    func_8002456C(model);
+    ctl->stat = -1;
+    while (1) {
+        HuPrcVSleep();
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FA4F4_StaffScene);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FAA4C_StaffScene);
@@ -942,14 +972,110 @@ INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FAD30_
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FB1A0_StaffScene);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FB5F0_StaffScene);
+void func_800FB5F0_StaffScene(StaffModel* m, Vec3f* to, s32 n) {
+    Vec3f* p;
+    f32 fn;
+    f32 dx;
+    f32 dy;
+    f32 dz;
 
+    p = &m->pos;
+    dx = to->x - p->x;
+    dy = to->y - p->y;
+    dz = to->z - p->z;
+    fn = n;
+    dx /= fn;
+    dy /= fn;
+    dz /= fn;
+    for (; n != 0; n--) {
+        p->x = dx + p->x;
+        p->y = dy + p->y;
+        p->z = dz + p->z;
+        HuPrcVSleep();
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FB6A8_StaffScene);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FBB88_StaffScene);
+void func_800FBB88_StaffScene(StaffModel* m, s32* state, s32 t) {
+    s32 hit;
+    s32 z;
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FBCF4_StaffScene);
+    switch (*state) {
+    case 0:
+        if (t == 0) {
+            D_800FDA08_StaffScene = 0.0f;
+        }
+        hit = 1;
+        if (!(m->pos.x > 86.0f)) {
+            hit = 0;
+        }
+        if (hit | (z = (t == 56))) {
+            D_800FDA0C_StaffScene = 2.0f;
+            *state = 3;
+        }
+        break;
+    case 2:
+    case 3:
+        if (t >= 75) {
+            if (t < 100) {
+                if (D_800FDA08_StaffScene < 60.0f) {
+                    D_800FDA08_StaffScene += 2.5f;
+                }
+            } else {
+                if (t == 100) {
+                    *state = 2;
+                }
+                if (Center.y > 640.0f) {
+                    Center.y -= 10.0f;
+                }
+            }
+        }
+        break;
+    }
+    if (*state != 0) {
+        func_800FB6A8_StaffScene(m, 450.0f, *state, D_800FDA08_StaffScene, D_800FDA0C_StaffScene);
+    }
+}
+void func_800FBCF4_StaffScene(StaffModel* m, Vec3f* path, s32 n, s32 steps) {
+    s32 state;
+    Vec3f* p;
+    Vec3f* r;
+    s32 t;
+    s32 i;
+    f32 fn;
+    f32 dx;
+    f32 dy;
+    f32 dz;
 
+    state = 0;
+    p = &m->pos;
+    r = &m->rot;
+    for (t = 0; n != 0; n--, path++, t++) {
+        i = steps;
+        dx = path->x - p->x;
+        dy = path->y - p->y;
+        dz = path->z - p->z;
+        fn = i;
+        dx /= fn;
+        dy /= fn;
+        dz /= fn;
+        for (; i != 0; i--) {
+            p->x = dx + p->x;
+            p->y = dy + p->y;
+            p->z = dz + p->z;
+            func_800FBB88_StaffScene(m, &state, t);
+            if (t >= 43) {
+                r->y += 24.0f;
+                if (r->y > 360.0f) {
+                    r->y -= 360.0f;
+                }
+            } else {
+                r->y = CRot.y;
+            }
+            HuPrcVSleep();
+        }
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FBE80_StaffScene);
 
 void func_800FC480_StaffScene(void) {
