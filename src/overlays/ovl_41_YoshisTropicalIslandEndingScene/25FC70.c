@@ -1,5 +1,9 @@
 #include "ending.h"
 
+#define ENDING_BOARD D_801102B0_YoshisTropicalIslandEndingScene
+/* ending.h: s32[2]; retail only ever uses it as a scalar (see the fork report) */
+#define ENDING_FX D_80110440_YoshisTropicalIslandEndingScene[0]
+
 void func_8004F548(void);
 void func_8004FB14(void);
 void func_8004FBB4(void);
@@ -22,18 +26,11 @@ void func_800F6C80_YoshisTropicalIslandEndingScene(void);
 void func_800F6D18_YoshisTropicalIslandEndingScene(void);
 
 /* .data 0x8010DC90-0x8010DDDF: shared by the scenes (ending.h) */
-s32 D_8010DC90_YoshisTropicalIslandEndingScene = 3;
-s32 D_8010DC94_YoshisTropicalIslandEndingScene = 5; /* unreferenced */
-s32 D_8010DC98_YoshisTropicalIslandEndingScene = 7; /* 2603D0 */
-f32 D_8010DC9C_YoshisTropicalIslandEndingScene = 0.0f;
-f32 D_8010DCA0_YoshisTropicalIslandEndingScene = 250.0f;
-f32 D_8010DCA4_YoshisTropicalIslandEndingScene[22] = {
-    0.0f, 0.0f, 0.0f, 0.0f,
-    89.0f, 0.0f, -87.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 0.0f,
-    250.0f, 0.0f,
+/* per-game-mode counts (GwSystem.unk_00); splat's D_8010DC98 is [2] */
+s32 D_8010DC90_YoshisTropicalIslandEndingScene[3] = { 3, 5, 7 };
+Vec3f D_8010DC9C_YoshisTropicalIslandEndingScene[8] = {
+    { 0.0f, 250.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 89.0f, 0.0f, -87.0f }, { 0.0f, 0.0f, 0.0f },
+    { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 250.0f, 0.0f },
 };
 f32 D_8010DCFC_YoshisTropicalIslandEndingScene[8] = {
     1000.0f, 750.0f, 1000.0f, 750.0f, 750.0f, 750.0f, 750.0f, 750.0f,
@@ -77,7 +74,7 @@ extern omObjData* D_8010F848_YoshisTropicalIslandEndingScene;
 extern s32 D_8010F84C_YoshisTropicalIslandEndingScene;
 
 void func_800F65E0_YoshisTropicalIslandEndingScene(void) {
-    D_801102B0_YoshisTropicalIslandEndingScene[0] = GwSystem.curBoardIndex;
+    ENDING_BOARD = GwSystem.curBoardIndex;
     omInitObjMan(0x64, 0x64);
     func_800F6C80_YoshisTropicalIslandEndingScene();
     func_800F6A90_YoshisTropicalIslandEndingScene();
@@ -114,26 +111,25 @@ void func_800F67AC_YoshisTropicalIslandEndingScene(void) {
     omDelObj(D_8010F848_YoshisTropicalIslandEndingScene);
 }
 
-// register allocation: the D_801102B0 address is kept in s1 across the calls (masked 19, all from it)
 #ifdef NON_MATCHING
 void func_800F67EC_YoshisTropicalIslandEndingScene(void) {
-    if (D_8010DD7C_YoshisTropicalIslandEndingScene[*D_801102B0_YoshisTropicalIslandEndingScene] != NULL) {
-        D_8010DD7C_YoshisTropicalIslandEndingScene[*D_801102B0_YoshisTropicalIslandEndingScene]();
+    if (D_8010DD7C_YoshisTropicalIslandEndingScene[ENDING_BOARD] != NULL) {
+        D_8010DD7C_YoshisTropicalIslandEndingScene[ENDING_BOARD]();
     }
-    D_8010DD9C_YoshisTropicalIslandEndingScene[*D_801102B0_YoshisTropicalIslandEndingScene]();
+    D_8010DD9C_YoshisTropicalIslandEndingScene[ENDING_BOARD]();
     {
         s32 delays[6] = { 45, 25, 30, 45, 45, 30 };
 
         HuPrcSleep(delays[GwPlayer[GwCommon.boardWork[0]].character]);
         func_80060468(0x99, GwPlayer[GwCommon.boardWork[0]].character);
-        func_8004F504((*D_801102B0_YoshisTropicalIslandEndingScene == 0) ? D_80110448_YoshisTropicalIslandEndingScene[0]
+        func_8004F504((ENDING_BOARD == 0) ? D_80110448_YoshisTropicalIslandEndingScene[0]
                                                                      : GwPlayer[GwCommon.boardWork[0]].player_obj);
     }
     func_800F671C_YoshisTropicalIslandEndingScene();
     HuPrcSleep(15);
     func_80060128(3);
     func_8004FFA8();
-    SetBoardFeatureFlag(D_8010DDBC_YoshisTropicalIslandEndingScene[D_801102B0_YoshisTropicalIslandEndingScene[0]]);
+    SetBoardFeatureFlag(D_8010DDBC_YoshisTropicalIslandEndingScene[ENDING_BOARD]);
     D_800F5144 = 1;
     while (1) {
         HuPrcVSleep();
@@ -184,8 +180,8 @@ void func_800F6A90_YoshisTropicalIslandEndingScene(void) {
     func_8004F2AC();
     func_8004F548();
     func_8004F8DC();
-    D_80110440_YoshisTropicalIslandEndingScene[0] = func_8004F954(0x2A, 0x20);
-    func_8004FA90(D_80110440_YoshisTropicalIslandEndingScene[0], 12.0f, 12.0f, 12.0f);
+    ENDING_FX = func_8004F954(0x2A, 0x20);
+    func_8004FA90(ENDING_FX, 12.0f, 12.0f, 12.0f);
     for (i = 0; i < 16; i++) {
         D_801102B8_YoshisTropicalIslandEndingScene[i] = -1;
         D_80110300_YoshisTropicalIslandEndingScene[i] = NULL;
