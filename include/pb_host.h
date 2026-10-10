@@ -61,6 +61,7 @@ void pb_gfx_forget(const void *p);
    --dev-turns N): whether minigame index mg (GwSystem.unk_1E numbering) may be picked, and a new
    game's turn count (-1: the game's own). */
 int pb_dev_minigame_allowed(s32 mg);
+int pb_dev_minigame_forced(void); /* --dev-minigame: one minigame overlay only */
 s32 pb_dev_turns(void);
 s32 pb_dev_board(void); /* --dev-board N: the board a new game uses (GwSystem.curBoardIndex), or -1 */
 /* --autoplay: nonzero makes events that steer a human with the stick (Chance Time walks under

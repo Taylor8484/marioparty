@@ -341,6 +341,19 @@ void func_8004388C(s32 arg0) {
     }
     if (j == D_800C4E10[sel]) {
         sel = 0;
+        /* --dev-minigame: the forced minigame's own type, even when the space colours say otherwise */
+        if (pb_dev_minigame_forced()) {
+            s32 k;
+            for (k = 0; k < 4; k++) {
+                for (j = 0; j < D_800C4E10[k]; j++) {
+                    if (pb_dev_minigame_allowed(lists[k][j] - 1)) {
+                        sel = k;
+                        k = 4;
+                        break;
+                    }
+                }
+            }
+        }
     }
 #endif
     D_800D6459 = sel;
