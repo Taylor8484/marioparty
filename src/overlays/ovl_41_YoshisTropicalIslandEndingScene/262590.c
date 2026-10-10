@@ -4,7 +4,6 @@
 
 #define ENDING_BOARD D_801102B0_YoshisTropicalIslandEndingScene
 /* ending.h: s32[2]; retail only ever uses it as a scalar (see the fork report) */
-#define ENDING_FX D_80110440_YoshisTropicalIslandEndingScene[0]
 #define ENDING_CENTER D_8010DC9C_YoshisTropicalIslandEndingScene
 
 void func_8004FAB8(s32);
@@ -279,7 +278,7 @@ void func_800F96E4_YoshisTropicalIslandEndingScene(void) {
     func_8004A140();
     func_800F8FBC_YoshisTropicalIslandEndingScene();
     func_800F6B54_YoshisTropicalIslandEndingScene();
-    func_8004FAB8(ENDING_FX);
+    func_8004FAB8(D_80110440_YoshisTropicalIslandEndingScene);
     func_8002456C((s16)D_8010E090_YoshisTropicalIslandEndingScene);
     func_8002456C((s16)D_8010E094_YoshisTropicalIslandEndingScene);
     D_8010E090_YoshisTropicalIslandEndingScene = -1;

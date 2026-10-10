@@ -2,7 +2,6 @@
 
 #define ENDING_BOARD D_801102B0_YoshisTropicalIslandEndingScene
 /* ending.h: s32[2]; retail only ever uses it as a scalar (see the fork report) */
-#define ENDING_FX D_80110440_YoshisTropicalIslandEndingScene[0]
 
 /* DK's Jungle Adventure ending (board 0): func_800F8848 (setup), func_800F8550 (scene) */
 
@@ -171,7 +170,7 @@ void func_800F717C_YoshisTropicalIslandEndingScene(omObjData* arg0) {
     s32 r;
 
     if (!(arg0->work[0] & 3)) {
-        func_8004FA90(ENDING_FX, 8.0f, 8.0f, 8.0f);
+        func_8004FA90(D_80110440_YoshisTropicalIslandEndingScene, 8.0f, 8.0f, 8.0f);
         r = rand8();
         model = MODEL[1];
         z = (f32)(r & 0x7F) + model->coords.z;
@@ -181,7 +180,7 @@ void func_800F717C_YoshisTropicalIslandEndingScene(omObjData* arg0) {
         goto spawn;
     }
     if (!(arg0->work[0] & 1)) {
-        func_8004FA90(ENDING_FX, 5.0f, 5.0f, 5.0f);
+        func_8004FA90(D_80110440_YoshisTropicalIslandEndingScene, 5.0f, 5.0f, 5.0f);
         r = rand8();
         model = MODEL[0];
         z = ((f32)(r & 0x7F) + model->coords.z) - 63.0f;
@@ -189,7 +188,7 @@ void func_800F717C_YoshisTropicalIslandEndingScene(omObjData* arg0) {
         x = model->coords.x;
         dx = 30.0f;
     spawn:
-        func_8004F9F4(ENDING_FX, x + dx, model->coords.y - 200.0f, z - dz, 1);
+        func_8004F9F4(D_80110440_YoshisTropicalIslandEndingScene, x + dx, model->coords.y - 200.0f, z - dz, 1);
     }
     arg0->work[0]++;
 }
@@ -242,8 +241,6 @@ void func_800F74E0_YoshisTropicalIslandEndingScene(omObjData* arg0) {
     }
 }
 
-// D_80110440 is s32[2] in ending.h; retail uses it as a scalar (base CSE, 2 instructions)
-#ifdef NON_MATCHING
 void func_800F759C_YoshisTropicalIslandEndingScene(void) {
     s32 ids[5] = { 7, 10, 8, 0x6D, 0x25 };
     s32 i;
@@ -343,9 +340,9 @@ void func_800F759C_YoshisTropicalIslandEndingScene(void) {
     HuPrcSleep(0x15);
     func_800F6B54_YoshisTropicalIslandEndingScene();
     func_8004A140();
-    func_8004FAB8(ENDING_FX);
-    ENDING_FX = func_8004F954(0x26, 0x20);
-    func_8004FA90(ENDING_FX, 5.0f, 5.0f, 5.0f);
+    func_8004FAB8(D_80110440_YoshisTropicalIslandEndingScene);
+    D_80110440_YoshisTropicalIslandEndingScene = func_8004F954(0x26, 0x20);
+    func_8004FA90(D_80110440_YoshisTropicalIslandEndingScene, 5.0f, 5.0f, 5.0f);
     HuPrcSleep(5);
     LoadBackgroundIndex(0);
     HuPrcSleep(2);
@@ -483,10 +480,6 @@ void func_800F759C_YoshisTropicalIslandEndingScene(void) {
     OBJ[7]->rot.y = 0.0f;
     func_8004F4D4(MODEL[0], 2, 0);
 }
-#else
-const s32 D_8010EEB8_YoshisTropicalIslandEndingScene[5] __attribute__((section(".rodata"))) = { 7, 10, 8, 0x6D, 0x25 };
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_41_YoshisTropicalIslandEndingScene/2603D0", func_800F759C_YoshisTropicalIslandEndingScene);
-#endif
 
 void func_800F8550_YoshisTropicalIslandEndingScene(void) {
     func_800F6D40_YoshisTropicalIslandEndingScene();
