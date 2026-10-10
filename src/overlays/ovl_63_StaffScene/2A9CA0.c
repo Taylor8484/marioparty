@@ -54,6 +54,7 @@ extern f32 D_800FE19C_StaffScene;    /* the fov last applied */
 void func_800FC554_StaffScene(StaffCamera*);
 void func_800FC5B0_StaffScene(omObjData*);
 void func_800FC864_StaffScene(void);
+void func_800FC624_StaffScene(s16*, s16, f32, f32, f32);
 void func_800F8380_StaffScene(void);
 void func_800F8894_StaffScene(void);
 void func_800F94E0_StaffScene(void);
@@ -1133,8 +1134,64 @@ void func_800FA3D8_StaffScene(void) {
 }
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FA4F4_StaffScene);
 
-INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FAA4C_StaffScene);
+void func_800FAA4C_StaffScene(void) {
+    s16 xy[2];
+    StaffCtl* ctl;
+    void* file;
+    s16 tex;
+    s16 win;
+    s32 i;
+    f32 x;
+    f32 y;
 
+    i = 0;
+    ctl = HuPrcCurrentGet()->user_data;
+    func_800FC624_StaffScene(xy, 0, 0.0f, 2200.0f, 0.0f);
+    file = func_80014614(0xF0006);
+    tex = func_800678A4(file);
+    FreeTemp(file);
+    win = func_80064EF4(6, 0);
+    for (; i < 6; i++) {
+        func_80067208(win, i, tex, 0);
+        func_800672B0(win, i, 0);
+        func_800674BC(win, i, 0x5000);
+        func_80067384(win, i, 0xFFFF);
+        func_80066DC4(win, i, xy[0] + D_800FD994_StaffScene[i].x, xy[1] + D_800FD994_StaffScene[i].y);
+    }
+    ctl->stat = 1;
+    do {
+        HuPrcVSleep();
+        if (ctl->cmd != 0) {
+            if (ctl->cmd == -1) {
+                ctl->stat = 0;
+            }
+            ctl->cmd = 0;
+        }
+        switch (ctl->stat) {
+        case 0:
+            break;
+        case 1:
+            func_800FC624_StaffScene(xy, 0, 0.0f, 2300.0f, 0.0f);
+            for (i = 0; i < 6; i++) {
+                x = xy[0] + D_800FD994_StaffScene[i].x;
+                y = xy[1] + D_800FD994_StaffScene[i].y;
+                if (y > 320.0f) {
+                    y -= 384.0f;
+                } else if (y <= -192.0f) {
+                    y += 384.0f;
+                }
+                func_80066DC4(win, i, x, y);
+            }
+            break;
+        }
+    } while (ctl->stat != 0);
+    func_80064D38(win);
+    func_80067704(tex);
+    ctl->stat = -1;
+    while (1) {
+        HuPrcVSleep();
+    }
+}
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FAD30_StaffScene);
 
 INCLUDE_ASM("asm/nonmatchings/overlays/ovl_63_StaffScene/2A9CA0", func_800FB1A0_StaffScene);
