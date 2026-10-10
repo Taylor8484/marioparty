@@ -1575,8 +1575,9 @@ segments:
     subsegments:
       - [0x246DF0, c]
       - [0x246E20, c]
-      - [0x248820, data, 246DF0]
-      - [0x248850, data, 246E20]
+      - [0x248820, .data, 246DF0]
+      - [0x248850, .data, 246E20]
+      - [0x248EF0, .rodata, 246E20]
       - {0x248F00, type: bss, vram: 0x800F86F0, name: ovl_38_bss}
   - type: code
     start: 0x248F00
@@ -1884,7 +1885,7 @@ segments:
     bss_size: 0x10
     subsegments:
       - [0x28ABA0, c]
-      - [0x28BBE0, data, 28ABA0]
+      - [0x28BBE0, .data, 28ABA0]
       - [0x28BC50, .rodata, 28ABA0]
       - {0x28BC70, type: bss, vram: 0x800F76B0, name: ovl_4D_bss}
   - type: code
@@ -1911,7 +1912,7 @@ segments:
     bss_size: 0x20
     subsegments:
       - [0x28CFF0, c]
-      - [0x28DF40, data, 28CFF0]
+      - [0x28DF40, .data, 28CFF0]
       - [0x28E010, .rodata, 28CFF0]
       - {0x28E030, type: bss, vram: 0x800F7620, name: ovl_4F_bss}
   - type: code
