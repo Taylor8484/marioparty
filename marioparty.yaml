@@ -1966,7 +1966,7 @@ segments:
     bss_size: 0x10
     subsegments:
       - [0x2908F0, c]
-      - [0x291280, data, 2908F0]
+      - [0x291280, .data, 2908F0]
       - {0x291360, type: bss, vram: 0x800F7050, name: ovl_53_bss}
   - type: code
     start: 0x291360
