@@ -1591,8 +1591,8 @@ segments:
     subsegments:
       - [0x248F00, c]
       - [0x248F30, c]
-      - [0x24C0D0, data, 248F00]
-      - [0x24C100, data, 248F30]
+      - [0x24C0D0, .data, 248F00]
+      - [0x24C100, .data, 248F30]
       - {0x24C390, type: bss, vram: 0x800F9A70, name: ovl_39_bss}
   - type: code
     start: 0x24C390
