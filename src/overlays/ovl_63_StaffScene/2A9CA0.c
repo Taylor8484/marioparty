@@ -1435,6 +1435,7 @@ void func_800FB6A8_StaffScene(StaffModel* m, f32 dist, s32 mode, f32 rise, f32 m
     f32 a;
     f32 lim;
     f32 dist2;
+    f32 k;
 
     if (mode != 0) {
         minYaw = 0.0f - maxYaw;
@@ -1446,10 +1447,10 @@ void func_800FB6A8_StaffScene(StaffModel* m, f32 dist, s32 mode, f32 rise, f32 m
         if (mode >= 3) {
             d = dxz + dy * dy;
             if (dist2 < d) {
-                d = dist / func_800B1750(d);
-                Center.x = m->pos.x - dx * d;
-                Center.y = m->pos.y - dy * d;
-                Center.z = m->pos.z - dz * d;
+                k = dist / func_800B1750(d);
+                Center.x = m->pos.x - dx * k;
+                Center.y = m->pos.y - dy * k;
+                Center.z = m->pos.z - dz * k;
             }
             Center.y += rise;
         }
